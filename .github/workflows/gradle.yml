@@ -10,8 +10,6 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -56,3 +54,12 @@ jobs:
           --file-exists-behavior OVERWRITE \
           --s3-location bucket=meeron-bucket,bundleType=zip,key=build/app.zip \
           --region ap-northeast-2
+      - name: build result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: all
+          author_name: 'meeron CI / CD'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
