@@ -14,4 +14,9 @@ public class HealthRestController {
     public String healthCheck() {
         return "OK";
     }
+
+    @GetMapping("/authenticated")
+    public String authenticated() {
+        return "AUTHENTICATED";
+    }
 }

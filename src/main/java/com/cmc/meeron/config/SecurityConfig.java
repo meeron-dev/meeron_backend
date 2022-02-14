@@ -1,5 +1,7 @@
 package com.cmc.meeron.config;
 
+import com.cmc.meeron.auth.filter.TokenAuthenticationErrorFilter;
+import com.cmc.meeron.auth.filter.TokenAuthenticationFilter;
 import com.cmc.meeron.auth.handler.CustomUserDetailsService;
 import com.cmc.meeron.auth.handler.RestAccessDeniedHandler;
 import com.cmc.meeron.auth.handler.RestAuthenticationEntryPoint;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final RestAccessDeniedHandler restAccessDeniedHandler;
     private final CustomUserDetailsService customUserDetailsService;
+    private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final TokenAuthenticationErrorFilter tokenAuthenticationErrorFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -29,11 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/health/**").permitAll()
+                .antMatchers("/api/health").permitAll()
                 .anyRequest().authenticated()
                 .and()
-//                .addFilterBefore(null, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(null, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenAuthenticationErrorFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()

@@ -23,6 +23,10 @@ spring:
     host: localhost
 server:
   port: 8080
+jwt:
+  secret-key: ENC(z1qhyistBmY+rofD3eB2jHFMtMfPLVFbGFxgLQ3n1hU=)
+  access-expiration-time: 3600000
+  refresh-expiration-time: 86400000
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
@@ -30,7 +34,6 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
-
 ---
 spring:
   config:
