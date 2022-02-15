@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+source /home/ec2-user/.bashrc
 
 echo "[dev-meeron] 작업 디렉토리 위치 변경"
 cd /home/ec2-user/app
