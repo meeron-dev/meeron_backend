@@ -6,6 +6,6 @@ ARG JASYPT_MEERON_PASSWORD
 COPY ${JAR_FILE} app.jar
 
 ENV PROFILE=""
-ENV JASPYT_MEERON_PASSWORD=$JASYPT_MEERON_PASSWORD
+ENV JASYPT_PASSWORD=$JASYPT_MEERON_PASSWORD
 
-ENTRYPOINT ["java", "-Djasypt.encryptor.password=${JASPYT_MEERON_PASSWORD}", "-jar", "-Dspring.profiles.active=${PROFILE}", "/app.jar"]
+ENTRYPOINT ["java", "-Djasypt.encryptor.password=${JASYPT_PASSWORD}", "-jar", "-Dspring.profiles.active=${PROFILE}", "/app.jar"]
