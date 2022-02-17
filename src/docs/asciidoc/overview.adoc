@@ -1,0 +1,40 @@
+[[overview]]
+== Overview
+
+[[overview-host]]
+=== 호스트
+
+|===
+| 환경 | Host
+
+| Dev
+| dev.meeron.net
+
+| Production
+| prod.meeron.net
+|===
+
+[[overview-http-status-codes]]
+=== HTTP 상태 코드
+
+|===
+| 상태 코드 | 설명
+
+| `200 OK`
+| 성공
+
+| `400 Bad Request`
+| 잘못된 요청
+
+| `401 Unauthorized`
+| 비인증 상태
+
+| `403 Forbidden`
+| 권한 거부
+
+| `404 Not Found`
+| 존재하지 않는 요청 리소스
+
+| `500 Internal Server Error`
+| 서버 에러
+|===

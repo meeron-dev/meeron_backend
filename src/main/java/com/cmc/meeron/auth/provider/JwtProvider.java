@@ -4,7 +4,6 @@ import com.cmc.meeron.auth.domain.AuthUser;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -20,7 +19,7 @@ public class JwtProvider {
     private final long REFRESH_TOKEN_EXPIRATION_MILLISECONDS;
     private final String BEARER = "Bearer ";
     private final String USER_ID = "userId";
-    private final String USER_PROVIDER = "userProvider";
+    private final String USER_PROVIDER = "provider";
 
     public JwtProvider(@Value("${jwt.secret-key}") String secretKey,
                        @Value("${jwt.access-expiration-time}") long accessTokenExpirationMilliseconds,
@@ -30,16 +29,15 @@ public class JwtProvider {
         this.REFRESH_TOKEN_EXPIRATION_MILLISECONDS = refreshTokenExpirationMilliSeconds;
     }
 
-    public String createAccessToken(Authentication authentication) {
-        return createToken(authentication, ACCESS_TOKEN_EXPIRATION_MILLISECONDS);
+    public String createAccessToken(AuthUser authUser) {
+        return createToken(authUser, ACCESS_TOKEN_EXPIRATION_MILLISECONDS);
     }
 
-    public String createRefreshToken(Authentication authentication) {
-        return createToken(authentication, REFRESH_TOKEN_EXPIRATION_MILLISECONDS);
+    public String createRefreshToken(AuthUser authUser) {
+        return createToken(authUser, REFRESH_TOKEN_EXPIRATION_MILLISECONDS);
     }
 
-    private String createToken(Authentication authentication, long time) {
-        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+    private String createToken(AuthUser authUser, long time) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + time);
         return Jwts.builder()

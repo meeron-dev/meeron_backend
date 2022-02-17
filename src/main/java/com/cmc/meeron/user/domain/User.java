@@ -27,4 +27,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserProvider userProvider;
+
+    @Column(nullable = false)
+    private String name;
+
+    private String profileImageUrl;
 }

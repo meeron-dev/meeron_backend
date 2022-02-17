@@ -1,6 +1,8 @@
 package com.cmc.meeron.support.restdocs;
 
 import com.cmc.meeron.HealthRestController;
+import com.cmc.meeron.auth.application.AuthUseCase;
+import com.cmc.meeron.auth.presentation.AuthRestController;
 import com.cmc.meeron.config.RestDocsConfig;
 import com.cmc.meeron.support.SecuritySupport;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -24,11 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 @Disabled
 @WebMvcTest(value = {
-        HealthRestController.class
+        HealthRestController.class,
+        AuthRestController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfig.class)
 public abstract class RestDocsTestSupport extends SecuritySupport {
+
+    @MockBean protected AuthUseCase authUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

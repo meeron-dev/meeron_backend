@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum UserProvider {
 
     KAKAO("KAKAO"),
+    APPLE("APPLE")
     ;
 
     private final String provider;

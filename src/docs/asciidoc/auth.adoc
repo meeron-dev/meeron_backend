@@ -1,0 +1,17 @@
+= 인증(로그인, 로그아웃, 토큰 재발급) 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+== 로그인
+include::{snippets}/auth-rest-controller-test/login_success/http-request.adoc[]
+include::{snippets}/auth-rest-controller-test/login_success/request-fields.adoc[]
+include::{snippets}/auth-rest-controller-test/login_success/http-response.adoc[]
+include::{snippets}/auth-rest-controller-test/login_success/response-fields.adoc[]
+
+=== 입력 조건을 지키지 않을 경우
+include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-request.adoc[]
+include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-response.adoc[]
