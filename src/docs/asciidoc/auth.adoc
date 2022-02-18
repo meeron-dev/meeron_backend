@@ -20,3 +20,9 @@ include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-response
 include::{snippets}/auth-rest-controller-test/logout_success/http-request.adoc[]
 include::{snippets}/auth-rest-controller-test/logout_success/request-headers.adoc[]
 include::{snippets}/auth-rest-controller-test/logout_success/http-response.adoc[]
+
+== 토큰 재발급
+include::{snippets}/auth-rest-controller-test/reissue_success/http-request.adoc[]
+include::{snippets}/auth-rest-controller-test/reissue_success/request-headers.adoc[]
+include::{snippets}/auth-rest-controller-test/reissue_success/http-response.adoc[]
+include::{snippets}/auth-rest-controller-test/reissue_success/response-fields.adoc[]

@@ -124,4 +124,22 @@ class AuthServiceTest {
                 () -> verify(logoutRefreshTokenRepository).save(any(LogoutRefreshToken.class))
         );
     }
+
+    @DisplayName("토큰 재발급 - 성공")
+    @Test
+    void reissue_success() throws Exception {
+
+        // given
+        AuthUser authUser = AuthUser.of(mockUser());
+        mockJwtProvider();
+
+        // when
+        TokenResponseDto reissuedTokenResponse = authService.reissue(authUser);
+
+        // then
+        assertAll(
+                () -> verify(jwtProvider).createAccessToken(authUser),
+                () -> verify(jwtProvider).createRefreshToken(authUser)
+        );
+    }
 }

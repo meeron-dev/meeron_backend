@@ -8,5 +8,5 @@
 
 include::overview.adoc[]
 
-=== 인증(로그인, 로그아웃, 토큰 재발급) 관련 API
-* link:auth.html[인증 관련 API, window=_blank]
+== 인증(로그인, 로그아웃, 토큰 재발급) 관련 API
+* link:auth.html[Auth API, window=_blank]

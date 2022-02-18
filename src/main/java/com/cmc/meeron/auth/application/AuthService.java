@@ -55,4 +55,11 @@ class AuthService implements AuthUseCase{
         logoutAccessTokenRepository.save(logoutAccessToken);
         logoutRefreshTokenRepository.save(logoutRefreshToken);
     }
+
+    @Override
+    public TokenResponseDto reissue(AuthUser authUser) {
+        String reissuedAccessToken = jwtProvider.createAccessToken(authUser);
+        String reissuedRefreshToken = jwtProvider.createRefreshToken(authUser);
+        return TokenResponseDto.of(reissuedAccessToken, reissuedRefreshToken);
+    }
 }

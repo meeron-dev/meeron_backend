@@ -23,6 +23,12 @@
 | `200 OK`
 | 성공
 
+| `201 Created`
+| 정상적으로 컨텐츠가 생성되었을 경우
+
+| `204 No Content`
+| 반환 값이 없는 경우
+
 | `400 Bad Request`
 | 잘못된 요청
 
@@ -35,6 +41,14 @@
 | `404 Not Found`
 | 존재하지 않는 요청 리소스
 
+| `405 Method Not Allowed`
+| API는 존재하나 Method가 존재하지 않는 경우
+
 | `500 Internal Server Error`
 | 서버 에러
 |===
+
+[[not-authenticated-user]]
+=== 인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우
+include::{snippets}/health-rest-controller-test/authentication_check_fail/http-request.adoc[]
+include::{snippets}/health-rest-controller-test/authentication_check_fail/http-response.adoc[]

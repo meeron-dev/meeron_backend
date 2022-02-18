@@ -35,7 +35,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .provider("KAKAO")
                 .build();
         when(authUseCase.login(any()))
-                .thenReturn(TokenResponseDto.of("testAccessToken", "testRefreshToken"));
+                .thenReturn(mockJwt());
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/login")
@@ -58,6 +58,10 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("JWT Refresh Token")
                         )
                 ));
+    }
+
+    private TokenResponseDto mockJwt() {
+        return TokenResponseDto.of("testAccessToken", "testRefreshToken");
     }
 
     @DisplayName("로그인 - 실패 / 입력 조건을 지키지 않을 경우")
@@ -98,6 +102,35 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer")),
                                 headerWithName("refreshToken").description("JWT Refresh Token").attributes(field("constraints", "JWT Refresh Token With Bearer"))
+                        )
+                ));
+    }
+
+    @DisplayName("토큰 재발급 - 성공")
+    @Test
+    void reissue_success() throws Exception {
+
+        // given
+        setUpAuthenticated();
+        String accessToken = "Bearer testAccessToken";
+        String refreshToken = "Bearer testRefreshToken";
+        when(authUseCase.reissue(any()))
+                .thenReturn(mockJwt());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/reissue")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .header("refreshToken", refreshToken))
+                .andExpect(status().isOk())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer")),
+                                headerWithName("refreshToken").description("JWT Refresh Token").attributes(field("constraints", "JWT Refresh Token With Bearer"))
+                        ),
+                        responseFields(
+                                fieldWithPath("type").type(JsonFieldType.STRING).description("토큰 타입 Bearer 고정"),
+                                fieldWithPath("accessToken").type(JsonFieldType.STRING).description("JWT Access Token"),
+                                fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("JWT Refresh Token")
                         )
                 ));
     }
