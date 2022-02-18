@@ -600,22 +600,22 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 494
 
 {
-  "time" : "2022-02-18T21:16:07.467284",
+  "time" : "2022-02-18T21:18:43.079908",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
-    "field" : "name",
-    "value" : null,
-    "reason" : "성함을 2 ~ 5자 내외로 입력해주세요."
+    "field" : "provider",
+    "value" : "",
+    "reason" : "소셜 로그인 제공자를 입력해주세요."
   }, {
     "field" : "email",
     "value" : null,
     "reason" : "이메일을 입력해주세요."
   }, {
-    "field" : "provider",
-    "value" : "",
-    "reason" : "소셜 로그인 제공자를 입력해주세요."
+    "field" : "name",
+    "value" : null,
+    "reason" : "성함을 2 ~ 5자 내외로 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -626,8 +626,24 @@ Content-Length: 494
 <div class="sect1">
 <h2 id="_로그아웃"><a class="link" href="#_로그아웃">로그아웃</a></h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>include::/Users/kobeomseok95/Desktop/project/meeron/backend/build/generated-snippets/auth-rest-controller-test/</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/logout HTTP/1.1
+Authorization: Bearer testAccessToken
+refreshToken: Bearer testRefreshToken
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 204 No Content
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: SAMEORIGIN</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -635,7 +651,7 @@ Content-Length: 494
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-02-18 21:15:36 +0900
+Last updated 2022-02-18 21:18:26 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -18,4 +18,5 @@ include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-response
 
 == 로그아웃
 include::{snippets}/auth-rest-controller-test/logout_success/http-request.adoc[]
+include::{snippets}/auth-rest-controller-test/logout_success/request-headers.adoc[]
 include::{snippets}/auth-rest-controller-test/logout_success/http-response.adoc[]
