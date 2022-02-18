@@ -15,6 +15,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,6 +93,12 @@ class AuthRestControllerTest extends RestDocsTestSupport {
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/logout")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .header("refreshToken", refreshToken))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer")),
+                                headerWithName("refreshToken").description("JWT Refresh Token").attributes(field("constraints", "JWT Refresh Token With Bearer"))
+                        )
+                ));
     }
 }

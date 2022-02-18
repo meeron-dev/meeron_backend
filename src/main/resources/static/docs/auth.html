@@ -451,6 +451,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_입력_조건을_지키지_않을_경우">입력 조건을 지키지 않을 경우</a></li>
 </ul>
 </li>
+<li><a href="#_로그아웃">로그아웃</a></li>
 </ul>
 </div>
 </div>
@@ -596,18 +597,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: SAMEORIGIN
-Content-Length: 493
+Content-Length: 494
 
 {
-  "time" : "2022-02-18T12:40:16.59951",
+  "time" : "2022-02-18T21:16:07.467284",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
-    "field" : "provider",
-    "value" : "",
-    "reason" : "소셜 로그인 제공자를 입력해주세요."
-  }, {
     "field" : "name",
     "value" : null,
     "reason" : "성함을 2 ~ 5자 내외로 입력해주세요."
@@ -615,6 +612,10 @@ Content-Length: 493
     "field" : "email",
     "value" : null,
     "reason" : "이메일을 입력해주세요."
+  }, {
+    "field" : "provider",
+    "value" : "",
+    "reason" : "소셜 로그인 제공자를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -622,11 +623,19 @@ Content-Length: 493
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_로그아웃"><a class="link" href="#_로그아웃">로그아웃</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>include::/Users/kobeomseok95/Desktop/project/meeron/backend/build/generated-snippets/auth-rest-controller-test/</p>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-02-18 01:36:11 +0900
+Last updated 2022-02-18 21:15:36 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

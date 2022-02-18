@@ -15,3 +15,7 @@ include::{snippets}/auth-rest-controller-test/login_success/response-fields.adoc
 === 입력 조건을 지키지 않을 경우
 include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-request.adoc[]
 include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-response.adoc[]
+
+== 로그아웃
+include::{snippets}/auth-rest-controller-test/logout_success/http-request.adoc[]
+include::{snippets}/auth-rest-controller-test/logout_success/http-response.adoc[]
