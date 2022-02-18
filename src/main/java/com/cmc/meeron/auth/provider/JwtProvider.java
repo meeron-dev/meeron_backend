@@ -20,6 +20,7 @@ public class JwtProvider {
     private final String BEARER = "Bearer ";
     private final String USER_ID = "userId";
     private final String USER_PROVIDER = "provider";
+    private final String USERNAME = "username";
 
     public JwtProvider(@Value("${jwt.secret-key}") String secretKey,
                        @Value("${jwt.access-expiration-time}") long accessTokenExpirationMilliseconds,
@@ -53,12 +54,13 @@ public class JwtProvider {
         Map<String, Object> map = new HashMap<>();
         map.put(USER_ID, authUser.getUserId());
         map.put(USER_PROVIDER, authUser.getUserProvider());
+        map.put(USERNAME, authUser.getUsername());
         return map;
     }
 
     public String getUserEmail(String token) {
-        Claims claims = getClaims(token);
-        return claims.getSubject();
+        return getClaims(token)
+                .get(USERNAME, String.class);
     }
 
     public long getRemainingMilliSecondsFromToken(String token){
