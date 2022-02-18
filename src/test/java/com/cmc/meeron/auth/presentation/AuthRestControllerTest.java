@@ -5,6 +5,7 @@ import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -75,5 +76,21 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(3)));
+    }
+
+    @DisplayName("로그아웃 - 성공")
+    @Test
+    void logout_success() throws Exception {
+
+        // given
+        setUpAuthenticated();
+        String accessToken = "Bearer testAccessToken";
+        String refreshToken = "Bearer testRefreshToken";
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/logout")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .header("refreshToken", refreshToken))
+                .andExpect(status().isNoContent());
     }
 }

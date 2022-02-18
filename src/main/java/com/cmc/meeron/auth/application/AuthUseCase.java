@@ -6,4 +6,6 @@ import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
 public interface AuthUseCase {
 
     TokenResponseDto login(LoginRequestDto loginRequestDto);
+
+    void logout(String accessToken, String refreshToken);
 }

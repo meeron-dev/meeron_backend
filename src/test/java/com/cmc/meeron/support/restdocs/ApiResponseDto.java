@@ -1,6 +1,5 @@
 package com.cmc.meeron.support.restdocs;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -8,7 +7,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @NoArgsConstructor
-@Builder
+//@Builder
 public class ApiResponseDto<T> {
 
     private T data;

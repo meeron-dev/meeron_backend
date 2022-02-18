@@ -65,7 +65,7 @@ public class JwtProvider {
 
     public long getRemainingMilliSecondsFromToken(String token){
         Date expiration = getClaims(token).getExpiration();
-        return expiration.getTime() - (new Date()).getTime();
+        return expiration.getTime() - new Date().getTime();
     }
 
     private Claims getClaims(String token) {

@@ -3,6 +3,10 @@ package com.cmc.meeron.auth.application;
 import com.cmc.meeron.auth.application.dto.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
 import com.cmc.meeron.auth.domain.AuthUser;
+import com.cmc.meeron.auth.domain.LogoutAccessToken;
+import com.cmc.meeron.auth.domain.LogoutRefreshToken;
+import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
+import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
@@ -29,6 +33,8 @@ class AuthServiceTest {
 
     @Mock UserRepository userRepository;
     @Mock JwtProvider jwtProvider;
+    @Mock LogoutAccessTokenRepository logoutAccessTokenRepository;
+    @Mock LogoutRefreshTokenRepository logoutRefreshTokenRepository;
     @InjectMocks AuthService authService;
 
     @DisplayName("로그인 - 성공 / 회원가입이 되지 않은 유저일 경우")
@@ -98,6 +104,24 @@ class AuthServiceTest {
                 () -> verify(userRepository, times(0)).save(any(User.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
+        );
+    }
+
+    @DisplayName("로그아웃 - 성공")
+    @Test
+    void logout_success() throws Exception {
+
+        // given
+        String accessToken = "testAccessToken";
+        String refreshToken = "testRefreshToken";
+
+        // when
+        authService.logout(accessToken, refreshToken);
+
+        // then
+        assertAll(
+                () -> verify(logoutAccessTokenRepository).save(any(LogoutAccessToken.class)),
+                () -> verify(logoutRefreshTokenRepository).save(any(LogoutRefreshToken.class))
         );
     }
 }
