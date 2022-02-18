@@ -450,9 +450,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#overview-host">호스트</a></li>
 <li><a href="#overview-http-status-codes">HTTP 상태 코드</a></li>
-<li><a href="#_인증로그인_로그아웃_토큰_재발급_관련_api">인증(로그인, 로그아웃, 토큰 재발급) 관련 API</a></li>
+<li><a href="#not-authenticated-user">인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우</a></li>
 </ul>
 </li>
+<li><a href="#_인증로그인_로그아웃_토큰_재발급_관련_api">인증(로그인, 로그아웃, 토큰 재발급) 관련 API</a></li>
 </ul>
 </div>
 </div>
@@ -504,6 +505,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">성공</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>201 Created</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">정상적으로 컨텐츠가 생성되었을 경우</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>204 No Content</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">반환 값이 없는 경우</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 요청</p></td>
 </tr>
@@ -520,6 +529,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 요청 리소스</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>405 Method Not Allowed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API는 존재하나 Method가 존재하지 않는 경우</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>500 Internal Server Error</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">서버 에러</p></td>
 </tr>
@@ -527,14 +540,47 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_인증로그인_로그아웃_토큰_재발급_관련_api"><a class="link" href="#_인증로그인_로그아웃_토큰_재발급_관련_api">인증(로그인, 로그아웃, 토큰 재발급) 관련 API</a></h3>
+<h3 id="not-authenticated-user"><a class="link" href="#not-authenticated-user">인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/health/authenticated HTTP/1.1
+Authorization: Bearer ex
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: SAMEORIGIN
+Content-Length: 151
+
+{
+  "time" : "2022-02-18T22:30:50.870098",
+  "status" : 401,
+  "message" : "인증에 실패했습니다.",
+  "code" : "MEERON-401",
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_인증로그인_로그아웃_토큰_재발급_관련_api"><a class="link" href="#_인증로그인_로그아웃_토큰_재발급_관련_api">인증(로그인, 로그아웃, 토큰 재발급) 관련 API</a></h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><a href="auth.html" target="_blank" rel="noopener">인증 관련 API</a></p>
+<p><a href="auth.html" target="_blank" rel="noopener">Auth API</a></p>
 </li>
 </ul>
-</div>
 </div>
 </div>
 </div>
@@ -542,7 +588,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-02-18 01:36:11 +0900
+Last updated 2022-02-18 22:15:03 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
