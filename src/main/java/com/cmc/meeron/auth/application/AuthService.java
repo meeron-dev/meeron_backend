@@ -41,7 +41,8 @@ class AuthService implements AuthUseCase{
                 .email(loginRequestDto.getEmail())
                 .role(Role.USER)
                 .userProvider(UserProvider.valueOf(loginRequestDto.getProvider().toUpperCase()))
-                .name(loginRequestDto.getName())
+                .name("")
+                .nickname(loginRequestDto.getNickname())
                 .build());
     }
 

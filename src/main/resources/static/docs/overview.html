@@ -527,7 +527,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/health/authenticated HTTP/1.1
 Authorization: Bearer ex
-Host: localhost:8080</code></pre>
+Host: dev.meeron.net</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -539,11 +539,12 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 151
+Content-Length: 150
 
 {
-  "time" : "2022-02-18T22:30:50.870098",
+  "time" : "2022-02-19T16:17:44.56379",
   "status" : 401,
   "message" : "인증에 실패했습니다.",
   "code" : "MEERON-401",

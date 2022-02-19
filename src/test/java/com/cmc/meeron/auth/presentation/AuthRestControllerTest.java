@@ -30,7 +30,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
         // given
         LoginRequest request = LoginRequest.builder()
                 .email("test@naver.com")
-                .name("고범석")
+                .nickname("고범석")
                 .profileImageUrl("https://test.image.com/12341234")
                 .provider("KAKAO")
                 .build();
@@ -47,8 +47,8 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.refreshToken", is("testRefreshToken")))
                 .andDo(restDocumentationResultHandler.document(
                         requestFields(
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("회원가입 / 로그인 할 이메일").attributes(field("constraints", "Not Null, Email 형식이어야 함")),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("회원이름").attributes(field("constraints", "2 ~ 5자 내외로 입력해야 함")),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("회원가입 / 로그인 할 이메일").attributes(field("constraints", "Email 형식이어야 함")),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("소셜 닉네임"),
                                 fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("소셜 로그인할 때 프로필 이미지 URL").optional(),
                                 fieldWithPath("provider").type(JsonFieldType.STRING).description("소셜 로그인 제공자").attributes(field("constraints", "KAKAO, APPLE 만 가능"))
                         ),
@@ -71,7 +71,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
         // given
         LoginRequest request = LoginRequest.builder()
                 .email(null)
-                .name(null)
+                .nickname(null)
                 .profileImageUrl("https://test.image.com/12341234")
                 .provider("")
                 .build();

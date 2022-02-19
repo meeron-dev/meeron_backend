@@ -28,8 +28,10 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserProvider userProvider;
 
-    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String nickname;
 
     private String profileImageUrl;
 }

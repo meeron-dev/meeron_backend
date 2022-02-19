@@ -44,7 +44,11 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     void setUp(final WebApplicationContext webApplicationContext,
                final RestDocumentationContextProvider restDocumentationContextProvider) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentationContextProvider))
+                .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentationContextProvider)
+                        .uris()
+                        .withScheme("https")
+                        .withHost("dev.meeron.net")
+                        .withPort(443))
                 .apply(springSecurity())
                 .alwaysDo(print())
                 .alwaysDo(restDocumentationResultHandler)

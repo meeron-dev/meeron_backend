@@ -1,7 +1,6 @@
 package com.cmc.meeron.auth.presentation;
 
 import com.cmc.meeron.auth.application.AuthUseCase;
-import com.cmc.meeron.auth.application.dto.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
 import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
@@ -20,11 +19,11 @@ public class AuthRestController {
 
     private final AuthUseCase authUseCase;
 
+    // TODO: 2022/02/19 kobeomseok95 email Duplicate Validator
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public TokenResponseDto login(@RequestBody @Valid LoginRequest loginRequest) {
-        LoginRequestDto loginRequestDto = AuthPresentationAssembler.toLoginRequestDto(loginRequest);
-        return authUseCase.login(loginRequestDto);
+        return authUseCase.login(AuthPresentationAssembler.toLoginRequestDto(loginRequest));
     }
 
     @PostMapping("/logout")

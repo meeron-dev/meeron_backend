@@ -8,8 +8,9 @@ import lombok.*;
 @Builder
 public class LoginRequestDto {
 
+    // TODO: 2022/02/19 kobeomseok95 VO로 개선해볼까?
     private String email;
-    private String name;
+    private String nickname;
     private String profileImageUrl;
     private String provider;
 }

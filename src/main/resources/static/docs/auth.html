@@ -464,12 +464,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 137
-Host: localhost:8080
+Content-Length: 141
+Host: dev.meeron.net
 
 {
   "email" : "test@naver.com",
-  "name" : "고범석",
+  "nickname" : "고범석",
   "profileImageUrl" : "https://test.image.com/12341234",
   "provider" : "KAKAO"
 }</code></pre>
@@ -495,15 +495,15 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Not Null, Email 형식이어야 함</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Email 형식이어야 함</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">회원가입 / 로그인 할 이메일</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2 ~ 5자 내외로 입력해야 함</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회원이름</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">소셜 닉네임</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileImageUrl</code></p></td>
@@ -530,6 +530,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
 Content-Length: 99
 
@@ -577,12 +578,12 @@ Content-Length: 99
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 113
-Host: localhost:8080
+Content-Length: 117
+Host: dev.meeron.net
 
 {
   "email" : null,
-  "name" : null,
+  "nickname" : null,
   "profileImageUrl" : "https://test.image.com/12341234",
   "provider" : ""
 }</code></pre>
@@ -597,11 +598,12 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 494
+Content-Length: 489
 
 {
-  "time" : "2022-02-18T22:30:55.307236",
+  "time" : "2022-02-19T16:17:48.693967",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -614,9 +616,9 @@ Content-Length: 494
     "value" : null,
     "reason" : "이메일을 입력해주세요."
   }, {
-    "field" : "name",
+    "field" : "nickname",
     "value" : null,
-    "reason" : "성함을 2 ~ 5자 내외로 입력해주세요."
+    "reason" : "소셜 닉네임을 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -632,7 +634,7 @@ Content-Length: 494
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/logout HTTP/1.1
 Authorization: Bearer testAccessToken
 refreshToken: Bearer testRefreshToken
-Host: localhost:8080</code></pre>
+Host: dev.meeron.net</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -665,6 +667,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
@@ -678,7 +681,7 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/reissue HTTP/1.1
 Authorization: Bearer testAccessToken
 refreshToken: Bearer testRefreshToken
-Host: localhost:8080</code></pre>
+Host: dev.meeron.net</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -712,6 +715,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
 Content-Length: 99
 

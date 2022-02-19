@@ -67,7 +67,7 @@ class AuthServiceTest {
     private LoginRequestDto mockKakaoLoginRequest() {
         return LoginRequestDto.builder()
                 .email("test@naver.com")
-                .name("고범석")
+                .nickname("고범석")
                 .profileImageUrl("https://test.test.com/12341234")
                 .provider("KAKAO")
                 .build();
