@@ -38,6 +38,3 @@ out/
 
 ### generated ###
 /src/main/generated/**
-
-### docs ###
-**/src/main/resources/static/docs/
