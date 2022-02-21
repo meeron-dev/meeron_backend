@@ -9,9 +9,11 @@ ENV PROFILE=""
 ENV JASPYT_PASSWORD=$JASPYT_PASSWORD
 ENV TZ=Asia/Seoul
 
-ENTRYPOINT ["java",
-            "-jar",
-            "-Duser.timezone=${TZ}",
-            "-Djasypt.encryptor.password=${JASPYT_PASSWORD}",
-            "-Dspring.profiles.active=${PROFILE}",
-            "/app.jar"]
+ENTRYPOINT [ \
+            "java", \
+            "-Duser.timezone=${TZ}", \
+            "-Djasypt.encryptor.password=${JASPYT_PASSWORD}", \
+            "-Dspring.profiles.active=${PROFILE}", \
+            "-jar", \
+            "/app.jar" \
+]
