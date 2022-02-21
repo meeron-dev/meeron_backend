@@ -10,5 +10,5 @@ public interface AuthUseCase {
 
     void logout(String accessToken, String refreshToken);
 
-    TokenResponseDto reissue(AuthUser authUser);
+    TokenResponseDto reissue(String accessToken, String refreshToken, AuthUser authUser);
 }

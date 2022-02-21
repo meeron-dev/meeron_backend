@@ -9,21 +9,24 @@ import org.springframework.data.redis.core.TimeToLive;
 import javax.persistence.Id;
 import java.util.concurrent.TimeUnit;
 
-@RedisHash("logoutRefreshToken")
+@RedisHash("refreshToken")
 @Getter
 @AllArgsConstructor
 @Builder
-public class LogoutRefreshToken {
+public class RefreshToken {
 
     @Id
     private String id;
 
-    @TimeToLive(unit = TimeUnit.MILLISECONDS)
-    private Long expiration;
+    private String refreshToken;
 
-    public static LogoutRefreshToken of(String refreshToken, long expiration) {
-        return LogoutRefreshToken.builder()
-                .id(refreshToken)
+    @TimeToLive(unit = TimeUnit.MILLISECONDS)
+    private long expiration;
+
+    public static RefreshToken of(String username, String refreshToken, long expiration) {
+        return RefreshToken.builder()
+                .id(username)
+                .refreshToken(refreshToken)
                 .expiration(expiration)
                 .build();
     }

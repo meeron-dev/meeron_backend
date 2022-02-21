@@ -5,9 +5,12 @@ import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
 import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.domain.LogoutAccessToken;
 import com.cmc.meeron.auth.domain.LogoutRefreshToken;
+import com.cmc.meeron.auth.domain.RefreshToken;
 import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
 import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
+import com.cmc.meeron.auth.domain.repository.RefreshTokenRepository;
 import com.cmc.meeron.auth.provider.JwtProvider;
+import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserProvider;
@@ -21,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,11 +33,14 @@ class AuthServiceTest {
 
     private final String ACCESS_TOKEN = "testAccessToken";
     private final String REFRESH_TOKEN = "testRefreshToken";
+    private final String RENEWAL_ACCESS_TOKEN = "refreshedTestAccessToken";
+    private final String RENEWAL_REFRESH_TOKEN = "refreshedTestRefreshToken";
 
     @Mock UserRepository userRepository;
     @Mock JwtProvider jwtProvider;
     @Mock LogoutAccessTokenRepository logoutAccessTokenRepository;
     @Mock LogoutRefreshTokenRepository logoutRefreshTokenRepository;
+    @Mock RefreshTokenRepository refreshTokenRepository;
     @InjectMocks AuthService authService;
 
     @DisplayName("로그인 - 성공 / 회원가입이 되지 않은 유저일 경우")
@@ -43,8 +49,9 @@ class AuthServiceTest {
 
         // given
         LoginRequestDto kakaoLoginRequest = mockKakaoLoginRequest();
-        when(userRepository.findByEmail(kakaoLoginRequest.getEmail()))
-                .thenReturn(Optional.empty());
+        when(userRepository.findByEmail(kakaoLoginRequest.getEmail())
+                .orElseGet(() -> userRepository.save(any())))
+                .thenReturn(mockUser());
         mockJwtProvider();
 
         // when
@@ -52,8 +59,8 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(userRepository).findByEmail(kakaoLoginRequest.getEmail()),
                 () -> verify(userRepository).save(any(User.class)),
+                () -> verify(refreshTokenRepository).save(any(RefreshToken.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
         );
@@ -125,21 +132,73 @@ class AuthServiceTest {
         );
     }
 
-    @DisplayName("토큰 재발급 - 성공")
+    @DisplayName("토큰 재발급 - 성공 / 재발급 유효 기간이 지나지 않았을 경우 Access Token만 발급")
     @Test
-    void reissue_success() throws Exception {
+    void reissue_success_before_refresh_token_valid_time() throws Exception {
 
         // given
-        AuthUser authUser = AuthUser.of(mockUser());
-        mockJwtProvider();
+        User user = mockUser();
+        AuthUser authUser = AuthUser.of(user);
+        RefreshToken refreshToken = RefreshToken.of(user.getEmail(), REFRESH_TOKEN, 60 * 60 * 24 * 4L);
+        mockFindRefreshTokenByUsername(user, refreshToken);
+        when(jwtProvider.isRemainTimeOverRefreshTokenValidTime(refreshToken.getExpiration()))
+                .thenReturn(true);
+        when(jwtProvider.createAccessToken(any())).thenReturn(RENEWAL_ACCESS_TOKEN);
 
         // when
-        TokenResponseDto reissuedTokenResponse = authService.reissue(authUser);
+        TokenResponseDto reissuedTokenResponse = authService.reissue(ACCESS_TOKEN, REFRESH_TOKEN, authUser);
 
         // then
         assertAll(
-                () -> verify(jwtProvider).createAccessToken(authUser),
-                () -> verify(jwtProvider).createRefreshToken(authUser)
+                () -> verify(refreshTokenRepository).findById(user.getEmail()),
+                () -> assertNotEquals(ACCESS_TOKEN, reissuedTokenResponse.getAccessToken()),
+                () -> assertEquals(REFRESH_TOKEN, reissuedTokenResponse.getRefreshToken())
         );
+    }
+
+    private void mockFindRefreshTokenByUsername(User user, RefreshToken refreshToken) {
+        when(refreshTokenRepository.findById(user.getEmail()))
+                .thenReturn(Optional.of(refreshToken));
+    }
+
+    @DisplayName("토큰 재발급 - 성공 / 재발급 유효 기간이 지났을 경우 Access Token, Refresh Token 재발급")
+    @Test
+    void reissue_success_after_refresh_token_valid_time() throws Exception {
+
+        // given
+        User user = mockUser();
+        AuthUser authUser = AuthUser.of(user);
+        RefreshToken refreshToken = RefreshToken.of(user.getEmail(), REFRESH_TOKEN, 60 * 60 * 24 * 2L);
+        mockFindRefreshTokenByUsername(user, refreshToken);
+        when(jwtProvider.isRemainTimeOverRefreshTokenValidTime(refreshToken.getExpiration()))
+                .thenReturn(false);
+        when(jwtProvider.createAccessToken(any())).thenReturn(RENEWAL_ACCESS_TOKEN);
+        when(jwtProvider.createRefreshToken(any())).thenReturn(RENEWAL_REFRESH_TOKEN);
+
+        // when
+        TokenResponseDto reissuedTokenResponse = authService.reissue(ACCESS_TOKEN, REFRESH_TOKEN, authUser);
+
+        // then
+        assertAll(
+                () -> verify(refreshTokenRepository).findById(user.getEmail()),
+                () -> verify(refreshTokenRepository).save(any(RefreshToken.class)),
+                () -> assertNotEquals(ACCESS_TOKEN, reissuedTokenResponse.getAccessToken()),
+                () -> assertNotEquals(REFRESH_TOKEN, reissuedTokenResponse.getRefreshToken())
+        );
+    }
+
+    @DisplayName("토큰 재발급 - 실패 / Redis에 RefreshToken이 없을 경우")
+    @Test
+    void reissue_failed_caused_by_not_exist_from_redis() throws Exception {
+
+        // given
+        User user = mockUser();
+        AuthUser authUser = AuthUser.of(user);
+        when(refreshTokenRepository.findById(user.getEmail()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(RefreshTokenNotExistException.class,
+                () -> authService.reissue(ACCESS_TOKEN, REFRESH_TOKEN, authUser));
     }
 }

@@ -1,6 +1,7 @@
 package com.cmc.meeron.auth.presentation;
 
 import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
+import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import org.junit.jupiter.api.DisplayName;
@@ -114,7 +115,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
         setUpAuthenticated();
         String accessToken = "Bearer testAccessToken";
         String refreshToken = "Bearer testRefreshToken";
-        when(authUseCase.reissue(any()))
+        when(authUseCase.reissue(any(), any(), any(AuthUser.class)))
                 .thenReturn(mockJwt());
 
         // when, then, docs

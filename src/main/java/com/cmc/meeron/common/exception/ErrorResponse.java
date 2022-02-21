@@ -20,15 +20,6 @@ public class ErrorResponse {
     private String code;
     private List<FieldError> errors;
 
-    private ErrorResponse(LocalDateTime time, int status, String message, String code) {
-        this.time = time;
-        this.status = status;
-        this.message = message;
-        this.code = code;
-        this.errors = Collections.emptyList();
-    }
-
-    // TODO: 2022/02/18 kobeomseok95 이 형태처럼 time, status, message를 외부에서 줄 이유가 없다.
     private ErrorResponse(BindingResult bindingResult) {
         this.time = LocalDateTime.now();
         this.status = HttpStatus.BAD_REQUEST.value();
@@ -37,12 +28,36 @@ public class ErrorResponse {
         this.errors = FieldError.of(bindingResult);
     }
 
-    public static ErrorResponse of(int status, String message, String code) {
-        return new ErrorResponse(LocalDateTime.now(), status, message, code);
+    private ErrorResponse(String message) {
+        this.time = LocalDateTime.now();
+        this.status = HttpStatus.BAD_REQUEST.value();
+        this.message = message;
+        this.code = "MEERON-400";
+        this.errors = Collections.emptyList();
     }
 
-    public static ErrorResponse ofBeanValidation(BindingResult bindingResult) {
+    private ErrorResponse(int status, String message, String code) {
+        this.time = LocalDateTime.now();
+        this.status = status;
+        this.message = message;
+        this.code = code;
+        this.errors = Collections.emptyList();
+    }
+
+    public static ErrorResponse fromBeanValidation(BindingResult bindingResult) {
         return new ErrorResponse(bindingResult);
+    }
+
+    public static ErrorResponse fromApplicationException(String message) {
+        return new ErrorResponse(message);
+    }
+
+    public static ErrorResponse fromUnauthorized(String message) {
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), message, "MEERON-401");
+    }
+
+    public static ErrorResponse fromForbidden(String message) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN.value(), message, "MEERON-403");
     }
 
     @Getter

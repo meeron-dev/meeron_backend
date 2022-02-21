@@ -19,7 +19,6 @@ public class AuthRestController {
 
     private final AuthUseCase authUseCase;
 
-    // TODO: 2022/02/19 kobeomseok95 email Duplicate Validator
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public TokenResponseDto login(@RequestBody @Valid LoginRequest loginRequest) {
@@ -39,7 +38,9 @@ public class AuthRestController {
 
     @PostMapping("/reissue")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponseDto reissue(@AuthenticationPrincipal AuthUser authUser) {
-        return authUseCase.reissue(authUser);
+    public TokenResponseDto reissue(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
+                                    @RequestHeader("refreshToken") String refreshToken,
+                                    @AuthenticationPrincipal AuthUser authUser) {
+        return authUseCase.reissue(accessToken, refreshToken, authUser);
     }
 }

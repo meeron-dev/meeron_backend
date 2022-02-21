@@ -29,8 +29,8 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        String json = objectMapper.writeValueAsString(ErrorResponse
-                .of(HttpStatus.FORBIDDEN.value(), MESSAGE, "MEERON-403"));
+        String json = objectMapper.writeValueAsString(
+                ErrorResponse.fromForbidden(MESSAGE));
         response.getWriter().write(json);
     }
 }

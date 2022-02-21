@@ -34,4 +34,14 @@ public class User extends BaseEntity {
     private String nickname;
 
     private String profileImageUrl;
+
+    public static User of(String email, String nickname, String provider) {
+        return User.builder()
+                .email(email)
+                .role(Role.USER)
+                .userProvider(UserProvider.valueOf(provider.toUpperCase()))
+                .name("")
+                .nickname(nickname)
+                .build();
+    }
 }

@@ -32,8 +32,8 @@ public class TokenAuthenticationErrorFilter extends OncePerRequestFilter {
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            String json = objectMapper.writeValueAsString(ErrorResponse
-                    .of(HttpStatus.UNAUTHORIZED.value(), tokenAuthenticationException.getMessage(), "MEERON-401"));
+            String json = objectMapper.writeValueAsString(
+                    ErrorResponse.fromUnauthorized(tokenAuthenticationException.getMessage()));
             response.getWriter().write(json);
         }
     }

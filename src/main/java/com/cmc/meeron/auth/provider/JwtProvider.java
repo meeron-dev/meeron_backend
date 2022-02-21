@@ -17,6 +17,7 @@ public class JwtProvider {
     private final String SECRET_KEY;
     private final long ACCESS_TOKEN_EXPIRATION_MILLISECONDS;
     private final long REFRESH_TOKEN_EXPIRATION_MILLISECONDS;
+    private final long REFRESH_TOKEN_VALID_MILLISECONDS;
     private final String BEARER = "Bearer ";
     private final String USER_ID = "userId";
     private final String USER_PROVIDER = "provider";
@@ -24,10 +25,12 @@ public class JwtProvider {
 
     public JwtProvider(@Value("${jwt.secret-key}") String secretKey,
                        @Value("${jwt.access-expiration-time}") long accessTokenExpirationMilliseconds,
-                       @Value("${jwt.refresh-expiration-time}") long refreshTokenExpirationMilliSeconds) {
+                       @Value("${jwt.refresh-expiration-time}") long refreshTokenExpirationMilliSeconds,
+                       @Value("${jwt.refresh-valid-time}") long refreshTokenValidMilliSeconds) {
         this.SECRET_KEY = secretKey;
         this.ACCESS_TOKEN_EXPIRATION_MILLISECONDS = accessTokenExpirationMilliseconds;
         this.REFRESH_TOKEN_EXPIRATION_MILLISECONDS = refreshTokenExpirationMilliSeconds;
+        this.REFRESH_TOKEN_VALID_MILLISECONDS = refreshTokenValidMilliSeconds;
     }
 
     public String createAccessToken(AuthUser authUser) {
@@ -99,5 +102,9 @@ public class JwtProvider {
 
     public boolean isStartWithBearer(String bearerToken) {
         return bearerToken.startsWith(BEARER);
+    }
+
+    public boolean isRemainTimeOverRefreshTokenValidTime(long refreshTokenExpiration) {
+        return refreshTokenExpiration > REFRESH_TOKEN_VALID_MILLISECONDS;
     }
 }

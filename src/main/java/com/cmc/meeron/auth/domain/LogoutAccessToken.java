@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.TimeToLive;
 import javax.persistence.Id;
 import java.util.concurrent.TimeUnit;
 
-@RedisHash("logoutAccessToken")
+@RedisHash("accessToken")
 @Getter
 @AllArgsConstructor
 @Builder
