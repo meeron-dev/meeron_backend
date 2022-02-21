@@ -33,7 +33,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .email("test@naver.com")
                 .nickname("고범석")
                 .profileImageUrl("https://test.image.com/12341234")
-                .provider("KAKAO")
+                .provider("kakao")
                 .build();
         when(authUseCase.login(any()))
                 .thenReturn(mockJwt());
@@ -49,7 +49,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .andDo(restDocumentationResultHandler.document(
                         requestFields(
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("회원가입 / 로그인 할 이메일").attributes(field("constraints", "Email 형식이어야 함")),
-                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("소셜 닉네임"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("소셜 닉네임").optional(),
                                 fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("소셜 로그인할 때 프로필 이미지 URL").optional(),
                                 fieldWithPath("provider").type(JsonFieldType.STRING).description("소셜 로그인 제공자").attributes(field("constraints", "KAKAO, APPLE 만 가능"))
                         ),
@@ -74,7 +74,7 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .email(null)
                 .nickname(null)
                 .profileImageUrl("https://test.image.com/12341234")
-                .provider("")
+                .provider(null)
                 .build();
 
         // when, then, docs
@@ -82,7 +82,27 @@ class AuthRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", hasSize(3)));
+                .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+
+    @DisplayName("로그인 - 실패 / 카카오, 애플이 아닌 provider는 소셜 로그인이 제공되지 않는다.")
+    @Test
+    void login_fail_not_provider() throws Exception {
+
+        // given
+        LoginRequest request = LoginRequest.builder()
+                .email("test@naver.com")
+                .nickname(null)
+                .profileImageUrl(null)
+                .provider("naver")
+                .build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 
     @DisplayName("로그아웃 - 성공")

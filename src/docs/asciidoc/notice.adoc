@@ -1,0 +1,8 @@
+[[notice]]
+== API 변경사항
+
+[[Login]]
+=== link:auth.html[/api/login, window=_blank]
+====
+- 'nickname' 값을 필수가 아닌 선택(optional)적으로 주게 변경되었습니다.
+====

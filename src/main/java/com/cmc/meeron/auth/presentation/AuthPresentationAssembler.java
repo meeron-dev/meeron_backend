@@ -8,9 +8,9 @@ public class AuthPresentationAssembler {
     static LoginRequestDto toLoginRequestDto(LoginRequest loginRequest) {
         return LoginRequestDto.builder()
                 .email(loginRequest.getEmail())
-                .nickname(loginRequest.getNickname())
+                .nickname(loginRequest.getNickname().isBlank() ? "" : loginRequest.getNickname())
                 .profileImageUrl(loginRequest.getProfileImageUrl().isBlank() ? "" : loginRequest.getProfileImageUrl())
-                .provider(loginRequest.getProvider())
+                .provider(loginRequest.getProvider().toUpperCase())
                 .build();
     }
 }

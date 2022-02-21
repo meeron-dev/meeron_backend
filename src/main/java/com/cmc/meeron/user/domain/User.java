@@ -30,7 +30,6 @@ public class User extends BaseEntity {
 
     private String name;
 
-    @Column(nullable = false)
     private String nickname;
 
     private String profileImageUrl;
@@ -41,7 +40,7 @@ public class User extends BaseEntity {
         return User.builder()
                 .email(email)
                 .role(Role.USER)
-                .userProvider(UserProvider.valueOf(provider.toUpperCase()))
+                .userProvider(UserProvider.valueOf(provider))
                 .name("")
                 .nickname(nickname)
                 .build();
