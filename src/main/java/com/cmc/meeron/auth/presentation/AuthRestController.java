@@ -41,6 +41,6 @@ public class AuthRestController {
     public TokenResponseDto reissue(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
                                     @RequestHeader("refreshToken") String refreshToken,
                                     @AuthenticationPrincipal AuthUser authUser) {
-        return authUseCase.reissue(accessToken, refreshToken, authUser);
+        return authUseCase.reissue(removeType(accessToken), removeType(refreshToken), authUser);
     }
 }
