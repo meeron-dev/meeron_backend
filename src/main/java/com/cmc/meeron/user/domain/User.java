@@ -35,6 +35,8 @@ public class User extends BaseEntity {
 
     private String profileImageUrl;
 
+    private String contactEmail;
+
     public static User of(String email, String nickname, String provider) {
         return User.builder()
                 .email(email)
