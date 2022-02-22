@@ -2,7 +2,7 @@
 name: realized
 about: 개발 도중 알게 된 지식들을 저장하는 템플릿
 title: "[REALIZED]"
-labels: realized
+labels: ''
 assignees: kobeomseok95
 
 ---
