@@ -1,6 +1,5 @@
 package com.cmc.meeron.auth.integration;
 
-import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
 import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
 import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
@@ -19,12 +18,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthIntegrationTest extends IntegrationTest {
@@ -111,19 +110,12 @@ public class AuthIntegrationTest extends IntegrationTest {
         String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(user));
 
         // when
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/reissue")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/reissue")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .header("refreshToken", refreshToken))
-                .andExpect(status().isOk())
-                .andReturn();
-        TokenResponseDto response = objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                TokenResponseDto.class);
+                .andExpect(status().isOk());
 
         // then
-        assertAll(
-                () -> assertEquals(refreshToken.substring(7), response.getRefreshToken()),
-                () -> assertTrue(refreshTokenRepository.existsById(user.getEmail()))
-        );
+        assertTrue(refreshTokenRepository.existsById(user.getEmail()));
     }
 }
