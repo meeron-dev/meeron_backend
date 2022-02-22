@@ -22,7 +22,7 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Build With Gradle
-        run: ./gradlew clean build --debug -Pjasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+        run: ./gradlew clean build -Pjasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
       - name: Make Directory for Deliver
         run: mkdir deploy
       - name: Copy Jar
