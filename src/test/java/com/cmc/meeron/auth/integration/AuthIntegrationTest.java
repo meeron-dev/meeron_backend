@@ -35,8 +35,6 @@ public class AuthIntegrationTest extends IntegrationTest {
     @Autowired LogoutAccessTokenRepository logoutAccessTokenRepository;
     @Autowired LogoutRefreshTokenRepository logoutRefreshTokenRepository;
 
-    private User mockUser;
-
     private User createMockUser() {
         return User.of("test@naver.com", "test", "KAKAO");
     }
@@ -81,9 +79,9 @@ public class AuthIntegrationTest extends IntegrationTest {
     void logout_success() throws Exception {
 
         // given
-        setUpMockUser();
-        String accessToken = "Bearer " + jwtProvider.createAccessToken(AuthUser.of(mockUser));
-        String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(mockUser));
+        User user = setUpMockUser();
+        String accessToken = "Bearer " + jwtProvider.createAccessToken(AuthUser.of(user));
+        String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(user));
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/logout")
@@ -98,9 +96,8 @@ public class AuthIntegrationTest extends IntegrationTest {
         );
     }
 
-    private void setUpMockUser() {
-        mockUser = createMockUser();
-        userRepository.save(mockUser);
+    private User setUpMockUser() {
+        return userRepository.save(createMockUser());
     }
 
     @WithMockJwt
@@ -109,9 +106,9 @@ public class AuthIntegrationTest extends IntegrationTest {
     void reissue_success() throws Exception {
 
         // given
-        setUpMockUser();
-        String accessToken = "Bearer " + jwtProvider.createAccessToken(AuthUser.of(mockUser));
-        String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(mockUser));
+        User user = setUpMockUser();
+        String accessToken = "Bearer " + jwtProvider.createAccessToken(AuthUser.of(user));
+        String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(user));
 
         // when
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/reissue")
@@ -127,7 +124,7 @@ public class AuthIntegrationTest extends IntegrationTest {
         assertAll(
                 () -> assertNotEquals(accessToken.substring(7), response.getAccessToken()),
                 () -> assertEquals(refreshToken.substring(7), response.getRefreshToken()),
-                () -> assertTrue(refreshTokenRepository.existsById(mockUser.getEmail()))
+                () -> assertTrue(refreshTokenRepository.existsById(user.getEmail()))
         );
     }
 }
