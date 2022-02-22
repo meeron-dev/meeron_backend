@@ -122,7 +122,6 @@ public class AuthIntegrationTest extends IntegrationTest {
 
         // then
         assertAll(
-                () -> assertNotEquals(accessToken.substring(7), response.getAccessToken()),
                 () -> assertEquals(refreshToken.substring(7), response.getRefreshToken()),
                 () -> assertTrue(refreshTokenRepository.existsById(user.getEmail()))
         );
