@@ -1,6 +1,6 @@
 package com.cmc.meeron.auth.integration;
 
-import com.cmc.meeron.auth.domain.AuthUser;
+import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
 import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
 import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
 import com.cmc.meeron.auth.domain.repository.RefreshTokenRepository;
@@ -78,25 +78,39 @@ public class AuthIntegrationTest extends IntegrationTest {
     void logout_success() throws Exception {
 
         // given
-        User user = setUpMockUser();
-        String accessToken = "Bearer " + jwtProvider.createAccessToken(AuthUser.of(user));
-        String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(user));
+        setUpMockUser();
+        TokenResponseDto login = login();
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/logout")
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .header("refreshToken", refreshToken))
+                .header(HttpHeaders.AUTHORIZATION, login.getType() + " " + login.getAccessToken())
+                .header("refreshToken", login.getType() + " " + login.getRefreshToken()))
                 .andExpect(status().isNoContent());
 
         // then
         assertAll(
-                () -> assertTrue(logoutAccessTokenRepository.existsById(accessToken.substring(7))),
-                () -> assertTrue(logoutRefreshTokenRepository.existsById(refreshToken.substring(7)))
+                () -> assertTrue(logoutAccessTokenRepository.existsById(login.getAccessToken())),
+                () -> assertTrue(logoutRefreshTokenRepository.existsById(login.getRefreshToken()))
         );
     }
 
     private User setUpMockUser() {
         return userRepository.save(createMockUser());
+    }
+
+    private TokenResponseDto login() throws Exception {
+        String content = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(LoginRequest.builder()
+                        .email("test@naver.com")
+                        .nickname("고범석")
+                        .profileImageUrl("https://test.image.com/12341234")
+                        .provider("kakao")
+                        .build())))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        return objectMapper.readValue(content, TokenResponseDto.class);
     }
 
     @WithMockJwt
@@ -106,13 +120,12 @@ public class AuthIntegrationTest extends IntegrationTest {
 
         // given
         User user = setUpMockUser();
-        String accessToken = "Bearer " + jwtProvider.createAccessToken(AuthUser.of(user));
-        String refreshToken = "Bearer " + jwtProvider.createRefreshToken(AuthUser.of(user));
+        TokenResponseDto login = login();
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/reissue")
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .header("refreshToken", refreshToken))
+                .header(HttpHeaders.AUTHORIZATION, login.getType() + " " + login.getAccessToken())
+                .header("refreshToken", login.getType() + " " + login.getRefreshToken()))
                 .andExpect(status().isOk());
 
         // then
