@@ -1,4 +1,4 @@
-package com.cmc.meeron.support;
+package com.cmc.meeron.support.security;
 
 import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;

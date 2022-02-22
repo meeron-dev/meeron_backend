@@ -4,7 +4,7 @@ import com.cmc.meeron.HealthRestController;
 import com.cmc.meeron.auth.application.AuthUseCase;
 import com.cmc.meeron.auth.presentation.AuthRestController;
 import com.cmc.meeron.config.RestDocsConfig;
-import com.cmc.meeron.support.SecuritySupport;
+import com.cmc.meeron.support.security.SecuritySupport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
