@@ -1,12 +1,11 @@
 package com.cmc.meeron.user.domain.repository;
 
 import com.cmc.meeron.user.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository {
+interface UserJpaRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
-
-    User save(User user);
 }

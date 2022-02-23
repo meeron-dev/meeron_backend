@@ -1,0 +1,18 @@
+= 회의 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+== 오늘의 회의 조회
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/response-fields.adoc[]
+
+=== 워크스페이스 ID, 워크스페이스 유저 ID를 주지 않을 경우
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_fail_required_workspace_workspace_user_id/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/today_meetings_list_fail_required_workspace_workspace_user_id/http-response.adoc[]

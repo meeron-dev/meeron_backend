@@ -6,9 +6,7 @@ import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.domain.LogoutAccessToken;
 import com.cmc.meeron.auth.domain.LogoutRefreshToken;
 import com.cmc.meeron.auth.domain.RefreshToken;
-import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
-import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
-import com.cmc.meeron.auth.domain.repository.RefreshTokenRepository;
+import com.cmc.meeron.auth.domain.repository.TokenRepository;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.user.domain.Role;
@@ -38,9 +36,7 @@ class AuthServiceTest {
 
     @Mock UserRepository userRepository;
     @Mock JwtProvider jwtProvider;
-    @Mock LogoutAccessTokenRepository logoutAccessTokenRepository;
-    @Mock LogoutRefreshTokenRepository logoutRefreshTokenRepository;
-    @Mock RefreshTokenRepository refreshTokenRepository;
+    @Mock TokenRepository tokenRepository;
     @InjectMocks AuthService authService;
 
     @DisplayName("로그인 - 성공 / 회원가입이 되지 않은 유저일 경우")
@@ -60,7 +56,7 @@ class AuthServiceTest {
         // then
         assertAll(
                 () -> verify(userRepository).save(any(User.class)),
-                () -> verify(refreshTokenRepository).save(any(RefreshToken.class)),
+                () -> verify(tokenRepository).saveRefreshToken(any(RefreshToken.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
         );
@@ -127,8 +123,8 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(logoutAccessTokenRepository).save(any(LogoutAccessToken.class)),
-                () -> verify(logoutRefreshTokenRepository).save(any(LogoutRefreshToken.class))
+                () -> verify(tokenRepository).saveLogoutAccessToken(any(LogoutAccessToken.class)),
+                () -> verify(tokenRepository).saveLogoutRefreshToken(any(LogoutRefreshToken.class))
         );
     }
 
@@ -150,14 +146,14 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(refreshTokenRepository).findById(user.getEmail()),
+                () -> verify(tokenRepository).findRefreshTokenByUsername(user.getEmail()),
                 () -> assertNotEquals(ACCESS_TOKEN, reissuedTokenResponse.getAccessToken()),
                 () -> assertEquals(REFRESH_TOKEN, reissuedTokenResponse.getRefreshToken())
         );
     }
 
     private void mockFindRefreshTokenByUsername(User user, RefreshToken refreshToken) {
-        when(refreshTokenRepository.findById(user.getEmail()))
+        when(tokenRepository.findRefreshTokenByUsername(user.getEmail()))
                 .thenReturn(Optional.of(refreshToken));
     }
 
@@ -180,8 +176,8 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(refreshTokenRepository).findById(user.getEmail()),
-                () -> verify(refreshTokenRepository).save(any(RefreshToken.class)),
+                () -> verify(tokenRepository).findRefreshTokenByUsername(user.getEmail()),
+                () -> verify(tokenRepository).saveRefreshToken(any(RefreshToken.class)),
                 () -> assertNotEquals(ACCESS_TOKEN, reissuedTokenResponse.getAccessToken()),
                 () -> assertNotEquals(REFRESH_TOKEN, reissuedTokenResponse.getRefreshToken())
         );
@@ -194,7 +190,7 @@ class AuthServiceTest {
         // given
         User user = mockUser();
         AuthUser authUser = AuthUser.of(user);
-        when(refreshTokenRepository.findById(user.getEmail()))
+        when(tokenRepository.findRefreshTokenByUsername(user.getEmail()))
                 .thenReturn(Optional.empty());
 
         // when, then

@@ -6,9 +6,7 @@ import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.auth.domain.LogoutAccessToken;
 import com.cmc.meeron.auth.domain.LogoutRefreshToken;
 import com.cmc.meeron.auth.domain.RefreshToken;
-import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
-import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
-import com.cmc.meeron.auth.domain.repository.RefreshTokenRepository;
+import com.cmc.meeron.auth.domain.repository.TokenRepository;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.user.domain.User;
@@ -20,13 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-class AuthService implements AuthUseCase{
+class AuthService implements AuthUseCase {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
-    private final LogoutAccessTokenRepository logoutAccessTokenRepository;
-    private final LogoutRefreshTokenRepository logoutRefreshTokenRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
@@ -43,7 +39,7 @@ class AuthService implements AuthUseCase{
 
     private String createAndSaveRefreshToken(AuthUser authUser) {
         String refreshToken = jwtProvider.createRefreshToken(authUser);
-        refreshTokenRepository.save(
+        tokenRepository.saveRefreshToken(
                 RefreshToken.of(authUser.getUsername(),
                         refreshToken,
                         jwtProvider.getRemainingMilliSecondsFromToken(refreshToken)));
@@ -57,13 +53,13 @@ class AuthService implements AuthUseCase{
         LogoutRefreshToken logoutRefreshToken =
                 LogoutRefreshToken.of(refreshToken, jwtProvider.getRemainingMilliSecondsFromToken(refreshToken));
 
-        logoutAccessTokenRepository.save(logoutAccessToken);
-        logoutRefreshTokenRepository.save(logoutRefreshToken);
+        tokenRepository.saveLogoutAccessToken(logoutAccessToken);
+        tokenRepository.saveLogoutRefreshToken(logoutRefreshToken);
     }
 
     @Override
     public TokenResponseDto reissue(String accessToken, String refreshToken, AuthUser authUser) {
-        RefreshToken redisRefreshToken = refreshTokenRepository.findById(authUser.getUsername())
+        RefreshToken redisRefreshToken = tokenRepository.findRefreshTokenByUsername(authUser.getUsername())
                 .orElseThrow(RefreshTokenNotExistException::new);
         if (jwtProvider.isRemainTimeOverRefreshTokenValidTime(redisRefreshToken.getExpiration())) {
             return TokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken);

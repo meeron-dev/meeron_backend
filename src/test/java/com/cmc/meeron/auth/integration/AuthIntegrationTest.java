@@ -1,9 +1,7 @@
 package com.cmc.meeron.auth.integration;
 
 import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
-import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
-import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
-import com.cmc.meeron.auth.domain.repository.RefreshTokenRepository;
+import com.cmc.meeron.auth.domain.repository.TokenRepository;
 import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.support.IntegrationTest;
@@ -29,10 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthIntegrationTest extends IntegrationTest {
 
     @Autowired UserRepository userRepository;
-    @Autowired RefreshTokenRepository refreshTokenRepository;
+    @Autowired TokenRepository tokenRepository;
     @Autowired JwtProvider jwtProvider;
-    @Autowired LogoutAccessTokenRepository logoutAccessTokenRepository;
-    @Autowired LogoutRefreshTokenRepository logoutRefreshTokenRepository;
 
     private User createMockUser() {
         return User.of("test@naver.com", "test", "KAKAO");
@@ -51,7 +47,7 @@ public class AuthIntegrationTest extends IntegrationTest {
 
         assertAll(
                 () -> assertTrue(userRepository.findByEmail(request.getEmail()).isPresent()),
-                () -> assertTrue(refreshTokenRepository.existsById(request.getEmail()))
+                () -> assertTrue(tokenRepository.existsRefreshTokenByUsername(request.getEmail()))
         );
     }
 
@@ -89,8 +85,8 @@ public class AuthIntegrationTest extends IntegrationTest {
 
         // then
         assertAll(
-                () -> assertTrue(logoutAccessTokenRepository.existsById(login.getAccessToken())),
-                () -> assertTrue(logoutRefreshTokenRepository.existsById(login.getRefreshToken()))
+                () -> assertTrue(tokenRepository.existsLogoutAccessTokenById(login.getAccessToken())),
+                () -> assertTrue(tokenRepository.existsLogoutRefreshTokenById(login.getRefreshToken()))
         );
     }
 
@@ -129,6 +125,6 @@ public class AuthIntegrationTest extends IntegrationTest {
                 .andExpect(status().isOk());
 
         // then
-        assertTrue(refreshTokenRepository.existsById(user.getEmail()));
+        assertTrue(tokenRepository.existsRefreshTokenByUsername(user.getEmail()));
     }
 }

@@ -1,7 +1,6 @@
 package com.cmc.meeron.auth.filter;
 
-import com.cmc.meeron.auth.domain.repository.LogoutAccessTokenRepository;
-import com.cmc.meeron.auth.domain.repository.LogoutRefreshTokenRepository;
+import com.cmc.meeron.auth.domain.repository.TokenRepository;
 import com.cmc.meeron.auth.handler.CustomUserDetailsService;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.common.exception.auth.TokenAuthenticationException;
@@ -28,8 +27,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtProvider jwtProvider;
-    private final LogoutAccessTokenRepository logoutAccessTokenRepository;
-    private final LogoutRefreshTokenRepository logoutRefreshTokenRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -58,7 +56,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private boolean isValid(String jwt) {
         return StringUtils.hasText(jwt)
                 && jwtProvider.validateToken(jwt)
-                && !logoutAccessTokenRepository.existsById(jwt)
-                && !logoutRefreshTokenRepository.existsById(jwt);
+                && !tokenRepository.existsLogoutAccessTokenById(jwt)
+                && !tokenRepository.existsLogoutRefreshTokenById(jwt);
     }
 }

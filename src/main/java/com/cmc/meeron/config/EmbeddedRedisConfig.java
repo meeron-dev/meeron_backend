@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
-@Profile({"local", "dev"})
+@Profile({"local", "dev", "test"})
 @Configuration
 public class EmbeddedRedisConfig implements InitializingBean, DisposableBean {
 
