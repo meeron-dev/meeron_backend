@@ -1,0 +1,31 @@
+= 유저 관련 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+== 유저 정보 조회
+include::{snippets}/user-rest-controller-test/get_me_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/get_me_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/get_me_success/http-response.adoc[]
+include::{snippets}/user-rest-controller-test/get_me_success/response-fields.adoc[]
+
+== 유저의 모든 '워크스페이스 유저' 조회
+include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/path-parameters.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/http-response.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/response-fields.adoc[]
+
+== 유저의 모든 '워크스페이스 유저' 중 하나 조회
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/path-parameters.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/http-response.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/response-fields.adoc[]
+
+=== 워크스페이스 유저가 존재하지 않을 경우
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-response.adoc[]

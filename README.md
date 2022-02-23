@@ -1,5 +1,5 @@
 ### 과제
-- [ ] 테스트용 데이터 추가
+- [ ] 테스트용 데이터 추가 및 통합 테스트 진행 (user, meeting)
 - [ ] Soft Delete
 - [ ] Elastic Beanstalk 환경으로 개선
 - [ ] 푸시 알림

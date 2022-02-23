@@ -36,6 +36,8 @@ public class User extends BaseEntity {
 
     private String contactEmail;
 
+    private String phone;
+
     public static User of(String email, String nickname, String provider) {
         return User.builder()
                 .email(email)

@@ -15,7 +15,8 @@ interface MeetingJpaRepository extends JpaRepository<Meeting, Long> {
             " from Meeting m join fetch m.attendees.values a" +
             " where m.workspace.id = :workspaceId" +
             " and a.workspaceUser.id = :workspaceUserId" +
-            " and m.startDate = :todayDate"
+            " and m.startDate = :todayDate" +
+            " order by m.startDate asc"
     )
     List<Meeting> findTodayMeetings(@Param("workspaceId") Long workspaceId,
                                     @Param("workspaceUserId") Long workspaceUserId,

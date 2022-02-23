@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>MEERON API</title>
+<title>유저 관련 API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -439,125 +439,55 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>MEERON API</h1>
+<h1>유저 관련 API</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#overview">Overview</a>
+<li><a href="#_유저_정보_조회">유저 정보 조회</a></li>
+<li><a href="#_유저의_모든_워크스페이스_유저_조회">유저의 모든 '워크스페이스 유저' 조회</a></li>
+<li><a href="#_유저의_모든_워크스페이스_유저_중_하나_조회">유저의 모든 '워크스페이스 유저' 중 하나 조회</a>
 <ul class="sectlevel2">
-<li><a href="#overview-host">호스트</a></li>
-<li><a href="#overview-http-status-codes">HTTP 상태 코드</a></li>
-<li><a href="#not-authenticated-user">인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우</a></li>
+<li><a href="#_워크스페이스_유저가_존재하지_않을_경우">워크스페이스 유저가 존재하지 않을 경우</a></li>
 </ul>
 </li>
-<li><a href="#notice">API 변경사항</a>
-<ul class="sectlevel2">
-<li><a href="#Login">/api/login</a></li>
-</ul>
-</li>
-<li><a href="#_인증로그인_로그아웃_토큰_재발급_관련_api">인증(로그인, 로그아웃, 토큰 재발급) 관련 API</a></li>
-<li><a href="#_회의_관련_api">회의 관련 API</a></li>
-<li><a href="#_유저_관련_api">유저 관련 API</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="overview"><a class="link" href="#overview">Overview</a></h2>
+<h2 id="_유저_정보_조회"><a class="link" href="#_유저_정보_조회">유저 정보 조회</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="overview-host"><a class="link" href="#overview-host">호스트</a></h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">환경</th>
-<th class="tableblock halign-left valign-top">Host</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dev</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dev.meeron.net</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Production</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">prod.meeron.net</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="overview-http-status-codes"><a class="link" href="#overview-http-status-codes">HTTP 상태 코드</a></h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">상태 코드</th>
-<th class="tableblock halign-left valign-top">설명</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>200 OK</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">성공</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>201 Created</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">정상적으로 컨텐츠가 생성되었을 경우</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>204 No Content</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">반환 값이 없는 경우</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>400 Bad Request</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">잘못된 요청</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>401 Unauthorized</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">비인증 상태</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>403 Forbidden</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">권한 거부</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>404 Not Found</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">존재하지 않는 요청 리소스</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>405 Method Not Allowed</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">API는 존재하나 Method가 존재하지 않는 경우</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>500 Internal Server Error</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">서버 에러</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="not-authenticated-user"><a class="link" href="#not-authenticated-user">인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/health/authenticated HTTP/1.1
-Authorization: Bearer ex
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/me HTTP/1.1
+Authorization: Bearer testAccessToken
 Host: dev.meeron.net</code></pre>
 </div>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT Access Token</p></td>
+</tr>
+</tbody>
+</table>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -566,13 +496,336 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 151
+Content-Length: 199
 
 {
-  "time" : "2022-02-24T00:11:42.751097",
-  "status" : 401,
-  "message" : "인증에 실패했습니다.",
-  "code" : "MEERON-401",
+  "userId" : 1,
+  "loginEmail" : "test@gmail.com",
+  "contactEmail" : "test@naver.com",
+  "name" : "테스트",
+  "profileImageUrl" : "https://test.images.com/12341234",
+  "phone" : "01023412341"
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>loginEmail</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">소셜 로그인 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contactEmail</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">연락 메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 이름</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileImageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 프로필 이미지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 휴대전화번호</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_유저의_모든_워크스페이스_유저_조회"><a class="link" href="#_유저의_모든_워크스페이스_유저_조회">유저의 모든 '워크스페이스 유저' 조회</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/1/workspace-users HTTP/1.1
+Authorization: Bearer testAccessToken
+Host: dev.meeron.net</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT Access Token</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /api/users/{userId}/workspace-users</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>userId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저 ID</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 457
+
+{
+  "myWorkspaceUsers" : [ {
+    "workspaceUserId" : 1,
+    "workspaceId" : 1,
+    "nickname" : "테스트닉네임1",
+    "profileImageUrl" : "https://test.images.com/12341234",
+    "position" : "대리",
+    "workspaceAdmin" : false
+  }, {
+    "workspaceUserId" : 2,
+    "workspaceId" : 1,
+    "nickname" : "테스트닉네임2",
+    "profileImageUrl" : "https://test.images.com/12341235",
+    "position" : "매니저",
+    "workspaceAdmin" : true
+  } ]
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].workspaceUserId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저의 워크스페이스 유저 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].workspaceId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저가 속한 워크스페이스 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].workspaceAdmin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저의 관리자 유무</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].nickname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].profileImageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 프로필 이미지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].position</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 직책</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_유저의_모든_워크스페이스_유저_중_하나_조회"><a class="link" href="#_유저의_모든_워크스페이스_유저_중_하나_조회">유저의 모든 '워크스페이스 유저' 중 하나 조회</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/1 HTTP/1.1
+Authorization: Bearer testAccessToken
+Host: dev.meeron.net</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT Access Token</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. /api/workspace-users/{workspaceUserId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUserId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 ID</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 195
+
+{
+  "workspaceUserId" : 1,
+  "workspaceId" : 1,
+  "nickname" : "테스트닉네임",
+  "profileImageUrl" : "https://test.images.com/12341",
+  "position" : "관리자",
+  "workspaceAdmin" : true
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUserId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">유저의 워크스페이스 유저 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저가 속한 워크스페이스 ID</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceAdmin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저의 관리자 유무</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 닉네임</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileImageUrl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 프로필 이미지 URL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>position</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 직책</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_워크스페이스_유저가_존재하지_않을_경우"><a class="link" href="#_워크스페이스_유저가_존재하지_않을_경우">워크스페이스 유저가 존재하지 않을 경우</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/1 HTTP/1.1
+Authorization: Bearer testAccessToken
+Host: dev.meeron.net</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 174
+
+{
+  "time" : "2022-02-24T00:11:49.485769",
+  "status" : 400,
+  "message" : "워크스페이스 유저를 찾지 못했습니다.",
+  "code" : "MEERON-400",
   "errors" : [ ]
 }</code></pre>
 </div>
@@ -580,66 +833,11 @@ Content-Length: 151
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="notice"><a class="link" href="#notice">API 변경사항</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="Login"><a class="link" href="#Login"><a href="auth.html" target="_blank" rel="noopener">/api/login</a></a></h3>
-<div class="exampleblock">
-<div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p>'nickname' 값을 필수가 아닌 선택(optional)적으로 주게 변경되었습니다.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_인증로그인_로그아웃_토큰_재발급_관련_api"><a class="link" href="#_인증로그인_로그아웃_토큰_재발급_관련_api">인증(로그인, 로그아웃, 토큰 재발급) 관련 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="auth.html" target="_blank" rel="noopener">Auth API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_회의_관련_api"><a class="link" href="#_회의_관련_api">회의 관련 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="meeting.html" target="_blank" rel="noopener">Meeting API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_유저_관련_api"><a class="link" href="#_유저_관련_api">유저 관련 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="user.html" target="_blank" rel="noopener">Meeting API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-02-24 00:03:51 +0900
+Last updated 2022-02-24 00:11:33 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

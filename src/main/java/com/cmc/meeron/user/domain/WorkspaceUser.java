@@ -29,8 +29,11 @@ public class WorkspaceUser extends BaseEntity {
     @Column(length = 20, nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
     private boolean workspaceAdmin;
 
     @Column(length = 20)
     private String position;
+
+    private String profileImageUrl;
 }
