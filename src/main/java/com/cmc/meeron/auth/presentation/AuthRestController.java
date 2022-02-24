@@ -38,9 +38,8 @@ public class AuthRestController {
 
     @PostMapping("/reissue")
     @ResponseStatus(HttpStatus.OK)
-    public TokenResponseDto reissue(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-                                    @RequestHeader("refreshToken") String refreshToken,
+    public TokenResponseDto reissue(@RequestHeader(HttpHeaders.AUTHORIZATION) String refreshToken,
                                     @AuthenticationPrincipal AuthUser authUser) {
-        return authUseCase.reissue(removeType(accessToken), removeType(refreshToken), authUser);
+        return authUseCase.reissue(removeType(refreshToken), authUser);
     }
 }

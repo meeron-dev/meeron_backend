@@ -142,12 +142,11 @@ class AuthServiceTest {
         when(jwtProvider.createAccessToken(any())).thenReturn(RENEWAL_ACCESS_TOKEN);
 
         // when
-        TokenResponseDto reissuedTokenResponse = authService.reissue(ACCESS_TOKEN, REFRESH_TOKEN, authUser);
+        TokenResponseDto reissuedTokenResponse = authService.reissue(REFRESH_TOKEN, authUser);
 
         // then
         assertAll(
                 () -> verify(tokenRepository).findRefreshTokenByUsername(user.getEmail()),
-                () -> assertNotEquals(ACCESS_TOKEN, reissuedTokenResponse.getAccessToken()),
                 () -> assertEquals(REFRESH_TOKEN, reissuedTokenResponse.getRefreshToken())
         );
     }
@@ -172,13 +171,12 @@ class AuthServiceTest {
         when(jwtProvider.createRefreshToken(any())).thenReturn(RENEWAL_REFRESH_TOKEN);
 
         // when
-        TokenResponseDto reissuedTokenResponse = authService.reissue(ACCESS_TOKEN, REFRESH_TOKEN, authUser);
+        TokenResponseDto reissuedTokenResponse = authService.reissue(REFRESH_TOKEN, authUser);
 
         // then
         assertAll(
                 () -> verify(tokenRepository).findRefreshTokenByUsername(user.getEmail()),
                 () -> verify(tokenRepository).saveRefreshToken(any(RefreshToken.class)),
-                () -> assertNotEquals(ACCESS_TOKEN, reissuedTokenResponse.getAccessToken()),
                 () -> assertNotEquals(REFRESH_TOKEN, reissuedTokenResponse.getRefreshToken())
         );
     }
@@ -195,6 +193,6 @@ class AuthServiceTest {
 
         // when, then
         assertThrows(RefreshTokenNotExistException.class,
-                () -> authService.reissue(ACCESS_TOKEN, REFRESH_TOKEN, authUser));
+                () -> authService.reissue(REFRESH_TOKEN, authUser));
     }
 }

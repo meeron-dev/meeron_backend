@@ -5,7 +5,6 @@ import com.cmc.meeron.auth.domain.repository.TokenRepository;
 import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.support.IntegrationTest;
-import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthIntegrationTest extends IntegrationTest {
@@ -29,10 +27,6 @@ public class AuthIntegrationTest extends IntegrationTest {
     @Autowired UserRepository userRepository;
     @Autowired TokenRepository tokenRepository;
     @Autowired JwtProvider jwtProvider;
-
-    private User createMockUser() {
-        return User.of("test@naver.com", "test", "KAKAO");
-    }
 
     @DisplayName("로그인 - 성공 / 카카오, 애플 로그인")
     @ParameterizedTest
@@ -53,12 +47,7 @@ public class AuthIntegrationTest extends IntegrationTest {
 
     private static Stream<Arguments> provideLoginUser() {
         return Stream.of(
-                Arguments.of(LoginRequest.builder()
-                        .email("test@naver.com")
-                        .nickname("고범석")
-                        .profileImageUrl("https://test.image.com/12341234")
-                        .provider("kakao")
-                        .build()),
+                Arguments.of(createLoginRequest()),
                 Arguments.of(LoginRequest.builder()
                         .email("test@apple.com")
                         .nickname(null)
@@ -68,63 +57,79 @@ public class AuthIntegrationTest extends IntegrationTest {
         );
     }
 
-    @WithMockJwt
+    private static LoginRequest createLoginRequest() {
+        return LoginRequest.builder()
+                .email("test@naver.com")
+                .nickname("고범석")
+                .profileImageUrl("https://test.image.com/12341234")
+                .provider("KAKAO")
+                .build();
+    }
+
     @DisplayName("로그아웃 - 성공")
     @Test
     void logout_success() throws Exception {
 
         // given
-        setUpMockUser();
-        TokenResponseDto login = login();
+        LoginRequest loginRequest = createLoginRequest();
+        setUpMockUser(loginRequest);
+        TokenResponseDto loggedIn = login(loginRequest);
 
         // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/logout")
-                .header(HttpHeaders.AUTHORIZATION, login.getType() + " " + login.getAccessToken())
-                .header("refreshToken", login.getType() + " " + login.getRefreshToken()))
+                .header(HttpHeaders.AUTHORIZATION, loggedIn.getType() + " " + loggedIn.getAccessToken())
+                .header("refreshToken", loggedIn.getType() + " " + loggedIn.getRefreshToken()))
                 .andExpect(status().isNoContent());
 
         // then
         assertAll(
-                () -> assertTrue(tokenRepository.existsLogoutAccessTokenById(login.getAccessToken())),
-                () -> assertTrue(tokenRepository.existsLogoutRefreshTokenById(login.getRefreshToken()))
+                () -> assertTrue(tokenRepository.existsLogoutAccessTokenById(loggedIn.getAccessToken())),
+                () -> assertTrue(tokenRepository.existsLogoutRefreshTokenById(loggedIn.getRefreshToken()))
         );
     }
 
-    private User setUpMockUser() {
-        return userRepository.save(createMockUser());
+    private User setUpMockUser(LoginRequest loginRequest) {
+        return userRepository.save(createMockUser(loginRequest));
     }
 
-    private TokenResponseDto login() throws Exception {
+    private User createMockUser(LoginRequest loginRequest) {
+        return User.of(loginRequest.getEmail(),
+                loginRequest.getNickname(),
+                loginRequest.getProvider());
+    }
+
+    private TokenResponseDto login(LoginRequest loginRequest) throws Exception {
         String content = mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(LoginRequest.builder()
-                        .email("test@naver.com")
-                        .nickname("고범석")
-                        .profileImageUrl("https://test.image.com/12341234")
-                        .provider("kakao")
-                        .build())))
+                .content(objectMapper.writeValueAsString(loginRequest)))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         return objectMapper.readValue(content, TokenResponseDto.class);
     }
 
-    @WithMockJwt
     @DisplayName("토큰 재발급 - 성공")
     @Test
     void reissue_success() throws Exception {
 
         // given
-        User user = setUpMockUser();
-        TokenResponseDto login = login();
+        LoginRequest loginRequest = createLoginRequest();
+        User user = setUpMockUser(loginRequest);
+        TokenResponseDto loggedIn = login(loginRequest);
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/reissue")
-                .header(HttpHeaders.AUTHORIZATION, login.getType() + " " + login.getAccessToken())
-                .header("refreshToken", login.getType() + " " + login.getRefreshToken()))
-                .andExpect(status().isOk());
+        String response = mockMvc.perform(MockMvcRequestBuilders.post("/api/reissue")
+                .header(HttpHeaders.AUTHORIZATION, loggedIn.getType() + " " + loggedIn.getRefreshToken()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        TokenResponseDto responseToken = objectMapper.readValue(response, TokenResponseDto.class);
 
         // then
-        assertTrue(tokenRepository.existsRefreshTokenByUsername(user.getEmail()));
+        assertAll(
+                () -> assertTrue(tokenRepository.existsRefreshTokenByUsername(user.getEmail())),
+                () -> assertEquals(responseToken.getRefreshToken(), loggedIn.getRefreshToken())
+        );
     }
 }
