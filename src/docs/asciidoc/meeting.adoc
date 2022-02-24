@@ -6,6 +6,7 @@
 :toclevels: 4
 :sectlinks:
 
+[[today-meetings]]
 == 오늘의 회의 조회
 include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/http-request.adoc[]
 include::{snippets}/meeting-rest-controller-test/today_meetings_list_success/request-headers.adoc[]

@@ -58,14 +58,12 @@ class AuthService implements AuthUseCase {
     }
 
     @Override
-    public TokenResponseDto reissue(String accessToken, String refreshToken, AuthUser authUser) {
+    public TokenResponseDto reissue(String refreshToken, AuthUser authUser) {
         RefreshToken redisRefreshToken = tokenRepository.findRefreshTokenByUsername(authUser.getUsername())
                 .orElseThrow(RefreshTokenNotExistException::new);
         if (jwtProvider.isRemainTimeOverRefreshTokenValidTime(redisRefreshToken.getExpiration())) {
             return TokenResponseDto.of(jwtProvider.createAccessToken(authUser), refreshToken);
         }
-
-        String createdRefreshToken = createAndSaveRefreshToken(authUser);
-        return TokenResponseDto.of(jwtProvider.createAccessToken(authUser), createdRefreshToken);
+        return TokenResponseDto.of(jwtProvider.createAccessToken(authUser), createAndSaveRefreshToken(authUser));
     }
 }

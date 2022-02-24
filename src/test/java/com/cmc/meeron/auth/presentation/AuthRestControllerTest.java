@@ -133,20 +133,17 @@ class AuthRestControllerTest extends RestDocsTestSupport {
 
         // given
         setUpAuthenticated();
-        String accessToken = "Bearer testAccessToken";
         String refreshToken = "Bearer testRefreshToken";
-        when(authUseCase.reissue(any(), any(), any(AuthUser.class)))
+        when(authUseCase.reissue(any(), any(AuthUser.class)))
                 .thenReturn(mockJwt());
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/reissue")
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .header("refreshToken", refreshToken))
+                .header(HttpHeaders.AUTHORIZATION, refreshToken))
                 .andExpect(status().isOk())
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer")),
-                                headerWithName("refreshToken").description("JWT Refresh Token").attributes(field("constraints", "JWT Refresh Token With Bearer"))
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token은 만료가 되었으므로 Refresh Token을 준다.").attributes(field("constraints", "JWT Refresh Token With Bearer"))
                         ),
                         responseFields(
                                 fieldWithPath("type").type(JsonFieldType.STRING).description("토큰 타입 Bearer 고정"),

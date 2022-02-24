@@ -6,12 +6,14 @@
 :toclevels: 4
 :sectlinks:
 
+[[user]]
 == 유저 정보 조회
 include::{snippets}/user-rest-controller-test/get_me_success/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/request-headers.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/response-fields.adoc[]
 
+[[workspace-users]]
 == 유저의 모든 '워크스페이스 유저' 조회
 include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/request-headers.adoc[]
@@ -19,6 +21,7 @@ include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/pat
 include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/response-fields.adoc[]
 
+[[workspace-user]]
 == 유저의 모든 '워크스페이스 유저' 중 하나 조회
 include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/request-headers.adoc[]
