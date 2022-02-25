@@ -14,7 +14,7 @@ class UserApplicationAssembler {
                 .collect(Collectors.toList());
     }
 
-    public static MyWorkspaceUserResponseDto fromWorkspaceUser(WorkspaceUser workspaceUser) {
+    static MyWorkspaceUserResponseDto fromWorkspaceUser(WorkspaceUser workspaceUser) {
         return MyWorkspaceUserResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
                 .workspaceId(workspaceUser.getWorkspace().getId())

@@ -1,4 +1,4 @@
-= 유저 관련 API
+= 유저 API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs

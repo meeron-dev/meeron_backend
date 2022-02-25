@@ -10,6 +10,8 @@ import com.cmc.meeron.meeting.presentation.MeetingRestController;
 import com.cmc.meeron.support.security.SecuritySupport;
 import com.cmc.meeron.user.application.UserQueryUseCase;
 import com.cmc.meeron.user.presentation.UserRestController;
+import com.cmc.meeron.workspace.application.WorkspaceUseCase;
+import com.cmc.meeron.workspace.presentation.WorkspaceRestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -36,7 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         AuthRestController.class,
         GlobalExceptionHandler.class,
         MeetingRestController.class,
-        UserRestController.class
+        UserRestController.class,
+        WorkspaceRestController.class
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfig.class)
@@ -45,6 +48,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected AuthUseCase authUseCase;
     @MockBean protected MeetingUseCase meetingUseCase;
     @MockBean protected UserQueryUseCase userQueryUseCase;
+    @MockBean protected WorkspaceUseCase workspaceUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

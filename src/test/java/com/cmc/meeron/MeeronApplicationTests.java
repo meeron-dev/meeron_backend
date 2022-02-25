@@ -1,10 +1,9 @@
 package com.cmc.meeron;
 
+import com.cmc.meeron.support.IntegrationTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class MeeronApplicationTests {
+class MeeronApplicationTests extends IntegrationTest {
 
     @Test
     void contextLoads() {

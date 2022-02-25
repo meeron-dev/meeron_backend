@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>회의 관련 API</title>
+<title>회의 API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -439,7 +439,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>회의 관련 API</h1>
+<h1>회의 API</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
@@ -524,18 +524,18 @@ Content-Length: 548
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
-    "meetingDate" : "2022-02-24",
-    "startTime" : "01:00:00",
-    "endTime" : "02:00:00",
+    "meetingDate" : "2022-02-25",
+    "startTime" : "17:00:00",
+    "endTime" : "18:00:00",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
-    "meetingDate" : "2022-02-24",
-    "startTime" : "20:00:00",
-    "endTime" : "21:00:00",
+    "meetingDate" : "2022-02-25",
+    "startTime" : "12:00:00",
+    "endTime" : "13:00:00",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -619,21 +619,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 408
+Content-Length: 407
 
 {
-  "time" : "2022-02-24T23:21:54.112312",
+  "time" : "2022-02-25T15:59:55.01713",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
-    "field" : "workspaceUserId",
-    "value" : null,
-    "reason" : "워크스페이스 유저 ID를 입력해주세요."
-  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "workspaceUserId",
+    "value" : null,
+    "reason" : "워크스페이스 유저 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -645,7 +645,7 @@ Content-Length: 408
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-02-24 23:20:55 +0900
+Last updated 2022-02-25 15:50:26 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

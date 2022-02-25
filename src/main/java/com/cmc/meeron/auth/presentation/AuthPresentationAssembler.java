@@ -3,7 +3,7 @@ package com.cmc.meeron.auth.presentation;
 import com.cmc.meeron.auth.application.dto.request.LoginRequestDto;
 import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
 
-public class AuthPresentationAssembler {
+class AuthPresentationAssembler {
 
     static LoginRequestDto toLoginRequestDto(LoginRequest loginRequest) {
         return LoginRequestDto.builder()

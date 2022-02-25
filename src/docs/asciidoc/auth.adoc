@@ -1,4 +1,4 @@
-= 인증(로그인, 로그아웃, 토큰 재발급) 관련 API
+= 인증(로그인, 로그아웃, 토큰 재발급) API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs

@@ -1,4 +1,4 @@
-= 회의 관련 API
+= 회의 API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs

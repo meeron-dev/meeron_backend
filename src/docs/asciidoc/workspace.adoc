@@ -1,0 +1,27 @@
+= 워크스페이스 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[user_workspaces]]
+== 유저가 속한 워크스페이스 조회
+include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/http-request.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/path-parameters.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/request-headers.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/http-response.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/response-fields.adoc[]
+
+[[workspace]]
+== 워크스페이스 조회
+include::{snippets}/workspace-rest-controller-test/get_workspace_success/http-request.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_workspace_success/path-parameters.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_workspace_success/request-headers.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_workspace_success/http-response.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_workspace_success/response-fields.adoc[]
+
+=== 존재하지 않는 워크스페이스일 경우
+include::{snippets}/workspace-rest-controller-test/get_workspace_fail_not_found_workspace/http-request.adoc[]
+include::{snippets}/workspace-rest-controller-test/get_workspace_fail_not_found_workspace/http-response.adoc[]
