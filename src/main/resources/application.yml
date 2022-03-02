@@ -9,9 +9,9 @@ spring:
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
+#    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true

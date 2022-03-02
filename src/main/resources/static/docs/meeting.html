@@ -638,18 +638,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 408
 
 {
-  "time" : "2022-03-02T15:47:34.826107",
+  "time" : "2022-03-02T15:55:19.284048",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
-    "field" : "workspaceUserId",
-    "value" : null,
-    "reason" : "워크스페이스 유저 ID를 입력해주세요."
-  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "workspaceUserId",
+    "value" : null,
+    "reason" : "워크스페이스 유저 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -681,14 +681,18 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 576
+Content-Length: 575
 
 {
-  "time" : "2022-03-02T15:47:34.747968",
+  "time" : "2022-03-02T15:55:19.20657",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
+  }, {
     "field" : "date",
     "value" : null,
     "reason" : "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요."
@@ -696,10 +700,6 @@ Content-Length: 576
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
-  }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1025,7 +1025,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 960
 
 {
-  "time" : "2022-03-02T15:47:34.612808",
+  "time" : "2022-03-02T15:55:19.069177",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -1120,15 +1120,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "16:47",
-    "endTime" : "18:47",
+    "startTime" : "16:55",
+    "endTime" : "18:55",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "19:47",
-    "endTime" : "21:47",
+    "startTime" : "19:55",
+    "endTime" : "21:55",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1256,15 +1256,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "16:47",
-    "endTime" : "18:47",
+    "startTime" : "16:55",
+    "endTime" : "18:55",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "19:47",
-    "endTime" : "21:47",
+    "startTime" : "19:55",
+    "endTime" : "21:55",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1392,15 +1392,15 @@ Content-Length: 411
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "16:47",
-    "endTime" : "18:47",
+    "startTime" : "16:55",
+    "endTime" : "18:55",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "19:47",
-    "endTime" : "21:47",
+    "startTime" : "19:55",
+    "endTime" : "21:55",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -1460,7 +1460,7 @@ Content-Length: 411
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-02 15:47:12 +0900
+Last updated 2022-03-02 15:50:23 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
