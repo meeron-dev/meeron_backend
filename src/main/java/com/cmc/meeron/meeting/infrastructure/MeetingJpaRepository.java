@@ -1,4 +1,4 @@
-package com.cmc.meeron.meeting.domain.repository;
+package com.cmc.meeron.meeting.infrastructure;
 
 import com.cmc.meeron.meeting.domain.Meeting;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-interface MeetingJpaRepository extends JpaRepository<Meeting, Long> {
+interface MeetingJpaRepository
+        extends JpaRepository<Meeting, Long>{
 
     @Query(
             "select m" +

@@ -5,7 +5,7 @@ import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.user.application.dto.response.MeResponseDto;
 import com.cmc.meeron.user.application.dto.response.MyWorkspaceUserResponseDto;
 import com.cmc.meeron.user.domain.WorkspaceUser;
-import com.cmc.meeron.user.domain.repository.UserRepository;
+import com.cmc.meeron.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

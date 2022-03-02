@@ -1,6 +1,6 @@
 package com.cmc.meeron.auth.filter;
 
-import com.cmc.meeron.auth.domain.repository.TokenRepository;
+import com.cmc.meeron.auth.domain.TokenRepository;
 import com.cmc.meeron.auth.handler.CustomUserDetailsService;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.common.exception.auth.TokenAuthenticationException;

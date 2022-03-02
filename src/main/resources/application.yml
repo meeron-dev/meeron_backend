@@ -7,20 +7,24 @@ spring:
     password:
     driver-class-name: org.h2.Driver
   jpa:
+    open-in-view: false
     database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
         show_sql: true
-    open-in-view: false
   h2:
     console:
       enabled: true
   redis:
     port: 16379
     host: localhost
+  mvc:
+    format:
+      date: yyyy-MM-dd
 server:
   port: 8080
 jwt:
@@ -40,3 +44,9 @@ spring:
   config:
     activate:
       on-profile: dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod

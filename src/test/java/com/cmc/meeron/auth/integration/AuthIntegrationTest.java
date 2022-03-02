@@ -1,12 +1,12 @@
 package com.cmc.meeron.auth.integration;
 
 import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
-import com.cmc.meeron.auth.domain.repository.TokenRepository;
+import com.cmc.meeron.auth.domain.TokenRepository;
 import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
 import com.cmc.meeron.auth.provider.JwtProvider;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.user.domain.repository.UserRepository;
+import com.cmc.meeron.user.domain.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

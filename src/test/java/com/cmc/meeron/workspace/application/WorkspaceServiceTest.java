@@ -3,7 +3,7 @@ package com.cmc.meeron.workspace.application;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.workspace.application.dto.response.WorkspaceResponseDto;
 import com.cmc.meeron.workspace.domain.Workspace;
-import com.cmc.meeron.workspace.domain.repository.WorkspaceRepository;
+import com.cmc.meeron.workspace.domain.WorkspaceRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,4 @@
-package com.cmc.meeron.workspace.domain.repository;
-
-import com.cmc.meeron.workspace.domain.Workspace;
+package com.cmc.meeron.workspace.domain;
 
 import java.util.List;
 import java.util.Optional;

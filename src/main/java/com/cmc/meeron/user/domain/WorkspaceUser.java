@@ -26,7 +26,7 @@ public class WorkspaceUser extends BaseEntity {
     @JoinColumn(name = "WORKSPACE_ID", nullable = false)
     private Workspace workspace;
 
-    @Column(length = 20, nullable = false)
+    @Column(nullable = false, length = 20)
     private String nickname;
 
     @Column(nullable = false)
@@ -35,5 +35,6 @@ public class WorkspaceUser extends BaseEntity {
     @Column(length = 20)
     private String position;
 
+    @Column(length = 200)
     private String profileImageUrl;
 }

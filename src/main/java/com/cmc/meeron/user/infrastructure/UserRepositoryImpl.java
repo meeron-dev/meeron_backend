@@ -1,6 +1,7 @@
-package com.cmc.meeron.user.domain.repository;
+package com.cmc.meeron.user.infrastructure;
 
 import com.cmc.meeron.user.domain.User;
+import com.cmc.meeron.user.domain.UserRepository;
 import com.cmc.meeron.user.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

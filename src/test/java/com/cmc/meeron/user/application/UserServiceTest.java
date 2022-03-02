@@ -8,7 +8,7 @@ import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserProvider;
 import com.cmc.meeron.user.domain.WorkspaceUser;
-import com.cmc.meeron.user.domain.repository.UserRepository;
+import com.cmc.meeron.user.domain.UserRepository;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

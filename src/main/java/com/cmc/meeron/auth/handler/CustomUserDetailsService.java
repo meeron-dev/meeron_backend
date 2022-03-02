@@ -2,7 +2,7 @@ package com.cmc.meeron.auth.handler;
 
 import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.user.domain.repository.UserRepository;
+import com.cmc.meeron.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

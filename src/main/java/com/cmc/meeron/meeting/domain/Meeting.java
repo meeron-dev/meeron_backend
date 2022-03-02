@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
+import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.domain.Workspace;
 import lombok.*;
 
@@ -8,7 +9,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-// TODO: 2022/02/23 kobeomseok95 TEAM 객체도 참조할 것
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,7 +17,7 @@ import java.time.LocalTime;
 public class Meeting extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEETING_ID")
     private Long id;
 
@@ -25,13 +25,17 @@ public class Meeting extends BaseEntity {
     @JoinColumn(name = "WORKSPACE_ID", nullable = false)
     private Workspace workspace;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEAM_ID", nullable = false)
+    private Team team;
+
     @Embedded
     private Attendees attendees;
 
-    @Column(length = 50, nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(nullable = false, length = 100)
     private String purpose;
 
     @Column(nullable = false)
@@ -43,13 +47,13 @@ public class Meeting extends BaseEntity {
     @Column(nullable = false)
     private LocalTime endTime;
 
-    @Column(length = 200, nullable = false)
+    @Column(nullable = false, length = 200)
     private String place;
 
     @Column(nullable = false)
     private boolean privateMeeting;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private MeetingStatus meetingStatus;
 }

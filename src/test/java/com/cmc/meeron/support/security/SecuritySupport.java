@@ -1,7 +1,7 @@
 package com.cmc.meeron.support.security;
 
 import com.cmc.meeron.auth.domain.AuthUser;
-import com.cmc.meeron.auth.domain.repository.TokenRepository;
+import com.cmc.meeron.auth.domain.TokenRepository;
 import com.cmc.meeron.auth.handler.CustomUserDetailsService;
 import com.cmc.meeron.auth.handler.RestAccessDeniedHandler;
 import com.cmc.meeron.auth.handler.RestAuthenticationEntryPoint;
@@ -10,7 +10,7 @@ import com.cmc.meeron.common.exception.auth.TokenAuthenticationException;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserProvider;
-import com.cmc.meeron.user.domain.repository.UserRepository;
+import com.cmc.meeron.user.domain.UserRepository;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;

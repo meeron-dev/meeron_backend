@@ -1,4 +1,4 @@
-package com.cmc.meeron.workspace.domain.repository;
+package com.cmc.meeron.workspace.infrastructure;
 
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;

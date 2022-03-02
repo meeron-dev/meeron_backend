@@ -1,8 +1,9 @@
-package com.cmc.meeron.auth.domain.repository;
+package com.cmc.meeron.auth.infrastructure;
 
 import com.cmc.meeron.auth.domain.LogoutAccessToken;
 import com.cmc.meeron.auth.domain.LogoutRefreshToken;
 import com.cmc.meeron.auth.domain.RefreshToken;
+import com.cmc.meeron.auth.domain.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

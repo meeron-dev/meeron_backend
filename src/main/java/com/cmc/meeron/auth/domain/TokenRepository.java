@@ -1,8 +1,4 @@
-package com.cmc.meeron.auth.domain.repository;
-
-import com.cmc.meeron.auth.domain.LogoutAccessToken;
-import com.cmc.meeron.auth.domain.LogoutRefreshToken;
-import com.cmc.meeron.auth.domain.RefreshToken;
+package com.cmc.meeron.auth.domain;
 
 import java.util.Optional;
 

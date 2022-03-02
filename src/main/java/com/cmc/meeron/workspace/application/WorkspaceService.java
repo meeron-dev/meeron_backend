@@ -3,7 +3,7 @@ package com.cmc.meeron.workspace.application;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.workspace.application.dto.response.WorkspaceResponseDto;
 import com.cmc.meeron.workspace.domain.Workspace;
-import com.cmc.meeron.workspace.domain.repository.WorkspaceRepository;
+import com.cmc.meeron.workspace.domain.WorkspaceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

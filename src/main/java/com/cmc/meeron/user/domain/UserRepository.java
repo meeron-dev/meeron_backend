@@ -1,7 +1,4 @@
-package com.cmc.meeron.user.domain.repository;
-
-import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+package com.cmc.meeron.user.domain;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.cmc.meeron.user.domain.repository;
+package com.cmc.meeron.user.infrastructure;
 
 import com.cmc.meeron.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,12 +1,19 @@
 package com.cmc.meeron.meeting.presentation;
 
 import com.cmc.meeron.meeting.application.dto.response.TodayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.dto.response.WorkspaceAndTeamDayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.dto.response.WorkspaceUserDayMeetingResponseDto;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.util.LocalDateTimeUtil;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -15,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
 import static org.hamcrest.Matchers.*;
@@ -41,7 +49,7 @@ class MeetingRestControllerTest extends RestDocsTestSupport {
         params.add("workspaceId", "1");
         params.add("workspaceUserId", "1");
         List<TodayMeetingResponseDto> responseDto = createTodayMeetingResponseDto();
-        when(meetingUseCase.getTodayMeetings(any()))
+        when(meetingQueryUseCase.getTodayMeetings(any()))
                 .thenReturn(responseDto);
 
         // when, then, docs
@@ -128,5 +136,397 @@ class MeetingRestControllerTest extends RestDocsTestSupport {
                         .meetingStatus("END")
                         .build()
         );
+    }
+
+    private List<Integer> getDays() {
+        return List.of(10, 20, 15, 21);
+    }
+
+    @DisplayName("워크스페이스 캘린더에서 회의 날짜 조회 - 실패 / date(yyyy-MM)를 제대로 주지 않을 경우")
+    @ParameterizedTest
+    @MethodSource("failMeetingDaysParameters")
+    void get_workspace_meeting_days_fail_require_yearMonth(MultiValueMap<String, String> params) throws Exception {
+
+        // given, when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is("MEERON-400")))
+                .andExpect(jsonPath("$.errors", hasSize(3)));
+    }
+
+    private static Stream<Arguments> failMeetingDaysParameters() {
+        MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
+        params1.add("date", "2022-");
+        MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
+        params2.add("date", "20");
+        MultiValueMap<String, String> params3 = new LinkedMultiValueMap<>();
+        params3.add("date", "");
+        MultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
+        params4.add("date", null);
+        return Stream.of(
+                Arguments.of(params1),
+                Arguments.of(params2),
+                Arguments.of(params3),
+                Arguments.of(params4)
+        );
+    }
+
+    @DisplayName("캘린더에서 이번 달 회의 날짜 조회 - 성공 / 워크스페이스 캘린더의 경우")
+    @Test
+    void get_meeting_days_success_workspace() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("date", "2022-03");
+        params.add("type", "workspace");
+        params.add("id", "1");
+        List<Integer> days = getDays();
+        when(meetingQueryUseCase.getMeetingDays(any()))
+                .thenReturn(days);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.days", hasSize(4)))
+                .andExpect(jsonPath("$.days[0]", is(days.get(0))))
+                .andExpect(jsonPath("$.days[1]", is(days.get(1))))
+                .andExpect(jsonPath("$.days[2]", is(days.get(2))))
+                .andExpect(jsonPath("$.days[3]", is(days.get(3))))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("찾을 워크스페이스 ID 입력"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM 형식으로 입력"))
+                        ),
+                        responseFields(
+                                fieldWithPath("days[]").description("검색하는 년 월에 해당하는 회의 날짜(day)들")
+                        )
+                ));
+    }
+
+    @DisplayName("캘린더에서 이번 달 회의 날짜 조회 - 성공 / 나의 미론, 내 캘린더의 경우")
+    @Test
+    void get_meeting_days_success_workspace_user() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("date", "2022-03");
+        params.add("type", "workspace_user");
+        params.add("id", "1");
+        params.add("id", "2");
+        params.add("id", "3");
+        List<Integer> days = getDays();
+        when(meetingQueryUseCase.getMeetingDays(any()))
+                .thenReturn(days);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.days", hasSize(4)))
+                .andExpect(jsonPath("$.days[0]", is(days.get(0))))
+                .andExpect(jsonPath("$.days[1]", is(days.get(1))))
+                .andExpect(jsonPath("$.days[2]", is(days.get(2))))
+                .andExpect(jsonPath("$.days[3]", is(days.get(3))))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음")),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM 형식으로 입력"))
+                        ),
+                        responseFields(
+                                fieldWithPath("days[]").description("검색하는 년 월에 해당하는 회의 날짜(day)들")
+                        )
+                ));
+    }
+
+    @DisplayName("캘린더에서 이번 달 회의 날짜 조회 - 성공 / 팀 캘린더의 경우")
+    @Test
+    void get_meeting_days_success_workspace_team() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("date", "2022-03");
+        params.add("type", "team");
+        params.add("id", "1");
+        List<Integer> days = getDays();
+        when(meetingQueryUseCase.getMeetingDays(any()))
+                .thenReturn(days);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.days", hasSize(4)))
+                .andExpect(jsonPath("$.days[0]", is(days.get(0))))
+                .andExpect(jsonPath("$.days[1]", is(days.get(1))))
+                .andExpect(jsonPath("$.days[2]", is(days.get(2))))
+                .andExpect(jsonPath("$.days[3]", is(days.get(3))))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("팀 ID 입력"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM 형식으로 입력"))
+                        ),
+                        responseFields(
+                                fieldWithPath("days[]").description("검색하는 년 월에 해당하는 회의 날짜(day)들")
+                        )
+                ));
+    }
+
+    @DisplayName("워크스페이스 캘린더에서 선택한 날짜의 회의 조회 - 실패 / date(yyyy-MM-dd)를 제대로 주지 않을 경우")
+    @ParameterizedTest
+    @MethodSource("failDayMeetingsParameters")
+    void get_workspace_day_meetings_fail_require_localDate(MultiValueMap<String, String> params) throws Exception {
+
+        // given, when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is("MEERON-400")))
+                .andExpect(jsonPath("$.errors", hasSize(3)));
+    }
+
+    private static Stream<Arguments> failDayMeetingsParameters() {
+        MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
+        params1.add("date", "2022-");
+        MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
+        params2.add("date", "20");
+        MultiValueMap<String, String> params3 = new LinkedMultiValueMap<>();
+        params3.add("date", "");
+        MultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
+        params4.add("date", null);
+        MultiValueMap<String, String> params5 = new LinkedMultiValueMap<>();
+        params5.add("date", "2022-02");
+        MultiValueMap<String, String> params6 = new LinkedMultiValueMap<>();
+        params6.add("date", "2022-02-1");
+        return Stream.of(
+                Arguments.of(params1),
+                Arguments.of(params2),
+                Arguments.of(params3),
+                Arguments.of(params4),
+                Arguments.of(params5),
+                Arguments.of(params6)
+        );
+    }
+
+    @DisplayName("캘린더에서 선택한 날짜의 회의 조회 - 성공 / 워크스페이스의 경우")
+    @Test
+    void get_day_meetings_success_workspace() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String now = LocalDate.now().toString();
+        params.add("date", now);
+        params.add("type", "workspace");
+        params.add("id", "1");
+        List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
+        when(meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meetings", hasSize(2)))
+                .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(responseDtos.get(0).getStartTime())))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(responseDtos.get(0).getEndTime())))
+                .andExpect(jsonPath("$.meetings[0].workspaceId", nullValue()))
+                .andExpect(jsonPath("$.meetings[0].workspaceName", nullValue()))
+                .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(responseDtos.get(1).getStartTime())))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(responseDtos.get(1).getEndTime())))
+                .andExpect(jsonPath("$.meetings[1].workspaceId", nullValue()))
+                .andExpect(jsonPath("$.meetings[1].workspaceName", nullValue()))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("찾을 워크스페이스 ID 입력"),
+                                parameterWithName("date").description("찾을 년 월 일").attributes(field("constraints", "yyyy-MM-dd 형식으로 입력"))
+                        ),
+                        responseFields(
+                                fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
+                                fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
+                                fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NULL).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.NULL).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                        )
+                ));
+    }
+
+    private List<WorkspaceAndTeamDayMeetingResponseDto> getDayMeetingsWorkspaceAndTeam() {
+        LocalTime now = LocalTime.now();
+        return List.of(
+                WorkspaceAndTeamDayMeetingResponseDto.builder()
+                        .meetingId(1L)
+                        .meetingName("첫번째회의")
+                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(1)))
+                        .endTime(LocalDateTimeUtil.convertTime((now.plusHours(3))))
+                        .build(),
+                WorkspaceAndTeamDayMeetingResponseDto.builder()
+                        .meetingId(2L)
+                        .meetingName("두번째회의")
+                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(4)))
+                        .endTime(LocalDateTimeUtil.convertTime(now.plusHours(6)))
+                        .build()
+        );
+    }
+
+    @DisplayName("캘린더에서 선택한 날짜의 회의 조회 - 성공 / 나의 미론, 내 캘린더의 경우")
+    @Test
+    void get_day_meetings_success_workspace_user() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String now = LocalDate.now().toString();
+        params.add("date", now);
+        params.add("type", "workspace_user");
+        params.add("id", "1");
+        params.add("id", "2");
+        params.add("id", "3");
+        List<WorkspaceUserDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceUser();
+        when(meetingQueryUseCase.getWorkspaceUserDayMeetings(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meetings", hasSize(2)))
+                .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(responseDtos.get(0).getStartTime())))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(responseDtos.get(0).getEndTime())))
+                .andExpect(jsonPath("$.meetings[0].workspaceId", is(responseDtos.get(0).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].workspaceName", is(responseDtos.get(0).getWorkspaceName())))
+                .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(responseDtos.get(1).getStartTime())))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(responseDtos.get(1).getEndTime())))
+                .andExpect(jsonPath("$.meetings[1].workspaceId", is(responseDtos.get(1).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.meetings[1].workspaceName", is(responseDtos.get(1).getWorkspaceName())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음")),
+                                parameterWithName("date").description("찾을 년 월 일").attributes(field("constraints", "yyyy-MM-dd 형식으로 입력"))
+                        ),
+                        responseFields(
+                                fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
+                                fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
+                                fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                        )
+                ));
+    }
+
+    private List<WorkspaceUserDayMeetingResponseDto> getDayMeetingsWorkspaceUser() {
+        LocalTime now = LocalTime.now();
+        return List.of(
+                WorkspaceUserDayMeetingResponseDto.builder()
+                        .meetingId(1L)
+                        .meetingName("첫번째회의")
+                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(1)))
+                        .endTime(LocalDateTimeUtil.convertTime((now.plusHours(3))))
+                        .workspaceId(1L)
+                        .workspaceName("첫번째 워크스페이스")
+                        .build(),
+                WorkspaceUserDayMeetingResponseDto.builder()
+                        .meetingId(2L)
+                        .meetingName("두번째회의")
+                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(4)))
+                        .endTime(LocalDateTimeUtil.convertTime((now.plusHours(6))))
+                        .workspaceId(2L)
+                        .workspaceName("두번째 워크스페이스")
+                        .build()
+        );
+    }
+
+    @DisplayName("캘린더에서 선택한 날짜의 회의 조회 - 성공 / 팀의 경우")
+    @Test
+    void get_day_meetings_success_team() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String now = LocalDate.now().toString();
+        params.add("date", now);
+        params.add("type", "team");
+        params.add("id", "1");
+        List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
+        when(meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meetings", hasSize(2)))
+                .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(responseDtos.get(0).getStartTime())))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(responseDtos.get(0).getEndTime())))
+                .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(responseDtos.get(1).getStartTime())))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(responseDtos.get(1).getEndTime())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("팀 ID 입력"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM-dd 형식으로 입력"))
+                        ),
+                        responseFields(
+                                fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
+                                fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
+                                fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NULL).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.NULL).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                        )
+                ));
     }
 }
