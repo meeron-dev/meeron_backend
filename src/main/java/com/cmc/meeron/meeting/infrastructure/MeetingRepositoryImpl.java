@@ -2,10 +2,13 @@ package com.cmc.meeron.meeting.infrastructure;
 
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingRepository;
+import com.cmc.meeron.meeting.domain.dto.MonthMeetingsCountDto;
+import com.cmc.meeron.meeting.domain.dto.YearMeetingsCountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -29,5 +32,15 @@ class MeetingRepositoryImpl implements MeetingRepository {
     @Override
     public List<Meeting> findDayMeetings(String searchType, List<Long> searchIds, LocalDate date) {
         return meetingQuerydslRepository.findDayMeetings(searchType, searchIds, date);
+    }
+
+    @Override
+    public List<YearMeetingsCountDto> findYearMeetingsCount(String searchType, List<Long> searchIds) {
+        return meetingQuerydslRepository.findYearMeetingsCount(searchType, searchIds);
+    }
+
+    @Override
+    public List<MonthMeetingsCountDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year) {
+        return meetingQuerydslRepository.findMonthMeetingsCount(searchType, searchIds, year);
     }
 }

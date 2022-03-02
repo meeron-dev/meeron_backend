@@ -1,8 +1,6 @@
 package com.cmc.meeron.meeting.presentation;
 
-import com.cmc.meeron.meeting.application.dto.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.dto.response.WorkspaceAndTeamDayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.dto.response.WorkspaceUserDayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.dto.response.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.util.LocalDateTimeUtil;
@@ -526,6 +524,257 @@ class MeetingRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
                                 fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NULL).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
                                 fieldWithPath("meetings[].workspaceName").type(JsonFieldType.NULL).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                        )
+                ));
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 워크스페이스 캘린더의 경우")
+    @Test
+    void get_year_meetings_count_success_workspace() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "workspace");
+        params.add("id", "1");
+        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
+        when(meetingQueryUseCase.getYearMeetingsCount(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/years")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.yearCounts", hasSize(2)))
+                .andExpect(jsonPath("$.yearCounts[0].year", is(responseDtos.get(0).getYear())))
+                .andExpect(jsonPath("$.yearCounts[0].count", is(responseDtos.get(0).getCount().intValue())))
+                .andExpect(jsonPath("$.yearCounts[1].year", is(responseDtos.get(1).getYear())))
+                .andExpect(jsonPath("$.yearCounts[1].count", is(responseDtos.get(1).getCount().intValue())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("찾을 워크스페이스 ID 입력")
+                        ),
+                        responseFields(
+                                fieldWithPath("yearCounts[].year").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
+                                fieldWithPath("yearCounts[].count").type(JsonFieldType.NUMBER).description("해당 년도의 회의 갯수")
+                        )
+                ));
+    }
+
+    private List<YearMeetingsCountResponseDto> createYearMeetingsCountResposeDtos() {
+        return List.of(
+                YearMeetingsCountResponseDto.builder().year(2022).count(12L).build(),
+                YearMeetingsCountResponseDto.builder().year(2021).count(13L).build()
+        );
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 나의 미론, 내 캘린더의 경우")
+    @Test
+    void get_year_meetings_count_success_workspace_user() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "workspace_user");
+        params.add("id", "1");
+        params.add("id", "2");
+        params.add("id", "3");
+        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
+        when(meetingQueryUseCase.getYearMeetingsCount(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/years")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.yearCounts", hasSize(2)))
+                .andExpect(jsonPath("$.yearCounts[0].year", is(responseDtos.get(0).getYear())))
+                .andExpect(jsonPath("$.yearCounts[0].count", is(responseDtos.get(0).getCount().intValue())))
+                .andExpect(jsonPath("$.yearCounts[1].year", is(responseDtos.get(1).getYear())))
+                .andExpect(jsonPath("$.yearCounts[1].count", is(responseDtos.get(1).getCount().intValue())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음"))
+                        ),
+                        responseFields(
+                                fieldWithPath("yearCounts[].year").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
+                                fieldWithPath("yearCounts[].count").type(JsonFieldType.NUMBER).description("해당 년도의 회의 갯수")
+                        )
+                ));
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 팀 캘린더의 경우")
+    @Test
+    void get_year_meetings_count_success_team() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "team");
+        params.add("id", "1");
+        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
+        when(meetingQueryUseCase.getYearMeetingsCount(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/years")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.yearCounts", hasSize(2)))
+                .andExpect(jsonPath("$.yearCounts[0].year", is(responseDtos.get(0).getYear())))
+                .andExpect(jsonPath("$.yearCounts[0].count", is(responseDtos.get(0).getCount().intValue())))
+                .andExpect(jsonPath("$.yearCounts[1].year", is(responseDtos.get(1).getYear())))
+                .andExpect(jsonPath("$.yearCounts[1].count", is(responseDtos.get(1).getCount().intValue())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("팀 ID 입력")
+                        ),
+                        responseFields(
+                                fieldWithPath("yearCounts[].year").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
+                                fieldWithPath("yearCounts[].count").type(JsonFieldType.NUMBER).description("해당 년도의 회의 갯수")
+                        )
+                ));
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 워크스페이스 캘린더의 경우")
+    @Test
+    void get_month_meetings_count_success_workspace() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "workspace");
+        params.add("id", "1");
+        params.add("year", "2022");
+        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
+        when(meetingQueryUseCase.getMonthMeetingsCount(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/months")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.monthCounts", hasSize(12)))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("찾을 워크스페이스 ID 입력"),
+                                parameterWithName("year").description("찾을 년도")
+                        ),
+                        responseFields(
+                                fieldWithPath("monthCounts[].month").type(JsonFieldType.NUMBER).description("선택한 년도의 월"),
+                                fieldWithPath("monthCounts[].count").type(JsonFieldType.NUMBER).description("해당 월의 회의 갯수")
+                        )
+                ));
+    }
+
+    private List<MonthMeetingsCountResponseDto> createMonthMeetingsCountResposeDtos() {
+        return List.of(
+                MonthMeetingsCountResponseDto.builder().month(1).count(17L).build(),
+                MonthMeetingsCountResponseDto.builder().month(2).count(12L).build(),
+                MonthMeetingsCountResponseDto.builder().month(3).count(16L).build(),
+                MonthMeetingsCountResponseDto.builder().month(4).count(29L).build(),
+                MonthMeetingsCountResponseDto.builder().month(5).count(3L).build(),
+                MonthMeetingsCountResponseDto.builder().month(6).count(0L).build(),
+                MonthMeetingsCountResponseDto.builder().month(7).count(0L).build(),
+                MonthMeetingsCountResponseDto.builder().month(8).count(0L).build(),
+                MonthMeetingsCountResponseDto.builder().month(9).count(0L).build(),
+                MonthMeetingsCountResponseDto.builder().month(10).count(1L).build(),
+                MonthMeetingsCountResponseDto.builder().month(11).count(12L).build(),
+                MonthMeetingsCountResponseDto.builder().month(12).count(25L).build()
+        );
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 나의 미론, 내 캘린더의 경우")
+    @Test
+    void get_month_meetings_count_success_workspace_user() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "workspace_user");
+        params.add("id", "1");
+        params.add("id", "2");
+        params.add("id", "3");
+        params.add("year", "2022");
+        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
+        when(meetingQueryUseCase.getMonthMeetingsCount(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/months")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.monthCounts", hasSize(12)))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음")),
+                                parameterWithName("year").description("찾을 년도")
+                        ),
+                        responseFields(
+                                fieldWithPath("monthCounts[].month").type(JsonFieldType.NUMBER).description("선택한 년도의 월"),
+                                fieldWithPath("monthCounts[].count").type(JsonFieldType.NUMBER).description("해당 월의 회의 갯수")
+                        )
+                ));
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 팀 캘린더의 경우")
+    @Test
+    void get_month_meetings_count_success_team() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "team");
+        params.add("id", "1");
+        params.add("year", "2022");
+        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
+        when(meetingQueryUseCase.getMonthMeetingsCount(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/months")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.monthCounts", hasSize(12)))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
+                                parameterWithName("id").description("팀 ID 입력"),
+                                parameterWithName("year").description("찾을 년도")
+                        ),
+                        responseFields(
+                                fieldWithPath("monthCounts[].month").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
+                                fieldWithPath("monthCounts[].count").type(JsonFieldType.NUMBER).description("해당 년도의 회의 갯수")
                         )
                 ));
     }

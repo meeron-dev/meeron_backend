@@ -1,12 +1,17 @@
 package com.cmc.meeron.meeting.infrastructure;
 
 import com.cmc.meeron.meeting.domain.Meeting;
+import com.cmc.meeron.meeting.domain.dto.MonthMeetingsCountDto;
+import com.cmc.meeron.meeting.domain.dto.QMonthMeetingsCountDto;
+import com.cmc.meeron.meeting.domain.dto.QYearMeetingsCountDto;
+import com.cmc.meeron.meeting.domain.dto.YearMeetingsCountDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -73,5 +78,43 @@ class MeetingQuerydslRepository {
 
     private BooleanExpression dateEq(LocalDate date) {
         return meeting.startDate.eq(date);
+    }
+
+    public List<YearMeetingsCountDto> findYearMeetingsCount(String searchType, List<Long> searchIds) {
+        if (searchType.equals(WORKSPACE_USER)) {
+            return queryFactory.select(new QYearMeetingsCountDto(meeting.startDate.year(), meeting.startDate.count()))
+                    .from(attendee)
+                    .join(attendee.meeting, meeting)
+                    .where(attendee.workspaceUser.id.in(searchIds))
+                    .groupBy(meeting.startDate.year())
+                    .orderBy(meeting.startDate.year().desc())
+                    .fetch();
+        }
+
+        return queryFactory.select(new QYearMeetingsCountDto(meeting.startDate.year(), meeting.startDate.count()))
+                .from(meeting)
+                .where(searchTypePredicateOnlyWorkspaceAndTeam(searchType, searchIds))
+                .groupBy(meeting.startDate.year())
+                .orderBy(meeting.startDate.year().desc())
+                .fetch();
+    }
+
+    public List<MonthMeetingsCountDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year) {
+        if (searchType.equals(WORKSPACE_USER)) {
+            return queryFactory.select(new QMonthMeetingsCountDto(meeting.startDate.month(), meeting.startDate.count()))
+                    .from(attendee)
+                    .join(attendee.meeting, meeting)
+                    .where(attendee.workspaceUser.id.in(searchIds))
+                    .groupBy(meeting.startDate.month())
+                    .orderBy(meeting.startDate.month().asc())
+                    .fetch();
+        }
+
+        return queryFactory.select(new QMonthMeetingsCountDto(meeting.startDate.month(), meeting.startDate.count()))
+                .from(meeting)
+                .where(searchTypePredicateOnlyWorkspaceAndTeam(searchType, searchIds))
+                .groupBy(meeting.startDate.month())
+                .orderBy(meeting.startDate.month().asc())
+                .fetch();
     }
 }

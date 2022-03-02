@@ -1,15 +1,12 @@
 package com.cmc.meeron.meeting.application;
 
-import com.cmc.meeron.meeting.application.dto.request.DayMeetingsRequestDto;
-import com.cmc.meeron.meeting.application.dto.request.MeetingDaysRequestDto;
-import com.cmc.meeron.meeting.application.dto.request.MeetingSearchRequestDto;
-import com.cmc.meeron.meeting.application.dto.request.TodayMeetingRequestDto;
-import com.cmc.meeron.meeting.application.dto.response.WorkspaceAndTeamDayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.dto.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.dto.response.WorkspaceUserDayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.dto.request.*;
+import com.cmc.meeron.meeting.application.dto.response.*;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingRepository;
 import com.cmc.meeron.meeting.domain.MeetingStatus;
+import com.cmc.meeron.meeting.domain.dto.MonthMeetingsCountDto;
+import com.cmc.meeron.meeting.domain.dto.YearMeetingsCountDto;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
@@ -237,6 +234,106 @@ class MeetingServiceTest {
                 Meeting.builder().id(2L).name("테스트미팅2").startTime(now.plusHours(2)).endTime(now.plusHours(4))
                         .workspace(Workspace.builder().id(4L).name("테스트워크스페이스4").build())
                         .build()
+        );
+    }
+
+    @DisplayName("캘린더에서 년도별 회의 카운트 - 성공")
+    @ParameterizedTest
+    @MethodSource("createYearMeetingsCountRequest")
+    void get_year_meetings_count_success(MeetingSearchRequestDto requestDto) throws Exception {
+
+        // given
+        List<YearMeetingsCountDto> responseDtos = createYearMeetingsCountDto();
+        when(meetingRepository.findYearMeetingsCount(requestDto.getSearchType(), requestDto.getSearchIds()))
+                .thenReturn(responseDtos);
+
+        // when
+        List<YearMeetingsCountResponseDto> countDtos = meetingService.getYearMeetingsCount(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(meetingRepository).findYearMeetingsCount((requestDto.getSearchType()), requestDto.getSearchIds()),
+                () -> assertEquals(responseDtos.size(), countDtos.size()),
+                () -> assertEquals(responseDtos.get(0).getYear(), countDtos.get(0).getYear()),
+                () -> assertEquals(responseDtos.get(0).getCount(), countDtos.get(0).getCount())
+        );
+    }
+
+    private static Stream<Arguments> createYearMeetingsCountRequest() {
+        return Stream.of(
+                Arguments.of(
+                        MeetingSearchRequestDto.builder()
+                                .searchType("WORKSPACE")
+                                .searchIds(List.of(1L))
+                                .build()),
+                Arguments.of(
+                        MeetingSearchRequestDto.builder()
+                                .searchType("WORKSPACE_USER")
+                                .searchIds(List.of(1L, 2L))
+                                .build()),
+                Arguments.of(
+                        MeetingSearchRequestDto.builder()
+                                .searchType("TEAM")
+                                .searchIds(List.of(1L))
+                                .build())
+        );
+    }
+
+    private List<YearMeetingsCountDto> createYearMeetingsCountDto() {
+        return List.of(
+                YearMeetingsCountDto.builder().year(2022).count(10L).build(),
+                YearMeetingsCountDto.builder().year(2021).count(2L).build()
+        );
+    }
+
+    @DisplayName("캘린더에서 월별 회의 카운트 - 성공")
+    @ParameterizedTest
+    @MethodSource("createMonthMeetingsCountRequest")
+    void get_month_meetings_count_success(MonthMeetingsCountRequestDto requestDto) throws Exception {
+
+        // given
+        List<MonthMeetingsCountDto> responseDtos = createMonthMeetingsCountDto();
+        when(meetingRepository.findMonthMeetingsCount(requestDto.getSearchType(), requestDto.getSearchIds(), requestDto.getYear()))
+                .thenReturn(responseDtos);
+
+        // when
+        List<MonthMeetingsCountResponseDto> countDtos = meetingService.getMonthMeetingsCount(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(meetingRepository).findMonthMeetingsCount((requestDto.getSearchType()), requestDto.getSearchIds(), requestDto.getYear()),
+                () -> assertEquals(12, countDtos.size())
+        );
+    }
+
+    private static Stream<Arguments> createMonthMeetingsCountRequest() {
+        return Stream.of(
+                Arguments.of(MonthMeetingsCountRequestDto.builder()
+                        .meetingSearch(MeetingSearchRequestDto.builder()
+                                .searchType("WORKSPACE")
+                                .searchIds(List.of(1L))
+                                .build())
+                        .build()),
+                Arguments.of(MonthMeetingsCountRequestDto.builder()
+                        .meetingSearch(MeetingSearchRequestDto.builder()
+                                .searchType("WORKSPACE_USER")
+                                .searchIds(List.of(1L, 2L))
+                                .build())
+                        .build()),
+                Arguments.of(MonthMeetingsCountRequestDto.builder()
+                        .meetingSearch(MeetingSearchRequestDto.builder()
+                                .searchType("TEAM")
+                                .searchIds(List.of(1L))
+                                .build())
+                        .build())
+        );
+    }
+
+    private List<MonthMeetingsCountDto> createMonthMeetingsCountDto() {
+        return List.of(
+                MonthMeetingsCountDto.builder().month(4).count(1L).build(),
+                MonthMeetingsCountDto.builder().month(7).count(2L).build(),
+                MonthMeetingsCountDto.builder().month(9).count(3L).build()
         );
     }
 }

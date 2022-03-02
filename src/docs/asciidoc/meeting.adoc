@@ -71,3 +71,49 @@ include::{snippets}/meeting-rest-controller-test/get_day_meetings_success_worksp
 include::{snippets}/meeting-rest-controller-test/get_day_meetings_success_workspace_user/request-parameters.adoc[]
 include::{snippets}/meeting-rest-controller-test/get_day_meetings_success_workspace_user/http-response.adoc[]
 include::{snippets}/meeting-rest-controller-test/get_day_meetings_success_workspace_user/response-fields.adoc[]
+
+[[year-meetings-count]]
+== 년도별 회의 갯수 조회
+=== 워크스페이스 캘린더의 경우
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace/response-fields.adoc[]
+
+=== 팀 캘린더의 경우
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_team/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_team/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_team/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_team/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_team/response-fields.adoc[]
+
+=== '나의 미론'의 경우
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace_user/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace_user/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace_user/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace_user/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_year_meetings_count_success_workspace_user/response-fields.adoc[]
+
+[[month-meetings-count]]
+== 선택한 년도의 월별 회의 갯수 조회
+=== 워크스페이스 캘린더의 경우
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace/response-fields.adoc[]
+
+=== 팀 캘린더의 경우
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_team/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_team/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_team/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_team/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_team/response-fields.adoc[]
+
+=== '나의 미론'의 경우
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace_user/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace_user/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace_user/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace_user/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_month_meetings_count_success_workspace_user/response-fields.adoc[]

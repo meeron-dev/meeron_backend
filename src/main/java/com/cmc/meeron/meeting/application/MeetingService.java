@@ -1,16 +1,16 @@
 package com.cmc.meeron.meeting.application;
 
 import com.cmc.meeron.meeting.application.dto.request.*;
-import com.cmc.meeron.meeting.application.dto.response.WorkspaceAndTeamDayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.dto.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.dto.response.WorkspaceUserDayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.dto.response.*;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingRepository;
+import com.cmc.meeron.meeting.domain.dto.MonthMeetingsCountDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +48,24 @@ class MeetingService implements MeetingQueryUseCase {
     public List<WorkspaceUserDayMeetingResponseDto> getWorkspaceUserDayMeetings(DayMeetingsRequestDto dayMeetingsRequestDto) {
         List<Meeting> meetings = findMeetings(dayMeetingsRequestDto);
         return MeetingApplicationAssembler.toWorkspaceUserDayMeetingResponseDtos(meetings);
+    }
+
+    @Override
+    public List<YearMeetingsCountResponseDto> getYearMeetingsCount(MeetingSearchRequestDto meetingSearchRequestDto) {
+        return meetingRepository.findYearMeetingsCount(meetingSearchRequestDto.getSearchType(), meetingSearchRequestDto.getSearchIds())
+                .stream()
+                .map(it -> YearMeetingsCountResponseDto.builder()
+                        .year(it.getYear())
+                        .count(it.getCount())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MonthMeetingsCountResponseDto> getMonthMeetingsCount(MonthMeetingsCountRequestDto monthMeetingsCountRequestDto) {
+        List<MonthMeetingsCountDto> monthMeetingsCountDtos = meetingRepository.findMonthMeetingsCount(monthMeetingsCountRequestDto.getSearchType(),
+                monthMeetingsCountRequestDto.getSearchIds(),
+                monthMeetingsCountRequestDto.getYear());
+        return MeetingApplicationAssembler.toMonthMeetingsCountResponseDtoSortByMonth(monthMeetingsCountDtos);
     }
 }
