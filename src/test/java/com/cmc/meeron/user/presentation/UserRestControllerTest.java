@@ -5,11 +5,16 @@ import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.application.dto.response.MeResponseDto;
 import com.cmc.meeron.user.application.dto.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.user.application.dto.response.WorkspaceUserResponseDto;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -23,8 +28,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -203,5 +207,146 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is("MEERON-400")));
+    }
+
+    @DisplayName("워크스페이스 유저 검색 - 성공")
+    @Test
+    void search_workspace_users_success() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", "1");
+        params.add("nickname", "무");
+        List<WorkspaceUserResponseDto> workspaceUserResponseDtos = createWorkspaceUserSearchResponseDtos();
+        when(userQueryUseCase.searchWorkspaceUsers(any(), any()))
+                .thenReturn(workspaceUserResponseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/workspace-users")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUsers", hasSize(2)))
+                .andExpect(jsonPath("$.workspaceUsers[0].workspaceUserId", is(workspaceUserResponseDtos.get(0).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[0].profileImageUrl", is(workspaceUserResponseDtos.get(0).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[0].nickname", is(workspaceUserResponseDtos.get(0).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[0].position", is(workspaceUserResponseDtos.get(0).getPosition())))
+                .andExpect(jsonPath("$.workspaceUsers[1].workspaceUserId", is(workspaceUserResponseDtos.get(1).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[1].profileImageUrl", is(workspaceUserResponseDtos.get(1).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[1].nickname", is(workspaceUserResponseDtos.get(1).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[1].position", is(workspaceUserResponseDtos.get(1).getPosition())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("workspaceId").description("워크스페이스 ID"),
+                                parameterWithName("nickname").description("찾을 워크스페이스 유저 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("workspaceUsers[].nickname").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 닉네임"),
+                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책")
+                        )
+                ));
+    }
+
+    private List<WorkspaceUserResponseDto> createWorkspaceUserSearchResponseDtos() {
+        return List.of(
+                WorkspaceUserResponseDto.builder()
+                        .workspaceUserId(1L)
+                        .profileImageUrl("https://image.com/12344")
+                        .nickname("무무")
+                        .position("백엔드")
+                        .build(),
+                WorkspaceUserResponseDto.builder()
+                        .workspaceUserId(2L)
+                        .profileImageUrl("https://image.com/12341234")
+                        .nickname("무무무")
+                        .position("데브옵스")
+                        .build()
+        );
+    }
+
+    @DisplayName("워크스페이스 유저 실패 - 워크스페이스 ID, 검색할 워크스페이스 유저 닉네임을 주지 않을 경우")
+    @Test
+    void search_workspace_users_fail_require_workspace_id_nickname() throws Exception {
+
+        // given, when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/workspace-users")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(2)))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is("MEERON-400")));
+    }
+
+    @DisplayName("팀에 속한 모든 워크스페이스 유저 정보 조회 - 성공")
+    @Test
+    void get_team_members_success() throws Exception {
+
+        // given
+        List<WorkspaceUserResponseDto> workspaceUserResponseDtos = createTeamMemberResponseDtos();
+        when(userQueryUseCase.getTeamUsers(any()))
+                .thenReturn(workspaceUserResponseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/teams/{teamId}/workspace-users", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUsers", hasSize(3)))
+                .andExpect(jsonPath("$.workspaceUsers[0].workspaceUserId", is(workspaceUserResponseDtos.get(0).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[0].profileImageUrl", is(workspaceUserResponseDtos.get(0).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[0].nickname", is(workspaceUserResponseDtos.get(0).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[0].position", is(workspaceUserResponseDtos.get(0).getPosition())))
+                .andExpect(jsonPath("$.workspaceUsers[1].workspaceUserId", is(workspaceUserResponseDtos.get(1).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[1].profileImageUrl", is(workspaceUserResponseDtos.get(1).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[1].nickname", is(workspaceUserResponseDtos.get(1).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[1].position", is(workspaceUserResponseDtos.get(1).getPosition())))
+                .andExpect(jsonPath("$.workspaceUsers[2].workspaceUserId", is(workspaceUserResponseDtos.get(2).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[2].profileImageUrl", is(workspaceUserResponseDtos.get(2).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[2].nickname", is(workspaceUserResponseDtos.get(2).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[2].position", is(workspaceUserResponseDtos.get(2).getPosition())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("teamId").description("팀원들을 찾을 팀 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("workspaceUsers[].nickname").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 닉네임"),
+                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책")
+                        )
+                ));
+    }
+
+    private List<WorkspaceUserResponseDto> createTeamMemberResponseDtos() {
+        return List.of(
+                WorkspaceUserResponseDto.builder()
+                        .workspaceUserId(1L)
+                        .profileImageUrl("https://image.com/12344")
+                        .nickname("고범석")
+                        .position("백엔드")
+                        .build(),
+                WorkspaceUserResponseDto.builder()
+                        .workspaceUserId(2L)
+                        .profileImageUrl("https://image.com/12341234")
+                        .nickname("무무")
+                        .position("데브옵스")
+                        .build(),
+                WorkspaceUserResponseDto.builder()
+                        .workspaceUserId(3L)
+                        .profileImageUrl("https://image.com/12551")
+                        .nickname("비버")
+                        .position("인턴")
+                        .build()
+        );
     }
 }

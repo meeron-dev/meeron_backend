@@ -3,6 +3,7 @@ package com.cmc.meeron.user.infrastructure;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserRepository;
 import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.user.domain.dto.WorkspaceUserQueryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,6 +16,7 @@ class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
     private final WorkspaceUserJpaRepository workspaceUserJpaRepository;
+    private final WorkspaceUserQuerydslRepository workspaceUserQuerydslRepository;
 
     @Override
     public Optional<User> findByEmail(String email) {
@@ -34,5 +36,15 @@ class UserRepositoryImpl implements UserRepository {
     @Override
     public Optional<WorkspaceUser> findWorkspaceUserById(Long workspaceUserId) {
         return workspaceUserJpaRepository.findById(workspaceUserId);
+    }
+
+    @Override
+    public List<WorkspaceUserQueryResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname) {
+        return workspaceUserQuerydslRepository.findByWorkspaceIdNickname(workspaceId, nickname);
+    }
+
+    @Override
+    public List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId) {
+        return workspaceUserQuerydslRepository.findByTeamId(teamId);
     }
 }

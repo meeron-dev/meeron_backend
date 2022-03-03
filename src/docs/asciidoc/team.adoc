@@ -1,0 +1,15 @@
+= 팀 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[teams]]
+== 워크스페이스 내 모든 팀 조회
+include::{snippets}/team-rest-controller-test/get_workspace_teams_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/get_workspace_teams_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/get_workspace_teams_success/request-parameters.adoc[]
+include::{snippets}/team-rest-controller-test/get_workspace_teams_success/http-response.adoc[]
+include::{snippets}/team-rest-controller-test/get_workspace_teams_success/response-fields.adoc[]

@@ -12,4 +12,4 @@ assignees: ''
 - [ ] 기능2
 
 **언제까지?**
-~ yyyy/MM/dd HH:ss
+~ yyyy/MM/dd

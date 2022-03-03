@@ -4,11 +4,13 @@ import com.cmc.meeron.auth.domain.AuthUser;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.user.application.dto.response.MeResponseDto;
 import com.cmc.meeron.user.application.dto.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.user.application.dto.response.WorkspaceUserResponseDto;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserProvider;
 import com.cmc.meeron.user.domain.WorkspaceUser;
 import com.cmc.meeron.user.domain.UserRepository;
+import com.cmc.meeron.user.domain.dto.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -150,5 +152,60 @@ class UserServiceTest {
                 .workspaceAdmin(false)
                 .position("과장")
                 .build();
+    }
+
+    @DisplayName("워크스페이스 유저 닉네임, 워크스페이스 id로 조회 - 성공")
+    @Test
+    void search_workspace_users_success() throws Exception {
+
+        // given
+        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = createWorkspaceUserQueryResponseDtos();
+        when(userRepository.findByWorkspaceIdNickname(any(), any()))
+                .thenReturn(workspaceUserQueryResponseDtos);
+
+        // when
+        List<WorkspaceUserResponseDto> responseDtos = userService.searchWorkspaceUsers(1L, "무");
+
+        // then
+        assertAll(
+                () -> verify(userRepository).findByWorkspaceIdNickname(1L, "무"),
+                () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size())
+        );
+    }
+
+    private List<WorkspaceUserQueryResponseDto> createWorkspaceUserQueryResponseDtos() {
+        return List.of(
+                WorkspaceUserQueryResponseDto.builder()
+                        .workspaceUserId(1L)
+                        .nickname("무무")
+                        .profileImageUrl(null)
+                        .position("사원")
+                        .build(),
+                WorkspaceUserQueryResponseDto.builder()
+                        .workspaceUserId(2L)
+                        .nickname("무무무")
+                        .profileImageUrl("https://image.com/123")
+                        .position("사원")
+                        .build()
+        );
+    }
+
+    @DisplayName("팀원 정보 조회 - 성공")
+    @Test
+    void get_team_users_success() throws Exception {
+
+        // given
+        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = createWorkspaceUserQueryResponseDtos();
+        when(userRepository.findByTeamId(any()))
+                .thenReturn(workspaceUserQueryResponseDtos);
+
+        // when
+        List<WorkspaceUserResponseDto> workspaceUserResponseDtos = userService.getTeamUsers(1L);
+
+        // then
+        assertAll(
+                () -> assertEquals(workspaceUserQueryResponseDtos.size(), workspaceUserResponseDtos.size()),
+                () -> verify(userRepository).findByTeamId(1L)
+        );
     }
 }

@@ -555,8 +555,8 @@ Content-Length: 548
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
     "meetingDate" : "2022-03-03",
-    "startTime" : "04:00:00",
-    "endTime" : "05:00:00",
+    "startTime" : "22:00:00",
+    "endTime" : "23:00:00",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
@@ -564,8 +564,8 @@ Content-Length: 548
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
     "meetingDate" : "2022-03-03",
-    "startTime" : "23:00:00",
-    "endTime" : "00:00:00",
+    "startTime" : "17:00:00",
+    "endTime" : "18:00:00",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,7 +652,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 408
 
 {
-  "time" : "2022-03-03T02:07:50.110834",
+  "time" : "2022-03-03T20:03:52.782288",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -698,11 +698,15 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 576
 
 {
-  "time" : "2022-03-03T02:07:49.985991",
+  "time" : "2022-03-03T20:03:52.680495",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
+  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
@@ -710,10 +714,6 @@ Content-Length: 576
     "field" : "date",
     "value" : null,
     "reason" : "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요."
-  }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1039,7 +1039,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 960
 
 {
-  "time" : "2022-03-03T02:07:49.682922",
+  "time" : "2022-03-03T20:03:52.437015",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -1048,13 +1048,13 @@ Content-Length: 960
     "value" : "2022-02-1",
     "reason" : "Failed to convert property value of type 'java.lang.String' to required type 'java.time.LocalDate' for property 'date'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull java.time.LocalDate] for value '2022-02-1'; nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [2022-02-1]"
   }, {
-    "field" : "id",
-    "value" : null,
-    "reason" : "검색 유형의 ID를 입력해주세요."
-  }, {
     "field" : "type",
     "value" : null,
     "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
+  }, {
+    "field" : "id",
+    "value" : null,
+    "reason" : "검색 유형의 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1134,15 +1134,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "03:07",
-    "endTime" : "05:07",
+    "startTime" : "21:03",
+    "endTime" : "23:03",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "06:07",
-    "endTime" : "08:07",
+    "startTime" : "00:03",
+    "endTime" : "02:03",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1270,15 +1270,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "03:07",
-    "endTime" : "05:07",
+    "startTime" : "21:03",
+    "endTime" : "23:03",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "06:07",
-    "endTime" : "08:07",
+    "startTime" : "00:03",
+    "endTime" : "02:03",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1406,15 +1406,15 @@ Content-Length: 411
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "03:07",
-    "endTime" : "05:07",
+    "startTime" : "21:03",
+    "endTime" : "23:03",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "06:07",
-    "endTime" : "08:07",
+    "startTime" : "00:03",
+    "endTime" : "02:03",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2207,7 +2207,7 @@ Content-Length: 513
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-03 02:04:40 +0900
+Last updated 2022-03-03 02:10:07 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -20,3 +20,6 @@ include::notice.adoc[]
 
 == 워크스페이스 관련 API
 * link:workspace.html[Workspace API, window=_blank]
+
+== 팀 관련 API
+* link:team.html[Team API, window=_blank]
