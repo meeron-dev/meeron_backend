@@ -1,6 +1,6 @@
 package com.cmc.meeron.support.security;
 
-import com.cmc.meeron.auth.domain.AuthUser;
+import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;

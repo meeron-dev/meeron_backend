@@ -1,10 +1,11 @@
 package com.cmc.meeron.config;
 
-import com.cmc.meeron.auth.filter.TokenAuthenticationErrorFilter;
-import com.cmc.meeron.auth.filter.TokenAuthenticationFilter;
-import com.cmc.meeron.auth.handler.CustomUserDetailsService;
-import com.cmc.meeron.auth.handler.RestAccessDeniedHandler;
-import com.cmc.meeron.auth.handler.RestAuthenticationEntryPoint;
+import com.cmc.meeron.common.security.TokenAuthenticationErrorFilter;
+import com.cmc.meeron.common.security.TokenAuthenticationFilter;
+import com.cmc.meeron.common.security.CustomUserDetailsService;
+import com.cmc.meeron.common.security.RestAccessDeniedHandler;
+import com.cmc.meeron.common.security.RestAuthenticationEntryPoint;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

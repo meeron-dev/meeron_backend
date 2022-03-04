@@ -3,7 +3,7 @@ name: bug
 about: 버그에 대한 상세한 상황을 기록하는 템플릿
 title: "[BUG]"
 labels: bug
-assignees: ''
+assignees: kobeomseok95
 
 ---
 

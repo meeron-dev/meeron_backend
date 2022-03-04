@@ -1,12 +1,12 @@
 package com.cmc.meeron.auth.integration;
 
-import com.cmc.meeron.auth.application.dto.response.TokenResponseDto;
-import com.cmc.meeron.auth.domain.TokenRepository;
-import com.cmc.meeron.auth.presentation.dto.request.LoginRequest;
-import com.cmc.meeron.auth.provider.JwtProvider;
+import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
+import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
+import com.cmc.meeron.auth.adapter.in.request.LoginRequest;
+import com.cmc.meeron.common.security.JwtProvider;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.user.domain.UserRepository;
+import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,8 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AuthIntegrationTest extends IntegrationTest {
 
-    @Autowired UserRepository userRepository;
-    @Autowired TokenRepository tokenRepository;
+    @Autowired
+    UserQueryPort userQueryPort;
+    @Autowired
+    TokenQueryPort tokenQueryPort;
     @Autowired JwtProvider jwtProvider;
 
     @DisplayName("로그인 - 성공 / 카카오, 애플 로그인")
@@ -40,8 +42,8 @@ public class AuthIntegrationTest extends IntegrationTest {
                 .andExpect(status().isOk());
 
         assertAll(
-                () -> assertTrue(userRepository.findByEmail(request.getEmail()).isPresent()),
-                () -> assertTrue(tokenRepository.existsRefreshTokenByUsername(request.getEmail()))
+                () -> assertTrue(userQueryPort.findByEmail(request.getEmail()).isPresent()),
+                () -> assertTrue(tokenQueryPort.existsRefreshTokenByUsername(request.getEmail()))
         );
     }
 
@@ -83,13 +85,13 @@ public class AuthIntegrationTest extends IntegrationTest {
 
         // then
         assertAll(
-                () -> assertTrue(tokenRepository.existsLogoutAccessTokenById(loggedIn.getAccessToken())),
-                () -> assertTrue(tokenRepository.existsLogoutRefreshTokenById(loggedIn.getRefreshToken()))
+                () -> assertTrue(tokenQueryPort.existsLogoutAccessTokenById(loggedIn.getAccessToken())),
+                () -> assertTrue(tokenQueryPort.existsLogoutRefreshTokenById(loggedIn.getRefreshToken()))
         );
     }
 
     private User setUpMockUser(LoginRequest loginRequest) {
-        return userRepository.save(createMockUser(loginRequest));
+        return userQueryPort.save(createMockUser(loginRequest));
     }
 
     private User createMockUser(LoginRequest loginRequest) {
@@ -128,7 +130,7 @@ public class AuthIntegrationTest extends IntegrationTest {
 
         // then
         assertAll(
-                () -> assertTrue(tokenRepository.existsRefreshTokenByUsername(user.getEmail())),
+                () -> assertTrue(tokenQueryPort.existsRefreshTokenByUsername(user.getEmail())),
                 () -> assertEquals(responseToken.getRefreshToken(), loggedIn.getRefreshToken())
         );
     }
