@@ -32,11 +32,11 @@ include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_worksp
 include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace/response-fields.adoc[]
 
 === 팀 캘린더에서의 회의 날짜 조회
-include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace/http-request.adoc[]
-include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace/request-headers.adoc[]
-include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace/request-parameters.adoc[]
-include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace/http-response.adoc[]
-include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace/response-fields.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_team/http-request.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_team/request-headers.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_team/request-parameters.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_team/http-response.adoc[]
+include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_team/response-fields.adoc[]
 
 === '나의 미론' 캘린더에서의 회의 날짜 조회
 include::{snippets}/meeting-rest-controller-test/get_meeting_days_success_workspace_user/http-request.adoc[]

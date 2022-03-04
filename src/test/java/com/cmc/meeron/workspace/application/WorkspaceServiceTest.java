@@ -51,7 +51,7 @@ class WorkspaceServiceTest {
                 Workspace.builder()
                         .id(2L)
                         .name("테스트 워크스페이스2")
-                        .workspaceImageUrl("https://image.url.com/123124")
+                        .workspaceLogoUrl("https://image.url.com/123124")
                         .build()
         );
     }
@@ -60,7 +60,7 @@ class WorkspaceServiceTest {
         return Workspace.builder()
                 .id(1L)
                 .name("테스트 워크스페이스1")
-                .workspaceImageUrl("https://image.url.com/123123")
+                .workspaceLogoUrl("https://image.url.com/123123")
                 .build();
     }
 

@@ -15,8 +15,8 @@ include::notice.adoc[]
 == 회의 API
 * link:meeting.html[Meeting API, window=_blank]
 
-== 유저 / 워크스페이스 유저 API
-* link:user.html[User / Workspace-User API, window=_blank]
+== 유저 / 워크스페이스 유저 / 팀 유저 API
+* link:user.html[User / Workspace-User / Team-User API, window=_blank]
 
 == 워크스페이스 관련 API
 * link:workspace.html[Workspace API, window=_blank]

@@ -18,7 +18,7 @@ class WorkspaceApplicationAssembler {
         return WorkspaceResponseDto.builder()
                 .workspaceId(workspace.getId())
                 .workspaceName(workspace.getName())
-                .workspaceLogoUrl(workspace.getWorkspaceImageUrl())
+                .workspaceLogoUrl(workspace.getWorkspaceLogoUrl())
                 .build();
     }
 }

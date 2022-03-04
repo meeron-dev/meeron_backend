@@ -20,6 +20,21 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, length = 200)
     private String email;
 
+    @Column(length = 200)
+    private String contactEmail;
+
+    @Column(length = 20)
+    private String name;
+
+    @Column(length = 200)
+    private String profileImageUrl;
+
+    @Column(length = 25)
+    private String phone;
+
+    @Column(length = 30)
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Role role;
@@ -27,21 +42,6 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private UserProvider userProvider;
-
-    @Column(length = 20)
-    private String name;
-
-    @Column(length = 30)
-    private String nickname;
-
-    @Column(length = 200)
-    private String profileImageUrl;
-
-    @Column(length = 200)
-    private String contactEmail;
-
-    @Column(length = 25)
-    private String phone;
 
     public static User of(String email, String nickname, String provider) {
         return User.builder()

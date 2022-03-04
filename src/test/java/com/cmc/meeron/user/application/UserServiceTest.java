@@ -96,7 +96,7 @@ class UserServiceTest {
                         .user(user)
                         .workspace(Workspace.builder().id(1L).build())
                         .nickname("테스트닉네임1")
-                        .workspaceAdmin(false)
+                        .isWorkspaceAdmin(false)
                         .position("과장")
                         .build(),
                 WorkspaceUser.builder()
@@ -104,7 +104,7 @@ class UserServiceTest {
                         .user(user)
                         .workspace(Workspace.builder().id(2L).build())
                         .nickname("테스트닉네임2")
-                        .workspaceAdmin(true)
+                        .isWorkspaceAdmin(true)
                         .position("매니저")
                         .build()
         );
@@ -149,7 +149,7 @@ class UserServiceTest {
                 .user(user)
                 .workspace(Workspace.builder().id(1L).build())
                 .nickname("테스트닉네임1")
-                .workspaceAdmin(false)
+                .isWorkspaceAdmin(false)
                 .position("과장")
                 .build();
     }

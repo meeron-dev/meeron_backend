@@ -50,9 +50,6 @@ public class Meeting extends BaseEntity {
     @Column(nullable = false, length = 200)
     private String place;
 
-    @Column(nullable = false)
-    private boolean privateMeeting;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private MeetingStatus meetingStatus;

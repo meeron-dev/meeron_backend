@@ -26,6 +26,6 @@ public class TeamUser extends BaseEntity {
     @JoinColumn(name = "WORKSPACE_USER_ID", nullable = false)
     private WorkspaceUser workspaceUser;
 
-    @Column(nullable = false)
-    private boolean teamAdmin;
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private boolean isTeamAdmin;
 }

@@ -29,8 +29,8 @@ public class WorkspaceUser extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String nickname;
 
-    @Column(nullable = false)
-    private boolean workspaceAdmin;
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private boolean isWorkspaceAdmin;
 
     @Column(length = 20)
     private String position;

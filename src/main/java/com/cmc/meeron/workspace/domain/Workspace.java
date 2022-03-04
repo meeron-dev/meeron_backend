@@ -21,5 +21,5 @@ public class Workspace extends BaseEntity {
     private String name;
 
     @Column(length = 200)
-    private String workspaceImageUrl;
+    private String workspaceLogoUrl;
 }

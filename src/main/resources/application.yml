@@ -1,17 +1,19 @@
 spring:
   profiles:
     default: local
+  sql:
+    init:
+      mode: always
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MYSQL;
     username: sa
     password:
     driver-class-name: org.h2.Driver
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.H2Dialect
-#    defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
@@ -25,8 +27,6 @@ spring:
   mvc:
     format:
       date: yyyy-MM-dd
-server:
-  port: 8080
 jwt:
   secret-key: ENC(z1qhyistBmY+rofD3eB2jHFMtMfPLVFbGFxgLQ3n1hU=)
   access-expiration-time: 3600000
@@ -39,6 +39,8 @@ jasypt:
     property:
       prefix: ENC(
       suffix: )
+server:
+  port: 8080
 ---
 spring:
   config:

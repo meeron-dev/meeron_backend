@@ -67,7 +67,6 @@ class MeetingServiceTest {
                         .startTime(LocalTime.now().minusHours(3))
                         .endTime(LocalTime.now().minusHours(2))
                         .place("테스트 장소1")
-                        .privateMeeting(false)
                         .meetingStatus(MeetingStatus.END)
                         .team(Team.builder().id(1L).name("테스트팀1").build())
                         .build(),
@@ -80,7 +79,6 @@ class MeetingServiceTest {
                         .startTime(LocalTime.now().plusHours(1))
                         .endTime(LocalTime.now().plusHours(2))
                         .place("테스트 장소2")
-                        .privateMeeting(false)
                         .meetingStatus(MeetingStatus.EXPECT)
                         .team(Team.builder().id(2L).name("테스트팀2").build())
                         .build()

@@ -255,7 +255,7 @@ class MeetingRestControllerTest extends RestDocsTestSupport {
 
     @DisplayName("캘린더에서 이번 달 회의 날짜 조회 - 성공 / 팀 캘린더의 경우")
     @Test
-    void get_meeting_days_success_workspace_team() throws Exception {
+    void get_meeting_days_success_team() throws Exception {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

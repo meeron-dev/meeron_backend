@@ -554,18 +554,18 @@ Content-Length: 548
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
-    "meetingDate" : "2022-03-03",
-    "startTime" : "22:00:00",
-    "endTime" : "23:00:00",
+    "meetingDate" : "2022-03-04",
+    "startTime" : "17:00:00",
+    "endTime" : "18:00:00",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
-    "meetingDate" : "2022-03-03",
-    "startTime" : "17:00:00",
-    "endTime" : "18:00:00",
+    "meetingDate" : "2022-03-04",
+    "startTime" : "12:00:00",
+    "endTime" : "13:00:00",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,7 +652,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 408
 
 {
-  "time" : "2022-03-03T20:03:52.782288",
+  "time" : "2022-03-04T15:59:22.206484",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -698,18 +698,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 576
 
 {
-  "time" : "2022-03-03T20:03:52.680495",
+  "time" : "2022-03-04T15:59:22.072323",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
-  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   }, {
     "field" : "date",
     "value" : null,
@@ -820,7 +820,7 @@ Content-Length: 33
 <h3 id="_팀_캘린더에서의_회의_날짜_조회"><a class="link" href="#_팀_캘린더에서의_회의_날짜_조회">팀 캘린더에서의 회의 날짜 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022-03&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022-03&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -859,12 +859,12 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>type</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스의 경우 'workspace' 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팀 캘린더의 경우 'team' 입력</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">찾을 워크스페이스 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID 입력</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -1039,7 +1039,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 960
 
 {
-  "time" : "2022-03-03T20:03:52.437015",
+  "time" : "2022-03-04T15:59:21.778806",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -1048,13 +1048,13 @@ Content-Length: 960
     "value" : "2022-02-1",
     "reason" : "Failed to convert property value of type 'java.lang.String' to required type 'java.time.LocalDate' for property 'date'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull java.time.LocalDate] for value '2022-02-1'; nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [2022-02-1]"
   }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
-  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1064,7 +1064,7 @@ Content-Length: 960
 <h3 id="_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회">워크스페이스 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-03&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-04&amp;type=workspace&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1134,15 +1134,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "21:03",
-    "endTime" : "23:03",
+    "startTime" : "16:59",
+    "endTime" : "18:59",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "00:03",
-    "endTime" : "02:03",
+    "startTime" : "19:59",
+    "endTime" : "21:59",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1200,7 +1200,7 @@ Content-Length: 365
 <h3 id="_팀_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_팀_캘린더에서의_선택한_날짜에_대한_회의_조회">팀 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-03&amp;type=team&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-04&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1270,15 +1270,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "21:03",
-    "endTime" : "23:03",
+    "startTime" : "16:59",
+    "endTime" : "18:59",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "00:03",
-    "endTime" : "02:03",
+    "startTime" : "19:59",
+    "endTime" : "21:59",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1336,7 +1336,7 @@ Content-Length: 365
 <h3 id="_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회">'나의 미론' 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-03&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-04&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1406,15 +1406,15 @@ Content-Length: 411
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "21:03",
-    "endTime" : "23:03",
+    "startTime" : "16:59",
+    "endTime" : "18:59",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "00:03",
-    "endTime" : "02:03",
+    "startTime" : "19:59",
+    "endTime" : "21:59",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2207,7 +2207,7 @@ Content-Length: 513
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-03 02:10:07 +0900
+Last updated 2022-03-04 15:42:27 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
