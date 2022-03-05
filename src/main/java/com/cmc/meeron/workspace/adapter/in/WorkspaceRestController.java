@@ -17,7 +17,7 @@ public class WorkspaceRestController {
 
     private final WorkspaceQueryUseCase workspaceQueryUseCase;
 
-    // FIXME: 2022/03/04 kobeomseok95 workspace?userId=12
+    // FIXME: 2022/03/04 kobeomseok95 workspaces?userId=12
     @GetMapping("/users/{userId}/workspaces")
     @ResponseStatus(HttpStatus.OK)
     public MyWorkspacesResponse getMyWorkspaces(@PathVariable Long userId) {

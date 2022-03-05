@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class DayMeetingsResponse {
 
     @Builder.Default
-    private List<DayMeeting> meetings = new ArrayList();
+    private List<DayMeeting> meetings = new ArrayList<>();
 
     public static DayMeetingsResponse fromWorkspaceAndTeam(List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos) {
         return DayMeetingsResponse.builder()
