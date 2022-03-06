@@ -16,8 +16,8 @@ interface MeetingJpaRepository
             " from Meeting m join fetch m.attendees.values a" +
             " where m.workspace.id = :workspaceId" +
             " and a.workspaceUser.id = :workspaceUserId" +
-            " and m.startDate = :todayDate" +
-            " order by m.startDate asc"
+            " and m.meetingTime.startDate = :todayDate" +
+            " order by m.meetingTime.startDate asc"
     )
     List<Meeting> findTodayMeetings(@Param("workspaceId") Long workspaceId,
                                     @Param("workspaceUserId") Long workspaceUserId,

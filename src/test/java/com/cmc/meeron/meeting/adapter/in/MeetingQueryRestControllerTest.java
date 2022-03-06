@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
-class MeetingRestControllerTest extends RestDocsTestSupport {
+class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
     @DisplayName("오늘 회의 리스트 조회 - 성공")
     @Test

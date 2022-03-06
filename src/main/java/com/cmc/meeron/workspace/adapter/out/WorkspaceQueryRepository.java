@@ -23,4 +23,9 @@ class WorkspaceQueryRepository implements WorkspaceQueryPort {
     public Optional<Workspace> findById(Long workspaceId) {
         return workspaceJpaRepository.findById(workspaceId);
     }
+
+    @Override
+    public List<Workspace> findIdByWorkspaceUserIds(List<Long> workspaceUserIds) {
+        return workspaceJpaRepository.findByWorkspaceUserIds(workspaceUserIds);
+    }
 }

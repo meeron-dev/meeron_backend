@@ -7,6 +7,7 @@ import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQu
 import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingStatus;
+import com.cmc.meeron.meeting.domain.MeetingTime;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
@@ -65,9 +66,11 @@ class MeetingQueryServiceTest {
                         .workspace(Workspace.builder().id(1L).build())
                         .name("테스트 회의1")
                         .purpose("목적1")
-                        .startDate(LocalDate.now())
-                        .startTime(LocalTime.now().minusHours(3))
-                        .endTime(LocalTime.now().minusHours(2))
+                        .meetingTime(MeetingTime.builder()
+                                .startDate(LocalDate.now())
+                                .startTime(LocalTime.now().minusHours(3))
+                                .endTime(LocalTime.now().minusHours(2))
+                                .build())
                         .place("테스트 장소1")
                         .meetingStatus(MeetingStatus.END)
                         .team(Team.builder().id(1L).name("테스트팀1").build())
@@ -77,9 +80,11 @@ class MeetingQueryServiceTest {
                         .workspace(Workspace.builder().id(1L).build())
                         .name("테스트 회의2")
                         .purpose("목적2")
-                        .startDate(LocalDate.now())
-                        .startTime(LocalTime.now().plusHours(1))
-                        .endTime(LocalTime.now().plusHours(2))
+                        .meetingTime(MeetingTime.builder()
+                                .startDate(LocalDate.now())
+                                .startTime(LocalTime.now().plusHours(1))
+                                .endTime(LocalTime.now().plusHours(2))
+                                .build())
                         .place("테스트 장소2")
                         .meetingStatus(MeetingStatus.EXPECT)
                         .team(Team.builder().id(2L).name("테스트팀2").build())
@@ -188,8 +193,22 @@ class MeetingQueryServiceTest {
     private List<Meeting> createDayMeetings() {
         LocalTime now = LocalTime.now();
         return List.of(
-                Meeting.builder().id(1L).name("테스트미팅1").startTime(now).endTime(now.plusHours(2)).build(),
-                Meeting.builder().id(2L).name("테스트미팅2").startTime(now.plusHours(2)).endTime(now.plusHours(4)).build()
+                Meeting.builder()
+                        .id(1L)
+                        .name("테스트미팅1")
+                        .meetingTime(MeetingTime.builder()
+                                .startTime(now)
+                                .endTime(now.plusHours(2))
+                                .build())
+                        .build(),
+                Meeting.builder()
+                        .id(2L)
+                        .name("테스트미팅2")
+                        .meetingTime(MeetingTime.builder()
+                                .startTime(now.plusHours(2))
+                                .endTime(now.plusHours(4))
+                                .build())
+                        .build()
         );
     }
 
@@ -228,10 +247,18 @@ class MeetingQueryServiceTest {
     private List<Meeting> createDayMeetingsContainsWorkspace() {
         LocalTime now = LocalTime.now();
         return List.of(
-                Meeting.builder().id(1L).name("테스트미팅1").startTime(now).endTime(now.plusHours(2))
+                Meeting.builder().id(1L).name("테스트미팅1")
+                        .meetingTime(MeetingTime.builder()
+                                .startTime(now)
+                                .endTime(now.plusHours(2))
+                                .build())
                         .workspace(Workspace.builder().id(3L).name("테스트워크스페이스3").build())
                         .build(),
-                Meeting.builder().id(2L).name("테스트미팅2").startTime(now.plusHours(2)).endTime(now.plusHours(4))
+                Meeting.builder().id(2L).name("테스트미팅2")
+                        .meetingTime(MeetingTime.builder()
+                                .startTime(now.plusHours(2))
+                                .endTime(now.plusHours(4))
+                                .build())
                         .workspace(Workspace.builder().id(4L).name("테스트워크스페이스4").build())
                         .build()
         );

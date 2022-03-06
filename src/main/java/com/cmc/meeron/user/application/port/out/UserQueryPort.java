@@ -20,4 +20,6 @@ public interface UserQueryPort {
     List<WorkspaceUserQueryResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname);
 
     List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId);
+
+    List<WorkspaceUser> findAllWorkspaceUsersById(List<Long> workspaceUserIds);
 }

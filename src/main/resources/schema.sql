@@ -116,7 +116,7 @@ CREATE TABLE MEETING
     `START_DATE`          DATE            NOT NULL,
     `START_TIME`          TIME            NOT NULL,
     `END_TIME`            TIME            NOT NULL,
-    `PLACE`               VARCHAR(200)    NOT NULL,
+    `PLACE`               VARCHAR(200)    NULL,
     `MEETING_STATUS`      VARCHAR(20)     NOT NULL,
     PRIMARY KEY (MEETING_ID)
 );

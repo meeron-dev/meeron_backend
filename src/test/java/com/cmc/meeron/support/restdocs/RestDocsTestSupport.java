@@ -5,8 +5,11 @@ import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.auth.adapter.in.AuthRestController;
 import com.cmc.meeron.common.exception.GlobalExceptionHandler;
 import com.cmc.meeron.config.RestDocsConfig;
+import com.cmc.meeron.meeting.adapter.in.MeetingCommandRestController;
+import com.cmc.meeron.meeting.adapter.in.MeetingDayValidator;
+import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
-import com.cmc.meeron.meeting.adapter.in.MeetingRestController;
+import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
 import com.cmc.meeron.support.security.SecuritySupport;
 import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.team.adapter.in.TeamRestController;
@@ -39,10 +42,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         HealthRestController.class,
         AuthRestController.class,
         GlobalExceptionHandler.class,
-        MeetingRestController.class,
+        MeetingQueryRestController.class,
+        MeetingCommandRestController.class,
         UserRestController.class,
         WorkspaceRestController.class,
-        TeamRestController.class
+        TeamRestController.class,
+        MeetingDayValidator.class,
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import(RestDocsConfig.class)
@@ -53,6 +58,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected UserQueryUseCase userQueryUseCase;
     @MockBean protected WorkspaceQueryUseCase workspaceQueryUseCase;
     @MockBean protected TeamQueryUseCase teamQueryUseCase;
+    @MockBean protected MeetingCommandUseCase meetingCommandUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

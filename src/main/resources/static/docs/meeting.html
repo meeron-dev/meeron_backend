@@ -554,18 +554,18 @@ Content-Length: 548
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
-    "meetingDate" : "2022-03-05",
-    "startTime" : "22:00:00",
-    "endTime" : "23:00:00",
+    "meetingDate" : "2022-03-06",
+    "startTime" : "23:00:00",
+    "endTime" : "00:00:00",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
-    "meetingDate" : "2022-03-05",
-    "startTime" : "17:00:00",
-    "endTime" : "18:00:00",
+    "meetingDate" : "2022-03-06",
+    "startTime" : "18:00:00",
+    "endTime" : "19:00:00",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,7 +652,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 408
 
 {
-  "time" : "2022-03-05T20:48:54.008552",
+  "time" : "2022-03-06T21:45:53.283254",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -698,18 +698,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 576
 
 {
-  "time" : "2022-03-05T20:48:53.911343",
+  "time" : "2022-03-06T21:45:53.159876",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
   "errors" : [ {
-    "field" : "date",
-    "value" : null,
-    "reason" : "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요."
-  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "date",
+    "value" : null,
+    "reason" : "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요."
   }, {
     "field" : "type",
     "value" : null,
@@ -1039,7 +1039,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 960
 
 {
-  "time" : "2022-03-05T20:48:53.680182",
+  "time" : "2022-03-06T21:45:52.882316",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : "MEERON-400",
@@ -1064,7 +1064,7 @@ Content-Length: 960
 <h3 id="_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회">워크스페이스 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-05&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-06&amp;type=workspace&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1134,15 +1134,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "21:48",
-    "endTime" : "23:48",
+    "startTime" : "22:45",
+    "endTime" : "00:45",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "00:48",
-    "endTime" : "02:48",
+    "startTime" : "01:45",
+    "endTime" : "03:45",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1200,7 +1200,7 @@ Content-Length: 365
 <h3 id="_팀_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_팀_캘린더에서의_선택한_날짜에_대한_회의_조회">팀 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-05&amp;type=team&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-06&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1270,15 +1270,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "21:48",
-    "endTime" : "23:48",
+    "startTime" : "22:45",
+    "endTime" : "00:45",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "00:48",
-    "endTime" : "02:48",
+    "startTime" : "01:45",
+    "endTime" : "03:45",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1336,7 +1336,7 @@ Content-Length: 365
 <h3 id="_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회">'나의 미론' 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-05&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-06&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1406,15 +1406,15 @@ Content-Length: 411
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "21:48",
-    "endTime" : "23:48",
+    "startTime" : "22:45",
+    "endTime" : "00:45",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "00:48",
-    "endTime" : "02:48",
+    "startTime" : "01:45",
+    "endTime" : "03:45",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2207,7 +2207,7 @@ Content-Length: 513
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-04 16:29:37 +0900
+Last updated 2022-03-06 21:44:16 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
-public class MeetingIntegrationTest extends IntegrationTest {
+public class MeetingQueryIntegrationTest extends IntegrationTest {
 
     @DisplayName("오늘의 회의 조회 - 성공")
     @Test

@@ -5,6 +5,8 @@ import com.cmc.meeron.user.domain.WorkspaceUser;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -29,4 +31,22 @@ public class Attendee extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private AttendStatus attendStatus;
+
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private boolean isMeetingAdmin;
+
+    public static List<Attendee> createMeetingAdmins(List<WorkspaceUser> meetingAdmins, Meeting meeting) {
+        return meetingAdmins.stream()
+                .map(admin -> Attendee.createMeetingAdmin(admin, meeting))
+                .collect(Collectors.toList());
+    }
+
+    private static Attendee createMeetingAdmin(WorkspaceUser workspaceUser, Meeting meeting) {
+        return Attendee.builder()
+                .workspaceUser(workspaceUser)
+                .meeting(meeting)
+                .attendStatus(AttendStatus.ATTEND)
+                .isMeetingAdmin(true)
+                .build();
+    }
 }
