@@ -26,8 +26,21 @@ public class Attendees {
     @Builder.Default
     private List<Attendee> values = new ArrayList<>();
 
-    public void addAll(List<WorkspaceUser> meetingAdmins, Meeting meeting) {
-        List<Attendee> attendees = Attendee.createMeetingAdmins(meetingAdmins, meeting);
+    public void addAdmins(List<WorkspaceUser> meetingAdmins, Meeting meeting) {
+        List<Attendee> admins = Attendee.createMeetingAdmins(meetingAdmins, meeting);
+        addAll(admins);
+    }
+
+    public void addAttendees(List<WorkspaceUser> attendees, Meeting meeting) {
+        List<Attendee> meetingAttendee = Attendee.createAttendees(attendees, meeting);
+        addAll(meetingAttendee);
+    }
+
+    public void addAll(List<Attendee> attendees) {
         values.addAll(attendees);
+    }
+
+    public int size() {
+        return values.size();
     }
 }

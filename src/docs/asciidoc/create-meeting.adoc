@@ -6,6 +6,15 @@
 :toclevels: 4
 :sectlinks:
 
+== 회의를 만들때 필요한 API 정리
+====
+- link:user.html#search-workspace-users[/api/workspace-users?workspaceId=:id&nickname='닉네임', window=_blank] (닉네임으로 워크스페이스 내부 유저 검색)
+- link:team.html#teams[/api/teams?workspaceId=:id, window=_blank] (워크스페이스 내의 모든 팀 조회)
+- link:user.html#team-workspace-users[/api/teams/:id/workspace-users, window=_blank] (팀 선택시, 팀에 속한 유저 리스트)
+====
+
+
+
 [[create-meeting]]
 == 회의 생성
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/http-request.adoc[]
@@ -37,3 +46,28 @@ include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not
 === 담당 팀의 워크스페이스와 공동 관리자들의 공통 워크스페이스와 일치하지 않는 경우
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_admins_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_admins_workspace/http-response.adoc[]
+
+[[join-attendees]]
+== 만들어진 회의에 참가자 추가하기
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/request-headers.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/request-fields.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-response.adoc[]
+
+=== 회의 참가자의 워크스페이스 유저 ID를 주지 않을 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_empty_workspace_user_ids/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_empty_workspace_user_ids/http-response.adoc[]
+
+=== 존재하지 않는 회의일 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-response.adoc[]
+
+=== 참가자가 같은 워크스페이스에 속하지 않은 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-response.adoc[]
+
+=== 참가자가 같은 워크스페이스에 속해도 회의가 다른 워크스페이스에 있을 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_workspace/http-response.adoc[]
+
+

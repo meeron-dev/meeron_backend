@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
 public interface MeetingQueryPort {
 
@@ -20,4 +21,6 @@ public interface MeetingQueryPort {
     List<YearMeetingsCountQueryDto> findYearMeetingsCount(String searchType, List<Long> searchIds);
 
     List<MonthMeetingsCountQueryDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year);
+
+    Optional<Meeting> findById(Long meetingId);
 }

@@ -78,9 +78,18 @@ public class Meeting extends BaseEntity {
 
 
     public void addAdmins(List<WorkspaceUser> meetingAdmins) {
+        ifAttendeesNull();
+        attendees.addAdmins(meetingAdmins, this);
+    }
+
+    private void ifAttendeesNull() {
         if (attendees == null) {
             attendees = new Attendees();
         }
-        attendees.addAll(meetingAdmins, this);
+    }
+
+    public void addAttendees(List<WorkspaceUser> attendees) {
+        ifAttendeesNull();
+        this.attendees.addAttendees(attendees, this);
     }
 }

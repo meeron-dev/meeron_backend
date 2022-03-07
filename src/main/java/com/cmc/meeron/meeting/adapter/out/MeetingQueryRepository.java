@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -42,5 +43,10 @@ class MeetingQueryRepository implements MeetingQueryPort {
     @Override
     public List<MonthMeetingsCountQueryDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year) {
         return meetingQuerydslRepository.findMonthMeetingsCount(searchType, searchIds, year);
+    }
+
+    @Override
+    public Optional<Meeting> findById(Long meetingId) {
+        return meetingJpaRepository.findById(meetingId);
     }
 }

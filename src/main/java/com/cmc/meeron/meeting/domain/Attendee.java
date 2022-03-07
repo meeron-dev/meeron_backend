@@ -37,16 +37,22 @@ public class Attendee extends BaseEntity {
 
     public static List<Attendee> createMeetingAdmins(List<WorkspaceUser> meetingAdmins, Meeting meeting) {
         return meetingAdmins.stream()
-                .map(admin -> Attendee.createMeetingAdmin(admin, meeting))
+                .map(admin -> Attendee.createAttendee(admin, meeting, true))
                 .collect(Collectors.toList());
     }
 
-    private static Attendee createMeetingAdmin(WorkspaceUser workspaceUser, Meeting meeting) {
+    private static Attendee createAttendee(WorkspaceUser workspaceUser, Meeting meeting, boolean isAdmin) {
         return Attendee.builder()
                 .workspaceUser(workspaceUser)
                 .meeting(meeting)
                 .attendStatus(AttendStatus.ATTEND)
-                .isMeetingAdmin(true)
+                .isMeetingAdmin(isAdmin)
                 .build();
+    }
+
+    public static List<Attendee> createAttendees(List<WorkspaceUser> attendees, Meeting meeting) {
+        return attendees.stream()
+                .map(attendee -> Attendee.createAttendee(attendee, meeting, false))
+                .collect(Collectors.toList());
     }
 }

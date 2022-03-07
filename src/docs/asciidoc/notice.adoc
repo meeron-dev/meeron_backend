@@ -1,14 +1,4 @@
 [[notice]]
 == API 변경사항
 
-[[Login]]
-=== link:auth.html#login[/api/login, window=_blank]
-====
-- 'nickname' 값을 필수가 아닌 선택(optional)적으로 주게 변경되었습니다.
-====
-
-[[Reissue]]
-=== link:auth.html#reissue[/api/reissue, window=_blank]
-====
-- 토큰을 재발급 기능에서 Access Token, Refresh Token 둘 다 주는 것이 아닌 Refresh Token만 주는 것으로 변경되었습니다.
-====
+=== 없음
