@@ -15,8 +15,11 @@ include::notice.adoc[]
 == 회의 API
 * link:meeting.html[Meeting API, window=_blank]
 
-== 회의 생성 API
-* link:create-meeting.html[Create-Meeting API, window=_blank]
+== 회의, 아젠다 생성 API
+* link:create-meeting.html[Create-Meeting / Agenda API, window=_blank]
+
+== 아젠다 파일 생성 API
+* link:agenda-file.html[Agenda-File API, window=_blank]
 
 == 유저 / 워크스페이스 유저 / 팀 유저 API
 * link:user.html[User / Workspace-User / Team-User API, window=_blank]

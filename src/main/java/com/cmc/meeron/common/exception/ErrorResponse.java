@@ -48,7 +48,7 @@ public class ErrorResponse {
         return new ErrorResponse(bindingResult);
     }
 
-    public static ErrorResponse fromApplicationException(String message) {
+    public static ErrorResponse fromApplicationCommonException(String message) {
         return new ErrorResponse(message);
     }
 

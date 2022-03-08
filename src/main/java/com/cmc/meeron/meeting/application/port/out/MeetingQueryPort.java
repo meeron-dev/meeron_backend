@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.application.port.out;
 
+import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
@@ -23,4 +24,6 @@ public interface MeetingQueryPort {
     List<MonthMeetingsCountQueryDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year);
 
     Optional<Meeting> findById(Long meetingId);
+
+    Optional<Agenda> findAgendaById(Long agendaId);
 }

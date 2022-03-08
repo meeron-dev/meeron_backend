@@ -36,7 +36,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'

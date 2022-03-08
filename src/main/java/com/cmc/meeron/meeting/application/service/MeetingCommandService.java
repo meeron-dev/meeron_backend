@@ -5,10 +5,13 @@ import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
+import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
+import com.cmc.meeron.meeting.application.port.in.response.CreateAgendaResponseDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingBasicInfoVo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +40,7 @@ class MeetingCommandService implements MeetingCommandUseCase {
     private final MeetingQueryPort meetingQueryPort;
 
     @Override
-    public Long creteMeeting(CreateMeetingRequestDto createMeetingRequestDto) {
+    public Long createMeeting(CreateMeetingRequestDto createMeetingRequestDto) {
         List<Long> workspaceUserIds = createMeetingRequestDto.getMeetingManagerIds();
 
         Team operationTeam = teamQueryPort.findById(createMeetingRequestDto.getOperationTeamId())
@@ -48,7 +52,7 @@ class MeetingCommandService implements MeetingCommandUseCase {
         MeetingBasicInfoVo meetingBasicInfoVo = createMeetingRequestDto.createMeetingBasicInfo();
         Meeting meeting = Meeting.create(operationTeam, workspace, meetingTime, meetingBasicInfoVo);
         meeting.addAdmins(meetingAdmins);
-        return meetingCommandPort.save(meeting);
+        return meetingCommandPort.saveMeeting(meeting);
     }
 
     private List<WorkspaceUser> findWorkspaceUsers(List<Long> workspaceUserIds) {
@@ -74,5 +78,20 @@ class MeetingCommandService implements MeetingCommandUseCase {
         validateEqualWorkspace(joinAttendeesRequestDto.getWorkspaceUserIds(), meeting.getWorkspace());
         List<WorkspaceUser> attendees = findWorkspaceUsers(joinAttendeesRequestDto.getWorkspaceUserIds());
         meeting.addAttendees(attendees);
+    }
+
+    @Override
+    public List<CreateAgendaResponseDto> createAgendas(CreateAgendaRequestDto createAgendaRequestDto) {
+        List<CreateAgendaResponseDto> responseDtos = new ArrayList<>();
+        Meeting meeting = meetingQueryPort.findById(createAgendaRequestDto.getMeetingId())
+                .orElseThrow(MeetingNotFoundException::new);
+        createAgendaRequestDto.getAgendaRequestDtos()
+                .forEach(dto -> {
+                    Agenda agenda = meetingCommandPort.saveAgenda(dto.createAgenda(meeting));
+                    meetingCommandPort.saveIssues(dto.createIssues(agenda));
+                    CreateAgendaResponseDto responseDto = CreateAgendaResponseDto.of(dto.getAgendaOrder(), agenda.getId());
+                    responseDtos.add(responseDto);
+                });
+        return responseDtos;
     }
 }

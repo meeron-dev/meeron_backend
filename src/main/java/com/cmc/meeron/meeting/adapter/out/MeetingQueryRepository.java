@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.adapter.out;
 
+import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
@@ -19,6 +20,7 @@ class MeetingQueryRepository implements MeetingQueryPort {
 
     private final MeetingJpaRepository meetingJpaRepository;
     private final MeetingQuerydslRepository meetingQuerydslRepository;
+    private final AgendaJpaRepository agendaJpaRepository;
 
     @Override
     public List<Meeting> findTodayMeetings(Long workspaceId, Long workspaceUserId) {
@@ -48,5 +50,10 @@ class MeetingQueryRepository implements MeetingQueryPort {
     @Override
     public Optional<Meeting> findById(Long meetingId) {
         return meetingJpaRepository.findById(meetingId);
+    }
+
+    @Override
+    public Optional<Agenda> findAgendaById(Long agendaId) {
+        return agendaJpaRepository.findById(agendaId);
     }
 }

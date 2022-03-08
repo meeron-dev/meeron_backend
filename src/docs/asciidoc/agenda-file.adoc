@@ -1,0 +1,23 @@
+= 아젠다 파일 생성 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[create-agenda-file]]
+== 아젠다 파일 생성
+include::{snippets}/file-rest-controller-test/create_agenda_files_success/http-request.adoc[]
+include::{snippets}/file-rest-controller-test/create_agenda_files_success/request-headers.adoc[]
+include::{snippets}/file-rest-controller-test/create_agenda_files_success/path-parameters.adoc[]
+include::{snippets}/file-rest-controller-test/create_agenda_files_success/request-parts.adoc[]
+include::{snippets}/file-rest-controller-test/create_agenda_files_success/http-response.adoc[]
+
+=== 빈 파일을 리스트로 보낼 경우
+include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_empty_files/http-request.adoc[]
+include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_empty_files/http-response.adoc[]
+
+=== 아젠다를 찾지 못한 경우
+include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_found_agenda/http-request.adoc[]
+include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_found_agenda/http-response.adoc[]
