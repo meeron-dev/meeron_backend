@@ -1,5 +1,6 @@
 package com.cmc.meeron.workspace.adapter.in;
 
+import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -131,6 +132,6 @@ class WorkspaceRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.message", notNullValue()))
-                .andExpect(jsonPath("$.code", is("MEERON-400")));
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 }

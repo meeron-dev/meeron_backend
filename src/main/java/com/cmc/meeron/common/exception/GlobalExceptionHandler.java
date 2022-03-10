@@ -1,5 +1,6 @@
 package com.cmc.meeron.common.exception;
 
+import com.cmc.meeron.common.exception.file.FileUploadException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,26 +16,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorResponse> applicationException(ApplicationException e) {
         log.error(e.getMessage());
-        return ResponseEntity.badRequest().body(ErrorResponse.fromApplicationCommonException(e.getMessage()));
+        return ResponseEntity.badRequest().body(ErrorResponse.of(e));
     }
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ErrorResponse> bindException(BindException e) {
         log.error(e.getMessage());
-        return ResponseEntity.badRequest().body(ErrorResponse.fromBeanValidation(e.getBindingResult()));
+        return ResponseEntity.badRequest().body(ErrorResponse.fromBindException(e.getBindingResult()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorResponse> maxUploadSizeExceededException(MaxUploadSizeExceededException e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(ErrorResponse
-                .fromApplicationCommonException("파일 크기가 초과되었습니다. 10MB 내로 파일을 업로드해주세요."));
+                .of(new FileUploadException("파일 용량을 초과했습니다.")));
     }
 
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<ErrorResponse> maxUploadSizeExceededException(MissingServletRequestPartException e) {
         log.error(e.getMessage());
         return ResponseEntity.badRequest().body(ErrorResponse
-                .fromApplicationCommonException("파일을 하나 이상 보내야 합니다."));
+                .of(new FileUploadException("파일을 최소 하나 이상 보내야합니다.")));
     }
 }

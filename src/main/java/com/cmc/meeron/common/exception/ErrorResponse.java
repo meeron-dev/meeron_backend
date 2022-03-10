@@ -1,5 +1,6 @@
 package com.cmc.meeron.common.exception;
 
+import com.cmc.meeron.common.exception.auth.AuthErrorCode;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -17,47 +18,51 @@ public class ErrorResponse {
     private LocalDateTime time;
     private int status;
     private String message;
-    private String code;
+    private int code;
     private List<FieldError> errors;
 
     private ErrorResponse(BindingResult bindingResult) {
         this.time = LocalDateTime.now();
         this.status = HttpStatus.BAD_REQUEST.value();
         this.message = "입력 조건에 대한 예외입니다.";
-        this.code = "MEERON-400";
+        this.code = CommonErrorCode.BIND_EXCEPTION.getCode();
         this.errors = FieldError.of(bindingResult);
     }
 
-    private ErrorResponse(String message) {
+    private ErrorResponse(ApplicationException e) {
         this.time = LocalDateTime.now();
         this.status = HttpStatus.BAD_REQUEST.value();
-        this.message = message;
-        this.code = "MEERON-400";
+        this.message = e.getMessage();
+        this.code = e.getErrorEnumCode().getCode();
         this.errors = Collections.emptyList();
     }
 
-    private ErrorResponse(int status, String message, String code) {
+    private ErrorResponse(int status, String message, ErrorEnumCode errorEnumCode) {
         this.time = LocalDateTime.now();
         this.status = status;
         this.message = message;
-        this.code = code;
+        this.code = errorEnumCode.getCode();
         this.errors = Collections.emptyList();
     }
 
-    public static ErrorResponse fromBeanValidation(BindingResult bindingResult) {
+    public static ErrorResponse fromBindException(BindingResult bindingResult) {
         return new ErrorResponse(bindingResult);
     }
 
-    public static ErrorResponse fromApplicationCommonException(String message) {
-        return new ErrorResponse(message);
+    public static ErrorResponse of(ApplicationException e) {
+        return new ErrorResponse(e);
     }
 
-    public static ErrorResponse fromUnauthorized(String message) {
-        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), message, "MEERON-401");
+    public static ErrorResponse fromUnauthorizedAtFilter(String message) {
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), message, AuthErrorCode.UNAUTHENTICATED);
     }
 
-    public static ErrorResponse fromForbidden(String message) {
-        return new ErrorResponse(HttpStatus.FORBIDDEN.value(), message, "MEERON-403");
+    public static ErrorResponse fromTokenAuthenticationFilter(ApplicationException e) {
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), e.getErrorEnumCode());
+    }
+
+    public static ErrorResponse fromForbiddenAtFilter(String message) {
+        return new ErrorResponse(HttpStatus.FORBIDDEN.value(), message, AuthErrorCode.FORBIDDEN);
     }
 
     @Getter

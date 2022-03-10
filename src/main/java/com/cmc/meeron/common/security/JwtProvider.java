@@ -1,5 +1,7 @@
 package com.cmc.meeron.common.security;
 
+import com.cmc.meeron.common.exception.auth.AuthErrorCode;
+import com.cmc.meeron.common.exception.auth.TokenException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -87,16 +89,20 @@ public class JwtProvider {
             return true;
         } catch (SignatureException ex) {
             log.error("Invalid JWT signature");
+            throw new TokenException(AuthErrorCode.INVALID_SIGNATURE);
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
+            throw new TokenException(AuthErrorCode.INVALID_JWT);
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
+            throw new TokenException(AuthErrorCode.EXPIRED);
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
+            throw new TokenException(AuthErrorCode.UNSUPPORTED);
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
+            throw new TokenException(AuthErrorCode.EMPTY_CLAIM);
         }
-        return false;
     }
 
     public boolean isStartWithBearer(String bearerToken) {

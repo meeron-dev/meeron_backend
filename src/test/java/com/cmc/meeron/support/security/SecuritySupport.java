@@ -1,16 +1,14 @@
 package com.cmc.meeron.support.security;
 
-import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
-import com.cmc.meeron.common.security.CustomUserDetailsService;
-import com.cmc.meeron.common.security.RestAccessDeniedHandler;
-import com.cmc.meeron.common.security.RestAuthenticationEntryPoint;
-import com.cmc.meeron.common.security.JwtProvider;
+import com.cmc.meeron.common.exception.auth.AuthErrorCode;
 import com.cmc.meeron.common.exception.auth.TokenAuthenticationException;
+import com.cmc.meeron.common.exception.auth.TokenException;
+import com.cmc.meeron.common.security.*;
+import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserProvider;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +25,7 @@ public abstract class SecuritySupport {
 
     protected void setUpUnAuthenticated() {
         when(jwtProvider.isStartWithBearer(any())).thenReturn(true);
-        when(jwtProvider.validateToken(any())).thenThrow(new TokenAuthenticationException());
+        when(jwtProvider.validateToken(any())).thenThrow(new TokenAuthenticationException(AuthErrorCode.UNAUTHENTICATED));
     }
 
     protected void setUpAuthenticated() {
@@ -44,5 +42,10 @@ public abstract class SecuritySupport {
                                 .userProvider(UserProvider.KAKAO)
                                 .role(Role.USER)
                                 .build()));
+    }
+
+    protected void setUpExpired() {
+        when(jwtProvider.isStartWithBearer(any())).thenReturn(true);
+        when(jwtProvider.validateToken(any())).thenThrow(new TokenException(AuthErrorCode.EXPIRED));
     }
 }

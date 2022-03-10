@@ -1,5 +1,6 @@
 package com.cmc.meeron.user.adapter.in;
 
+import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -206,7 +207,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is("MEERON-400")));
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
     @DisplayName("워크스페이스 유저 검색 - 성공")
@@ -281,7 +282,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(2)))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is("MEERON-400")));
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     @DisplayName("팀에 속한 모든 워크스페이스 유저 정보 조회 - 성공")

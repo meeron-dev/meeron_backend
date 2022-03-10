@@ -1,5 +1,6 @@
 package com.cmc.meeron.file.adapter.in;
 
+import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -40,7 +41,7 @@ class FileRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is("MEERON-400")));
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
     // TODO: 2022/03/09 kobeomseok95 확장자 명 검증하기
@@ -80,7 +81,7 @@ class FileRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is("MEERON-400")));
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
     @DisplayName("아젠다 파일 생성 - 성공")

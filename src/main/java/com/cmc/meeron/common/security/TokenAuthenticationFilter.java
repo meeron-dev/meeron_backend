@@ -1,7 +1,9 @@
 package com.cmc.meeron.common.security;
 
 import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
+import com.cmc.meeron.common.exception.auth.AuthErrorCode;
 import com.cmc.meeron.common.exception.auth.TokenAuthenticationException;
+import com.cmc.meeron.common.exception.auth.TokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -37,8 +39,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+        } catch (TokenException e) {
+            throw e;
         } catch (Exception e) {
-            throw new TokenAuthenticationException();
+            throw new TokenAuthenticationException(AuthErrorCode.UNAUTHENTICATED);
         }
         filterChain.doFilter(request, response);
     }

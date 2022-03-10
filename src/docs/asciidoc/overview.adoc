@@ -52,3 +52,8 @@
 === 인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우
 include::{snippets}/health-rest-controller-test/authentication_check_fail/http-request.adoc[]
 include::{snippets}/health-rest-controller-test/authentication_check_fail/http-response.adoc[]
+
+[[expired-token]]
+=== 토큰이 만료되었을 경우
+include::{snippets}/health-rest-controller-test/login_fail_expired/http-request.adoc[]
+include::{snippets}/health-rest-controller-test/login_fail_expired/http-response.adoc[]

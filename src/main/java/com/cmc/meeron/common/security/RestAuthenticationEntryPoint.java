@@ -28,7 +28,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         String json = objectMapper.writeValueAsString(
-                ErrorResponse.fromUnauthorized(MESSAGE));
+                ErrorResponse.fromUnauthorizedAtFilter(MESSAGE));
         response.getWriter().write(json);
     }
 }
