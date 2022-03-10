@@ -21,7 +21,7 @@ public class WorkspaceUserDayMeetingResponseDto {
     private Long workspaceId;
     private String workspaceName;
 
-    public static List<WorkspaceUserDayMeetingResponseDto> ofList(List<Meeting> meetings) {
+    public static List<WorkspaceUserDayMeetingResponseDto> fromEntities(List<Meeting> meetings) {
         return meetings.stream()
                 .map(WorkspaceUserDayMeetingResponseDto::of)
                 .collect(Collectors.toList());

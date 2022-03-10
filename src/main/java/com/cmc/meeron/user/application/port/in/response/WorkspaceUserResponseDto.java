@@ -18,7 +18,7 @@ public class WorkspaceUserResponseDto {
     private String nickname;
     private String position;
 
-    public static List<WorkspaceUserResponseDto> ofList(List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos) {
+    public static List<WorkspaceUserResponseDto> fromQueryResponseDtos(List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos) {
         return workspaceUserQueryResponseDtos.stream()
                 .map(WorkspaceUserResponseDto::of)
                 .collect(Collectors.toList());

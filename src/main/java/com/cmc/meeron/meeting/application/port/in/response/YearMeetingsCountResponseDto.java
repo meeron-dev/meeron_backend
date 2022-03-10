@@ -16,7 +16,7 @@ public class YearMeetingsCountResponseDto {
     private int year;
     private Long count;
 
-    public static List<YearMeetingsCountResponseDto> ofList(List<YearMeetingsCountQueryDto> yearMeetingsCounts) {
+    public static List<YearMeetingsCountResponseDto> fromQueryResponseDtos(List<YearMeetingsCountQueryDto> yearMeetingsCounts) {
         return yearMeetingsCounts.stream()
                 .map(YearMeetingsCountResponseDto::of)
                 .collect(Collectors.toList());

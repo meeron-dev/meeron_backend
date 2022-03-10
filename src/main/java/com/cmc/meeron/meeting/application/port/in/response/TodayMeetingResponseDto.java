@@ -24,7 +24,7 @@ public class TodayMeetingResponseDto {
     private String operationTeamName;
     private String meetingStatus;
 
-    public static List<TodayMeetingResponseDto> ofList(List<Meeting> todayMeetings) {
+    public static List<TodayMeetingResponseDto> fromEntities(List<Meeting> todayMeetings) {
         return todayMeetings.stream()
                 .map(TodayMeetingResponseDto::of)
                 .collect(Collectors.toList());

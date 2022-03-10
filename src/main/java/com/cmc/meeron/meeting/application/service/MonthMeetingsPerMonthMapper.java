@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 class MonthMeetingsPerMonthMapper {
 
-    static List<MonthMeetingsCountResponseDto> toMonthMeetingsCountResponseDtoSortByMonth(List<MonthMeetingsCountQueryDto> monthMeetingsCountQueryDtos) {
+    static List<MonthMeetingsCountResponseDto> fromQueryResponseDtos(List<MonthMeetingsCountQueryDto> monthMeetingsCountQueryDtos) {
         List<MonthMeetingsCountResponseDto> monthMeetingsCountResponseDtos = monthMeetingsCountQueryDtos.stream()
                 .map(count -> MonthMeetingsCountResponseDto.builder()
                         .month(count.getMonth())

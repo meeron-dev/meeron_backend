@@ -24,11 +24,6 @@ class UserQueryRepository implements UserQueryPort {
     }
 
     @Override
-    public User save(User user) {
-        return userJpaRepository.save(user);
-    }
-
-    @Override
     public List<WorkspaceUser> findMyWorkspaceUsers(Long userId) {
         return workspaceUserJpaRepository.findByUserId(userId);
     }

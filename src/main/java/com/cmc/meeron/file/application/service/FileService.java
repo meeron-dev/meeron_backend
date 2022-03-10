@@ -70,7 +70,7 @@ class FileService implements FileManager {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
             storagePort.upload(filename, byteArrayInputStream, objectMetadata);
         } catch(IOException e) {
-            throw new FileUploadException(String.format("파일 업로드 중 에러가 발생했습니다. (%s)", file.getOriginalFilename()));
+            throw new FileUploadException(String.format("파일 업로드 중 예외가 발생했습니다. (%s)", file.getOriginalFilename()));
         }
     }
 }

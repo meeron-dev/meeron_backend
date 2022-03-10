@@ -11,6 +11,7 @@ import com.cmc.meeron.auth.domain.RefreshToken;
 import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.common.security.JwtProvider;
+import com.cmc.meeron.user.application.port.out.UserCommandPort;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 class AuthService implements AuthUseCase {
 
     private final UserQueryPort userQueryPort;
+    private final UserCommandPort userCommandPort;
     private final JwtProvider jwtProvider;
     private final TokenQueryPort tokenQueryPort;
     private final TokenCommandPort tokenCommandPort;
@@ -30,7 +32,7 @@ class AuthService implements AuthUseCase {
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userQueryPort.findByEmail(loginRequestDto.getEmail())
-                .orElseGet(() -> userQueryPort.save(User.of(
+                .orElseGet(() -> userCommandPort.save(User.of(
                         loginRequestDto.getEmail(),
                         loginRequestDto.getNickname(),
                         loginRequestDto.getProvider())));

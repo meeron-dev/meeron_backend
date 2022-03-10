@@ -3,6 +3,7 @@ package com.cmc.meeron.user.application.service;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
+import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
@@ -30,25 +31,27 @@ class UserQueryService implements UserQueryUseCase {
     @Override
     public List<MyWorkspaceUserResponseDto> getMyWorkspaceUsers(Long userId) {
         List<WorkspaceUser> myWorkspaceUsers = userQueryPort.findMyWorkspaceUsers(userId);
-        return MyWorkspaceUserResponseDto.ofList(myWorkspaceUsers);
+        return MyWorkspaceUserResponseDto.fromEntities(myWorkspaceUsers);
     }
 
     @Override
     public MyWorkspaceUserResponseDto getMyWorkspaceUser(Long workspaceUserId) {
         WorkspaceUser workspaceUser = userQueryPort.findWorkspaceUserById(workspaceUserId)
                 .orElseThrow(WorkspaceUserNotFoundException::new);
-        return MyWorkspaceUserResponseDto.of(workspaceUser);
+        return MyWorkspaceUserResponseDto.fromEntity(workspaceUser);
     }
 
     @Override
-    public List<WorkspaceUserResponseDto> searchWorkspaceUsers(Long workspaceId, String nickname) {
-        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = userQueryPort.findByWorkspaceIdNickname(workspaceId, nickname);
-        return WorkspaceUserResponseDto.ofList(workspaceUserQueryResponseDtos);
+    public List<WorkspaceUserResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto) {
+        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos =
+                userQueryPort.findByWorkspaceIdNickname(findWorkspaceUserRequestDto.getWorkspaceId(),
+                        findWorkspaceUserRequestDto.getNickname());
+        return WorkspaceUserResponseDto.fromQueryResponseDtos(workspaceUserQueryResponseDtos);
     }
 
     @Override
     public List<WorkspaceUserResponseDto> getTeamUsers(Long teamId) {
         List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = userQueryPort.findByTeamId(teamId);
-        return WorkspaceUserResponseDto.ofList(workspaceUserQueryResponseDtos);
+        return WorkspaceUserResponseDto.fromQueryResponseDtos(workspaceUserQueryResponseDtos);
     }
 }

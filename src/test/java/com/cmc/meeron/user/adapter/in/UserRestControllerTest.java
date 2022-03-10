@@ -219,7 +219,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
         params.add("workspaceId", "1");
         params.add("nickname", "무");
         List<WorkspaceUserResponseDto> workspaceUserResponseDtos = createWorkspaceUserSearchResponseDtos();
-        when(userQueryUseCase.searchWorkspaceUsers(any(), any()))
+        when(userQueryUseCase.searchWorkspaceUsers(any()))
                 .thenReturn(workspaceUserResponseDtos);
 
         // when, then, docs

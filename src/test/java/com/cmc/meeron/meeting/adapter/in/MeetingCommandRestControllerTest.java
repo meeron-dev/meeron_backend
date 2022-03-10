@@ -175,6 +175,32 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
+    @DisplayName("회의 생성 - 실패 / 워크스페이스 유저 ID가 존재하지 않을 경우(본인은 반드시 포함해야 한다.)")
+    @Test
+    void create_meeting_fail_require_my_workspace_user_id() throws Exception {
+
+        // given
+        CreateMeetingRequest request = CreateMeetingRequest.builder()
+                .meetingDate(LocalDate.now().plusDays(3))
+                .startTime(LocalTime.of(10, 0))
+                .endTime(LocalTime.of(11, 0))
+                .meetingName("테스트 회의")
+                .meetingPurpose("테스트 회의 성격")
+                .operationTeamId(1L)
+                .meetingAdminIds(List.of())
+                .build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+    }
+
     @DisplayName("회의 생성 - 성공")
     @Test
     void create_meeting_success() throws Exception {

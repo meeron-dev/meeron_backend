@@ -6,7 +6,6 @@ import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
 import com.cmc.meeron.meeting.adapter.in.response.CreateAgendaResponse;
 import com.cmc.meeron.meeting.adapter.in.response.CreateMeetingResponse;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
-import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
 import com.cmc.meeron.meeting.application.port.in.response.CreateAgendaResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class MeetingCommandRestController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateMeetingResponse createMeeting(@RequestBody @Valid CreateMeetingRequest createMeetingRequest) {
-        Long createdTeamId = meetingCommandUseCase.createMeeting(createMeetingRequest.toDto());
+        Long createdTeamId = meetingCommandUseCase.createMeeting(createMeetingRequest.toRequestDto());
         return CreateMeetingResponse.of(createdTeamId);
     }
 
@@ -40,9 +39,7 @@ public class MeetingCommandRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public void joinAttendees(@PathVariable Long meetingId,
                               @RequestBody @Valid JoinAttendeesRequest joinAttendeesRequest) {
-        JoinAttendeesRequestDto joinAttendeesRequestDto = JoinAttendeesRequestDto.of(meetingId,
-                joinAttendeesRequest.getWorkspaceUserIds());
-        meetingCommandUseCase.joinAttendees(joinAttendeesRequestDto);
+        meetingCommandUseCase.joinAttendees(joinAttendeesRequest.toRequestDto(meetingId));
     }
 
     @PostMapping("/{meetingId}/agendas")

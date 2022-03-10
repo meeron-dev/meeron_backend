@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.adapter.in.request;
 
 import com.cmc.meeron.common.validator.EnumValid;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingSearchRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -18,6 +19,13 @@ public class YearMeetingsCountRequest {
 
     @NotEmpty(message = "검색 유형의 ID를 입력해주세요.")
     private List<Long> id;
+
+    public MeetingSearchRequestDto toRequestDto() {
+        return MeetingSearchRequestDto.builder()
+                .searchType(type.toUpperCase())
+                .searchIds(id)
+                .build();
+    }
 
     public String getType() {
         return type.toUpperCase();

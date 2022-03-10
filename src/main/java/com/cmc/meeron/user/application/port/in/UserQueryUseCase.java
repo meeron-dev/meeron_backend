@@ -1,6 +1,7 @@
 package com.cmc.meeron.user.application.port.in;
 
 import com.cmc.meeron.common.security.AuthUser;
+import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
@@ -15,7 +16,7 @@ public interface UserQueryUseCase {
 
     MyWorkspaceUserResponseDto getMyWorkspaceUser(Long workspaceUserId);
 
-    List<WorkspaceUserResponseDto> searchWorkspaceUsers(Long workspaceId, String nickname);
+    List<WorkspaceUserResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto);
 
     List<WorkspaceUserResponseDto> getTeamUsers(Long teamId);
 }

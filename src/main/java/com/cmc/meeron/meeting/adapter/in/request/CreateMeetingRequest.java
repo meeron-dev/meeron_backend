@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -36,9 +37,10 @@ public class CreateMeetingRequest {
     @NotNull(message = "담당 팀 ID를 입력해주세요.")
     private Long operationTeamId;
 
+    @Size(min = 1, message = "공동 관리자는 본인이 반드시 포함되어야 합니다.")
     private List<Long> meetingAdminIds;
 
-    public CreateMeetingRequestDto toDto() {
+    public CreateMeetingRequestDto toRequestDto() {
         return CreateMeetingRequestDto.builder()
                 .startDate(meetingDate)
                 .startTime(startTime)

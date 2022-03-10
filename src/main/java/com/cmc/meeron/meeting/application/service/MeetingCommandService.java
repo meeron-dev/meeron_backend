@@ -25,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -82,16 +82,15 @@ class MeetingCommandService implements MeetingCommandUseCase {
 
     @Override
     public List<CreateAgendaResponseDto> createAgendas(CreateAgendaRequestDto createAgendaRequestDto) {
-        List<CreateAgendaResponseDto> responseDtos = new ArrayList<>();
         Meeting meeting = meetingQueryPort.findById(createAgendaRequestDto.getMeetingId())
                 .orElseThrow(MeetingNotFoundException::new);
-        createAgendaRequestDto.getAgendaRequestDtos()
-                .forEach(dto -> {
+        return createAgendaRequestDto.getAgendaRequestDtos()
+                .stream()
+                .map(dto -> {
                     Agenda agenda = meetingCommandPort.saveAgenda(dto.createAgenda(meeting));
                     meetingCommandPort.saveIssues(dto.createIssues(agenda));
-                    CreateAgendaResponseDto responseDto = CreateAgendaResponseDto.of(dto.getAgendaOrder(), agenda.getId());
-                    responseDtos.add(responseDto);
-                });
-        return responseDtos;
+                    return CreateAgendaResponseDto.fromEntity(dto.getAgendaOrder(), agenda.getId());
+                })
+                .collect(Collectors.toList());
     }
 }

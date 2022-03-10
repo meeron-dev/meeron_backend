@@ -12,7 +12,7 @@ public class CreateAgendaResponseDto {
     private int agendaNumber;
     private Long createdAgendaId;
 
-    public static CreateAgendaResponseDto of(int agendaNumber, Long agendaId) {
+    public static CreateAgendaResponseDto fromEntity(int agendaNumber, Long agendaId) {
         return CreateAgendaResponseDto.builder()
                 .agendaNumber(agendaNumber)
                 .createdAgendaId(agendaId)

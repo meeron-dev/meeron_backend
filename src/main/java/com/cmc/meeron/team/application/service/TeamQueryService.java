@@ -21,6 +21,6 @@ class TeamQueryService implements TeamQueryUseCase {
     public List<WorkspaceTeamsResponseDto> getWorkspaceTeams(Long workspaceId) {
         List<WorkspaceTeamsQueryResponseDto> workspaceTeamsQueryResponseDtos = teamQueryPort
                 .findByWorkspaceId(workspaceId);
-        return WorkspaceTeamsResponseDto.ofList(workspaceTeamsQueryResponseDtos);
+        return WorkspaceTeamsResponseDto.fromQueryResponseDtos(workspaceTeamsQueryResponseDtos);
     }
 }

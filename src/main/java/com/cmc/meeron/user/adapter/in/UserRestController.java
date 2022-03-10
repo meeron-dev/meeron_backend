@@ -1,7 +1,7 @@
 package com.cmc.meeron.user.adapter.in;
 
 import com.cmc.meeron.common.security.AuthUser;
-import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUsersParameters;
+import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequest;
 import com.cmc.meeron.user.adapter.in.response.MyWorkspaceUserResponse;
 import com.cmc.meeron.user.adapter.in.response.MyWorkspaceUsersResponse;
 import com.cmc.meeron.user.adapter.in.response.WorkspaceUserResponse;
@@ -39,9 +39,9 @@ public class UserRestController {
 
     @GetMapping("/workspace-users")
     @ResponseStatus(HttpStatus.OK)
-    public WorkspaceUserResponse searchWorkspaceUsers(@Valid FindWorkspaceUsersParameters findWorkspaceUsersParameters) {
+    public WorkspaceUserResponse searchWorkspaceUsers(@Valid FindWorkspaceUserRequest findWorkspaceUserRequest) {
         List<WorkspaceUserResponseDto> workspaceUserResponseDtos =
-                userQueryUseCase.searchWorkspaceUsers(findWorkspaceUsersParameters.getWorkspaceId(), findWorkspaceUsersParameters.getNickname());
+                userQueryUseCase.searchWorkspaceUsers(findWorkspaceUserRequest.toRequestDto());
         return WorkspaceUserResponse.fromList(workspaceUserResponseDtos);
     }
 

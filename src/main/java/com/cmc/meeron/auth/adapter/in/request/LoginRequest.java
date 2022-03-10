@@ -1,5 +1,6 @@
 package com.cmc.meeron.auth.adapter.in.request;
 
+import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.common.validator.EnumValid;
 import lombok.*;
 
@@ -21,6 +22,15 @@ public class LoginRequest {
 
     @EnumValid(message = "지원하지 않는 소셜 로그인 방식입니다.", enumClass = SocialLoginProvider.class)
     private String provider;
+
+    public LoginRequestDto toRequestDto() {
+        return LoginRequestDto.builder()
+                .email(email)
+                .nickname(nickname)
+                .provider(provider.toUpperCase())
+                .profileImageUrl(profileImageUrl)
+                .build();
+    }
 
     @Getter
     @AllArgsConstructor

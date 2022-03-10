@@ -2,6 +2,7 @@ package com.cmc.meeron.user.application.service;
 
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
@@ -158,18 +159,26 @@ class UserQueryServiceTest {
     void search_workspace_users_success() throws Exception {
 
         // given
+        FindWorkspaceUserRequestDto requestDto = createFindWorkspaceUserRequestDto();
         List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = createWorkspaceUserQueryResponseDtos();
         when(userQueryPort.findByWorkspaceIdNickname(any(), any()))
                 .thenReturn(workspaceUserQueryResponseDtos);
 
         // when
-        List<WorkspaceUserResponseDto> responseDtos = userQueryService.searchWorkspaceUsers(1L, "무");
+        List<WorkspaceUserResponseDto> responseDtos = userQueryService.searchWorkspaceUsers(requestDto);
 
         // then
         assertAll(
                 () -> verify(userQueryPort).findByWorkspaceIdNickname(1L, "무"),
                 () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size())
         );
+    }
+
+    private FindWorkspaceUserRequestDto createFindWorkspaceUserRequestDto() {
+        return FindWorkspaceUserRequestDto.builder()
+                .workspaceId(1L)
+                .nickname("무")
+                .build();
     }
 
     private List<WorkspaceUserQueryResponseDto> createWorkspaceUserQueryResponseDtos() {

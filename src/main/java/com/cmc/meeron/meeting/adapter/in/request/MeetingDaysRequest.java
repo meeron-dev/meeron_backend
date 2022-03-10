@@ -1,6 +1,8 @@
 package com.cmc.meeron.meeting.adapter.in.request;
 
 import com.cmc.meeron.common.validator.EnumValid;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingDaysRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingSearchRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -23,6 +25,16 @@ public class MeetingDaysRequest {
 
     @NotNull(message = "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요.")
     private YearMonth date;
+
+    public MeetingDaysRequestDto toRequestDto() {
+        return MeetingDaysRequestDto.builder()
+                .meetingSearch(MeetingSearchRequestDto.builder()
+                        .searchType(type.toUpperCase())
+                        .searchIds(id)
+                        .build())
+                .yearMonth(date)
+                .build();
+    }
 
     public String getType() {
         return type.toUpperCase();

@@ -47,6 +47,10 @@ include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_admins_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_admins_workspace/http-response.adoc[]
 
+=== 공동 관리자 임명 시 본인 워크스페이스 유저 ID를 넣지 않은 경우
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_require_my_workspace_user_id/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_require_my_workspace_user_id/http-response.adoc[]
+
 [[join-attendees]]
 == 만들어진 회의에 참가자 추가하기
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-request.adoc[]

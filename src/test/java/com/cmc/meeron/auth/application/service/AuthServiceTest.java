@@ -8,6 +8,7 @@ import com.cmc.meeron.auth.domain.*;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.security.JwtProvider;
+import com.cmc.meeron.user.application.port.out.UserCommandPort;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
@@ -33,16 +34,12 @@ class AuthServiceTest {
     private final String RENEWAL_ACCESS_TOKEN = "refreshedTestAccessToken";
     private final String RENEWAL_REFRESH_TOKEN = "refreshedTestRefreshToken";
 
-    @Mock
-    UserQueryPort userQueryPort;
-    @Mock
-    JwtProvider jwtProvider;
-    @Mock
-    TokenQueryPort tokenQueryPort;
-    @Mock
-    TokenCommandPort tokenCommandPort;
-    @InjectMocks
-    AuthService authService;
+    @Mock UserQueryPort userQueryPort;
+    @Mock JwtProvider jwtProvider;
+    @Mock TokenQueryPort tokenQueryPort;
+    @Mock TokenCommandPort tokenCommandPort;
+    @Mock UserCommandPort userCommandPort;
+    @InjectMocks AuthService authService;
 
     @DisplayName("로그인 - 성공 / 회원가입이 되지 않은 유저일 경우")
     @Test
@@ -51,7 +48,7 @@ class AuthServiceTest {
         // given
         LoginRequestDto kakaoLoginRequest = mockKakaoLoginRequest();
         when(userQueryPort.findByEmail(kakaoLoginRequest.getEmail())
-                .orElseGet(() -> userQueryPort.save(any())))
+                .orElseGet(() -> userCommandPort.save(any())))
                 .thenReturn(mockUser());
         mockJwtProvider();
 
@@ -60,7 +57,7 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(userQueryPort).save(any(User.class)),
+                () -> verify(userCommandPort).save(any(User.class)),
                 () -> verify(tokenCommandPort).saveRefreshToken(any(RefreshToken.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
@@ -109,7 +106,7 @@ class AuthServiceTest {
         // then
         assertAll(
                 () -> verify(userQueryPort).findByEmail(kakaoLoginRequest.getEmail()),
-                () -> verify(userQueryPort, times(0)).save(any(User.class)),
+                () -> verify(userCommandPort, times(0)).save(any(User.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
         );

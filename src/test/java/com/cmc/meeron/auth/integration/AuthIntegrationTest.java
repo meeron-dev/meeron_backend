@@ -5,6 +5,7 @@ import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
 import com.cmc.meeron.auth.adapter.in.request.LoginRequest;
 import com.cmc.meeron.common.security.JwtProvider;
 import com.cmc.meeron.support.IntegrationTest;
+import com.cmc.meeron.user.application.port.out.UserCommandPort;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import org.junit.jupiter.api.DisplayName;
@@ -24,10 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AuthIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    UserQueryPort userQueryPort;
-    @Autowired
-    TokenQueryPort tokenQueryPort;
+    @Autowired UserQueryPort userQueryPort;
+    @Autowired TokenQueryPort tokenQueryPort;
+    @Autowired UserCommandPort userCommandPort;
     @Autowired JwtProvider jwtProvider;
 
     @DisplayName("로그인 - 성공 / 카카오, 애플 로그인")
@@ -91,7 +91,7 @@ public class AuthIntegrationTest extends IntegrationTest {
     }
 
     private User setUpMockUser(LoginRequest loginRequest) {
-        return userQueryPort.save(createMockUser(loginRequest));
+        return userCommandPort.save(createMockUser(loginRequest));
     }
 
     private User createMockUser(LoginRequest loginRequest) {

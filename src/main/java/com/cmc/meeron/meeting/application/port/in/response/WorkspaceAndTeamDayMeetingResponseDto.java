@@ -19,7 +19,7 @@ public class WorkspaceAndTeamDayMeetingResponseDto {
     private String startTime;
     private String endTime;
 
-    public static List<WorkspaceAndTeamDayMeetingResponseDto> ofList(List<Meeting> dayMeetings) {
+    public static List<WorkspaceAndTeamDayMeetingResponseDto> fromEntities(List<Meeting> dayMeetings) {
         return dayMeetings.stream()
                 .map(WorkspaceAndTeamDayMeetingResponseDto::of)
                 .collect(Collectors.toList());

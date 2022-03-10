@@ -13,11 +13,4 @@ public class JoinAttendeesRequestDto {
 
     private Long meetingId;
     private List<Long> workspaceUserIds;
-
-    public static JoinAttendeesRequestDto of(Long meetingId, List<Long> workspaceUserIds) {
-        return JoinAttendeesRequestDto.builder()
-                .meetingId(meetingId)
-                .workspaceUserIds(workspaceUserIds)
-                .build();
-    }
 }

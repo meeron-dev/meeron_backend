@@ -2,7 +2,6 @@ package com.cmc.meeron.auth.adapter.in;
 
 import com.cmc.meeron.auth.adapter.in.request.LoginRequest;
 import com.cmc.meeron.auth.application.port.in.AuthUseCase;
-import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
 import com.cmc.meeron.common.security.AuthUser;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class AuthRestController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public TokenResponseDto login(@RequestBody @Valid LoginRequest loginRequest) {
-        return authUseCase.login(LoginRequestDto.of(loginRequest));
+        return authUseCase.login(loginRequest.toRequestDto());
     }
 
     @PostMapping("/logout")

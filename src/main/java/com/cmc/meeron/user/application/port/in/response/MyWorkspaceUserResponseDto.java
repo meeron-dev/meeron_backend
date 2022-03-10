@@ -20,13 +20,13 @@ public class MyWorkspaceUserResponseDto {
     private String profileImageUrl;
     private String position;
 
-    public static List<MyWorkspaceUserResponseDto> ofList(List<WorkspaceUser> myWorkspaceUsers) {
+    public static List<MyWorkspaceUserResponseDto> fromEntities(List<WorkspaceUser> myWorkspaceUsers) {
         return myWorkspaceUsers.stream()
-                .map(MyWorkspaceUserResponseDto::of)
+                .map(MyWorkspaceUserResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    public static MyWorkspaceUserResponseDto of(WorkspaceUser workspaceUser) {
+    public static MyWorkspaceUserResponseDto fromEntity(WorkspaceUser workspaceUser) {
         return MyWorkspaceUserResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
                 .workspaceId(workspaceUser.getWorkspace().getId())

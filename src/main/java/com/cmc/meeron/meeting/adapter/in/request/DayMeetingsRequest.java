@@ -1,6 +1,8 @@
 package com.cmc.meeron.meeting.adapter.in.request;
 
 import com.cmc.meeron.common.validator.EnumValid;
+import com.cmc.meeron.meeting.application.port.in.request.DayMeetingsRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingSearchRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -26,5 +28,15 @@ public class DayMeetingsRequest {
 
     public String getType() {
         return type.toUpperCase();
+    }
+
+    public DayMeetingsRequestDto toRequestDto() {
+        return DayMeetingsRequestDto.builder()
+                .meetingSearch(MeetingSearchRequestDto.builder()
+                        .searchType(type.toUpperCase())
+                        .searchIds(id)
+                        .build())
+                .localDate(date)
+                .build();
     }
 }

@@ -1,6 +1,8 @@
 package com.cmc.meeron.meeting.adapter.in.request;
 
 import com.cmc.meeron.common.validator.EnumValid;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingSearchRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.MonthMeetingsCountRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
@@ -23,6 +25,16 @@ public class MonthMeetingsCountRequest {
 
     @NotNull(message = "찾을 회의의 년도를 'yyyy' 형식으로 입력해주세요.")
     private Year year;
+
+    public MonthMeetingsCountRequestDto toRequestDto() {
+        return MonthMeetingsCountRequestDto.builder()
+                .meetingSearch(MeetingSearchRequestDto.builder()
+                        .searchType(type.toUpperCase())
+                        .searchIds(id)
+                        .build())
+                .year(year)
+                .build();
+    }
 
     public String getType() {
         return type.toUpperCase();

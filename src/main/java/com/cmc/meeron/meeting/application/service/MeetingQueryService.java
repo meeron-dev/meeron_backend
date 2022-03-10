@@ -23,7 +23,7 @@ class MeetingQueryService implements MeetingQueryUseCase {
     @Override
     public List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto) {
         List<Meeting> todayMeetings = meetingQueryPort.findTodayMeetings(todayMeetingRequestDto.getWorkspaceId(), todayMeetingRequestDto.getWorkspaceUserId());
-        return TodayMeetingResponseDto.ofList(todayMeetings);
+        return TodayMeetingResponseDto.fromEntities(todayMeetings);
     }
 
     @Override
@@ -36,7 +36,7 @@ class MeetingQueryService implements MeetingQueryUseCase {
     @Override
     public List<WorkspaceAndTeamDayMeetingResponseDto> getWorkspaceAndTeamDayMeetings(DayMeetingsRequestDto dayMeetingsRequestDto) {
         List<Meeting> dayMeetings = findMeetings(dayMeetingsRequestDto);
-        return WorkspaceAndTeamDayMeetingResponseDto.ofList(dayMeetings);
+        return WorkspaceAndTeamDayMeetingResponseDto.fromEntities(dayMeetings);
     }
 
     private List<Meeting> findMeetings(DayMeetingsRequestDto dayMeetingsRequestDto) {
@@ -48,13 +48,13 @@ class MeetingQueryService implements MeetingQueryUseCase {
     @Override
     public List<WorkspaceUserDayMeetingResponseDto> getWorkspaceUserDayMeetings(DayMeetingsRequestDto dayMeetingsRequestDto) {
         List<Meeting> meetings = findMeetings(dayMeetingsRequestDto);
-        return WorkspaceUserDayMeetingResponseDto.ofList(meetings);
+        return WorkspaceUserDayMeetingResponseDto.fromEntities(meetings);
     }
 
     @Override
     public List<YearMeetingsCountResponseDto> getYearMeetingsCount(MeetingSearchRequestDto meetingSearchRequestDto) {
         List<YearMeetingsCountQueryDto> yearMeetingsCount = meetingQueryPort.findYearMeetingsCount(meetingSearchRequestDto.getSearchType(), meetingSearchRequestDto.getSearchIds());
-        return YearMeetingsCountResponseDto.ofList(yearMeetingsCount);
+        return YearMeetingsCountResponseDto.fromQueryResponseDtos(yearMeetingsCount);
     }
 
     @Override
@@ -62,6 +62,6 @@ class MeetingQueryService implements MeetingQueryUseCase {
         List<MonthMeetingsCountQueryDto> monthMeetingsCountQueryDtos = meetingQueryPort.findMonthMeetingsCount(monthMeetingsCountRequestDto.getSearchType(),
                 monthMeetingsCountRequestDto.getSearchIds(),
                 monthMeetingsCountRequestDto.getYear());
-        return MonthMeetingsPerMonthMapper.toMonthMeetingsCountResponseDtoSortByMonth(monthMeetingsCountQueryDtos);
+        return MonthMeetingsPerMonthMapper.fromQueryResponseDtos(monthMeetingsCountQueryDtos);
     }
 }

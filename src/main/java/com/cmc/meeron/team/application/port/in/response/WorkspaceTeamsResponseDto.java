@@ -16,7 +16,7 @@ public class WorkspaceTeamsResponseDto {
     private Long teamId;
     private String teamName;
 
-    public static List<WorkspaceTeamsResponseDto> ofList(List<WorkspaceTeamsQueryResponseDto> workspaceTeamsQueryResponseDtos) {
+    public static List<WorkspaceTeamsResponseDto> fromQueryResponseDtos(List<WorkspaceTeamsQueryResponseDto> workspaceTeamsQueryResponseDtos) {
         return workspaceTeamsQueryResponseDtos.stream()
                 .map(queryResponse -> WorkspaceTeamsResponseDto.builder()
                         .teamId(queryResponse.getTeamId())

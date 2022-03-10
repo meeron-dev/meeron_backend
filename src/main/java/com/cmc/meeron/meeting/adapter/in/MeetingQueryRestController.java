@@ -3,7 +3,6 @@ package com.cmc.meeron.meeting.adapter.in;
 import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.meeting.adapter.in.response.*;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
-import com.cmc.meeron.meeting.application.port.in.request.*;
 import com.cmc.meeron.meeting.application.port.in.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,14 +25,14 @@ public class MeetingQueryRestController {
     @ResponseStatus(HttpStatus.OK)
     public TodayMeetingResponse todayMeetings(@Valid TodayMeetingRequest todayMeetingRequest) {
         List<TodayMeetingResponseDto> todayMeetings = meetingQueryUseCase
-                .getTodayMeetings(TodayMeetingRequestDto.of(todayMeetingRequest));
+                .getTodayMeetings(todayMeetingRequest.toRequestDto());
         return TodayMeetingResponse.fromDto(todayMeetings);
     }
 
     @GetMapping("/days")
     @ResponseStatus(HttpStatus.OK)
     public MeetingDaysResponse getMeetingDays(@Valid MeetingDaysRequest meetingDaysRequest) {
-        List<Integer> days = meetingQueryUseCase.getMeetingDays(MeetingDaysRequestDto.of(meetingDaysRequest));
+        List<Integer> days = meetingQueryUseCase.getMeetingDays(meetingDaysRequest.toRequestDto());
         return MeetingDaysResponse.of(days);
     }
 
@@ -43,14 +42,12 @@ public class MeetingQueryRestController {
     public DayMeetingsResponse getDayMeetings(@Valid DayMeetingsRequest dayMeetingsRequest) {
         if (!isWorkspaceUserType(dayMeetingsRequest)) {
             List<WorkspaceAndTeamDayMeetingResponseDto> workspaceAndTeamDayMeetingsResponseDtos =
-                    meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(DayMeetingsRequestDto
-                            .of(dayMeetingsRequest.getType(), dayMeetingsRequest.getId(), dayMeetingsRequest.getDate()));
+                    meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(dayMeetingsRequest.toRequestDto());
             return DayMeetingsResponse.fromWorkspaceAndTeam(workspaceAndTeamDayMeetingsResponseDtos);
         }
 
         List<WorkspaceUserDayMeetingResponseDto> workspaceUserDayMeetingsResponseDtos =
-                meetingQueryUseCase.getWorkspaceUserDayMeetings(DayMeetingsRequestDto
-                        .of(dayMeetingsRequest.getType(), dayMeetingsRequest.getId(), dayMeetingsRequest.getDate()));
+                meetingQueryUseCase.getWorkspaceUserDayMeetings(dayMeetingsRequest.toRequestDto());
         return DayMeetingsResponse.fromWorkspaceUser(workspaceUserDayMeetingsResponseDtos);
     }
 
@@ -61,17 +58,16 @@ public class MeetingQueryRestController {
     @GetMapping("/years")
     @ResponseStatus(HttpStatus.OK)
     public YearMeetingsCountResponse getYearMeetingsCount(@Valid YearMeetingsCountRequest yearMeetingsCountRequest) {
-        List<YearMeetingsCountResponseDto> yearMeetingsCount = meetingQueryUseCase.getYearMeetingsCount(
-                MeetingSearchRequestDto.of(yearMeetingsCountRequest.getType(), yearMeetingsCountRequest.getId()));
+        List<YearMeetingsCountResponseDto> yearMeetingsCount =
+                meetingQueryUseCase.getYearMeetingsCount(yearMeetingsCountRequest.toRequestDto());
         return YearMeetingsCountResponse.of(yearMeetingsCount);
     }
 
     @GetMapping("/months")
     @ResponseStatus(HttpStatus.OK)
     public MonthMeetingsCountResponse getMonthMeetingsCount(@Valid MonthMeetingsCountRequest monthMeetingsCountRequest) {
-        List<MonthMeetingsCountResponseDto> monthMeetingsCount = meetingQueryUseCase.getMonthMeetingsCount(
-                MonthMeetingsCountRequestDto.of(monthMeetingsCountRequest.getType(), monthMeetingsCountRequest.getId(),
-                        monthMeetingsCountRequest.getYear()));
+        List<MonthMeetingsCountResponseDto> monthMeetingsCount =
+                meetingQueryUseCase.getMonthMeetingsCount(monthMeetingsCountRequest.toRequestDto());
         return MonthMeetingsCountResponse.of(monthMeetingsCount);
     }
 }

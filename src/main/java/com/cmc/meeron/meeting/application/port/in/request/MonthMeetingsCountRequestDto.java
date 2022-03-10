@@ -15,16 +15,6 @@ public class MonthMeetingsCountRequestDto {
     private MeetingSearchRequestDto meetingSearch;
     private Year year;
 
-    public static MonthMeetingsCountRequestDto of(String type, List<Long> id, Year year) {
-        return MonthMeetingsCountRequestDto.builder()
-                .meetingSearch(MeetingSearchRequestDto.builder()
-                        .searchType(type)
-                        .searchIds(id)
-                        .build())
-                .year(year)
-                .build();
-    }
-
     public String getSearchType() {
         return meetingSearch.getSearchType();
     }

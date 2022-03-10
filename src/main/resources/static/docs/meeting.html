@@ -555,8 +555,8 @@ Content-Length: 548
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
     "meetingDate" : "2022-03-10",
-    "startTime" : "19:00:00",
-    "endTime" : "20:00:00",
+    "startTime" : "01:00:00",
+    "endTime" : "02:00:00",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
@@ -564,8 +564,8 @@ Content-Length: 548
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
     "meetingDate" : "2022-03-10",
-    "startTime" : "14:00:00",
-    "endTime" : "15:00:00",
+    "startTime" : "20:00:00",
+    "endTime" : "21:00:00",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,7 +652,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-03-10T17:56:48.634041",
+  "time" : "2022-03-10T23:05:46.092116",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -695,10 +695,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 567
+Content-Length: 568
 
 {
-  "time" : "2022-03-10T17:56:48.54344",
+  "time" : "2022-03-10T23:05:46.004475",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1039,7 +1039,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 952
 
 {
-  "time" : "2022-03-10T17:56:48.330795",
+  "time" : "2022-03-10T23:05:45.798601",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1048,13 +1048,13 @@ Content-Length: 952
     "value" : "2022-02-1",
     "reason" : "Failed to convert property value of type 'java.lang.String' to required type 'java.time.LocalDate' for property 'date'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull java.time.LocalDate] for value '2022-02-1'; nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [2022-02-1]"
   }, {
-    "field" : "id",
-    "value" : null,
-    "reason" : "검색 유형의 ID를 입력해주세요."
-  }, {
     "field" : "type",
     "value" : null,
     "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
+  }, {
+    "field" : "id",
+    "value" : null,
+    "reason" : "검색 유형의 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1134,15 +1134,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "18:56",
-    "endTime" : "20:56",
+    "startTime" : "00:05",
+    "endTime" : "02:05",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "21:56",
-    "endTime" : "23:56",
+    "startTime" : "03:05",
+    "endTime" : "05:05",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1270,15 +1270,15 @@ Content-Length: 365
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "18:56",
-    "endTime" : "20:56",
+    "startTime" : "00:05",
+    "endTime" : "02:05",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "21:56",
-    "endTime" : "23:56",
+    "startTime" : "03:05",
+    "endTime" : "05:05",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1406,15 +1406,15 @@ Content-Length: 411
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "18:56",
-    "endTime" : "20:56",
+    "startTime" : "00:05",
+    "endTime" : "02:05",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "21:56",
-    "endTime" : "23:56",
+    "startTime" : "03:05",
+    "endTime" : "05:05",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
