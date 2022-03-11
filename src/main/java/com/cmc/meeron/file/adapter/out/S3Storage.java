@@ -7,12 +7,14 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.cmc.meeron.config.AmazonS3BucketNameConfig;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 
 @Component
 @RequiredArgsConstructor
+@Profile({"local", "dev", "prod"})
 class S3Storage implements StoragePort {
 
     private final AmazonS3Client amazonS3Client;

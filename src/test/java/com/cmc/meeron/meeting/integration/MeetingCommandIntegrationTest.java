@@ -1,7 +1,10 @@
 package com.cmc.meeron.meeting.integration;
 
+import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
+import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -16,6 +19,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,7 +42,7 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.meetingId", is(5)));
+                .andExpect(jsonPath("$.meetingId", is(6)));
 
         List<Meeting> meetings = meetingQueryPort.findDayMeetings("WORKSPACE", List.of(1L), LocalDate.now().plusDays(1));
         assertEquals(1, meetings.size());
@@ -53,6 +57,84 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                 .meetingPurpose("테스트 회의 성격")
                 .operationTeamId(1L)
                 .meetingAdminIds(List.of(1L, 2L))
+                .build();
+    }
+
+    @DisplayName("회의 참여자 추가 - 성공")
+    @Test
+    void join_attendees_success() throws Exception {
+
+        // given
+        Meeting meeting = findTestMeeting(5L);
+        JoinAttendeesRequest request = createJoinAttendeesRequest();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", meeting.getId().intValue())
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        // then
+        flushAndClear();
+        Meeting afterJoinAttendeesMeeting = findTestMeeting(5L);
+        assertEquals(3, afterJoinAttendeesMeeting.getAttendees().size());
+    }
+
+    private Meeting findTestMeeting(Long meetingId) {
+        return meetingQueryPort.findById(meetingId).orElseThrow();
+    }
+
+    private JoinAttendeesRequest createJoinAttendeesRequest() {
+        return JoinAttendeesRequest.builder()
+                .workspaceUserIds(List.of(3L, 4L))
+                .build();
+    }
+
+    @DisplayName("회의 아젠다 생성 - 성공")
+    @Test
+    void create_agenda_success() throws Exception {
+
+        // given
+        Meeting meeting = findTestMeeting(5L);
+        CreateAgendaRequest request = createCreateAgendaRequest();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/agendas", meeting.getId().intValue())
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        // then
+        flushAndClear();
+        Meeting afterJoinAttendeesMeeting = findTestMeeting(5L);
+        // FIXME: 2022/03/11 kobeomseok95 추후 리팩토링
+        Agenda agenda1 = meetingQueryPort.findAgendaById(1L).orElseThrow();
+        Agenda agenda2 = meetingQueryPort.findAgendaById(2L).orElseThrow();
+        assertAll(
+                () -> assertEquals(afterJoinAttendeesMeeting, agenda1.getMeeting()),
+                () -> assertEquals(afterJoinAttendeesMeeting, agenda2.getMeeting())
+        );
+    }
+
+    private CreateAgendaRequest createCreateAgendaRequest() {
+        return CreateAgendaRequest.builder()
+                .agendas(List.of(CreateAgendaRequest.AgendaRequest.builder()
+                                .order(1)
+                                .name("테스트아젠다1")
+                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
+                                        .issue("테스트이슈1")
+                                        .build()))
+                                .build(),
+                        CreateAgendaRequest.AgendaRequest.builder()
+                                .order(2)
+                                .name("테스트아젠다2")
+                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
+                                                .issue("테스트이슈1")
+                                                .build(),
+                                        CreateAgendaRequest.IssueRequest.builder()
+                                                .issue("테스트이슈2")
+                                                .build()))
+                                .build()))
                 .build();
     }
 }

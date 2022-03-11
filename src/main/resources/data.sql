@@ -85,3 +85,16 @@ insert into attendee(attendee_id, meeting_id, workspace_user_id, attend_status, 
 values(15, 4, 3, 'ATTEND', current_timestamp, current_timestamp, 1);
 insert into attendee(attendee_id, meeting_id, workspace_user_id, attend_status, created_date, last_modified_date, is_meeting_admin)
 values(16, 4, 4, 'ATTEND', current_timestamp, current_timestamp, 0);
+
+insert into meeting(meeting_id, workspace_id, team_id, name, purpose, start_date, start_time, end_time, place, meeting_status, created_date, last_modified_date)
+values(5, 1, 3, '테스트 회의', '테스트', '2022-03-05', '22:00', '23:00', null, 'END', current_timestamp, current_timestamp);
+insert into attendee(attendee_id, meeting_id, workspace_user_id, attend_status, created_date, last_modified_date, is_meeting_admin)
+values(17, 5, 1, 'ATTEND', current_timestamp, current_timestamp, 1);
+
+-- AGENDA, ISSUE, AGENDA_FILE
+insert into agenda(agenda_id, meeting_id, created_date, last_modified_date, name, agenda_order)
+values(1, 5, current_timestamp, current_timestamp, '테스트아젠다1', 1);
+insert into issue(issue_id, agenda_id, created_date, last_modified_date, contents)
+values(1, 1, current_timestamp, current_timestamp, '테스트이슈1');
+insert into agenda_file(agenda_file_id, agenda_id, created_date, last_modified_date, url, origin_file_name, rename_file_name)
+values(1, 1, current_timestamp, current_timestamp, 'test-url.com', '테스트사진.jpg', '1234.jpg');

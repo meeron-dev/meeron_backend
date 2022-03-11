@@ -12,14 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import javax.persistence.EntityManager;
+
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @SpringBootTest
-@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Transactional
+@ActiveProfiles("test")
 public abstract class IntegrationTest {
 
+    @Autowired private EntityManager entityManager;
     @Autowired protected ObjectMapper objectMapper;
     @Autowired WebApplicationContext webApplicationContext;
     protected MockMvc mockMvc;
@@ -30,5 +33,10 @@ public abstract class IntegrationTest {
                 .apply(springSecurity())
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
+    }
+
+    protected void flushAndClear() {
+        entityManager.flush();
+        entityManager.clear();
     }
 }

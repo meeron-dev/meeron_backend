@@ -66,7 +66,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.days", hasSize(1)));
+                .andExpect(jsonPath("$.days", hasSize(2)));
     }
 
     @DisplayName("회의 날짜 조회 - 워크스페이스 유저의 경우")
@@ -84,7 +84,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.days", hasSize(1)));
+                .andExpect(jsonPath("$.days", hasSize(2)));
     }
 
     @DisplayName("선택한 날짜의 회의 조회 - 워크스페이스의 경우")
@@ -157,7 +157,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.yearCounts", hasSize(1)))
                 .andExpect(jsonPath("$.yearCounts[0].year", is(2022)))
-                .andExpect(jsonPath("$.yearCounts[0].count", is(4)));
+                .andExpect(jsonPath("$.yearCounts[0].count", is(5)));
     }
 
     @DisplayName("년도별 회의 갯수 조회 - 팀의 경우")
@@ -195,7 +195,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.yearCounts", hasSize(1)))
                 .andExpect(jsonPath("$.yearCounts[0].year", is(2022)))
-                .andExpect(jsonPath("$.yearCounts[0].count", is(4)));
+                .andExpect(jsonPath("$.yearCounts[0].count", is(5)));
     }
 
     @DisplayName("선택한 년도의 회의 갯수 조회 - 워크스페이스의 경우")
@@ -217,7 +217,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.monthCounts[1].month", is(2)))
                 .andExpect(jsonPath("$.monthCounts[1].count", is(3)))
                 .andExpect(jsonPath("$.monthCounts[2].month", is(3)))
-                .andExpect(jsonPath("$.monthCounts[2].count", is(1)));
+                .andExpect(jsonPath("$.monthCounts[2].count", is(2)));
     }
 
     @DisplayName("선택한 년도의 회의 갯수 조회 - 팀의 경우")
@@ -259,6 +259,6 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.monthCounts[1].month", is(2)))
                 .andExpect(jsonPath("$.monthCounts[1].count", is(3)))
                 .andExpect(jsonPath("$.monthCounts[2].month", is(3)))
-                .andExpect(jsonPath("$.monthCounts[2].count", is(1)));
+                .andExpect(jsonPath("$.monthCounts[2].count", is(2)));
     }
 }
