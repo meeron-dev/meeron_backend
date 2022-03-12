@@ -1,15 +1,14 @@
 package com.cmc.meeron.user.application.service;
 
-import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
 import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
-import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
-import com.cmc.meeron.user.domain.WorkspaceUser;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.user.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,16 +41,16 @@ class UserQueryService implements UserQueryUseCase {
     }
 
     @Override
-    public List<WorkspaceUserResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto) {
+    public List<MyWorkspaceUserResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto) {
         List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos =
                 userQueryPort.findByWorkspaceIdNickname(findWorkspaceUserRequestDto.getWorkspaceId(),
                         findWorkspaceUserRequestDto.getNickname());
-        return WorkspaceUserResponseDto.fromQueryResponseDtos(workspaceUserQueryResponseDtos);
+        return MyWorkspaceUserResponseDto.fromQueryResponseDtos(workspaceUserQueryResponseDtos);
     }
 
     @Override
-    public List<WorkspaceUserResponseDto> getTeamUsers(Long teamId) {
+    public List<MyWorkspaceUserResponseDto> getTeamUsers(Long teamId) {
         List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = userQueryPort.findByTeamId(teamId);
-        return WorkspaceUserResponseDto.fromQueryResponseDtos(workspaceUserQueryResponseDtos);
+        return MyWorkspaceUserResponseDto.fromQueryResponseDtos(workspaceUserQueryResponseDtos);
     }
 }

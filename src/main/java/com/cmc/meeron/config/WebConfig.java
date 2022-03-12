@@ -1,6 +1,6 @@
 package com.cmc.meeron.config;
 
-import com.cmc.meeron.common.util.StringToYearMonthConverter;
+import com.cmc.meeron.common.converter.StringToYearMonthConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

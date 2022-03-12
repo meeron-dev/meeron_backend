@@ -1,11 +1,7 @@
 package com.cmc.meeron.user.adapter.in.response;
 
-import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
+import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -14,32 +10,21 @@ import java.util.stream.Collectors;
 @Builder
 public class WorkspaceUserResponse {
 
-    @Builder.Default
-    private List<WorkspaceUser> workspaceUsers = new ArrayList<>();
+    private Long workspaceUserId;
+    private Long workspaceId;
+    private boolean isWorkspaceAdmin;
+    private String nickname;
+    private String profileImageUrl;
+    private String position;
 
-    public static WorkspaceUserResponse fromList(List<WorkspaceUserResponseDto> workspaceUserResponseDtos) {
+    public static WorkspaceUserResponse fromWorkspaceUser(MyWorkspaceUserResponseDto myWorkspaceUserResponseDto) {
         return WorkspaceUserResponse.builder()
-                .workspaceUsers(workspaceUserResponseDtos.stream()
-                        .map(responseDto -> WorkspaceUser.builder()
-                                .workspaceUserId(responseDto.getWorkspaceUserId())
-                                .profileImageUrl(responseDto.getProfileImageUrl())
-                                .nickname(responseDto.getNickname())
-                                .position(responseDto.getPosition())
-                                .build())
-                        .collect(Collectors.toList()))
+                .workspaceUserId(myWorkspaceUserResponseDto.getWorkspaceUserId())
+                .workspaceId(myWorkspaceUserResponseDto.getWorkspaceId())
+                .isWorkspaceAdmin(myWorkspaceUserResponseDto.isWorkspaceAdmin())
+                .nickname(myWorkspaceUserResponseDto.getNickname())
+                .profileImageUrl(myWorkspaceUserResponseDto.getProfileImageUrl())
+                .position(myWorkspaceUserResponseDto.getPosition())
                 .build();
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class WorkspaceUser {
-
-        private Long workspaceUserId;
-        private String profileImageUrl;
-        private String nickname;
-        private String position;
     }
 }

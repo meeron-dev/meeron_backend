@@ -1,14 +1,16 @@
 package com.cmc.meeron.user.application.service;
 
-import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
-import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
-import com.cmc.meeron.user.domain.*;
 import com.cmc.meeron.user.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.user.domain.Role;
+import com.cmc.meeron.user.domain.User;
+import com.cmc.meeron.user.domain.UserProvider;
+import com.cmc.meeron.user.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -165,7 +167,7 @@ class UserQueryServiceTest {
                 .thenReturn(workspaceUserQueryResponseDtos);
 
         // when
-        List<WorkspaceUserResponseDto> responseDtos = userQueryService.searchWorkspaceUsers(requestDto);
+        List<MyWorkspaceUserResponseDto> responseDtos = userQueryService.searchWorkspaceUsers(requestDto);
 
         // then
         assertAll(
@@ -184,12 +186,16 @@ class UserQueryServiceTest {
     private List<WorkspaceUserQueryResponseDto> createWorkspaceUserQueryResponseDtos() {
         return List.of(
                 WorkspaceUserQueryResponseDto.builder()
+                        .workspaceId(1L)
+                        .workspaceAdmin(false)
                         .workspaceUserId(1L)
                         .nickname("무무")
                         .profileImageUrl(null)
                         .position("사원")
                         .build(),
                 WorkspaceUserQueryResponseDto.builder()
+                        .workspaceId(1L)
+                        .workspaceAdmin(true)
                         .workspaceUserId(2L)
                         .nickname("무무무")
                         .profileImageUrl("https://image.com/123")
@@ -208,11 +214,11 @@ class UserQueryServiceTest {
                 .thenReturn(workspaceUserQueryResponseDtos);
 
         // when
-        List<WorkspaceUserResponseDto> workspaceUserResponseDtos = userQueryService.getTeamUsers(1L);
+        List<MyWorkspaceUserResponseDto> responseDtos = userQueryService.getTeamUsers(1L);
 
         // then
         assertAll(
-                () -> assertEquals(workspaceUserQueryResponseDtos.size(), workspaceUserResponseDtos.size()),
+                () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size()),
                 () -> verify(userQueryPort).findByTeamId(1L)
         );
     }

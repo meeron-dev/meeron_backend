@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MyWorkspaceUsersResponse {
+public class WorkspaceUsersResponse {
 
     @Builder.Default
-    private List<WorkspaceUserResponse> myWorkspaceUsers = new ArrayList<>();
+    private List<WorkspaceUserResponse> workspaceUsers = new ArrayList<>();
 
-    public static MyWorkspaceUsersResponse fromWorkspaceUsers(List<MyWorkspaceUserResponseDto> myWorkspaceUsers) {
-        return MyWorkspaceUsersResponse.builder()
-                .myWorkspaceUsers(myWorkspaceUsers
+    public static WorkspaceUsersResponse fromWorkspaceUsers(List<MyWorkspaceUserResponseDto> myWorkspaceUsers) {
+        return WorkspaceUsersResponse.builder()
+                .workspaceUsers(myWorkspaceUsers
                         .stream()
                         .map(WorkspaceUserResponse::fromWorkspaceUser)
                         .collect(Collectors.toList()))
