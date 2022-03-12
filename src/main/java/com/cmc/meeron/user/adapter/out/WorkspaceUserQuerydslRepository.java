@@ -19,7 +19,8 @@ class WorkspaceUserQuerydslRepository {
 
     public List<WorkspaceUserQueryResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname) {
         return queryFactory.select(new QWorkspaceUserQueryResponseDto(
-                workspaceUser.id, workspaceUser.profileImageUrl, workspaceUser.nickname, workspaceUser.position))
+                workspaceUser.workspace.id, workspaceUser.id, workspaceUser.profileImageUrl,
+                workspaceUser.nickname, workspaceUser.position, workspaceUser.isWorkspaceAdmin))
                 .from(workspaceUser)
                 .where(workspaceUser.workspace.id.eq(workspaceId),
                         workspaceUser.nickname.startsWith(nickname))
@@ -29,7 +30,8 @@ class WorkspaceUserQuerydslRepository {
 
     public List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId) {
         return queryFactory.select(new QWorkspaceUserQueryResponseDto(
-                workspaceUser.id, workspaceUser.profileImageUrl, workspaceUser.nickname, workspaceUser.position))
+                workspaceUser.workspace.id, workspaceUser.id, workspaceUser.profileImageUrl,
+                workspaceUser.nickname, workspaceUser.position, workspaceUser.isWorkspaceAdmin))
                 .from(teamUser)
                 .join(teamUser.workspaceUser, workspaceUser)
                 .where(teamUser.team.id.eq(teamId))

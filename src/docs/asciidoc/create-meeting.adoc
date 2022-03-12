@@ -31,10 +31,6 @@ include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_text_valid/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_text_valid/http-response.adoc[]
 
-=== 회의 시작 시간이 현재보다 이전일 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_before_start_time_at_now/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_before_start_time_at_now/http-response.adoc[]
-
 === 담당 팀이 존재하지 않을 경우
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-response.adoc[]

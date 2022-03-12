@@ -548,24 +548,24 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 548
+Content-Length: 546
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
-    "meetingDate" : "2022-03-10",
-    "startTime" : "01:00:00",
-    "endTime" : "02:00:00",
+    "meetingDate" : "2022/3/12",
+    "startTime" : "06:00 PM",
+    "endTime" : "07:00 PM",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
-    "meetingDate" : "2022-03-10",
-    "startTime" : "20:00:00",
-    "endTime" : "21:00:00",
+    "meetingDate" : "2022/3/12",
+    "startTime" : "01:00 PM",
+    "endTime" : "02:00 PM",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,18 +652,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-03-10T23:05:46.092116",
+  "time" : "2022-03-12T16:35:07.197492",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "workspaceId",
-    "value" : null,
-    "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
     "field" : "workspaceUserId",
     "value" : null,
     "reason" : "워크스페이스 유저 ID를 입력해주세요."
+  }, {
+    "field" : "workspaceId",
+    "value" : null,
+    "reason" : "워크스페이스 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -678,7 +678,7 @@ Content-Length: 400
 <h3 id="_회의_날짜_조회시_파라미터를_제대로_주지_않을_경우"><a class="link" href="#_회의_날짜_조회시_파라미터를_제대로_주지_않을_경우">회의 날짜 조회시 파라미터를 제대로 주지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=&amp;date= HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022%2F15 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -695,21 +695,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 568
+Content-Length: 607
 
 {
-  "time" : "2022-03-10T23:05:46.004475",
+  "time" : "2022-03-12T16:35:07.115992",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
+    "field" : "date",
+    "value" : "2022/15",
+    "reason" : "형변환 중 예외가 발생했습니다. 값을 입력형식에 맞게 입력해주세요."
+  }, {
     "field" : "type",
     "value" : null,
     "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
-  }, {
-    "field" : "date",
-    "value" : null,
-    "reason" : "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요."
   }, {
     "field" : "id",
     "value" : null,
@@ -723,7 +723,7 @@ Content-Length: 568
 <h3 id="_워크스페이스_캘린더에서의_회의_날짜_조회"><a class="link" href="#_워크스페이스_캘린더에서의_회의_날짜_조회">워크스페이스 캘린더에서의 회의 날짜 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022-03&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022%2F3&amp;type=workspace&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -820,7 +820,7 @@ Content-Length: 33
 <h3 id="_팀_캘린더에서의_회의_날짜_조회"><a class="link" href="#_팀_캘린더에서의_회의_날짜_조회">팀 캘린더에서의 회의 날짜 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022-03&amp;type=team&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022%2F02&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -917,7 +917,7 @@ Content-Length: 33
 <h3 id="_나의_미론_캘린더에서의_회의_날짜_조회"><a class="link" href="#_나의_미론_캘린더에서의_회의_날짜_조회">'나의 미론' 캘린더에서의 회의 날짜 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022-03&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022%2F3&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1019,7 +1019,7 @@ Content-Length: 33
 <h3 id="_선택한_날짜의_회의_조회시_파라미터를_제대로_주지_않을_경우"><a class="link" href="#_선택한_날짜의_회의_조회시_파라미터를_제대로_주지_않을_경우">선택한 날짜의 회의 조회시 파라미터를 제대로 주지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-02-1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F02 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1036,25 +1036,25 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 952
+Content-Length: 607
 
 {
-  "time" : "2022-03-10T23:05:45.798601",
+  "time" : "2022-03-12T16:35:06.905418",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
     "field" : "date",
-    "value" : "2022-02-1",
-    "reason" : "Failed to convert property value of type 'java.lang.String' to required type 'java.time.LocalDate' for property 'date'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [@javax.validation.constraints.NotNull java.time.LocalDate] for value '2022-02-1'; nested exception is java.lang.IllegalArgumentException: Parse attempt failed for value [2022-02-1]"
-  }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
+    "value" : "2022/02",
+    "reason" : "형변환 중 예외가 발생했습니다. 값을 입력형식에 맞게 입력해주세요."
   }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1064,7 +1064,7 @@ Content-Length: 952
 <h3 id="_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회">워크스페이스 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-10&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F12&amp;type=workspace&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1128,21 +1128,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 365
+Content-Length: 377
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "00:05",
-    "endTime" : "02:05",
+    "startTime" : "05:35 PM",
+    "endTime" : "07:35 PM",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:05",
-    "endTime" : "05:05",
+    "startTime" : "08:35 PM",
+    "endTime" : "10:35 PM",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1200,7 +1200,7 @@ Content-Length: 365
 <h3 id="_팀_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_팀_캘린더에서의_선택한_날짜에_대한_회의_조회">팀 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-10&amp;type=team&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F12&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1264,21 +1264,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 365
+Content-Length: 377
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "00:05",
-    "endTime" : "02:05",
+    "startTime" : "05:35 PM",
+    "endTime" : "07:35 PM",
     "workspaceId" : null,
     "workspaceName" : null
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:05",
-    "endTime" : "05:05",
+    "startTime" : "08:35 PM",
+    "endTime" : "10:35 PM",
     "workspaceId" : null,
     "workspaceName" : null
   } ]
@@ -1336,7 +1336,7 @@ Content-Length: 365
 <h3 id="_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회">'나의 미론' 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022-03-10&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F12&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1400,21 +1400,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 411
+Content-Length: 423
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "00:05",
-    "endTime" : "02:05",
+    "startTime" : "05:35 PM",
+    "endTime" : "07:35 PM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:05",
-    "endTime" : "05:05",
+    "startTime" : "08:35 PM",
+    "endTime" : "10:35 PM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]

@@ -12,8 +12,8 @@ include::notice.adoc[]
 == 인증(로그인, 로그아웃, 토큰 재발급) API
 * link:auth.html[Auth API, window=_blank]
 
-== 회의 API
-* link:meeting.html[Meeting API, window=_blank]
+== 회의 조회 API
+* link:meeting.html[Query-Meeting API, window=_blank]
 
 == 회의, 아젠다 생성 API
 * link:create-meeting.html[Create-Meeting / Agenda API, window=_blank]
@@ -21,7 +21,7 @@ include::notice.adoc[]
 == 아젠다 파일 생성 API
 * link:agenda-file.html[Agenda-File API, window=_blank]
 
-== 유저 / 워크스페이스 유저 / 팀 유저 API
+== 유저 / 워크스페이스 유저 / 팀 유저 조회 API
 * link:user.html[User / Workspace-User / Team-User API, window=_blank]
 
 == 워크스페이스 관련 API

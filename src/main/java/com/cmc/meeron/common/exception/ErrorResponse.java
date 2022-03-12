@@ -8,7 +8,10 @@ import org.springframework.validation.BindingResult;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.cmc.meeron.common.exception.CommonErrorCode.TYPE_MISMATCH_EXCEPTION;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -86,7 +89,9 @@ public class ErrorResponse {
                     .map(error -> new FieldError(
                             error.getField(),
                             error.getRejectedValue() == null ? null : error.getRejectedValue().toString(),
-                            error.getDefaultMessage()
+                            Objects.equals(error.getCode(), "typeMismatch")
+                                    ? TYPE_MISMATCH_EXCEPTION.getMessage()
+                                    : error.getDefaultMessage()
                     ))
                     .collect(Collectors.toList());
         }

@@ -15,6 +15,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import javax.persistence.EntityManager;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,6 +32,7 @@ public abstract class IntegrationTest {
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
+                .alwaysDo(print())
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
     }

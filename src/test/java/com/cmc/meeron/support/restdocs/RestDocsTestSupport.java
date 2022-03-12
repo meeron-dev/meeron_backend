@@ -1,24 +1,25 @@
 package com.cmc.meeron.support.restdocs;
 
 import com.cmc.meeron.HealthRestController;
-import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.auth.adapter.in.AuthRestController;
+import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.common.exception.GlobalExceptionHandler;
+import com.cmc.meeron.config.JacksonTimeFormatConfig;
 import com.cmc.meeron.config.RestDocsConfig;
 import com.cmc.meeron.file.adapter.in.FileRestController;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.meeting.adapter.in.MeetingCommandRestController;
 import com.cmc.meeron.meeting.adapter.in.MeetingDayValidator;
+import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
-import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
 import com.cmc.meeron.support.security.SecuritySupport;
-import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.team.adapter.in.TeamRestController;
-import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
+import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.user.adapter.in.UserRestController;
-import com.cmc.meeron.workspace.application.port.in.WorkspaceQueryUseCase;
+import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
 import com.cmc.meeron.workspace.adapter.in.WorkspaceRestController;
+import com.cmc.meeron.workspace.application.port.in.WorkspaceQueryUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -53,7 +54,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         FileRestController.class,
 })
 @ExtendWith(RestDocumentationExtension.class)
-@Import(RestDocsConfig.class)
+@Import({
+        RestDocsConfig.class,
+        JacksonTimeFormatConfig.class,
+})
 public abstract class RestDocsTestSupport extends SecuritySupport {
 
     @MockBean protected AuthUseCase authUseCase;

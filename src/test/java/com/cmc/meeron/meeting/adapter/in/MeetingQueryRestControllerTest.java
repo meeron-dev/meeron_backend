@@ -1,10 +1,10 @@
 package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.util.LocalDateTimeUtil;
 import com.cmc.meeron.meeting.application.port.in.response.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
-import com.cmc.meeron.common.util.LocalDateTimeUtil;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,17 +59,17 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDto.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDto.get(0).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[0].meetingDate", is(responseDto.get(0).getMeetingDate().toString())))
-                .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.toStringTime(responseDto.get(0).getStartTime()))))
-                .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.toStringTime(responseDto.get(0).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[0].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(0).getMeetingDate()))))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[0].operationTeamId", is(responseDto.get(0).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].operationTeamName", is(responseDto.get(0).getOperationTeamName())))
                 .andExpect(jsonPath("$.meetings[0].meetingStatus", is(responseDto.get(0).getMeetingStatus())))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDto.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDto.get(1).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[1].meetingDate", is(responseDto.get(1).getMeetingDate().toString())))
-                .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.toStringTime(responseDto.get(1).getStartTime()))))
-                .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.toStringTime(responseDto.get(1).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[1].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(1).getMeetingDate()))))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDto.get(1).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(1).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[1].operationTeamId", is(responseDto.get(1).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].operationTeamName", is(responseDto.get(1).getOperationTeamName())))
                 .andExpect(jsonPath("$.meetings[1].meetingStatus", is(responseDto.get(1).getMeetingStatus())))
@@ -141,7 +141,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         return List.of(10, 20, 15, 21);
     }
 
-    @DisplayName("워크스페이스 캘린더에서 회의 날짜 조회 - 실패 / date(yyyy-MM)를 제대로 주지 않을 경우")
+    @DisplayName("워크스페이스 캘린더에서 회의 날짜 조회 - 실패 / date(yyyy/M)를 제대로 주지 않을 경우")
     @ParameterizedTest
     @MethodSource("failMeetingDaysParameters")
     void get_workspace_meeting_days_fail_require_yearMonth(MultiValueMap<String, String> params) throws Exception {
@@ -159,18 +159,21 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
     private static Stream<Arguments> failMeetingDaysParameters() {
         MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
-        params1.add("date", "2022-");
+        params1.add("date", "2022/");
         MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
         params2.add("date", "20");
         MultiValueMap<String, String> params3 = new LinkedMultiValueMap<>();
         params3.add("date", "");
         MultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
         params4.add("date", null);
+        MultiValueMap<String, String> params5 = new LinkedMultiValueMap<>();
+        params5.add("date", "2022/15");
         return Stream.of(
                 Arguments.of(params1),
                 Arguments.of(params2),
                 Arguments.of(params3),
-                Arguments.of(params4)
+                Arguments.of(params4),
+                Arguments.of(params5)
         );
     }
 
@@ -180,7 +183,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("date", "2022-03");
+        params.add("date", "2022/3");
         params.add("type", "workspace");
         params.add("id", "1");
         List<Integer> days = getDays();
@@ -219,7 +222,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("date", "2022-03");
+        params.add("date", "2022/3");
         params.add("type", "workspace_user");
         params.add("id", "1");
         params.add("id", "2");
@@ -260,7 +263,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("date", "2022-03");
+        params.add("date", "2022/02");
         params.add("type", "team");
         params.add("id", "1");
         List<Integer> days = getDays();
@@ -293,7 +296,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    @DisplayName("워크스페이스 캘린더에서 선택한 날짜의 회의 조회 - 실패 / date(yyyy-MM-dd)를 제대로 주지 않을 경우")
+    @DisplayName("워크스페이스 캘린더에서 선택한 날짜의 회의 조회 - 실패 / date(yyyy/M/d)를 제대로 주지 않을 경우")
     @ParameterizedTest
     @MethodSource("failDayMeetingsParameters")
     void get_workspace_day_meetings_fail_require_localDate(MultiValueMap<String, String> params) throws Exception {
@@ -311,7 +314,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
     private static Stream<Arguments> failDayMeetingsParameters() {
         MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
-        params1.add("date", "2022-");
+        params1.add("date", "2022/");
         MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
         params2.add("date", "20");
         MultiValueMap<String, String> params3 = new LinkedMultiValueMap<>();
@@ -319,16 +322,13 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
         params4.add("date", null);
         MultiValueMap<String, String> params5 = new LinkedMultiValueMap<>();
-        params5.add("date", "2022-02");
-        MultiValueMap<String, String> params6 = new LinkedMultiValueMap<>();
-        params6.add("date", "2022-02-1");
+        params5.add("date", "2022/02");
         return Stream.of(
                 Arguments.of(params1),
                 Arguments.of(params2),
                 Arguments.of(params3),
                 Arguments.of(params4),
-                Arguments.of(params5),
-                Arguments.of(params6)
+                Arguments.of(params5)
         );
     }
 
@@ -338,8 +338,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String now = LocalDate.now().toString();
-        params.add("date", now);
+        params.add("date", LocalDateTimeUtil.nowDate());
         params.add("type", "workspace");
         params.add("id", "1");
         List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
@@ -355,14 +354,14 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[0].startTime", is(responseDtos.get(0).getStartTime())))
-                .andExpect(jsonPath("$.meetings[0].endTime", is(responseDtos.get(0).getEndTime())))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[0].workspaceId", nullValue()))
                 .andExpect(jsonPath("$.meetings[0].workspaceName", nullValue()))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[1].startTime", is(responseDtos.get(1).getStartTime())))
-                .andExpect(jsonPath("$.meetings[1].endTime", is(responseDtos.get(1).getEndTime())))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[1].workspaceId", nullValue()))
                 .andExpect(jsonPath("$.meetings[1].workspaceName", nullValue()))
                 .andDo(restDocumentationResultHandler.document(
@@ -391,14 +390,14 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 WorkspaceAndTeamDayMeetingResponseDto.builder()
                         .meetingId(1L)
                         .meetingName("첫번째회의")
-                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(1)))
-                        .endTime(LocalDateTimeUtil.convertTime((now.plusHours(3))))
+                        .startTime(now.plusHours(1))
+                        .endTime((now.plusHours(3)))
                         .build(),
                 WorkspaceAndTeamDayMeetingResponseDto.builder()
                         .meetingId(2L)
                         .meetingName("두번째회의")
-                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(4)))
-                        .endTime(LocalDateTimeUtil.convertTime(now.plusHours(6)))
+                        .startTime(now.plusHours(4))
+                        .endTime(now.plusHours(6))
                         .build()
         );
     }
@@ -409,8 +408,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String now = LocalDate.now().toString();
-        params.add("date", now);
+        params.add("date", LocalDateTimeUtil.nowDate());
         params.add("type", "workspace_user");
         params.add("id", "1");
         params.add("id", "2");
@@ -428,14 +426,14 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[0].startTime", is(responseDtos.get(0).getStartTime())))
-                .andExpect(jsonPath("$.meetings[0].endTime", is(responseDtos.get(0).getEndTime())))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[0].workspaceId", is(responseDtos.get(0).getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].workspaceName", is(responseDtos.get(0).getWorkspaceName())))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[1].startTime", is(responseDtos.get(1).getStartTime())))
-                .andExpect(jsonPath("$.meetings[1].endTime", is(responseDtos.get(1).getEndTime())))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[1].workspaceId", is(responseDtos.get(1).getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].workspaceName", is(responseDtos.get(1).getWorkspaceName())))
                 .andDo(restDocumentationResultHandler.document(
@@ -464,16 +462,16 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 WorkspaceUserDayMeetingResponseDto.builder()
                         .meetingId(1L)
                         .meetingName("첫번째회의")
-                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(1)))
-                        .endTime(LocalDateTimeUtil.convertTime((now.plusHours(3))))
+                        .startTime(now.plusHours(1))
+                        .endTime((now.plusHours(3)))
                         .workspaceId(1L)
                         .workspaceName("첫번째 워크스페이스")
                         .build(),
                 WorkspaceUserDayMeetingResponseDto.builder()
                         .meetingId(2L)
                         .meetingName("두번째회의")
-                        .startTime(LocalDateTimeUtil.convertTime(now.plusHours(4)))
-                        .endTime(LocalDateTimeUtil.convertTime((now.plusHours(6))))
+                        .startTime(now.plusHours(4))
+                        .endTime((now.plusHours(6)))
                         .workspaceId(2L)
                         .workspaceName("두번째 워크스페이스")
                         .build()
@@ -486,8 +484,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String now = LocalDate.now().toString();
-        params.add("date", now);
+        params.add("date", LocalDateTimeUtil.nowDate());
         params.add("type", "team");
         params.add("id", "1");
         List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
@@ -503,12 +500,12 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[0].startTime", is(responseDtos.get(0).getStartTime())))
-                .andExpect(jsonPath("$.meetings[0].endTime", is(responseDtos.get(0).getEndTime())))
+                .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[1].startTime", is(responseDtos.get(1).getStartTime())))
-                .andExpect(jsonPath("$.meetings[1].endTime", is(responseDtos.get(1).getEndTime())))
+                .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
+                .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))

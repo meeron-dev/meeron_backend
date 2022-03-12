@@ -26,7 +26,7 @@ spring:
     host: localhost
   mvc:
     format:
-      date: yyyy-MM-dd
+      date: yyyy/M/d
   servlet:
     multipart:
       max-request-size: 10MB

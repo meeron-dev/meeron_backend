@@ -13,15 +13,15 @@ insert into user(user_id, email, role, user_provider, created_date, last_modifie
 values(5, 'test5@test.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
 
 insert into workspace_user(workspace_user_id, user_id, workspace_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
-values(1, 1, 1, current_timestamp, current_timestamp, false, '무무', null, 'Server / PM');
+values(1, 1, 1, current_timestamp, current_timestamp, false, '무무', '', 'Server / PM');
 insert into workspace_user(workspace_user_id, user_id, workspace_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
-values(2, 2, 1, current_timestamp, current_timestamp, true, '네코', null, 'Planner');
+values(2, 2, 1, current_timestamp, current_timestamp, true, '네코', '', 'Planner');
 insert into workspace_user(workspace_user_id, user_id, workspace_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
-values(3, 3, 1, current_timestamp, current_timestamp, false, '제로', null, 'Android');
+values(3, 3, 1, current_timestamp, current_timestamp, false, '제로', '', 'Android');
 insert into workspace_user(workspace_user_id, user_id, workspace_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
-values(4, 4, 1, current_timestamp, current_timestamp, false, '주미', null, 'iOS');
+values(4, 4, 1, current_timestamp, current_timestamp, false, '주미', '', 'iOS');
 insert into workspace_user(workspace_user_id, user_id, workspace_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
-values(5, 5, 1, current_timestamp, current_timestamp, false, '미소', null, 'Designer');
+values(5, 5, 1, current_timestamp, current_timestamp, false, '미소', '', 'Designer');
 
 insert into team(team_id, workspace_id, created_date, last_modified_date, name)
 values(1, 1, current_timestamp, current_timestamp, '디자인팀');

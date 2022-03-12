@@ -62,48 +62,6 @@ public class UserIntegrationTest extends IntegrationTest {
     }
 
     @WithMockJwt
-    @DisplayName("워크스페이스 내 유저 조회 - 성공")
-    @ParameterizedTest
-    @MethodSource("searchWorkspaceUserParameters")
-    void search_workspace_users_success(MultiValueMap<String, String> params,
-                                        int expectedValue,
-                                        WorkspaceUserResponse.WorkspaceUser response) throws Exception {
-
-        // when, then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/workspace-users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .params(params))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("workspaceUsers", hasSize(expectedValue)))
-                .andExpect(jsonPath("workspaceUsers[0].workspaceUserId", is(response.getWorkspaceUserId().intValue())))
-                .andExpect(jsonPath("workspaceUsers[0].nickname", is(response.getNickname())))
-                .andExpect(jsonPath("workspaceUsers[0].position", is(response.getPosition())));
-    }
-
-    private static Stream<Arguments> searchWorkspaceUserParameters() {
-        MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
-        params1.add("nickname", "무");
-        params1.add("workspaceId", "1");
-        WorkspaceUserResponse.WorkspaceUser response1 = WorkspaceUserResponse.WorkspaceUser.builder()
-                .workspaceUserId(1L)
-                .nickname("무무")
-                .position("Server / PM")
-                .build();
-        MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
-        params2.add("nickname", "제");
-        params2.add("workspaceId", "1");
-        WorkspaceUserResponse.WorkspaceUser response2 = WorkspaceUserResponse.WorkspaceUser.builder()
-                .workspaceUserId(3L)
-                .nickname("제로")
-                .position("Android")
-                .build();
-        return Stream.of(
-                Arguments.of(params1, 1, response1),
-                Arguments.of(params2, 1, response2)
-        );
-    }
-
-    @WithMockJwt
     @DisplayName("워크스페이스 유저 상세 조회 - 성공")
     @Test
     void get_workspace_user_success() throws Exception {
@@ -116,8 +74,59 @@ public class UserIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.workspaceId", is(1)))
                 .andExpect(jsonPath("$.workspaceAdmin", is(false)))
                 .andExpect(jsonPath("$.nickname", is("무무")))
-                .andExpect(jsonPath("$.profileImageUrl", nullValue()))
+                .andExpect(jsonPath("$.profileImageUrl", blankString()))
                 .andExpect(jsonPath("$.position", is("Server / PM")));
+    }
+
+    @WithMockJwt
+    @DisplayName("워크스페이스 내 유저 조회 - 성공")
+    @ParameterizedTest
+    @MethodSource("searchWorkspaceUserParameters")
+    void search_workspace_users_success(MultiValueMap<String, String> params,
+                                        int expectedValue,
+                                        WorkspaceUserResponse response) throws Exception {
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/workspace-users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("workspaceUsers", hasSize(expectedValue)))
+                .andExpect(jsonPath("workspaceUsers[0].workspaceUserId", is(response.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("workspaceUsers[0].nickname", is(response.getNickname())))
+                .andExpect(jsonPath("workspaceUsers[0].position", is(response.getPosition())))
+                .andExpect(jsonPath("workspaceUsers[0].workspaceAdmin", is(response.isWorkspaceAdmin())))
+                .andExpect(jsonPath("workspaceUsers[0].workspaceId", is(response.getWorkspaceId().intValue())))
+                .andExpect(jsonPath("workspaceUsers[0].profileImageUrl", is(response.getProfileImageUrl())));
+    }
+
+    private static Stream<Arguments> searchWorkspaceUserParameters() {
+        MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
+        params1.add("nickname", "무");
+        params1.add("workspaceId", "1");
+        WorkspaceUserResponse response1 = WorkspaceUserResponse.builder()
+                .workspaceUserId(1L)
+                .workspaceId(1L)
+                .isWorkspaceAdmin(false)
+                .nickname("무무")
+                .profileImageUrl("")
+                .position("Server / PM")
+                .build();
+        MultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
+        params2.add("nickname", "제");
+        params2.add("workspaceId", "1");
+        WorkspaceUserResponse response2 = WorkspaceUserResponse.builder()
+                .workspaceUserId(3L)
+                .workspaceId(1L)
+                .isWorkspaceAdmin(false)
+                .nickname("제로")
+                .profileImageUrl("")
+                .position("Android")
+                .build();
+        return Stream.of(
+                Arguments.of(params1, 1, response1),
+                Arguments.of(params2, 1, response2)
+        );
     }
 
     @WithMockJwt

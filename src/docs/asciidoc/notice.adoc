@@ -1,4 +1,18 @@
 [[notice]]
 == API 변경사항
 
-=== 없음
+====
+* 시간 형식에 대한 타입을 일괄적으로 변경했습니다.
+1. 년월일 형식? `yyyy/M/d`
+- ex) 2022/3/12, 2022/12/1
+2. 년월 형식? `yyyy/M`
+- ex) 2022/3, 2022/12
+3. 시간 표시 형식? `hh:mm a`
+- ex) 10:00 AM, 09:00 PM
+* link:user.html#team-workspace-users[팀 내 모든 유저 조회, window=_blank],
+link:user.html#search-workspace-users[워크스페이스 내 유저 검색, window=_blank]
+- 기존의 응답에서 `workspaceAdmin`, `workspaceId` 필드가 추가되었습니다.
+* link:create-meeting.html#create-meeting[회의 생성, window=_blank]
+- 시간 정보를 입력할 때, `HH:mm` 형식이 아닌 `hh:mm a` 형식으로 변경되었습니다.
+- ex) `12:00 AM`, `02:00 PM`
+====

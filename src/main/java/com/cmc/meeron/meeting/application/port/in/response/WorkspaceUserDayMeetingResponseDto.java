@@ -1,9 +1,9 @@
 package com.cmc.meeron.meeting.application.port.in.response;
 
-import com.cmc.meeron.common.util.LocalDateTimeUtil;
 import com.cmc.meeron.meeting.domain.Meeting;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,8 +16,8 @@ public class WorkspaceUserDayMeetingResponseDto {
 
     private Long meetingId;
     private String meetingName;
-    private String startTime;
-    private String endTime;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private Long workspaceId;
     private String workspaceName;
 
@@ -31,8 +31,8 @@ public class WorkspaceUserDayMeetingResponseDto {
         return WorkspaceUserDayMeetingResponseDto.builder()
                 .meetingId(meeting.getId())
                 .meetingName(meeting.getName())
-                .startTime(LocalDateTimeUtil.convertTime(meeting.getStartTime()))
-                .endTime(LocalDateTimeUtil.convertTime(meeting.getEndTime()))
+                .startTime(meeting.getStartTime())
+                .endTime(meeting.getEndTime())
                 .workspaceId(meeting.getWorkspace().getId())
                 .workspaceName(meeting.getWorkspace().getName())
                 .build();
