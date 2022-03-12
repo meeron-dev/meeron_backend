@@ -9,7 +9,6 @@ import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.response.CreateAgendaResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,12 +20,6 @@ import java.util.List;
 public class MeetingCommandRestController {
 
     private final MeetingCommandUseCase meetingCommandUseCase;
-    private final MeetingDayValidator meetingDayValidator;
-
-    @InitBinder("createMeetingRequest")
-    public void initBinder(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(meetingDayValidator);
-    }
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)

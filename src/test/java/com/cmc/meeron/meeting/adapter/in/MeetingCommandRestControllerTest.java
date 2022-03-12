@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
@@ -46,7 +47,9 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
         // given, when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(CreateMeetingRequest.builder().build()))
+                .content(objectMapper.writeValueAsString(CreateMeetingRequest.builder()
+                        .meetingAdminIds(Collections.emptyList())
+                        .build()))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
@@ -196,9 +199,9 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestFields(
-                                fieldWithPath("meetingDate").type(JsonFieldType.STRING).description("회의 시작 날짜").attributes(field("constraints", "오늘 혹은 그 이후 날짜 'yyyy-MM-dd'로 줄 것")),
-                                fieldWithPath("startTime").type(JsonFieldType.STRING).description("회의 시작 시간").attributes(field("constraints", "'HH:mm' 형식으로 줄 것")),
-                                fieldWithPath("endTime").type(JsonFieldType.STRING).description("회의 종료 시간").attributes(field("constraints", "'HH:mm' 형식으로 줄 것")),
+                                fieldWithPath("meetingDate").type(JsonFieldType.STRING).description("회의 시작 날짜").attributes(field("constraints", "'yyyy/M/d' 형식으로 줄 것")),
+                                fieldWithPath("startTime").type(JsonFieldType.STRING).description("회의 시작 시간").attributes(field("constraints", "'hh:mm a' 형식으로 줄 것")),
+                                fieldWithPath("endTime").type(JsonFieldType.STRING).description("회의 종료 시간").attributes(field("constraints", "'hh:mm a' 형식으로 줄 것")),
                                 fieldWithPath("meetingName").type(JsonFieldType.STRING).description("회의명").attributes(field("constraints", "3자 이상 30자 이하로 줄 것")),
                                 fieldWithPath("meetingPurpose").type(JsonFieldType.STRING).description("회의 성격").attributes(field("constraints", "1자 이상 10자 이하로 줄 것")),
                                 fieldWithPath("operationTeamId").type(JsonFieldType.NUMBER).description("주관하는 팀 ID"),

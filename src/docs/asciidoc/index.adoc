@@ -13,10 +13,10 @@ include::notice.adoc[]
 * link:auth.html[Auth API, window=_blank]
 
 == 회의 조회 API
-* link:meeting.html[Query-Meeting API, window=_blank]
+* link:query-meeting.html[Query-Meeting API, window=_blank]
 
 == 회의, 아젠다 생성 API
-* link:create-meeting.html[Create-Meeting / Agenda API, window=_blank]
+* link:create-meeting-agenda.html[Create-Meeting / Agenda API, window=_blank]
 
 == 아젠다 파일 생성 API
 * link:agenda-file.html[Agenda-File API, window=_blank]

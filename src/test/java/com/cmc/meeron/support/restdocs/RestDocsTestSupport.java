@@ -9,7 +9,6 @@ import com.cmc.meeron.config.RestDocsConfig;
 import com.cmc.meeron.file.adapter.in.FileRestController;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.meeting.adapter.in.MeetingCommandRestController;
-import com.cmc.meeron.meeting.adapter.in.MeetingDayValidator;
 import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
@@ -50,7 +49,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         UserRestController.class,
         WorkspaceRestController.class,
         TeamRestController.class,
-        MeetingDayValidator.class,
         FileRestController.class,
 })
 @ExtendWith(RestDocumentationExtension.class)

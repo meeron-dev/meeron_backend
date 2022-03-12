@@ -21,10 +21,10 @@ public class CreateMeetingRequest {
     @NotNull(message = "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요.")
     private LocalDate meetingDate;
 
-    @NotNull(message = "회의 시작 시간을 'a HH:mm' 형식으로 입력해주세요.")
+    @NotNull(message = "회의 시작 시간을 'hh:mm a' 형식으로 입력해주세요.")
     private LocalTime startTime;
 
-    @NotNull(message = "회의 마감 시간을 'a HH:mm' 형식으로 입력해주세요.")
+    @NotNull(message = "회의 마감 시간을 'hh:mm a' 형식으로 입력해주세요.")
     private LocalTime endTime;
 
     @NotBlank(message = "회의명을 3자 이상 30자 이하로 입력해주세요.")
@@ -38,6 +38,7 @@ public class CreateMeetingRequest {
     @NotNull(message = "담당 팀 ID를 입력해주세요.")
     private Long operationTeamId;
 
+    @NotNull(message = "공동 관리자는 본인이 반드시 포함되어야 합니다.")
     @Size(min = 1, message = "공동 관리자는 본인이 반드시 포함되어야 합니다.")
     private List<Long> meetingAdminIds;
 
