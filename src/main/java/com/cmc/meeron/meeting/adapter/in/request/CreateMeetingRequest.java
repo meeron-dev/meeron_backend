@@ -18,12 +18,13 @@ import java.util.List;
 @Builder
 public class CreateMeetingRequest {
 
+    @NotNull(message = "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요.")
     private LocalDate meetingDate;
 
-    @NotNull(message = "회의 시작 시간을 'HH:mm' 형식으로 입력해주세요.")
+    @NotNull(message = "회의 시작 시간을 'a HH:mm' 형식으로 입력해주세요.")
     private LocalTime startTime;
 
-    @NotNull(message = "회의 마감 시간을 'HH:mm' 형식으로 입력해주세요.")
+    @NotNull(message = "회의 마감 시간을 'a HH:mm' 형식으로 입력해주세요.")
     private LocalTime endTime;
 
     @NotBlank(message = "회의명을 3자 이상 30자 이하로 입력해주세요.")

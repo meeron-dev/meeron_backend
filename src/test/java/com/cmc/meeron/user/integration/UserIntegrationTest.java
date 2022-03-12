@@ -116,7 +116,7 @@ public class UserIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.workspaceId", is(1)))
                 .andExpect(jsonPath("$.workspaceAdmin", is(false)))
                 .andExpect(jsonPath("$.nickname", is("무무")))
-                .andExpect(jsonPath("$.profileImageUrl", nullValue()))
+                .andExpect(jsonPath("$.profileImageUrl", blankString()))
                 .andExpect(jsonPath("$.position", is("Server / PM")));
     }
 

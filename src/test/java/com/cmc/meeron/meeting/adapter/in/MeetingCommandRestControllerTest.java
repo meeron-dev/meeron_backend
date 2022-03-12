@@ -50,7 +50,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.errors", hasSize(6)))
+                .andExpect(jsonPath("$.errors", hasSize(7)))
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
     }
 

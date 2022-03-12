@@ -1,4 +1,10 @@
 [[notice]]
 == API 변경사항
 
-=== 없음
+====
+* link:user.html#team-workspace-users[팀 내 모든 유저 조회, window=_blank]
+- 기존의 응답에서 `workspaceAdmin`, `workspaceId` 가 추가되었습니다.
+* link:create-meeting.html#create-meeting[회의 생성, window=_blank]
+- 시간 정보를 입력할 때, `HH:mm` 형식이 아닌 `hh:mm a` 형식으로 변경되었습니다.
+- ex) `12:00 AM`, `02:00 PM`
+====

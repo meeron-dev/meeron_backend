@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.integration;
 
+import com.cmc.meeron.common.util.LocalDateTimeUtil;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
@@ -8,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.time.YearMonth;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
@@ -41,7 +44,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace");
         params.add("id", "1");
-        params.add("date", "2022-02");
+        params.add("date", LocalDateTimeUtil.convertYearMonth(YearMonth.of(2022, 2)));
 
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/days")
@@ -59,7 +62,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "team");
         params.add("id", "3");
-        params.add("date", "2022-03");
+        params.add("date", LocalDateTimeUtil.convertYearMonth(YearMonth.of(2022, 3)));
 
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/days")
@@ -77,7 +80,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace_user");
         params.add("id", "1");
-        params.add("date", "2022-03");
+        params.add("date", LocalDateTimeUtil.convertYearMonth(YearMonth.of(2022, 3)));
 
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/days")
@@ -95,7 +98,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace");
         params.add("id", "1");
-        params.add("date", "2022-02-18");
+        params.add("date", "2022/2/18");
 
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/day")
@@ -113,7 +116,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "team");
         params.add("id", "1");
-        params.add("date", "2022-02-18");
+        params.add("date", "2022/2/18");
 
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/day")
@@ -131,7 +134,7 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace_user");
         params.add("id", "1");
-        params.add("date", "2022-02-18");
+        params.add("date", "2022/2/18");
 
         // when, then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/day")

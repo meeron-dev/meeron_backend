@@ -23,7 +23,7 @@ public class DayMeetingsRequest {
     @NotEmpty(message = "검색 유형의 ID를 입력해주세요.")
     private List<Long> id;
 
-    @NotNull(message = "찾을 회의를 'yyyy-MM-dd' 형식으로 입력해주세요.")
+    @NotNull(message = "찾을 회의를 'yyyy/M/d' 형식으로 입력해주세요.")
     private LocalDate date;
 
     public String getType() {

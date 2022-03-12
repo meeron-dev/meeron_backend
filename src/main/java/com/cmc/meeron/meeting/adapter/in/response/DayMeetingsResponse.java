@@ -4,6 +4,7 @@ import com.cmc.meeron.meeting.application.port.in.response.WorkspaceAndTeamDayMe
 import com.cmc.meeron.meeting.application.port.in.response.WorkspaceUserDayMeetingResponseDto;
 import lombok.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,8 +56,8 @@ public class DayMeetingsResponse {
 
         private Long meetingId;
         private String meetingName;
-        private String startTime;
-        private String endTime;
+        private LocalTime startTime;
+        private LocalTime endTime;
         private Long workspaceId;
         private String workspaceName;
     }

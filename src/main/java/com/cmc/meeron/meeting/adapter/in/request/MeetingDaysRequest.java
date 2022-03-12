@@ -4,6 +4,7 @@ import com.cmc.meeron.common.validator.EnumValid;
 import com.cmc.meeron.meeting.application.port.in.request.MeetingDaysRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.MeetingSearchRequestDto;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -23,7 +24,8 @@ public class MeetingDaysRequest {
     @NotEmpty(message = "검색 유형의 ID를 입력해주세요.")
     private List<Long> id;
 
-    @NotNull(message = "찾을 회의를 'yyyy-MM' 형식으로 입력해주세요.")
+    @DateTimeFormat(pattern = "yyyy/M")
+    @NotNull(message = "찾을 회의를 'yyyy/M' 형식으로 입력해주세요.")
     private YearMonth date;
 
     public MeetingDaysRequestDto toRequestDto() {
