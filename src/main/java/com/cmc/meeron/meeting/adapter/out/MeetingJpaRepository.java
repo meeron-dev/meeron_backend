@@ -12,8 +12,10 @@ interface MeetingJpaRepository
         extends JpaRepository<Meeting, Long>{
 
     @Query(
-            "select m" +
-            " from Meeting m join fetch m.attendees.values a" +
+            "select distinct m" +
+            " from Meeting m" +
+            " join m.attendees.values a" +
+            " join fetch m.team t" +
             " where m.workspace.id = :workspaceId" +
             " and a.workspaceUser.id = :workspaceUserId" +
             " and m.meetingTime.startDate = :todayDate" +
