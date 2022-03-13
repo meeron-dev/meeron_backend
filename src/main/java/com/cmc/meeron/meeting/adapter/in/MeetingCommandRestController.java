@@ -40,7 +40,7 @@ public class MeetingCommandRestController {
     public CreateAgendaResponse createAgendas(@PathVariable Long meetingId,
                                               @RequestBody @Valid CreateAgendaRequest createAgendaRequest) {
         List<CreateAgendaResponseDto> responseDtos =
-                meetingCommandUseCase.createAgendas(createAgendaRequest.toRequestDto(meetingId));
+                meetingCommandUseCase.createAgendas(createAgendaRequest.toRequestDtoAndSortByAgendaOrder(meetingId));
         return CreateAgendaResponse.of(responseDtos);
     }
 }

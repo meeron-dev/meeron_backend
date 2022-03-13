@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,8 @@ public class CreateAgendaRequest {
     @Valid
     private List<AgendaRequest> agendas;
 
-    public CreateAgendaRequestDto toRequestDto(Long meetingId) {
+    public CreateAgendaRequestDto toRequestDtoAndSortByAgendaOrder(Long meetingId) {
+        sortByAgendaOrder();
         return CreateAgendaRequestDto.builder()
                 .meetingId(meetingId)
                 .agendaRequestDtos(agendas
@@ -38,18 +40,27 @@ public class CreateAgendaRequest {
                 .build();
     }
 
+    private void sortByAgendaOrder() {
+        Collections.sort(this.agendas);
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class AgendaRequest {
+    public static class AgendaRequest implements Comparable<AgendaRequest> {
 
         private int order;
         @NotBlank(message = "아젠다를 48자 내로 입력해주세요.")
         @Length(max = 48, message = "아젠다를 48자 내로 입력해주세요.")
         private String name;
         private List<IssueRequest> issues;
+
+        @Override
+        public int compareTo(AgendaRequest o) {
+            return order - o.order;
+        }
     }
 
     @Getter
