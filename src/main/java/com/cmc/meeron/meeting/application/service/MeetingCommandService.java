@@ -3,6 +3,7 @@ package com.cmc.meeron.meeting.application.service;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
+import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
@@ -61,8 +62,12 @@ class MeetingCommandService implements MeetingCommandUseCase {
 
     private Workspace validateEqualWorkspace(List<Long> workspaceUserIds, Workspace needValidWorkspace) {
         List<Workspace> workspaces = workspaceQueryPort.findByWorkspaceUserIds(workspaceUserIds);
+        // TODO: 2022/03/13 kobeomseok95 refactoring
         if (workspaces.size() > 1) {
             throw new WorkspaceUsersNotInEqualWorkspaceException();
+        }
+        if (workspaces.size() == 0) {
+            throw new WorkspaceUserNotFoundException();
         }
         Workspace workspace = workspaces.get(0);
         if (!workspace.equals(needValidWorkspace)) {
@@ -73,7 +78,7 @@ class MeetingCommandService implements MeetingCommandUseCase {
 
     @Override
     public void joinAttendees(JoinAttendeesRequestDto joinAttendeesRequestDto) {
-        Meeting meeting = meetingQueryPort.findById(joinAttendeesRequestDto.getMeetingId())
+        Meeting meeting = meetingQueryPort.findWithAttendeesById(joinAttendeesRequestDto.getMeetingId())
                 .orElseThrow(MeetingNotFoundException::new);
         validateEqualWorkspace(joinAttendeesRequestDto.getWorkspaceUserIds(), meeting.getWorkspace());
         List<WorkspaceUser> attendees = findWorkspaceUsers(joinAttendeesRequestDto.getWorkspaceUserIds());

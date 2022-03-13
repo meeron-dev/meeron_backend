@@ -1,9 +1,11 @@
 package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
+import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
@@ -283,6 +285,46 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
 
         // given
         doThrow(new NotWorkspacesTeamException())
+                .when(meetingCommandUseCase)
+                .joinAttendees(any());
+        JoinAttendeesRequest request = createJoinAttendeesRequest();
+
+        // when, then, docs
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("회의 참가자 추가 - 실패 / 이미 참여중인 참가자가 있을 경우")
+    @Test
+    void join_attendees_fail_duplicate_attendees() throws Exception {
+
+        // given
+        doThrow(new AttendeeDuplicateException())
+                .when(meetingCommandUseCase)
+                .joinAttendees(any());
+        JoinAttendeesRequest request = createJoinAttendeesRequest();
+
+        // when, then, docs
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("회의 참가자 추가 - 실패 / 존재하지 않는 워크스페이스 유저인 경우")
+    @Test
+    void join_attendees_fail_not_found_workspace_user() throws Exception {
+
+        // given
+        doThrow(new WorkspaceUserNotFoundException())
                 .when(meetingCommandUseCase)
                 .joinAttendees(any());
         JoinAttendeesRequest request = createJoinAttendeesRequest();

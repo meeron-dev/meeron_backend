@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 interface MeetingJpaRepository
         extends JpaRepository<Meeting, Long>{
@@ -24,4 +25,12 @@ interface MeetingJpaRepository
     List<Meeting> findTodayMeetings(@Param("workspaceId") Long workspaceId,
                                     @Param("workspaceUserId") Long workspaceUserId,
                                     @Param("todayDate") LocalDate todayDate);
+
+    @Query(
+            "select distinct m" +
+            " from Meeting m" +
+            " join fetch m.attendees.values a" +
+            " where m.id = :meetingId"
+    )
+    Optional<Meeting> findWithAttendeesById(@Param("meetingId") Long meetingId);
 }

@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.domain;
 
+import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.user.domain.WorkspaceUser;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Embeddable
 @Getter
@@ -32,8 +34,20 @@ public class Attendees {
     }
 
     public void addAttendees(List<WorkspaceUser> attendees, Meeting meeting) {
+        checkDuplicateAttendees(attendees);
         List<Attendee> meetingAttendee = Attendee.createAttendees(attendees, meeting);
         addAll(meetingAttendee);
+    }
+
+    private void checkDuplicateAttendees(List<WorkspaceUser> attendees) {
+        List<Long> attendeesWorkspaceUserIds = attendees.stream().map(WorkspaceUser::getId).collect(Collectors.toList());
+        if (containsAttendee(attendeesWorkspaceUserIds)) {
+            throw new AttendeeDuplicateException();
+        }
+    }
+
+    private boolean containsAttendee(List<Long> attendeesWorkspaceUserIds) {
+        return values.stream().anyMatch(value -> attendeesWorkspaceUserIds.contains(value.getWorkspaceUser().getId()));
     }
 
     public void addAll(List<Attendee> attendees) {

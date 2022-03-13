@@ -26,4 +26,6 @@ public interface MeetingQueryPort {
     Optional<Meeting> findById(Long meetingId);
 
     Optional<Agenda> findAgendaById(Long agendaId);
+
+    Optional<Meeting> findWithAttendeesById(Long meetingId);
 }

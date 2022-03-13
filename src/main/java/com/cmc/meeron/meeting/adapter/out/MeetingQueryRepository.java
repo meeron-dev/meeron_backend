@@ -56,4 +56,9 @@ class MeetingQueryRepository implements MeetingQueryPort {
     public Optional<Agenda> findAgendaById(Long agendaId) {
         return agendaJpaRepository.findById(agendaId);
     }
+
+    @Override
+    public Optional<Meeting> findWithAttendeesById(Long meetingId) {
+        return meetingJpaRepository.findWithAttendeesById(meetingId);
+    }
 }

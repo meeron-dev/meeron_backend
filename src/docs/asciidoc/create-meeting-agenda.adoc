@@ -71,6 +71,14 @@ include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_workspace/http-response.adoc[]
 
+=== 이미 회의에 참여한 유저인 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-response.adoc[]
+
+=== 워크스페이스 유저가 존재하지 않는 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace_user/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace_user/http-response.adoc[]
+
 [[create-agenda]]
 == 아젠다 생성
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/http-request.adoc[]
