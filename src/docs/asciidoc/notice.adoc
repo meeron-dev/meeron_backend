@@ -13,6 +13,7 @@
 link:user.html#search-workspace-users[워크스페이스 내 유저 검색, window=_blank]
 - 기존의 응답에서 `workspaceAdmin`, `workspaceId` 필드가 추가되었습니다.
 * link:create-meeting-agenda.html#create-meeting[회의 생성, window=_blank]
+- `workspaceId` 를 필수적으로 줘야 합니다.
 - 날짜 정보를 입력할 때, `yyyy/M/d` 형식으로 변경되었습니다.
 - `2022/2/4`, `2022/2/21`, `2022/12/23`
 - 시간 정보를 입력할 때, `hh:mm a` 형식으로 변경되었습니다.

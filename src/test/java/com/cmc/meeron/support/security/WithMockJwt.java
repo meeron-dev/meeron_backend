@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @WithSecurityContext(factory = WithMockJwtSecurityContextFactory.class)
 public @interface WithMockJwt {
 
-    String email() default "test@naver.com";
+    String email() default "test1@test.com";
 
     Role role() default Role.USER;
 }

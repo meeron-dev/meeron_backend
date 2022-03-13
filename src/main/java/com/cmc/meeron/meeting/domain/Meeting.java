@@ -7,8 +7,6 @@ import com.cmc.meeron.workspace.domain.Workspace;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -37,11 +35,8 @@ public class Meeting extends BaseEntity {
     @Embedded
     private Attendees attendees;
 
-    @Column(nullable = false, length = 50)
-    private String name;
-
-    @Column(nullable = false, length = 100)
-    private String purpose;
+    @Embedded
+    private MeetingInfo meetingInfo;
 
     @Column(length = 200)
     private String place;
@@ -50,32 +45,18 @@ public class Meeting extends BaseEntity {
     @Column(nullable = false, length = 20)
     private MeetingStatus meetingStatus;
 
-    public LocalDate getStartDate() {
-        return meetingTime.getStartDate();
-    }
-
-    public LocalTime getStartTime() {
-        return meetingTime.getStartTime();
-    }
-
-    public LocalTime getEndTime() {
-        return meetingTime.getEndTime();
-    }
-
     public static Meeting create(Team operationTeam,
                                  Workspace workspace,
                                  MeetingTime meetingTime,
-                                 MeetingBasicInfoVo meetingBasicInfoVo) {
+                                 MeetingInfo meetingInfo) {
         return Meeting.builder()
                 .team(operationTeam)
                 .workspace(workspace)
                 .meetingStatus(MeetingStatus.EXPECT)
                 .meetingTime(meetingTime)
-                .name(meetingBasicInfoVo.getName())
-                .purpose(meetingBasicInfoVo.getPurpose())
+                .meetingInfo(meetingInfo)
                 .build();
     }
-
 
     public void addAdmins(List<WorkspaceUser> meetingAdmins) {
         ifAttendeesNull();

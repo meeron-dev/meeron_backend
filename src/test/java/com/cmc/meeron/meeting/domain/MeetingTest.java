@@ -32,8 +32,10 @@ class MeetingTest {
                         .startTime(localTimeNow)
                         .endTime(localTimeNow.plusHours(2))
                         .build())
-                .name("테스트 회의1")
-                .purpose("테스트 목적")
+                .meetingInfo(MeetingInfo.builder()
+                        .name("테스트 회의1")
+                        .purpose("테스트 목적")
+                        .build())
                 .place("회의실")
                 .build();
     }
@@ -51,23 +53,23 @@ class MeetingTest {
                 .startTime(time)
                 .endTime(time.plusHours(2))
                 .build();
-        MeetingBasicInfoVo meetingBasicInfoVo = MeetingBasicInfoVo.builder()
+        MeetingInfo meetingInfo = MeetingInfo.builder()
                 .name("테스트 회의명")
                 .purpose("회의 성격")
                 .build();
 
         // when
-        Meeting meeting = Meeting.create(team, workspace, meetingTime, meetingBasicInfoVo);
+        Meeting meeting = Meeting.create(team, workspace, meetingTime, meetingInfo);
 
         // then
         assertAll(
                 () -> assertEquals(team.getId(), meeting.getTeam().getId()),
                 () -> assertEquals(workspace.getId(), meeting.getWorkspace().getId()),
-                () -> assertEquals(meetingTime.getStartDate(), meeting.getStartDate()),
-                () -> assertEquals(meetingTime.getStartTime(), meeting.getStartTime()),
-                () -> assertEquals(meetingTime.getEndTime(), meeting.getEndTime()),
-                () -> assertEquals(meetingBasicInfoVo.getName(), meeting.getName()),
-                () -> assertEquals(meetingBasicInfoVo.getPurpose(), meeting.getPurpose()),
+                () -> assertEquals(meetingTime.getStartDate(), meeting.getMeetingTime().getStartDate()),
+                () -> assertEquals(meetingTime.getStartTime(), meeting.getMeetingTime().getStartTime()),
+                () -> assertEquals(meetingTime.getEndTime(), meeting.getMeetingTime().getEndTime()),
+                () -> assertEquals(meetingInfo.getName(), meeting.getMeetingInfo().getName()),
+                () -> assertEquals(meetingInfo.getPurpose(), meeting.getMeetingInfo().getPurpose()),
                 () -> assertEquals(MeetingStatus.EXPECT, meeting.getMeetingStatus())
         );
     }

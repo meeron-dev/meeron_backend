@@ -1,20 +1,19 @@
 package com.cmc.meeron.meeting.application.service;
 
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
-import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
+import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
-import com.cmc.meeron.meeting.application.port.in.response.CreateAgendaResponseDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
-import com.cmc.meeron.meeting.domain.MeetingBasicInfoVo;
+import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
@@ -26,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,52 +41,52 @@ class MeetingCommandService implements MeetingCommandUseCase {
     private final MeetingQueryPort meetingQueryPort;
 
     @Override
-    public Long createMeeting(CreateMeetingRequestDto createMeetingRequestDto) {
-        List<Long> workspaceUserIds = createMeetingRequestDto.getMeetingManagerIds();
-
+    public Long createMeeting(CreateMeetingRequestDto createMeetingRequestDto, AuthUser authUser) {
         Team operationTeam = teamQueryPort.findById(createMeetingRequestDto.getOperationTeamId())
                 .orElseThrow(TeamNotFoundException::new);
-        Workspace workspace = validateEqualWorkspace(workspaceUserIds, operationTeam.getWorkspace());
-        List<WorkspaceUser> meetingAdmins = findWorkspaceUsers(workspaceUserIds);
-
+        Workspace workspace = workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId())
+                .orElseThrow(WorkspaceNotFoundException::new);
+        List<WorkspaceUser> adminsIncludeMe = findAdminsAndMe(createMeetingRequestDto, authUser, workspace);
+        validWorkspaceInTeamAndWorkspaceUsers(workspace, operationTeam, adminsIncludeMe);
         MeetingTime meetingTime = createMeetingRequestDto.createMeetingTime();
-        MeetingBasicInfoVo meetingBasicInfoVo = createMeetingRequestDto.createMeetingBasicInfo();
-        Meeting meeting = Meeting.create(operationTeam, workspace, meetingTime, meetingBasicInfoVo);
-        meeting.addAdmins(meetingAdmins);
+        MeetingInfo meetingInfo = createMeetingRequestDto.createMeetingInfo();
+        Meeting meeting = Meeting.create(operationTeam, workspace, meetingTime, meetingInfo);
+        meeting.addAdmins(adminsIncludeMe);
         return meetingCommandPort.saveMeeting(meeting);
     }
 
-    private List<WorkspaceUser> findWorkspaceUsers(List<Long> workspaceUserIds) {
-        return userQueryPort.findAllWorkspaceUsersById(workspaceUserIds);
+    private List<WorkspaceUser> findAdminsAndMe(CreateMeetingRequestDto createMeetingRequestDto, AuthUser authUser, Workspace workspace) {
+        // TODO: 2022/03/13 kobeomseok95 쿼리를 두번치는건 조금 별로인듯 우선은 이렇게 진행하자.
+        List<WorkspaceUser> admins = userQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds());
+        WorkspaceUser me = userQueryPort.findByUserWorkspaceId(authUser.getUserId(), workspace.getId())
+                .orElseThrow(() -> new WorkspaceUserNotFoundException("회의 생성자가 존재하지 않습니다."));
+        List<WorkspaceUser> adminsIncludeMe = new ArrayList<>(admins);
+        adminsIncludeMe.add(me);
+        return adminsIncludeMe;
     }
 
-    private Workspace validateEqualWorkspace(List<Long> workspaceUserIds, Workspace needValidWorkspace) {
-        List<Workspace> workspaces = workspaceQueryPort.findByWorkspaceUserIds(workspaceUserIds);
-        // TODO: 2022/03/13 kobeomseok95 refactoring
-        if (workspaces.size() > 1) {
-            throw new WorkspaceUsersNotInEqualWorkspaceException();
-        }
-        if (workspaces.size() == 0) {
-            throw new WorkspaceUserNotFoundException();
-        }
-        Workspace workspace = workspaces.get(0);
-        if (!workspace.equals(needValidWorkspace)) {
-            throw new NotWorkspacesTeamException();
-        }
-        return workspace;
+    private void validWorkspaceInTeamAndWorkspaceUsers(Workspace workspace, Team operationTeam, List<WorkspaceUser> admins) {
+        validWorkspaceAndWorkspaceUsers(workspace, admins);
+        operationTeam.validWorkspace(workspace);
+    }
+
+    private void validWorkspaceAndWorkspaceUsers(Workspace workspace, List<WorkspaceUser> attendees) {
+        attendees.forEach(attendee -> attendee.validInWorkspace(workspace));
     }
 
     @Override
     public void joinAttendees(JoinAttendeesRequestDto joinAttendeesRequestDto) {
         Meeting meeting = meetingQueryPort.findWithAttendeesById(joinAttendeesRequestDto.getMeetingId())
                 .orElseThrow(MeetingNotFoundException::new);
-        validateEqualWorkspace(joinAttendeesRequestDto.getWorkspaceUserIds(), meeting.getWorkspace());
-        List<WorkspaceUser> attendees = findWorkspaceUsers(joinAttendeesRequestDto.getWorkspaceUserIds());
+        Workspace workspace = workspaceQueryPort.findById(meeting.getWorkspace().getId())
+                .orElseThrow(WorkspaceNotFoundException::new);
+        List<WorkspaceUser> attendees = userQueryPort.findAllWorkspaceUsersByIds(joinAttendeesRequestDto.getWorkspaceUserIds());
+        validWorkspaceAndWorkspaceUsers(workspace, attendees);
         meeting.addAttendees(attendees);
     }
 
     @Override
-    public List<CreateAgendaResponseDto> createAgendas(CreateAgendaRequestDto createAgendaRequestDto) {
+    public List<Long> createAgendas(CreateAgendaRequestDto createAgendaRequestDto) {
         Meeting meeting = meetingQueryPort.findById(createAgendaRequestDto.getMeetingId())
                 .orElseThrow(MeetingNotFoundException::new);
         return createAgendaRequestDto.getAgendaRequestDtos()
@@ -94,7 +94,7 @@ class MeetingCommandService implements MeetingCommandUseCase {
                 .map(dto -> {
                     Agenda agenda = meetingCommandPort.saveAgenda(dto.createAgenda(meeting));
                     meetingCommandPort.saveIssues(dto.createIssues(agenda));
-                    return CreateAgendaResponseDto.fromEntity(dto.getAgendaOrder(), agenda.getId());
+                    return agenda.getId();
                 })
                 .collect(Collectors.toList());
     }

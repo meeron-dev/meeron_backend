@@ -51,13 +51,14 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
 
     private CreateMeetingRequest createCreateMeetingRequest() {
         return CreateMeetingRequest.builder()
+                .workspaceId(1L)
                 .meetingDate(LocalDate.now().plusDays(1))
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(11, 0))
                 .meetingName("테스트 회의")
                 .meetingPurpose("테스트 회의 성격")
                 .operationTeamId(1L)
-                .meetingAdminIds(List.of(1L, 2L))
+                .meetingAdminIds(List.of(2L))
                 .build();
     }
 
@@ -77,7 +78,7 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.code", is(APPLICATION_EXCEPTION.getCode())));
     }
 
-    @DisplayName("회의 참여자 추가 - 실패 / 존재하지 않는 워크스페이스 유저를 참여시키는 경우")
+    @DisplayName("회의 참여자 추가 - 성공 / 존재하지 않는 워크스페이스 유저를 참여시키는 경우")
     @Test
     void join_attendees_fail_not_found_workspace_user() throws Exception {
 
@@ -91,8 +92,7 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", meeting.getId().intValue())
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(APPLICATION_EXCEPTION.getCode())));
+                .andExpect(status().isCreated());
     }
 
     @DisplayName("회의 참여자 추가 - 성공")

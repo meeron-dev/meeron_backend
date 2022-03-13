@@ -1,7 +1,9 @@
 package com.cmc.meeron.support.security;
 
 import com.cmc.meeron.common.security.AuthUser;
+import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
+import com.cmc.meeron.user.domain.UserProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,11 @@ final class WithMockJwtSecurityContextFactory implements WithSecurityContextFact
     }
 
     private User createUser(String email) {
-        return User.of(email, "고범석", "KAKAO");
+        return User.builder()
+                .id(1L)
+                .email(email)
+                .role(Role.USER)
+                .userProvider(UserProvider.KAKAO)
+                .build();
     }
 }

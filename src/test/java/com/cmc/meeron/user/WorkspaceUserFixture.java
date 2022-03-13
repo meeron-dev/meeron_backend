@@ -18,4 +18,16 @@ public class WorkspaceUserFixture {
             .workspace(WORKSPACE_2)
             .nickname("누구세요")
             .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_3 = WorkspaceUser.builder()
+            .id(14L)
+            .workspace(WORKSPACE_1)
+            .nickname("테스트1")
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_4 = WorkspaceUser.builder()
+            .id(14L)
+            .workspace(WORKSPACE_1)
+            .nickname("테스트2")
+            .build();
 }

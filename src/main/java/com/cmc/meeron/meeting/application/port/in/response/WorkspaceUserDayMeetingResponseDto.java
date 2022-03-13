@@ -30,9 +30,9 @@ public class WorkspaceUserDayMeetingResponseDto {
     private static WorkspaceUserDayMeetingResponseDto of(Meeting meeting) {
         return WorkspaceUserDayMeetingResponseDto.builder()
                 .meetingId(meeting.getId())
-                .meetingName(meeting.getName())
-                .startTime(meeting.getStartTime())
-                .endTime(meeting.getEndTime())
+                .meetingName(meeting.getMeetingInfo().getName())
+                .startTime(meeting.getMeetingTime().getStartTime())
+                .endTime(meeting.getMeetingTime().getEndTime())
                 .workspaceId(meeting.getWorkspace().getId())
                 .workspaceName(meeting.getWorkspace().getName())
                 .build();

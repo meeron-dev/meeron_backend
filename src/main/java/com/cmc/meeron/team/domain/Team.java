@@ -1,6 +1,7 @@
 package com.cmc.meeron.team.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
+import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.workspace.domain.Workspace;
 import lombok.*;
 
@@ -27,4 +28,10 @@ public class Team extends BaseEntity {
 
     @Column(length = 200)
     private String teamLogoUrl;
+
+    public void validWorkspace(Workspace target) {
+        if (!workspace.equals(target)) {
+            throw new NotWorkspacesTeamException();
+        }
+    }
 }

@@ -6,11 +6,11 @@ import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
-import com.cmc.meeron.meeting.application.port.in.response.CreateAgendaResponseDto;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
@@ -65,10 +65,11 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
 
         // given
         CreateMeetingRequest request = CreateMeetingRequest.builder()
+                .workspaceId(1L)
                 .meetingDate(LocalDate.now().plusDays(1))
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(11, 0))
-                .meetingName("테")
+                .meetingName("                ")
                 .meetingPurpose("회의 성격은 10글자를 넘어갔단다.")
                 .meetingAdminIds(List.of(1L, 2L))
                 .operationTeamId(1L)
@@ -91,7 +92,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
 
         // given
         CreateMeetingRequest request = createCreateMeetingRequest();
-        when(meetingCommandUseCase.createMeeting(any()))
+        when(meetingCommandUseCase.createMeeting(any(), any()))
                 .thenThrow(new TeamNotFoundException());
 
         // when, then, docs
@@ -106,6 +107,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
 
     private CreateMeetingRequest createCreateMeetingRequest() {
         return CreateMeetingRequest.builder()
+                .workspaceId(1L)
                 .meetingDate(LocalDate.now().plusDays(3))
                 .startTime(LocalTime.of(10, 0))
                 .endTime(LocalTime.of(11, 0))
@@ -116,13 +118,51 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .build();
     }
 
-    @DisplayName("회의 생성 - 실패 / 회의 공동 관리자가 하나의 워크스페이스에 속하지 않은 경우")
+    @DisplayName("회의 생성 - 실패 / 워크스페이스가 존재하지 않을 경우")
+    @Test
+    void create_meeting_fail_not_found_workspace() throws Exception {
+
+        // given
+        CreateMeetingRequest request = createCreateMeetingRequest();
+        when(meetingCommandUseCase.createMeeting(any(), any()))
+                .thenThrow(new WorkspaceNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("회의 생성 - 실패 / 회의 작성자가 존재하지 않을 경우")
+    @Test
+    void create_meeting_fail_not_found_workspace_user_me() throws Exception {
+
+        // given
+        CreateMeetingRequest request = createCreateMeetingRequest();
+        when(meetingCommandUseCase.createMeeting(any(), any()))
+                .thenThrow(new WorkspaceUserNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("회의 생성 - 실패 / 관리자가 선택한 워크스페이스에 속하지 않은 경우")
     @Test
     void create_meeting_fail_not_equal_workspace() throws Exception {
 
         // given
         CreateMeetingRequest request = createCreateMeetingRequest();
-        when(meetingCommandUseCase.createMeeting(any()))
+        when(meetingCommandUseCase.createMeeting(any(), any()))
                 .thenThrow(new WorkspaceUsersNotInEqualWorkspaceException());
 
         // when, then, docs
@@ -137,11 +177,11 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
 
     @DisplayName("회의 생성 - 실패 / 워크스페이스 유저와 팀이 속한 워크스페이스가 다를 경우")
     @Test
-    void create_meeting_fail_not_equal_team_admins_workspace() throws Exception {
+    void create_meeting_fail_not_equal_team_and_workspace() throws Exception {
 
         // given
         CreateMeetingRequest request = createCreateMeetingRequest();
-        when(meetingCommandUseCase.createMeeting(any()))
+        when(meetingCommandUseCase.createMeeting(any(), any()))
                 .thenThrow(new NotWorkspacesTeamException());
 
         // when, then, docs
@@ -154,39 +194,13 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
-    @DisplayName("회의 생성 - 실패 / 워크스페이스 유저 ID가 존재하지 않을 경우(본인은 반드시 포함해야 한다.)")
-    @Test
-    void create_meeting_fail_require_my_workspace_user_id() throws Exception {
-
-        // given
-        CreateMeetingRequest request = CreateMeetingRequest.builder()
-                .meetingDate(LocalDate.now().plusDays(3))
-                .startTime(LocalTime.of(10, 0))
-                .endTime(LocalTime.of(11, 0))
-                .meetingName("테스트 회의")
-                .meetingPurpose("테스트 회의 성격")
-                .operationTeamId(1L)
-                .meetingAdminIds(List.of())
-                .build();
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
-    }
-
     @DisplayName("회의 생성 - 성공")
     @Test
     void create_meeting_success() throws Exception {
 
         // given
         CreateMeetingRequest request = createCreateMeetingRequest();
-        when(meetingCommandUseCase.createMeeting(any()))
+        when(meetingCommandUseCase.createMeeting(any(), any()))
                 .thenReturn(1L);
 
         // when, then, docs
@@ -201,11 +215,12 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestFields(
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("회의를 만들 워크스페이스 ID"),
                                 fieldWithPath("meetingDate").type(JsonFieldType.STRING).description("회의 시작 날짜").attributes(field("constraints", "'yyyy/M/d' 형식으로 줄 것")),
                                 fieldWithPath("startTime").type(JsonFieldType.STRING).description("회의 시작 시간").attributes(field("constraints", "'hh:mm a' 형식으로 줄 것")),
                                 fieldWithPath("endTime").type(JsonFieldType.STRING).description("회의 종료 시간").attributes(field("constraints", "'hh:mm a' 형식으로 줄 것")),
-                                fieldWithPath("meetingName").type(JsonFieldType.STRING).description("회의명").attributes(field("constraints", "3자 이상 30자 이하로 줄 것")),
-                                fieldWithPath("meetingPurpose").type(JsonFieldType.STRING).description("회의 성격").attributes(field("constraints", "1자 이상 10자 이하로 줄 것")),
+                                fieldWithPath("meetingName").type(JsonFieldType.STRING).description("회의명").attributes(field("constraints", "1자 이상 30자 이하로 줄 것, 비어있는 문자열 금지")),
+                                fieldWithPath("meetingPurpose").type(JsonFieldType.STRING).description("회의 성격").attributes(field("constraints", "1자 이상 10자 이하로 줄 것, 비어있는 문자열 금지")),
                                 fieldWithPath("operationTeamId").type(JsonFieldType.NUMBER).description("주관하는 팀 ID"),
                                 fieldWithPath("meetingAdminIds[]").type(JsonFieldType.ARRAY).optional().description("회의 공동 관리자로 임명할 Workspace User ID").attributes(field("constraints", "입력한 Workspace User Id는 하나의 워크스페이스에 속해야 한다."))
                         ),
@@ -259,6 +274,26 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
+    @DisplayName("회의 참가자 추가 - 실패 / 존재하지 않는 워크스페이스일 경우")
+    @Test
+    void join_attendees_fail_not_found_workspace() throws Exception {
+
+        // given
+        doThrow(new WorkspaceNotFoundException())
+                .when(meetingCommandUseCase)
+                .joinAttendees(any());
+        JoinAttendeesRequest request = createJoinAttendeesRequest();
+
+        // when, then, docs
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
     @DisplayName("회의 참가자 추가 - 실패 / 참가자가 같은 워크스페이스에 속하지 않은 경우")
     @Test
     void join_attendees_fail_not_equal_attendees_workspace() throws Exception {
@@ -279,52 +314,12 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
-    @DisplayName("회의 참가자 추가 - 실패 / 참가자가 같은 워크스페이스에 속해도 생성된 회의의 워크스페이스 정보와 일치하지 않는 경우")
-    @Test
-    void join_attendees_fail_not_equal_workspace() throws Exception {
-
-        // given
-        doThrow(new NotWorkspacesTeamException())
-                .when(meetingCommandUseCase)
-                .joinAttendees(any());
-        JoinAttendeesRequest request = createJoinAttendeesRequest();
-
-        // when, then, docs
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
-    }
-
     @DisplayName("회의 참가자 추가 - 실패 / 이미 참여중인 참가자가 있을 경우")
     @Test
     void join_attendees_fail_duplicate_attendees() throws Exception {
 
         // given
         doThrow(new AttendeeDuplicateException())
-                .when(meetingCommandUseCase)
-                .joinAttendees(any());
-        JoinAttendeesRequest request = createJoinAttendeesRequest();
-
-        // when, then, docs
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
-    }
-
-    @DisplayName("회의 참가자 추가 - 실패 / 존재하지 않는 워크스페이스 유저인 경우")
-    @Test
-    void join_attendees_fail_not_found_workspace_user() throws Exception {
-
-        // given
-        doThrow(new WorkspaceUserNotFoundException())
                 .when(meetingCommandUseCase)
                 .joinAttendees(any());
         JoinAttendeesRequest request = createJoinAttendeesRequest();
@@ -492,9 +487,9 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
 
         // given
         CreateAgendaRequest request = createCreateAgendasRequest();
-        List<CreateAgendaResponseDto> responseDto = createCreateAgendaResponseDto();
+        List<Long> createdAgendaIds = List.of(3L);
         when(meetingCommandUseCase.createAgendas(any()))
-                .thenReturn(responseDto);
+                .thenReturn(createdAgendaIds);
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/agendas", "1")
@@ -502,10 +497,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.agendaResponses[0].agendaNumber", is(responseDto.get(0).getAgendaNumber())))
-                .andExpect(jsonPath("$.agendaResponses[0].createdAgendaId", is(responseDto.get(0).getCreatedAgendaId().intValue())))
-                .andExpect(jsonPath("$.agendaResponses[1].agendaNumber", is(responseDto.get(1).getAgendaNumber())))
-                .andExpect(jsonPath("$.agendaResponses[1].createdAgendaId", is(responseDto.get(1).getCreatedAgendaId().intValue())))
+                .andExpect(jsonPath("$.createdAgendaIds[0]", is(createdAgendaIds.get(0).intValue())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -519,15 +511,8 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("agendas[].issues[].issue").type(JsonFieldType.STRING).description("생성할 아젠다의 이슈")
                         ),
                         responseFields(
-                                fieldWithPath("agendaResponses[].agendaNumber").type(JsonFieldType.NUMBER).description("생성 요청한 아젠다 순서"),
-                                fieldWithPath("agendaResponses[].createdAgendaId").type(JsonFieldType.NUMBER).description("생성된 아젠다 ID")
+                                fieldWithPath("createdAgendaIds[]").type(JsonFieldType.ARRAY).description("생성된 아젠다 ID들")
                         )
                 ));
-    }
-
-    private List<CreateAgendaResponseDto> createCreateAgendaResponseDto() {
-        return List.of(
-                CreateAgendaResponseDto.builder().agendaNumber(1).createdAgendaId(1L).build(),
-                CreateAgendaResponseDto.builder().agendaNumber(2).createdAgendaId(2L).build());
     }
 }

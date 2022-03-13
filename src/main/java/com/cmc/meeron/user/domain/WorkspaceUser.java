@@ -1,6 +1,7 @@
 package com.cmc.meeron.user.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.workspace.domain.Workspace;
 import lombok.*;
 
@@ -37,4 +38,10 @@ public class WorkspaceUser extends BaseEntity {
 
     @Column(length = 200)
     private String profileImageUrl;
+
+    public void validInWorkspace(Workspace workspace) {
+        if (!this.workspace.equals(workspace)) {
+            throw new WorkspaceUsersNotInEqualWorkspaceException();
+        }
+    }
 }

@@ -19,5 +19,7 @@ public interface UserQueryPort {
 
     List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId);
 
-    List<WorkspaceUser> findAllWorkspaceUsersById(List<Long> workspaceUserIds);
+    List<WorkspaceUser> findAllWorkspaceUsersByIds(List<Long> workspaceUserIds);
+
+    Optional<WorkspaceUser> findByUserWorkspaceId(Long userId, Long workspaceId);
 }

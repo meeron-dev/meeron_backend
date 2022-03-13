@@ -28,9 +28,9 @@ public class WorkspaceAndTeamDayMeetingResponseDto {
     private static WorkspaceAndTeamDayMeetingResponseDto of(Meeting meeting) {
         return WorkspaceAndTeamDayMeetingResponseDto.builder()
                 .meetingId(meeting.getId())
-                .meetingName(meeting.getName())
-                .startTime(meeting.getStartTime())
-                .endTime(meeting.getEndTime())
+                .meetingName(meeting.getMeetingInfo().getName())
+                .startTime(meeting.getMeetingTime().getStartTime())
+                .endTime(meeting.getMeetingTime().getEndTime())
                 .build();
     }
 }

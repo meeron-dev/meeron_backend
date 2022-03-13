@@ -13,8 +13,6 @@
 - link:user.html#team-workspace-users[/api/teams/:id/workspace-users, window=_blank] (팀 선택시, 팀에 속한 유저 리스트)
 ====
 
-
-
 [[create-meeting]]
 == 회의 생성
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/http-request.adoc[]
@@ -27,25 +25,29 @@ include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_valid/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_valid/http-response.adoc[]
 
-=== 회의 제목은 3 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우
+=== 회의 제목은 1 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_text_valid/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_text_valid/http-response.adoc[]
 
-=== 담당 팀이 존재하지 않을 경우
+=== 주관하는 팀이 존재하지 않을 경우
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-response.adoc[]
 
-=== 공동 관리자가 한 워크스페이스에 같이 있지 않은 경우
+=== 워크스페이스가 존재하지 않을 경우
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace/http-response.adoc[]
+
+=== 회의 작성자가 존재하지 않을 경우
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace_user_me/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace_user_me/http-response.adoc[]
+
+=== 관리자가 한 워크스페이스에 같이 있지 않은 경우
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-response.adoc[]
 
-=== 담당 팀의 워크스페이스와 공동 관리자들의 공통 워크스페이스와 일치하지 않는 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_admins_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_admins_workspace/http-response.adoc[]
-
-=== 공동 관리자 임명 시 본인 워크스페이스 유저 ID를 넣지 않은 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_require_my_workspace_user_id/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_require_my_workspace_user_id/http-response.adoc[]
+=== 워크스페이스 유저와 팀이 속한 워크스페이스가 다를 경우
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_and_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_and_workspace/http-response.adoc[]
 
 [[join-attendees]]
 == 만들어진 회의에 참가자 추가하기
@@ -63,21 +65,17 @@ include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_emp
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-response.adoc[]
 
+=== 존재하지 않는 워크스페이스일 경우
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-response.adoc[]
+
 === 참가자가 같은 워크스페이스에 속하지 않은 경우
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-response.adoc[]
 
-=== 참가자가 같은 워크스페이스에 속해도 회의가 다른 워크스페이스에 있을 경우
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_workspace/http-response.adoc[]
-
-=== 이미 회의에 참여한 유저인 경우
+=== 이미 회의에 참여한 워크스페이스 유저인 경우
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-response.adoc[]
-
-=== 워크스페이스 유저가 존재하지 않는 경우
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace_user/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace_user/http-response.adoc[]
 
 [[create-agenda]]
 == 아젠다 생성

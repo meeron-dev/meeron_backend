@@ -5,11 +5,12 @@ import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
+import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
-import com.cmc.meeron.meeting.application.port.in.response.CreateAgendaResponseDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Agenda;
@@ -30,14 +31,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cmc.meeron.auth.AuthUserFixture.AUTH_USER;
 import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_1;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_2;
+import static com.cmc.meeron.user.WorkspaceUserFixture.*;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_2;
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,11 +58,42 @@ class MeetingCommandServiceTest {
 
     private Meeting meeting;
     private Agenda agenda;
+    private AuthUser authUser;
+    private Workspace workspace;
 
     @BeforeEach
     void setUp() {
         meeting = MEETING;
         agenda = AGENDA1;
+        authUser = AUTH_USER;
+        workspace = createWorkspace();
+    }
+
+    private CreateMeetingRequestDto createCreateMeetingRequestDto() {
+        LocalTime nowTime = LocalTime.now();
+        return CreateMeetingRequestDto.builder()
+                .workspaceId(workspace.getId())
+                .meetingName("테스트회의")
+                .meetingPurpose("테스트회의성격")
+                .startDate(LocalDate.now())
+                .startTime(nowTime)
+                .endTime(nowTime.plusHours(1))
+                .operationTeamId(1L)
+                .meetingAdminIds(List.of(1L, 2L))
+                .build();
+    }
+
+    private Workspace createWorkspace() {
+        return Workspace.builder()
+                .id(1L)
+                .build();
+    }
+
+    private Team createTeam() {
+        return Team.builder()
+                .id(1L)
+                .workspace(createWorkspace())
+                .build();
     }
 
     @DisplayName("회의 생성 - 실패 / 주관하는 팀이 존재하지 않을 경우")
@@ -74,23 +107,27 @@ class MeetingCommandServiceTest {
 
         // when, then
         assertThrows(TeamNotFoundException.class,
-                () -> meetingCommandService.createMeeting(createMeetingRequestDto));
+                () -> meetingCommandService.createMeeting(createMeetingRequestDto, authUser));
     }
 
-    private CreateMeetingRequestDto createCreateMeetingRequestDto() {
-        LocalTime nowTime = LocalTime.now();
-        return CreateMeetingRequestDto.builder()
-                .meetingName("테스트회의")
-                .meetingPurpose("테스트회의성격")
-                .startDate(LocalDate.now())
-                .startTime(nowTime)
-                .endTime(nowTime.plusHours(1))
-                .operationTeamId(1L)
-                .meetingManagerIds(List.of(1L, 2L))
-                .build();
+    @DisplayName("회의 생성 - 실패 / 워크스페이스가 존재하지 않을 경우")
+    @Test
+    void create_meeting_fail_not_exist_workspace() throws Exception {
+
+        // given
+        CreateMeetingRequestDto createMeetingRequestDto = createCreateMeetingRequestDto();
+        Team team = createTeam();
+        when(teamQueryPort.findById(createMeetingRequestDto.getOperationTeamId()))
+                .thenReturn(Optional.of(team));
+        when(workspaceQueryPort.findById(createCreateMeetingRequestDto().getWorkspaceId()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(WorkspaceNotFoundException.class,
+                () -> meetingCommandService.createMeeting(createMeetingRequestDto, authUser));
     }
 
-    @DisplayName("회의 생성 - 실패 / 공동 관리자가 워크스페이스 내에 존재하지 않을 경우")
+    @DisplayName("회의 생성 - 실패 / 내가 존재하지 않을 경우")
     @Test
     void create_meeting_fail_not_in_equal_workspace() throws Exception {
 
@@ -99,35 +136,45 @@ class MeetingCommandServiceTest {
         Team operationTeam = createTeam();
         when(teamQueryPort.findById(any()))
                 .thenReturn(Optional.of(operationTeam));
-        when(workspaceQueryPort.findByWorkspaceUserIds(createMeetingRequestDto
-                .getMeetingManagerIds()))
-                .thenReturn(createInvalidWorkspaceList());
+        Workspace workspace = createWorkspace();
+        when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(workspace));
+        when(userQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()))
+                .thenReturn(Collections.emptyList());
+        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(WorkspaceUserNotFoundException.class,
+                () -> meetingCommandService.createMeeting(createMeetingRequestDto, authUser));
+    }
+
+    @DisplayName("회의 생성 - 실패 / 찾은 워크스페이스 유저들이 워크스페이스에 속하지 않은 경우")
+    @Test
+    void create_meeting_fail_team_not_workspace_users_in_equal_workspace() throws Exception {
+
+        // given
+        CreateMeetingRequestDto createMeetingRequestDto = createCreateMeetingRequestDto();
+        Team team = createTeam();
+        when(teamQueryPort.findById(createMeetingRequestDto.getOperationTeamId()))
+                .thenReturn(Optional.of(team));
+        Workspace workspace = createWorkspace();
+        when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(workspace));
+        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+                .thenReturn(List.of(WorkspaceUser.builder()
+                        .workspace(WORKSPACE_2)
+                        .id(1728L).build()));
+        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(WorkspaceUser.builder()
+                        .id(1234L)
+                        .workspace(WORKSPACE_1)
+                        .user(authUser.getUser())
+                        .build()));
 
         // when, then
         assertThrows(WorkspaceUsersNotInEqualWorkspaceException.class,
-                () -> meetingCommandService.createMeeting(createMeetingRequestDto));
-    }
-
-    private Team createTeam() {
-        return Team.builder()
-                .id(1L)
-                .workspace(createWorkspace())
-                .build();
-    }
-
-    private Workspace createWorkspace() {
-        return Workspace.builder()
-                .id(1L)
-                .build();
-    }
-
-    private List<Workspace> createInvalidWorkspaceList() {
-        return List.of(
-                createWorkspace(),
-                Workspace.builder()
-                        .id(2L)
-                        .build()
-        );
+                () -> meetingCommandService.createMeeting(createMeetingRequestDto, authUser));
     }
 
     @DisplayName("회의 생성 - 실패 / 워크스페이스에 속한 팀이 아닌 경우")
@@ -136,15 +183,29 @@ class MeetingCommandServiceTest {
 
         // given
         CreateMeetingRequestDto createMeetingRequestDto = createCreateMeetingRequestDto();
-        Team team = createTeam();
+        Team team = Team.builder()
+                .id(2L)
+                .workspace(WORKSPACE_2)
+                .build();
         when(teamQueryPort.findById(createMeetingRequestDto.getOperationTeamId()))
                 .thenReturn(Optional.of(team));
-        when(workspaceQueryPort.findByWorkspaceUserIds(any()))
-                .thenReturn(List.of(Workspace.builder().id(1728L).build()));
+        Workspace workspace = createWorkspace();
+        when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(workspace));
+        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+                .thenReturn(List.of(WorkspaceUser.builder()
+                        .workspace(workspace)
+                        .id(1728L).build()));
+        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(WorkspaceUser.builder()
+                        .id(1234L)
+                        .workspace(workspace)
+                        .user(authUser.getUser())
+                        .build()));
 
         // when, then
         assertThrows(NotWorkspacesTeamException.class,
-                () -> meetingCommandService.createMeeting(createMeetingRequestDto));
+                () -> meetingCommandService.createMeeting(createMeetingRequestDto, authUser));
     }
 
     @DisplayName("회의 생성 - 성공")
@@ -153,34 +214,54 @@ class MeetingCommandServiceTest {
 
         // given
         CreateMeetingRequestDto createMeetingRequestDto = createCreateMeetingRequestDto();
-        Team team = createTeam();
+        Workspace workspace = createWorkspace();
+        Team team = createTeam(workspace);
         when(teamQueryPort.findById(createMeetingRequestDto.getOperationTeamId()))
                 .thenReturn(Optional.of(team));
-        Workspace workspace = team.getWorkspace();
-        when(workspaceQueryPort.findByWorkspaceUserIds(createMeetingRequestDto.getMeetingManagerIds()))
-                .thenReturn(List.of(workspace));
-        List<WorkspaceUser> workspaceUsers = createWorkspaceUsers();
-        when(userQueryPort.findAllWorkspaceUsersById(createMeetingRequestDto.getMeetingManagerIds()))
+        when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(workspace));
+        List<WorkspaceUser> workspaceUsers = createWorkspaceUsers(workspace);
+        when(userQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()))
                 .thenReturn(workspaceUsers);
+        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(WorkspaceUser.builder()
+                        .id(1234L)
+                        .workspace(workspace)
+                        .user(authUser.getUser())
+                        .build()));
         when(meetingCommandPort.saveMeeting(any(Meeting.class)))
                 .thenReturn(1L);
+        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+                .thenReturn(Optional.of(WorkspaceUser.builder()
+                        .id(1234L)
+                        .workspace(workspace)
+                        .user(authUser.getUser())
+                        .build()));
 
         // when
-        Long response = meetingCommandService.createMeeting(createMeetingRequestDto);
+        Long response = meetingCommandService.createMeeting(createMeetingRequestDto, authUser);
 
         // then
         assertAll(
                 () -> verify(teamQueryPort).findById(createMeetingRequestDto.getOperationTeamId()),
-                () -> verify(workspaceQueryPort).findByWorkspaceUserIds(createMeetingRequestDto.getMeetingManagerIds()),
-                () -> verify(userQueryPort).findAllWorkspaceUsersById(createMeetingRequestDto.getMeetingManagerIds()),
+                () -> verify(workspaceQueryPort).findById(createMeetingRequestDto.getWorkspaceId()),
+                () -> verify(userQueryPort).findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()),
+                () -> verify(userQueryPort).findByUserWorkspaceId(authUser.getUserId(), workspace.getId()),
                 () -> verify(meetingCommandPort).saveMeeting(any(Meeting.class))
         );
     }
 
-    private List<WorkspaceUser> createWorkspaceUsers() {
+    private Team createTeam(Workspace workspace) {
+        return Team.builder()
+                .id(1L)
+                .workspace(workspace)
+                .build();
+    }
+
+    private List<WorkspaceUser> createWorkspaceUsers(Workspace workspace) {
         return List.of(
-                WorkspaceUser.builder().id(1L).workspace(createWorkspace()).build(),
-                WorkspaceUser.builder().id(2L).workspace(createWorkspace()).build()
+                WorkspaceUser.builder().id(1L).workspace(workspace).build(),
+                WorkspaceUser.builder().id(2L).workspace(workspace).build()
         );
     }
 
@@ -229,7 +310,7 @@ class MeetingCommandServiceTest {
                 .thenReturn(agenda);
 
         // when
-        List<CreateAgendaResponseDto> responseDtos = meetingCommandService.createAgendas(requestDto);
+        List<Long> responseDtos = meetingCommandService.createAgendas(requestDto);
 
         // then
         assertAll(
@@ -249,10 +330,10 @@ class MeetingCommandServiceTest {
         JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
         when(meetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findByWorkspaceUserIds(any()))
-                .thenReturn(List.of(WORKSPACE_1));
-        when(userQueryPort.findAllWorkspaceUsersById(any()))
-                .thenReturn(List.of(WORKSPACE_USER_1, WORKSPACE_USER_2));
+        when(workspaceQueryPort.findById(any()))
+                .thenReturn(Optional.of(WORKSPACE_1));
+        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+                .thenReturn(List.of(WORKSPACE_USER_3, WORKSPACE_USER_4));
 
         // when
         meetingCommandService.joinAttendees(requestDto);
@@ -260,8 +341,8 @@ class MeetingCommandServiceTest {
         // then
         assertAll(
                 () -> verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId()),
-                () -> verify(workspaceQueryPort).findByWorkspaceUserIds(requestDto.getWorkspaceUserIds()),
-                () -> verify(userQueryPort).findAllWorkspaceUsersById(requestDto.getWorkspaceUserIds()),
+                () -> verify(workspaceQueryPort).findById(meeting.getWorkspace().getId()),
+                () -> verify(userQueryPort).findAllWorkspaceUsersByIds(requestDto.getWorkspaceUserIds()),
                 () -> assertEquals(requestDto.getWorkspaceUserIds().size(), meeting.getAttendees().size())
         );
     }
@@ -289,38 +370,20 @@ class MeetingCommandServiceTest {
         );
     }
 
-    @DisplayName("회의 참가자 추가 - 실패 / 회의 참가자가 속한 워크스페이스가 회의의 워크스페이스와 다른 경우")
+    @DisplayName("회의 참가자 추가 - 실패 / 워크스페이스가 존재하지 않을 경우")
     @Test
-    void join_attendees_fail_attendees_in_another_workspace() throws Exception {
+    void join_attendees_fail_not_found_workspace() throws Exception {
 
         // given
+        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
         when(meetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findByWorkspaceUserIds(any()))
-                .thenReturn(List.of(WORKSPACE_1, WORKSPACE_2));
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
+        when(workspaceQueryPort.findById(any()))
+                .thenReturn(Optional.empty());
 
         // when, then
         assertThrows(
-                WorkspaceUsersNotInEqualWorkspaceException.class,
-                () -> meetingCommandService.joinAttendees(requestDto)
-        );
-    }
-
-    @DisplayName("회의 참가자 추가 - 실패 / 회의 참가자가 회의의 워크스페이스에 속해있지 않은 경우")
-    @Test
-    void join_attendees_fail_attendees_not_in_meeting_workspace() throws Exception {
-
-        // given
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findByWorkspaceUserIds(any()))
-                .thenReturn(List.of(WORKSPACE_2));
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
-
-        // when, then
-        assertThrows(
-                NotWorkspacesTeamException.class,
+                WorkspaceNotFoundException.class,
                 () -> meetingCommandService.joinAttendees(requestDto)
         );
     }
@@ -333,29 +396,33 @@ class MeetingCommandServiceTest {
         JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
         when(meetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
-        when(workspaceQueryPort.findByWorkspaceUserIds(any()))
-                .thenReturn(List.of(WORKSPACE_1));
-        when(userQueryPort.findAllWorkspaceUsersById(any()))
-                .thenReturn(List.of(WORKSPACE_USER_1, WORKSPACE_USER_2));
+        when(workspaceQueryPort.findById(any()))
+                .thenReturn(Optional.of(meeting.getWorkspace()));
+        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+                .thenReturn(List.of(WORKSPACE_USER_1));
 
         // when, then
         assertThrows(AttendeeDuplicateException.class,
                 () -> meetingCommandService.joinAttendees(requestDto));
     }
 
-    @DisplayName("회의 참가자 추가 실패 / 존재하지 않는 워크스페이스 유저일 경우")
+    @DisplayName("회의 참가자 추가 - 실패 / 회의 참가자 워크스페이스가 회의 워크스페이스와 다른 경우")
     @Test
-    void join_attendees_fail_not_found_workspace_user() throws Exception {
+    void join_attendees_fail_attendees_in_another_workspace() throws Exception {
 
         // given
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
         when(meetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findByWorkspaceUserIds(any()))
-                .thenReturn(List.of());
+        when(workspaceQueryPort.findById(any()))
+                .thenReturn(Optional.of(meeting.getWorkspace()));
+        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+                .thenReturn(List.of(WORKSPACE_USER_2));
+        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
 
         // when, then
-        assertThrows(WorkspaceUserNotFoundException.class,
-                () -> meetingCommandService.joinAttendees(requestDto));
+        assertThrows(
+                WorkspaceUsersNotInEqualWorkspaceException.class,
+                () -> meetingCommandService.joinAttendees(requestDto)
+        );
     }
 }

@@ -1,6 +1,6 @@
 package com.cmc.meeron.meeting.application.port.in.request;
 
-import com.cmc.meeron.meeting.domain.MeetingBasicInfoVo;
+import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
 import lombok.*;
 
@@ -16,15 +16,15 @@ import java.util.List;
 @Builder
 public class CreateMeetingRequestDto {
 
+    private Long workspaceId;
     private LocalDate startDate;
     private LocalTime startTime;
     private LocalTime endTime;
     private String meetingName;
     private String meetingPurpose;
-
     private Long operationTeamId;
     @Builder.Default
-    private List<Long> meetingManagerIds = new ArrayList<>();
+    private List<Long> meetingAdminIds = new ArrayList<>();
 
     public MeetingTime createMeetingTime() {
         return MeetingTime.builder()
@@ -34,8 +34,8 @@ public class CreateMeetingRequestDto {
                 .build();
     }
 
-    public MeetingBasicInfoVo createMeetingBasicInfo() {
-        return MeetingBasicInfoVo.builder()
+    public MeetingInfo createMeetingInfo() {
+        return MeetingInfo.builder()
                 .name(meetingName)
                 .purpose(meetingPurpose)
                 .build();

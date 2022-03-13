@@ -450,21 +450,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#create-meeting">회의 생성</a>
 <ul class="sectlevel2">
 <li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
-<li><a href="#_회의_제목은_3_30자_회의_성격은_1_10자를_지키지_않을_경우">회의 제목은 3 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우</a></li>
-<li><a href="#_담당_팀이_존재하지_않을_경우">담당 팀이 존재하지 않을 경우</a></li>
-<li><a href="#_공동_관리자가_한_워크스페이스에_같이_있지_않은_경우">공동 관리자가 한 워크스페이스에 같이 있지 않은 경우</a></li>
-<li><a href="#_담당_팀의_워크스페이스와_공동_관리자들의_공통_워크스페이스와_일치하지_않는_경우">담당 팀의 워크스페이스와 공동 관리자들의 공통 워크스페이스와 일치하지 않는 경우</a></li>
-<li><a href="#_공동_관리자_임명_시_본인_워크스페이스_유저_id를_넣지_않은_경우">공동 관리자 임명 시 본인 워크스페이스 유저 ID를 넣지 않은 경우</a></li>
+<li><a href="#_회의_제목은_1_30자_회의_성격은_1_10자를_지키지_않을_경우">회의 제목은 1 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우</a></li>
+<li><a href="#_주관하는_팀이_존재하지_않을_경우">주관하는 팀이 존재하지 않을 경우</a></li>
+<li><a href="#_워크스페이스가_존재하지_않을_경우">워크스페이스가 존재하지 않을 경우</a></li>
+<li><a href="#_회의_작성자가_존재하지_않을_경우">회의 작성자가 존재하지 않을 경우</a></li>
+<li><a href="#_관리자가_한_워크스페이스에_같이_있지_않은_경우">관리자가 한 워크스페이스에 같이 있지 않은 경우</a></li>
+<li><a href="#_워크스페이스_유저와_팀이_속한_워크스페이스가_다를_경우">워크스페이스 유저와 팀이 속한 워크스페이스가 다를 경우</a></li>
 </ul>
 </li>
 <li><a href="#join-attendees">만들어진 회의에 참가자 추가하기</a>
 <ul class="sectlevel2">
 <li><a href="#_회의_참가자의_워크스페이스_유저_id를_주지_않을_경우">회의 참가자의 워크스페이스 유저 ID를 주지 않을 경우</a></li>
 <li><a href="#_존재하지_않는_회의일_경우">존재하지 않는 회의일 경우</a></li>
+<li><a href="#_존재하지_않는_워크스페이스일_경우">존재하지 않는 워크스페이스일 경우</a></li>
 <li><a href="#_참가자가_같은_워크스페이스에_속하지_않은_경우">참가자가 같은 워크스페이스에 속하지 않은 경우</a></li>
-<li><a href="#_참가자가_같은_워크스페이스에_속해도_회의가_다른_워크스페이스에_있을_경우">참가자가 같은 워크스페이스에 속해도 회의가 다른 워크스페이스에 있을 경우</a></li>
-<li><a href="#_이미_회의에_참여한_유저인_경우">이미 회의에 참여한 유저인 경우</a></li>
-<li><a href="#_워크스페이스_유저가_존재하지_않는_경우">워크스페이스 유저가 존재하지 않는 경우</a></li>
+<li><a href="#_이미_회의에_참여한_워크스페이스_유저인_경우">이미 회의에 참여한 워크스페이스 유저인 경우</a></li>
 </ul>
 </li>
 <li><a href="#create-agenda">아젠다 생성</a>
@@ -508,10 +508,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 230
+Content-Length: 251
 Host: dev.meeron.net
 
 {
+  "workspaceId" : 1,
   "meetingDate" : "2022/3/16",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
@@ -557,6 +558,13 @@ Host: dev.meeron.net
 <td class="tableblock halign-left valign-top"><p class="tableblock">설명</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의를 만들 워크스페이스 ID</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetingDate</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
@@ -581,14 +589,14 @@ Host: dev.meeron.net
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetingName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3자 이상 30자 이하로 줄 것</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1자 이상 30자 이하로 줄 것, 비어있는 문자열 금지</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">회의명</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetingPurpose</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1자 이상 10자 이하로 줄 것</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1자 이상 10자 이하로 줄 것, 비어있는 문자열 금지</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">회의 성격</p></td>
 </tr>
 <tr>
@@ -653,10 +661,11 @@ Content-Length: 21
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 174
+Content-Length: 198
 Host: dev.meeron.net
 
 {
+  "workspaceId" : null,
   "meetingDate" : null,
   "startTime" : null,
   "endTime" : null,
@@ -678,21 +687,21 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 1101
+Content-Length: 1083
 
 {
-  "time" : "2022-03-13T10:20:00.220868",
+  "time" : "2022-03-13T23:25:02.416465",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "meetingAdminIds",
-    "value" : "[]",
-    "reason" : "공동 관리자는 본인이 반드시 포함되어야 합니다."
-  }, {
-    "field" : "endTime",
+    "field" : "meetingName",
     "value" : null,
-    "reason" : "회의 마감 시간을 'hh:mm a' 형식으로 입력해주세요."
+    "reason" : "회의명을 30자 이하로 입력해주세요."
+  }, {
+    "field" : "meetingDate",
+    "value" : null,
+    "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
   }, {
     "field" : "meetingPurpose",
     "value" : null,
@@ -702,13 +711,13 @@ Content-Length: 1101
     "value" : null,
     "reason" : "회의 시작 시간을 'hh:mm a' 형식으로 입력해주세요."
   }, {
-    "field" : "meetingDate",
+    "field" : "endTime",
     "value" : null,
-    "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
+    "reason" : "회의 마감 시간을 'hh:mm a' 형식으로 입력해주세요."
   }, {
-    "field" : "meetingName",
+    "field" : "workspaceId",
     "value" : null,
-    "reason" : "회의명을 3자 이상 30자 이하로 입력해주세요."
+    "reason" : "회의를 생성할 워크스페이스 ID를 입력해주세요."
   }, {
     "field" : "operationTeamId",
     "value" : null,
@@ -719,20 +728,21 @@ Content-Length: 1101
 </div>
 </div>
 <div class="sect2">
-<h3 id="_회의_제목은_3_30자_회의_성격은_1_10자를_지키지_않을_경우"><a class="link" href="#_회의_제목은_3_30자_회의_성격은_1_10자를_지키지_않을_경우">회의 제목은 3 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우</a></h3>
+<h3 id="_회의_제목은_1_30자_회의_성격은_1_10자를_지키지_않을_경우"><a class="link" href="#_회의_제목은_1_30자_회의_성격은_1_10자를_지키지_않을_경우">회의 제목은 1 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 239
+Content-Length: 273
 Host: dev.meeron.net
 
 {
+  "workspaceId" : 1,
   "meetingDate" : "2022/3/14",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
-  "meetingName" : "테",
+  "meetingName" : "                ",
   "meetingPurpose" : "회의 성격은 10글자를 넘어갔단다.",
   "operationTeamId" : 1,
   "meetingAdminIds" : [ 1, 2 ]
@@ -750,10 +760,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 472
+Content-Length: 473
 
 {
-  "time" : "2022-03-13T10:20:00.130931",
+  "time" : "2022-03-13T23:25:02.358101",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -763,24 +773,25 @@ Content-Length: 472
     "reason" : "회의 성격을 1자 이상 10자 이하로 입력해주세요."
   }, {
     "field" : "meetingName",
-    "value" : "테",
-    "reason" : "회의명을 3자 이상 30자 이하로 입력해주세요."
+    "value" : "                ",
+    "reason" : "회의명을 30자 이하로 입력해주세요."
   } ]
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_담당_팀이_존재하지_않을_경우"><a class="link" href="#_담당_팀이_존재하지_않을_경우">담당 팀이 존재하지 않을 경우</a></h3>
+<h3 id="_주관하는_팀이_존재하지_않을_경우"><a class="link" href="#_주관하는_팀이_존재하지_않을_경우">주관하는 팀이 존재하지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 230
+Content-Length: 251
 Host: dev.meeron.net
 
 {
+  "workspaceId" : 1,
   "meetingDate" : "2022/3/16",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
@@ -805,7 +816,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-03-13T10:20:00.284731",
+  "time" : "2022-03-13T23:25:02.452246",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
   "code" : 1000,
@@ -815,16 +826,107 @@ Content-Length: 144
 </div>
 </div>
 <div class="sect2">
-<h3 id="_공동_관리자가_한_워크스페이스에_같이_있지_않은_경우"><a class="link" href="#_공동_관리자가_한_워크스페이스에_같이_있지_않은_경우">공동 관리자가 한 워크스페이스에 같이 있지 않은 경우</a></h3>
+<h3 id="_워크스페이스가_존재하지_않을_경우"><a class="link" href="#_워크스페이스가_존재하지_않을_경우">워크스페이스가 존재하지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 230
+Content-Length: 251
 Host: dev.meeron.net
 
 {
+  "workspaceId" : 1,
+  "meetingDate" : "2022/3/16",
+  "startTime" : "10:00 AM",
+  "endTime" : "11:00 AM",
+  "meetingName" : "테스트 회의",
+  "meetingPurpose" : "테스트 회의 성격",
+  "operationTeamId" : 1,
+  "meetingAdminIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 167
+
+{
+  "time" : "2022-03-13T23:25:02.339822",
+  "status" : 400,
+  "message" : "해당 워크스페이스를 찾을 수 없습니다.",
+  "code" : 1000,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회의_작성자가_존재하지_않을_경우"><a class="link" href="#_회의_작성자가_존재하지_않을_경우">회의 작성자가 존재하지 않을 경우</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 251
+Host: dev.meeron.net
+
+{
+  "workspaceId" : 1,
+  "meetingDate" : "2022/3/16",
+  "startTime" : "10:00 AM",
+  "endTime" : "11:00 AM",
+  "meetingName" : "테스트 회의",
+  "meetingPurpose" : "테스트 회의 성격",
+  "operationTeamId" : 1,
+  "meetingAdminIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 166
+
+{
+  "time" : "2022-03-13T23:25:02.581155",
+  "status" : 400,
+  "message" : "워크스페이스 유저를 찾지 못했습니다.",
+  "code" : 1000,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_관리자가_한_워크스페이스에_같이_있지_않은_경우"><a class="link" href="#_관리자가_한_워크스페이스에_같이_있지_않은_경우">관리자가 한 워크스페이스에 같이 있지 않은 경우</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 251
+Host: dev.meeron.net
+
+{
+  "workspaceId" : 1,
   "meetingDate" : "2022/3/16",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
@@ -849,7 +951,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 186
 
 {
-  "time" : "2022-03-13T10:20:00.396249",
+  "time" : "2022-03-13T23:25:02.551786",
   "status" : 400,
   "message" : "해당 유저는 같은 워크스페이스에 속해있지 않습니다.",
   "code" : 1000,
@@ -859,16 +961,17 @@ Content-Length: 186
 </div>
 </div>
 <div class="sect2">
-<h3 id="_담당_팀의_워크스페이스와_공동_관리자들의_공통_워크스페이스와_일치하지_않는_경우"><a class="link" href="#_담당_팀의_워크스페이스와_공동_관리자들의_공통_워크스페이스와_일치하지_않는_경우">담당 팀의 워크스페이스와 공동 관리자들의 공통 워크스페이스와 일치하지 않는 경우</a></h3>
+<h3 id="_워크스페이스_유저와_팀이_속한_워크스페이스가_다를_경우"><a class="link" href="#_워크스페이스_유저와_팀이_속한_워크스페이스가_다를_경우">워크스페이스 유저와 팀이 속한 워크스페이스가 다를 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 230
+Content-Length: 251
 Host: dev.meeron.net
 
 {
+  "workspaceId" : 1,
   "meetingDate" : "2022/3/16",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
@@ -893,59 +996,11 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 177
 
 {
-  "time" : "2022-03-13T10:20:00.261393",
+  "time" : "2022-03-13T23:25:02.613457",
   "status" : 400,
   "message" : "해당 팀은 워크스페이스에 속해 있지 않습니다.",
   "code" : 1000,
   "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_공동_관리자_임명_시_본인_워크스페이스_유저_id를_넣지_않은_경우"><a class="link" href="#_공동_관리자_임명_시_본인_워크스페이스_유저_id를_넣지_않은_경우">공동 관리자 임명 시 본인 워크스페이스 유저 ID를 넣지 않은 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer TestAccessToken
-Content-Length: 225
-Host: dev.meeron.net
-
-{
-  "meetingDate" : "2022/3/16",
-  "startTime" : "10:00 AM",
-  "endTime" : "11:00 AM",
-  "meetingName" : "테스트 회의",
-  "meetingPurpose" : "테스트 회의 성격",
-  "operationTeamId" : 1,
-  "meetingAdminIds" : [ ]
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 297
-
-{
-  "time" : "2022-03-13T10:20:00.092864",
-  "status" : 400,
-  "message" : "입력 조건에 대한 예외입니다.",
-  "code" : 1001,
-  "errors" : [ {
-    "field" : "meetingAdminIds",
-    "value" : "[]",
-    "reason" : "공동 관리자는 본인이 반드시 포함되어야 합니다."
-  } ]
 }</code></pre>
 </div>
 </div>
@@ -1068,10 +1123,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 319
+Content-Length: 320
 
 {
-  "time" : "2022-03-13T10:20:00.43643",
+  "time" : "2022-03-13T23:25:02.599034",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1113,9 +1168,47 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 150
 
 {
-  "time" : "2022-03-13T10:20:00.241703",
+  "time" : "2022-03-13T23:25:02.431681",
   "status" : 400,
   "message" : "존재하지 않는 회의입니다.",
+  "code" : 1000,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_존재하지_않는_워크스페이스일_경우"><a class="link" href="#_존재하지_않는_워크스페이스일_경우">존재하지 않는 워크스페이스일 경우</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 35
+Host: dev.meeron.net
+
+{
+  "workspaceUserIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 167
+
+{
+  "time" : "2022-03-13T23:25:02.283715",
+  "status" : 400,
+  "message" : "해당 워크스페이스를 찾을 수 없습니다.",
   "code" : 1000,
   "errors" : [ ]
 }</code></pre>
@@ -1151,7 +1244,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 186
 
 {
-  "time" : "2022-03-13T10:20:00.185105",
+  "time" : "2022-03-13T23:25:02.402027",
   "status" : 400,
   "message" : "해당 유저는 같은 워크스페이스에 속해있지 않습니다.",
   "code" : 1000,
@@ -1161,45 +1254,7 @@ Content-Length: 186
 </div>
 </div>
 <div class="sect2">
-<h3 id="_참가자가_같은_워크스페이스에_속해도_회의가_다른_워크스페이스에_있을_경우"><a class="link" href="#_참가자가_같은_워크스페이스에_속해도_회의가_다른_워크스페이스에_있을_경우">참가자가 같은 워크스페이스에 속해도 회의가 다른 워크스페이스에 있을 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer TestAccessToken
-Content-Length: 35
-Host: dev.meeron.net
-
-{
-  "workspaceUserIds" : [ 1, 2 ]
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 177
-
-{
-  "time" : "2022-03-13T10:20:00.345849",
-  "status" : 400,
-  "message" : "해당 팀은 워크스페이스에 속해 있지 않습니다.",
-  "code" : 1000,
-  "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_이미_회의에_참여한_유저인_경우"><a class="link" href="#_이미_회의에_참여한_유저인_경우">이미 회의에 참여한 유저인 경우</a></h3>
+<h3 id="_이미_회의에_참여한_워크스페이스_유저인_경우"><a class="link" href="#_이미_회의에_참여한_워크스페이스_유저인_경우">이미 회의에 참여한 워크스페이스 유저인 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
@@ -1227,47 +1282,9 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 157
 
 {
-  "time" : "2022-03-13T10:20:00.053005",
+  "time" : "2022-03-13T23:25:02.303475",
   "status" : 400,
   "message" : "이미 참여중인 유저가 있습니다.",
-  "code" : 1000,
-  "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_워크스페이스_유저가_존재하지_않는_경우"><a class="link" href="#_워크스페이스_유저가_존재하지_않는_경우">워크스페이스 유저가 존재하지 않는 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer TestAccessToken
-Content-Length: 35
-Host: dev.meeron.net
-
-{
-  "workspaceUserIds" : [ 1, 2 ]
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 166
-
-{
-  "time" : "2022-03-13T10:20:00.108346",
-  "status" : 400,
-  "message" : "워크스페이스 유저를 찾지 못했습니다.",
   "code" : 1000,
   "errors" : [ ]
 }</code></pre>
@@ -1385,16 +1402,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 142
+Content-Length: 32
 
 {
-  "agendaResponses" : [ {
-    "agendaNumber" : 1,
-    "createdAgendaId" : 1
-  }, {
-    "agendaNumber" : 2,
-    "createdAgendaId" : 2
-  } ]
+  "createdAgendaIds" : [ 3 ]
 }</code></pre>
 </div>
 </div>
@@ -1413,14 +1424,9 @@ Content-Length: 142
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agendaResponses[].agendaNumber</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">생성 요청한 아젠다 순서</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agendaResponses[].createdAgendaId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">생성된 아젠다 ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>createdAgendaIds[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">생성된 아젠다 ID들</p></td>
 </tr>
 </tbody>
 </table>
@@ -1489,13 +1495,13 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 802
 
 {
-  "time" : "2022-03-13T10:20:00.326101",
+  "time" : "2022-03-13T23:25:02.48737",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
     "field" : "agendas",
-    "value" : "[com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@702189aa, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@7a4154c, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@30cdd6f9, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@581c7611, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@248cc861, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@325a7c9]",
+    "value" : "[com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@3ba34018, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@71139676, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@83b55dc, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@78ac66e2, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@59ae4a6f, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@3463d70a]",
     "reason" : "아젠다는 최소 1개 최대 5개 까지 생성 가능합니다."
   } ]
 }</code></pre>
@@ -1537,7 +1543,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 573
 
 {
-  "time" : "2022-03-13T10:20:00.306435",
+  "time" : "2022-03-13T23:25:02.471011",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1585,7 +1591,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 150
 
 {
-  "time" : "2022-03-13T10:20:00.023196",
+  "time" : "2022-03-13T23:25:02.260556",
   "status" : 400,
   "message" : "존재하지 않는 회의입니다.",
   "code" : 1000,
@@ -1600,7 +1606,7 @@ Content-Length: 150
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-13 10:02:01 +0900
+Last updated 2022-03-13 23:23:13 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
