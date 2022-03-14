@@ -1,6 +1,6 @@
 FROM adoptopenjdk/openjdk11
 
-ARG JAR_FILE=meeron-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE=build/libs/meeron-0.0.1-SNAPSHOT.jar
 ARG JASPYT_PASSWORD=""
 ARG PROFILE=""
 
