@@ -21,39 +21,58 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+
       - name: Build With Gradle
         run: ./gradlew clean build -Pjasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
-      - name: Make Directory for Deliver
-        run: mkdir deploy
-      - name: Copy Jar
-        run: cp ./build/libs/*.jar ./deploy/
-      - name: Copy Dockerfile
-        run: cp Dockerfile ./deploy/
-      - name: Copy appspec
-        run: cp appspec.yml ./deploy/
-      - name: Copy shell
-        run: cp ./scripts/* ./deploy/
-      - name: Make Zip File
-        run: zip -r -qq -j ./app.zip ./deploy
-      - name: Deliver to AWS S3
+
+      - name: Configure AWS Elastic Beanstalk Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ELASTIC_BEANSTALK_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_ELASTIC_BEANSTALK_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: meeron
+          IMAGE_TAG: latest
         run: |
-          aws s3 cp \
-          --region ap-northeast-2 \
-          ./app.zip s3://meeron-bucket/build/
-      - name: Deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=${GITHUB_REF##*/} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYY-MM-DDTHH-mm-ss
+          utcOffset: "+09:00"
+
+      - name: Generate deployment package
         run: |
-          aws deploy create-deployment \
-          --application-name meeron-codedeploy \
-          --deployment-group-name meeron-dev-codedeploy-group \
-          --file-exists-behavior OVERWRITE \
-          --s3-location bucket=meeron-bucket,bundleType=zip,key=build/app.zip \
-          --region ap-northeast-2
+          mkdir -p deploy
+          cp -r .ebextensions deploy/.ebextensions
+          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cd deploy && zip -r deploy.zip .
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_SECRET_KEY }}
+          application_name: meeron
+          environment_name: meeron-dev
+          version_label: meeron-dev-${{steps.current-time.outputs.formattedTime}}
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: deploy/deploy.zip
+          wait_for_environment_recovery: 180
+
       - name: build result to slack
         uses: 8398a7/action-slack@v3
         with:
@@ -63,3 +82,35 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
+
+#      - name: Make Directory for Deliver
+#        run: mkdir deploy
+#      - name: Copy Jar
+#        run: cp ./build/libs/*.jar ./deploy/
+#      - name: Copy Dockerfile
+#        run: cp Dockerfile ./deploy/
+#      - name: Copy appspec
+#        run: cp appspec.yml ./deploy/
+#      - name: Copy shell
+#        run: cp ./scripts/* ./deploy/
+#      - name: Make Zip File
+#        run: zip -r -qq -j ./app.zip ./deploy
+#      - name: Deliver to AWS S3
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        run: |
+#          aws s3 cp \
+#          --region ap-northeast-2 \
+#          ./app.zip s3://meeron-bucket/build/
+#      - name: Deploy
+#        env:
+#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#        run: |
+#          aws deploy create-deployment \
+#          --application-name meeron-codedeploy \
+#          --deployment-group-name meeron-dev-codedeploy-group \
+#          --file-exists-behavior OVERWRITE \
+#          --s3-location bucket=meeron-bucket,bundleType=zip,key=build/app.zip \
+#          --region ap-northeast-2
