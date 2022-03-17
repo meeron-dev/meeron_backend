@@ -3,7 +3,10 @@ package com.cmc.meeron.meeting.adapter.in;
 import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.meeting.adapter.in.response.*;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
-import com.cmc.meeron.meeting.application.port.in.response.*;
+import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.MonthMeetingsCountResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.YearMeetingsCountResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import java.util.List;
 public class MeetingQueryRestController {
 
     private final MeetingQueryUseCase meetingQueryUseCase;
+    private final MeetingCalendarQueryUseCaseFactory meetingCalendarQueryUseCaseFactory;
 
     @GetMapping("/today")
     @ResponseStatus(HttpStatus.OK)
@@ -32,42 +36,37 @@ public class MeetingQueryRestController {
     @GetMapping("/days")
     @ResponseStatus(HttpStatus.OK)
     public MeetingDaysResponse getMeetingDays(@Valid MeetingDaysRequest meetingDaysRequest) {
-        List<Integer> days = meetingQueryUseCase.getMeetingDays(meetingDaysRequest.toRequestDto());
+        List<Integer> days = meetingCalendarQueryUseCaseFactory.getMeetingDays(meetingDaysRequest.getType(),
+                meetingDaysRequest.getId(),
+                meetingDaysRequest.getDate());
         return MeetingDaysResponse.of(days);
     }
 
-    // FIXME: 2022/03/02 kobeomseok95 refactoring
     @GetMapping("/day")
     @ResponseStatus(HttpStatus.OK)
     public DayMeetingsResponse getDayMeetings(@Valid DayMeetingsRequest dayMeetingsRequest) {
-        if (!isWorkspaceUserType(dayMeetingsRequest)) {
-            List<WorkspaceAndTeamDayMeetingResponseDto> workspaceAndTeamDayMeetingsResponseDtos =
-                    meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(dayMeetingsRequest.toRequestDto());
-            return DayMeetingsResponse.fromWorkspaceAndTeam(workspaceAndTeamDayMeetingsResponseDtos);
-        }
-
-        List<WorkspaceUserDayMeetingResponseDto> workspaceUserDayMeetingsResponseDtos =
-                meetingQueryUseCase.getWorkspaceUserDayMeetings(dayMeetingsRequest.toRequestDto());
-        return DayMeetingsResponse.fromWorkspaceUser(workspaceUserDayMeetingsResponseDtos);
-    }
-
-    private boolean isWorkspaceUserType(DayMeetingsRequest dayMeetingsRequest) {
-        return dayMeetingsRequest.getType().equals(MeetingDaysSearchType.WORKSPACE_USER.name());
+        List<DayMeetingResponseDto> dayMeetingResponseDtos = meetingCalendarQueryUseCaseFactory.getDayMeetings(dayMeetingsRequest.getType(),
+                dayMeetingsRequest.getId(),
+                dayMeetingsRequest.getDate());
+        return DayMeetingsResponse.fromResponseDtos(dayMeetingResponseDtos);
     }
 
     @GetMapping("/years")
     @ResponseStatus(HttpStatus.OK)
     public YearMeetingsCountResponse getYearMeetingsCount(@Valid YearMeetingsCountRequest yearMeetingsCountRequest) {
-        List<YearMeetingsCountResponseDto> yearMeetingsCount =
-                meetingQueryUseCase.getYearMeetingsCount(yearMeetingsCountRequest.toRequestDto());
-        return YearMeetingsCountResponse.of(yearMeetingsCount);
+        List<YearMeetingsCountResponseDto> meetingCountPerYear = meetingCalendarQueryUseCaseFactory.getMeetingCountPerYear(
+                yearMeetingsCountRequest.getType(),
+                yearMeetingsCountRequest.getId());
+        return YearMeetingsCountResponse.of(meetingCountPerYear);
     }
 
     @GetMapping("/months")
     @ResponseStatus(HttpStatus.OK)
     public MonthMeetingsCountResponse getMonthMeetingsCount(@Valid MonthMeetingsCountRequest monthMeetingsCountRequest) {
-        List<MonthMeetingsCountResponseDto> monthMeetingsCount =
-                meetingQueryUseCase.getMonthMeetingsCount(monthMeetingsCountRequest.toRequestDto());
-        return MonthMeetingsCountResponse.of(monthMeetingsCount);
+        List<MonthMeetingsCountResponseDto> meetingCountPerMonth = meetingCalendarQueryUseCaseFactory.getMeetingCountPerMonth(
+                monthMeetingsCountRequest.getType(),
+                monthMeetingsCountRequest.getId(),
+                monthMeetingsCountRequest.getYear());
+        return MonthMeetingsCountResponse.of(meetingCountPerMonth);
     }
 }

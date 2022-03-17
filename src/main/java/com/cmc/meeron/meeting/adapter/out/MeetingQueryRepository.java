@@ -19,7 +19,6 @@ import java.util.Optional;
 class MeetingQueryRepository implements MeetingQueryPort {
 
     private final MeetingJpaRepository meetingJpaRepository;
-    private final MeetingQuerydslRepository meetingQuerydslRepository;
     private final AgendaJpaRepository agendaJpaRepository;
 
     @Override
@@ -29,22 +28,30 @@ class MeetingQueryRepository implements MeetingQueryPort {
 
     @Override
     public List<Integer> findMeetingDays(String searchType, List<Long> searchIds, YearMonth yearMonth) {
-        return meetingQuerydslRepository.findMeetingDays(searchType, searchIds, yearMonth);
+        // TODO: 2022/03/17 kobeomseok95 delete
+//        return meetingQuerydslRepository.findMeetingDays(searchType, searchIds, yearMonth);
+        return null;
     }
 
     @Override
     public List<Meeting> findDayMeetings(String searchType, List<Long> searchIds, LocalDate date) {
-        return meetingQuerydslRepository.findDayMeetings(searchType, searchIds, date);
+        // TODO: 2022/03/17 kobeomseok95 delete
+//        return meetingQuerydslRepository.findDayMeetings(searchType, searchIds, date);
+        return null;
     }
 
     @Override
     public List<YearMeetingsCountQueryDto> findYearMeetingsCount(String searchType, List<Long> searchIds) {
-        return meetingQuerydslRepository.findYearMeetingsCount(searchType, searchIds);
+        // TODO: 2022/03/17 kobeomseok95 delete
+//        return meetingQuerydslRepository.findYearMeetingsCount(searchType, searchIds);
+        return null;
     }
 
     @Override
     public List<MonthMeetingsCountQueryDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year) {
-        return meetingQuerydslRepository.findMonthMeetingsCount(searchType, searchIds, year);
+        // TODO: 2022/03/17 kobeomseok95 delete
+//        return meetingQuerydslRepository.findMonthMeetingsCount(searchType, searchIds, year);
+        return null;
     }
 
     @Override

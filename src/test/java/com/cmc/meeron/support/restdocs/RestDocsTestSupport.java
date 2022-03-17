@@ -9,6 +9,7 @@ import com.cmc.meeron.config.RestDocsConfig;
 import com.cmc.meeron.file.adapter.in.FileRestController;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.meeting.adapter.in.MeetingCommandRestController;
+import com.cmc.meeron.meeting.adapter.in.MeetingCalendarQueryUseCaseFactory;
 import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
@@ -65,6 +66,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected TeamQueryUseCase teamQueryUseCase;
     @MockBean protected MeetingCommandUseCase meetingCommandUseCase;
     @MockBean protected FileManager fileManager;
+    @MockBean protected MeetingCalendarQueryUseCaseFactory meetingCalendarQueryUseCaseFactory;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

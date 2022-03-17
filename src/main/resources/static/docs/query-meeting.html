@@ -554,18 +554,18 @@ Content-Length: 546
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
-    "meetingDate" : "2022/3/13",
-    "startTime" : "01:00 AM",
-    "endTime" : "02:00 AM",
+    "meetingDate" : "2022/3/17",
+    "startTime" : "11:00 PM",
+    "endTime" : "12:00 AM",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
-    "meetingDate" : "2022/3/13",
-    "startTime" : "08:00 PM",
-    "endTime" : "09:00 PM",
+    "meetingDate" : "2022/3/17",
+    "startTime" : "06:00 PM",
+    "endTime" : "07:00 PM",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,7 +652,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-03-13T23:25:03.064579",
+  "time" : "2022-03-17T21:11:24.250156",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -695,10 +695,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 607
+Content-Length: 605
 
 {
-  "time" : "2022-03-13T23:25:02.982291",
+  "time" : "2022-03-17T21:11:24.1636",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -707,13 +707,13 @@ Content-Length: 607
     "value" : "2022/15",
     "reason" : "형변환 중 예외가 발생했습니다. 값을 입력형식에 맞게 입력해주세요."
   }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
-  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -767,7 +767,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">찾을 워크스페이스 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -864,7 +864,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -917,7 +917,7 @@ Content-Length: 33
 <h3 id="_나의_미론_캘린더에서의_회의_날짜_조회"><a class="link" href="#_나의_미론_캘린더에서의_회의_날짜_조회">'나의 미론' 캘린더에서의 회의 날짜 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022%2F3&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/days?date=2022%2F3&amp;type=workspace_user&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -961,7 +961,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">접속한 유저의 모든 워크스페이스 유저 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userId</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -1039,7 +1039,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 607
 
 {
-  "time" : "2022-03-13T23:25:02.764035",
+  "time" : "2022-03-17T21:11:23.925176",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1048,13 +1048,13 @@ Content-Length: 607
     "value" : "2022/02",
     "reason" : "형변환 중 예외가 발생했습니다. 값을 입력형식에 맞게 입력해주세요."
   }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
-  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1064,7 +1064,7 @@ Content-Length: 607
 <h3 id="_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_워크스페이스_캘린더에서의_선택한_날짜에_대한_회의_조회">워크스페이스 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F13&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F17&amp;type=workspace&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1108,7 +1108,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">찾을 워크스페이스 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -1128,23 +1128,23 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 377
+Content-Length: 367
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "12:25 AM",
-    "endTime" : "02:25 AM",
-    "workspaceId" : null,
-    "workspaceName" : null
+    "startTime" : "10:11 PM",
+    "endTime" : "12:11 AM",
+    "workspaceId" : 0,
+    "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:25 AM",
-    "endTime" : "05:25 AM",
-    "workspaceId" : null,
-    "workspaceName" : null
+    "startTime" : "01:11 AM",
+    "endTime" : "03:11 AM",
+    "workspaceId" : 0,
+    "workspaceName" : ""
   } ]
 }</code></pre>
 </div>
@@ -1185,13 +1185,13 @@ Content-Length: 377
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].workspaceId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID / 워크스페이스, 팀 조회 시 null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID / 워크스페이스, 팀 조회 시 0으로 표기</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].workspaceName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 명 / 워크스페이스, 팀 조회 시 null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 명 / 워크스페이스, 팀 조회 시 "" 로 표기</p></td>
 </tr>
 </tbody>
 </table>
@@ -1200,7 +1200,7 @@ Content-Length: 377
 <h3 id="_팀_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_팀_캘린더에서의_선택한_날짜에_대한_회의_조회">팀 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F13&amp;type=team&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F17&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1244,7 +1244,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -1264,23 +1264,23 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 377
+Content-Length: 367
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "12:25 AM",
-    "endTime" : "02:25 AM",
-    "workspaceId" : null,
-    "workspaceName" : null
+    "startTime" : "10:11 PM",
+    "endTime" : "12:11 AM",
+    "workspaceId" : 0,
+    "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:25 AM",
-    "endTime" : "05:25 AM",
-    "workspaceId" : null,
-    "workspaceName" : null
+    "startTime" : "01:11 AM",
+    "endTime" : "03:11 AM",
+    "workspaceId" : 0,
+    "workspaceName" : ""
   } ]
 }</code></pre>
 </div>
@@ -1321,13 +1321,13 @@ Content-Length: 377
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].workspaceId</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID / 워크스페이스, 팀 조회 시 null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID / 워크스페이스나 팀 조회 시 0으로 표기</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].workspaceName</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 명 / 워크스페이스, 팀 조회 시 null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 명 / 워크스페이스나 팀 조회 시 "" 로 표기</p></td>
 </tr>
 </tbody>
 </table>
@@ -1336,7 +1336,7 @@ Content-Length: 377
 <h3 id="_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회"><a class="link" href="#_나의_미론_캘린더에서의_선택한_날짜에_대한_회의_조회">'나의 미론' 캘린더에서의 선택한 날짜에 대한 회의 조회</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F13&amp;type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F3%2F17&amp;type=workspace_user&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1380,7 +1380,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">접속한 유저의 모든 워크스페이스 유저 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userId</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>date</code></p></td>
@@ -1406,15 +1406,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "12:25 AM",
-    "endTime" : "02:25 AM",
+    "startTime" : "10:11 PM",
+    "endTime" : "12:11 AM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:25 AM",
-    "endTime" : "05:25 AM",
+    "startTime" : "01:11 AM",
+    "endTime" : "03:11 AM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -1458,12 +1458,12 @@ Content-Length: 423
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].workspaceId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID / 워크스페이스, 팀 조회 시 null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID / 워크스페이스, 팀 조회 시 0으로 표기</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].workspaceName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 명 / 워크스페이스, 팀 조회 시 null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 명 / 워크스페이스, 팀 조회 시 "" 로 표기</p></td>
 </tr>
 </tbody>
 </table>
@@ -1521,7 +1521,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">찾을 워크스페이스 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID</p></td>
 </tr>
 </tbody>
 </table>
@@ -1624,7 +1624,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID</p></td>
 </tr>
 </tbody>
 </table>
@@ -1683,7 +1683,7 @@ Content-Length: 109
 <h3 id="_나의_미론의_경우"><a class="link" href="#_나의_미론의_경우">'나의 미론&#8217;의 경우</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/years?type=workspace_user&amp;id=1&amp;id=2&amp;id=3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/years?type=workspace_user&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1727,7 +1727,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">접속한 유저의 모든 워크스페이스 유저 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userId</p></td>
 </tr>
 </tbody>
 </table>
@@ -1835,7 +1835,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">찾을 워크스페이스 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>year</code></p></td>
@@ -1973,7 +1973,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">팀 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>year</code></p></td>
@@ -2067,7 +2067,7 @@ Content-Length: 513
 <h3 id="_나의_미론의_경우_2"><a class="link" href="#_나의_미론의_경우_2">'나의 미론&#8217;의 경우</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/months?type=workspace_user&amp;id=1&amp;id=2&amp;id=3&amp;year=2022 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/months?type=workspace_user&amp;id=1&amp;year=2022 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -2111,7 +2111,7 @@ Host: dev.meeron.net</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>id</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">접속한 유저의 모든 워크스페이스 유저 ID 입력</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userId</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>year</code></p></td>

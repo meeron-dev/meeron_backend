@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkspaceUserDayMeetingResponseDto {
+public class DayMeetingResponseDto {
 
     private Long meetingId;
     private String meetingName;
@@ -21,20 +21,37 @@ public class WorkspaceUserDayMeetingResponseDto {
     private Long workspaceId;
     private String workspaceName;
 
-    public static List<WorkspaceUserDayMeetingResponseDto> fromEntities(List<Meeting> meetings) {
+    public static List<DayMeetingResponseDto> fromMyMeetingEntities(List<Meeting> meetings) {
         return meetings.stream()
-                .map(WorkspaceUserDayMeetingResponseDto::of)
+                .map(DayMeetingResponseDto::ofMyDayMeetings)
                 .collect(Collectors.toList());
     }
 
-    private static WorkspaceUserDayMeetingResponseDto of(Meeting meeting) {
-        return WorkspaceUserDayMeetingResponseDto.builder()
+    private static DayMeetingResponseDto ofMyDayMeetings(Meeting meeting) {
+        return DayMeetingResponseDto.builder()
                 .meetingId(meeting.getId())
                 .meetingName(meeting.getMeetingInfo().getName())
                 .startTime(meeting.getMeetingTime().getStartTime())
                 .endTime(meeting.getMeetingTime().getEndTime())
                 .workspaceId(meeting.getWorkspace().getId())
                 .workspaceName(meeting.getWorkspace().getName())
+                .build();
+    }
+
+    public static List<DayMeetingResponseDto> fromEntities(List<Meeting> meetings) {
+        return meetings.stream()
+                .map(DayMeetingResponseDto::of)
+                .collect(Collectors.toList());
+    }
+
+    private static DayMeetingResponseDto of(Meeting meeting) {
+        return DayMeetingResponseDto.builder()
+                .meetingId(meeting.getId())
+                .meetingName(meeting.getMeetingInfo().getName())
+                .startTime(meeting.getMeetingTime().getStartTime())
+                .endTime(meeting.getMeetingTime().getEndTime())
+                .workspaceId(0L)
+                .workspaceName("")
                 .build();
     }
 }

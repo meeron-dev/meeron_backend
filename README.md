@@ -1,7 +1,7 @@
 ### 과제
 - [x] 테스트, 개발 환경 더미 데이터 추가 및 통합 테스트 진행
+- [x] Elastic Beanstalk 환경으로 개선
 - [ ] Soft Delete
-- [ ] Elastic Beanstalk 환경으로 개선
 - [ ] 푸시 알림
 
 ### 논의 사항

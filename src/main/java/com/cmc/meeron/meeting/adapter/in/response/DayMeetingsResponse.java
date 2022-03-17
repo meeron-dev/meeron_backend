@@ -1,7 +1,7 @@
 package com.cmc.meeron.meeting.adapter.in.response;
 
 import com.cmc.meeron.meeting.application.port.in.response.WorkspaceAndTeamDayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.WorkspaceUserDayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -32,7 +32,7 @@ public class DayMeetingsResponse {
                 .build();
     }
 
-    public static DayMeetingsResponse fromWorkspaceUser(List<WorkspaceUserDayMeetingResponseDto> responseDtos) {
+    public static DayMeetingsResponse fromResponseDtos(List<DayMeetingResponseDto> responseDtos) {
         return DayMeetingsResponse.builder()
                 .meetings(responseDtos.stream()
                         .map(dto -> DayMeeting.builder()

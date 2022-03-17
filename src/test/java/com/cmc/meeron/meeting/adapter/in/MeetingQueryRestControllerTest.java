@@ -2,7 +2,10 @@ package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.util.LocalDateTimeUtil;
-import com.cmc.meeron.meeting.application.port.in.response.*;
+import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.MonthMeetingsCountResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.YearMeetingsCountResponseDto;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
@@ -186,9 +189,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("date", "2022/3");
         params.add("type", "workspace");
         params.add("id", "1");
-        List<Integer> days = getDays();
-        when(meetingQueryUseCase.getMeetingDays(any()))
-                .thenReturn(days);
+        List<Integer> days = meetingDaysStubAndReturn();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
@@ -207,13 +208,20 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("찾을 워크스페이스 ID 입력"),
-                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM 형식으로 입력"))
+                                parameterWithName("id").description("워크스페이스 ID"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy/M 형식으로 입력"))
                         ),
                         responseFields(
                                 fieldWithPath("days[]").description("검색하는 년 월에 해당하는 회의 날짜(day)들")
                         )
                 ));
+    }
+
+    private List<Integer> meetingDaysStubAndReturn() {
+        List<Integer> days = getDays();
+        when(meetingCalendarQueryUseCaseFactory.getMeetingDays(any(), any(), any()))
+                .thenReturn(days);
+        return days;
     }
 
     @DisplayName("캘린더에서 이번 달 회의 날짜 조회 - 성공 / 나의 미론, 내 캘린더의 경우")
@@ -225,11 +233,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("date", "2022/3");
         params.add("type", "workspace_user");
         params.add("id", "1");
-        params.add("id", "2");
-        params.add("id", "3");
-        List<Integer> days = getDays();
-        when(meetingQueryUseCase.getMeetingDays(any()))
-                .thenReturn(days);
+        List<Integer> days = meetingDaysStubAndReturn();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
@@ -248,8 +252,8 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음")),
-                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM 형식으로 입력"))
+                                parameterWithName("id").description("userId"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy/M 형식으로 입력"))
                         ),
                         responseFields(
                                 fieldWithPath("days[]").description("검색하는 년 월에 해당하는 회의 날짜(day)들")
@@ -266,9 +270,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("date", "2022/02");
         params.add("type", "team");
         params.add("id", "1");
-        List<Integer> days = getDays();
-        when(meetingQueryUseCase.getMeetingDays(any()))
-                .thenReturn(days);
+        List<Integer> days = meetingDaysStubAndReturn();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/days")
@@ -287,8 +289,8 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("팀 ID 입력"),
-                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM 형식으로 입력"))
+                                parameterWithName("id").description("팀 ID"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy/M 형식으로 입력"))
                         ),
                         responseFields(
                                 fieldWithPath("days[]").description("검색하는 년 월에 해당하는 회의 날짜(day)들")
@@ -341,9 +343,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("date", LocalDateTimeUtil.nowDate());
         params.add("type", "workspace");
         params.add("id", "1");
-        List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
-        when(meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(any()))
-                .thenReturn(responseDtos);
+        List<DayMeetingResponseDto> responseDtos = getDayMeetingResponseDtos();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
@@ -356,48 +356,59 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
-                .andExpect(jsonPath("$.meetings[0].workspaceId", nullValue()))
-                .andExpect(jsonPath("$.meetings[0].workspaceName", nullValue()))
+                .andExpect(jsonPath("$.meetings[0].workspaceId", is(0)))
+                .andExpect(jsonPath("$.meetings[0].workspaceName", emptyString()))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
-                .andExpect(jsonPath("$.meetings[1].workspaceId", nullValue()))
-                .andExpect(jsonPath("$.meetings[1].workspaceName", nullValue()))
+                .andExpect(jsonPath("$.meetings[1].workspaceId", is(0)))
+                .andExpect(jsonPath("$.meetings[1].workspaceName", emptyString()))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestParameters(
                                 parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("찾을 워크스페이스 ID 입력"),
-                                parameterWithName("date").description("찾을 년 월 일").attributes(field("constraints", "yyyy-MM-dd 형식으로 입력"))
+                                parameterWithName("id").description("워크스페이스 ID"),
+                                parameterWithName("date").description("찾을 년 월 일").attributes(field("constraints", "yyyy/M/d 형식으로 입력"))
                         ),
                         responseFields(
                                 fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
                                 fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NULL).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
-                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.NULL).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 0으로 표기"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 \"\" 로 표기")
                         )
                 ));
     }
 
-    private List<WorkspaceAndTeamDayMeetingResponseDto> getDayMeetingsWorkspaceAndTeam() {
+    private List<DayMeetingResponseDto> getDayMeetingResponseDtos() {
+        List<DayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
+        when(meetingCalendarQueryUseCaseFactory.getDayMeetings(any(), any(), any()))
+                .thenReturn(responseDtos);
+        return responseDtos;
+    }
+
+    private List<DayMeetingResponseDto> getDayMeetingsWorkspaceAndTeam() {
         LocalTime now = LocalTime.now();
         return List.of(
-                WorkspaceAndTeamDayMeetingResponseDto.builder()
+                DayMeetingResponseDto.builder()
                         .meetingId(1L)
                         .meetingName("첫번째회의")
                         .startTime(now.plusHours(1))
                         .endTime((now.plusHours(3)))
+                        .workspaceId(0L)
+                        .workspaceName("")
                         .build(),
-                WorkspaceAndTeamDayMeetingResponseDto.builder()
+                DayMeetingResponseDto.builder()
                         .meetingId(2L)
                         .meetingName("두번째회의")
                         .startTime(now.plusHours(4))
                         .endTime(now.plusHours(6))
+                        .workspaceId(0L)
+                        .workspaceName("")
                         .build()
         );
     }
@@ -411,11 +422,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("date", LocalDateTimeUtil.nowDate());
         params.add("type", "workspace_user");
         params.add("id", "1");
-        params.add("id", "2");
-        params.add("id", "3");
-        List<WorkspaceUserDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceUser();
-        when(meetingQueryUseCase.getWorkspaceUserDayMeetings(any()))
-                .thenReturn(responseDtos);
+        List<DayMeetingResponseDto> responseDtos = getMyDayMeetingsResponseDto();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
@@ -442,24 +449,31 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음")),
-                                parameterWithName("date").description("찾을 년 월 일").attributes(field("constraints", "yyyy-MM-dd 형식으로 입력"))
+                                parameterWithName("id").description("userId"),
+                                parameterWithName("date").description("찾을 년 월 일").attributes(field("constraints", "yyyy/M/d 형식으로 입력"))
                         ),
                         responseFields(
                                 fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
                                 fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
-                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 0으로 표기"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 \"\" 로 표기")
                         )
                 ));
     }
 
-    private List<WorkspaceUserDayMeetingResponseDto> getDayMeetingsWorkspaceUser() {
+    private List<DayMeetingResponseDto> getMyDayMeetingsResponseDto() {
+        List<DayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceUser();
+        when(meetingCalendarQueryUseCaseFactory.getDayMeetings(any(), any(), any()))
+                .thenReturn(responseDtos);
+        return responseDtos;
+    }
+
+    private List<DayMeetingResponseDto> getDayMeetingsWorkspaceUser() {
         LocalTime now = LocalTime.now();
         return List.of(
-                WorkspaceUserDayMeetingResponseDto.builder()
+                DayMeetingResponseDto.builder()
                         .meetingId(1L)
                         .meetingName("첫번째회의")
                         .startTime(now.plusHours(1))
@@ -467,7 +481,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         .workspaceId(1L)
                         .workspaceName("첫번째 워크스페이스")
                         .build(),
-                WorkspaceUserDayMeetingResponseDto.builder()
+                DayMeetingResponseDto.builder()
                         .meetingId(2L)
                         .meetingName("두번째회의")
                         .startTime(now.plusHours(4))
@@ -487,9 +501,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("date", LocalDateTimeUtil.nowDate());
         params.add("type", "team");
         params.add("id", "1");
-        List<WorkspaceAndTeamDayMeetingResponseDto> responseDtos = getDayMeetingsWorkspaceAndTeam();
-        when(meetingQueryUseCase.getWorkspaceAndTeamDayMeetings(any()))
-                .thenReturn(responseDtos);
+        List<DayMeetingResponseDto> responseDtos = getDayMeetingResponseDtos();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/day")
@@ -502,26 +514,30 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[0].workspaceId", is(0)))
+                .andExpect(jsonPath("$.meetings[0].workspaceName", emptyString()))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[1].workspaceId", is(0)))
+                .andExpect(jsonPath("$.meetings[1].workspaceName", emptyString()))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         requestParameters(
                                 parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("팀 ID 입력"),
-                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy-MM-dd 형식으로 입력"))
+                                parameterWithName("id").description("팀 ID"),
+                                parameterWithName("date").description("찾을 년 월").attributes(field("constraints", "yyyy/M/d 형식으로 입력"))
                         ),
                         responseFields(
                                 fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
                                 fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NULL).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 null"),
-                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.NULL).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 null")
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스나 팀 조회 시 0으로 표기"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스나 팀 조회 시 \"\" 로 표기")
                         )
                 ));
     }
@@ -534,9 +550,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace");
         params.add("id", "1");
-        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
-        when(meetingQueryUseCase.getYearMeetingsCount(any()))
-                .thenReturn(responseDtos);
+        List<YearMeetingsCountResponseDto> responseDtos = meetingCountPerYearStubAndReturn();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/years")
@@ -555,13 +569,20 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("찾을 워크스페이스 ID 입력")
+                                parameterWithName("id").description("워크스페이스 ID")
                         ),
                         responseFields(
                                 fieldWithPath("yearCounts[].year").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
                                 fieldWithPath("yearCounts[].count").type(JsonFieldType.NUMBER).description("해당 년도의 회의 갯수")
                         )
                 ));
+    }
+
+    private List<YearMeetingsCountResponseDto> meetingCountPerYearStubAndReturn() {
+        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
+        when(meetingCalendarQueryUseCaseFactory.getMeetingCountPerYear(any(), any()))
+                .thenReturn(responseDtos);
+        return responseDtos;
     }
 
     private List<YearMeetingsCountResponseDto> createYearMeetingsCountResposeDtos() {
@@ -579,11 +600,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace_user");
         params.add("id", "1");
-        params.add("id", "2");
-        params.add("id", "3");
-        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
-        when(meetingQueryUseCase.getYearMeetingsCount(any()))
-                .thenReturn(responseDtos);
+        List<YearMeetingsCountResponseDto> responseDtos = meetingCountPerYearStubAndReturn();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/years")
@@ -602,7 +619,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음"))
+                                parameterWithName("id").description("userId")
                         ),
                         responseFields(
                                 fieldWithPath("yearCounts[].year").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
@@ -619,9 +636,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "team");
         params.add("id", "1");
-        List<YearMeetingsCountResponseDto> responseDtos = createYearMeetingsCountResposeDtos();
-        when(meetingQueryUseCase.getYearMeetingsCount(any()))
-                .thenReturn(responseDtos);
+        List<YearMeetingsCountResponseDto> responseDtos = meetingCountPerYearStubAndReturn();
 
         // when, then, docs
 
@@ -641,7 +656,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("팀 ID 입력")
+                                parameterWithName("id").description("팀 ID")
                         ),
                         responseFields(
                                 fieldWithPath("yearCounts[].year").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
@@ -650,7 +665,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    @DisplayName("캘린더에서 년도별 회의 갯수 조회 - 성공 / 워크스페이스 캘린더의 경우")
+    @DisplayName("캘린더에서 월별 회의 갯수 조회 - 성공 / 워크스페이스 캘린더의 경우")
     @Test
     void get_month_meetings_count_success_workspace() throws Exception {
 
@@ -659,9 +674,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("type", "workspace");
         params.add("id", "1");
         params.add("year", "2022");
-        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
-        when(meetingQueryUseCase.getMonthMeetingsCount(any()))
-                .thenReturn(responseDtos);
+        countPerMonthStub();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/months")
@@ -676,7 +689,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("워크스페이스의 경우 'workspace' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("찾을 워크스페이스 ID 입력"),
+                                parameterWithName("id").description("워크스페이스 ID"),
                                 parameterWithName("year").description("찾을 년도")
                         ),
                         responseFields(
@@ -684,6 +697,12 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("monthCounts[].count").type(JsonFieldType.NUMBER).description("해당 월의 회의 갯수")
                         )
                 ));
+    }
+
+    private void countPerMonthStub() {
+        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
+        when(meetingCalendarQueryUseCaseFactory.getMeetingCountPerMonth(any(), any(), any()))
+                .thenReturn(responseDtos);
     }
 
     private List<MonthMeetingsCountResponseDto> createMonthMeetingsCountResposeDtos() {
@@ -711,12 +730,8 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("type", "workspace_user");
         params.add("id", "1");
-        params.add("id", "2");
-        params.add("id", "3");
         params.add("year", "2022");
-        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
-        when(meetingQueryUseCase.getMonthMeetingsCount(any()))
-                .thenReturn(responseDtos);
+        countPerMonthStub();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/months")
@@ -731,7 +746,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("나의 캘린더의 경우 'workspace_user' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("접속한 유저의 모든 워크스페이스 유저 ID 입력").attributes(field("constraints", "workspace_user의 경우 여러 workspace_user_id가 존재, 리스트로 줄 수 있음")),
+                                parameterWithName("id").description("userId"),
                                 parameterWithName("year").description("찾을 년도")
                         ),
                         responseFields(
@@ -750,9 +765,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         params.add("type", "team");
         params.add("id", "1");
         params.add("year", "2022");
-        List<MonthMeetingsCountResponseDto> responseDtos = createMonthMeetingsCountResposeDtos();
-        when(meetingQueryUseCase.getMonthMeetingsCount(any()))
-                .thenReturn(responseDtos);
+        countPerMonthStub();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/months")
@@ -767,7 +780,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestParameters(
                                 parameterWithName("type").description("팀 캘린더의 경우 'team' 입력").attributes(field("constraints", "해당 파라미터는 workspace, workspace_user, team 중 하나")),
-                                parameterWithName("id").description("팀 ID 입력"),
+                                parameterWithName("id").description("팀 ID"),
                                 parameterWithName("year").description("찾을 년도")
                         ),
                         responseFields(

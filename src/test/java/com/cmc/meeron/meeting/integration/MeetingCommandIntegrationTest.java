@@ -3,7 +3,10 @@ package com.cmc.meeron.meeting.integration;
 import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
+import com.cmc.meeron.meeting.application.port.out.MeetingMyCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.application.port.out.MeetingTeamCalendarQueryPort;
+import com.cmc.meeron.meeting.application.port.out.MeetingWorkspaceCalendarQueryPort;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.support.IntegrationTest;
@@ -30,6 +33,12 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
 
     @Autowired
     MeetingQueryPort meetingQueryPort;
+    @Autowired
+    MeetingWorkspaceCalendarQueryPort meetingWorkspaceCalendarQueryPort;
+    @Autowired
+    MeetingTeamCalendarQueryPort meetingTeamCalendarQueryPort;
+    @Autowired
+    MeetingMyCalendarQueryPort meetingMyCalendarQueryPort;
 
     @DisplayName("회의 생성 - 성공")
     @Test
@@ -38,15 +47,22 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
         // given
         CreateMeetingRequest request = createCreateMeetingRequest();
 
-        // when, then
+        // when
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.meetingId", is(6)));
 
-        List<Meeting> meetings = meetingQueryPort.findDayMeetings("WORKSPACE", List.of(1L), LocalDate.now().plusDays(1));
-        assertEquals(1, meetings.size());
+        // then
+        List<Meeting> myDayMeetings = meetingMyCalendarQueryPort.findMyDayMeetings(List.of(1L), LocalDate.now().plusDays(1));
+        List<Meeting> teamDayMeetings = meetingTeamCalendarQueryPort.findTeamDayMeetings(request.getOperationTeamId(), LocalDate.now().plusDays(1));
+        List<Meeting> workspaceDayMeetings = meetingWorkspaceCalendarQueryPort.findWorkspaceDayMeetings(request.getWorkspaceId(), LocalDate.now().plusDays(1));
+        assertAll(
+                () -> assertEquals(1, myDayMeetings.size()),
+                () -> assertEquals(1, teamDayMeetings.size()),
+                () -> assertEquals(1, workspaceDayMeetings.size())
+        );
     }
 
     private CreateMeetingRequest createCreateMeetingRequest() {

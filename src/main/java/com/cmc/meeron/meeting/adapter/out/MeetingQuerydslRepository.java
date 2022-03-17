@@ -1,10 +1,10 @@
 package com.cmc.meeron.meeting.adapter.out;
 
-import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.QMonthMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.QYearMeetingsCountQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
+import com.cmc.meeron.meeting.domain.Meeting;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,27 +23,14 @@ import static com.cmc.meeron.workspace.domain.QWorkspace.workspace;
 @RequiredArgsConstructor
 class MeetingQuerydslRepository {
 
-    private final String WORKSPACE = "WORKSPACE";
-    private final String WORKSPACE_USER = "WORKSPACE_USER";
-    private final String TEAM = "TEAM";
-
     private final JPAQueryFactory queryFactory;
 
-    public List<Integer> findMeetingDays(String searchType, List<Long> searchIds, YearMonth yearMonth) {
-        if (searchType.equals(WORKSPACE_USER)) {
-            return queryFactory.select(meeting.meetingTime.startDate.dayOfMonth())
-                    .from(attendee)
-                    .join(attendee.meeting, meeting)
-                    .where(attendee.workspaceUser.id.in(searchIds),
-                            yearMonthEq(yearMonth))
-                    .fetch();
-        }
-
+    public List<Integer> findMyMeetingDays(List<Long> myWorkspaceUserIds, YearMonth yearMonth) {
         return queryFactory.select(meeting.meetingTime.startDate.dayOfMonth())
-                .from(meeting)
-                .where(searchTypePredicateOnlyWorkspaceAndTeam(searchType, searchIds)
-                        .and(yearMonthEq(yearMonth)))
-                .orderBy(meeting.meetingTime.startDate.dayOfMonth().asc())
+                .from(attendee)
+                .join(attendee.meeting, meeting)
+                .where(attendee.workspaceUser.id.in(myWorkspaceUserIds),
+                        yearMonthEq(yearMonth))
                 .fetch();
     }
 
@@ -52,27 +39,30 @@ class MeetingQuerydslRepository {
                 .and(meeting.meetingTime.startDate.month().eq(yearMonth.getMonthValue()));
     }
 
-    private BooleanExpression searchTypePredicateOnlyWorkspaceAndTeam(String searchType, List<Long> searchIds) {
-        Long findId = searchIds.get(0);
-        if (searchType.equals(WORKSPACE)) {
-            return meeting.workspace.id.eq(findId);
-        }
-        return meeting.team.id.eq(findId);
+    public List<Integer> findTeamMeetingDays(Long teamId, YearMonth yearMonth) {
+        return queryFactory.select(meeting.meetingTime.startDate.dayOfMonth())
+                .from(meeting)
+                .where(meeting.team.id.eq(teamId),
+                        yearMonthEq(yearMonth))
+                .orderBy(meeting.meetingTime.startDate.dayOfMonth().asc())
+                .fetch();
     }
 
-    public List<Meeting> findDayMeetings(String searchType, List<Long> searchIds, LocalDate date) {
-        if (searchType.equals(WORKSPACE_USER)) {
-            return queryFactory.selectFrom(meeting)
-                    .join(meeting.workspace, workspace).fetchJoin()
-                    .join(meeting.attendees.values, attendee)
-                    .where(attendee.workspaceUser.id.in(searchIds),
-                            dateEq(date))
-                    .fetch();
-        }
+    public List<Integer> findWorkspaceMeetingDays(Long workspaceUserId, YearMonth yearMonth) {
+        return queryFactory.select(meeting.meetingTime.startDate.dayOfMonth())
+                .from(attendee)
+                .join(attendee.meeting, meeting)
+                .where(attendee.workspaceUser.id.eq(workspaceUserId),
+                        yearMonthEq(yearMonth))
+                .fetch();
+    }
 
+    public List<Meeting> findMyDayMeetings(List<Long> myWorkspaceUserIds, LocalDate localDate) {
         return queryFactory.selectFrom(meeting)
-                .where(searchTypePredicateOnlyWorkspaceAndTeam(searchType, searchIds),
-                        dateEq(date))
+                .join(meeting.workspace, workspace).fetchJoin()
+                .join(meeting.attendees.values, attendee)
+                .where(attendee.workspaceUser.id.in(myWorkspaceUserIds),
+                        dateEq(localDate))
                 .fetch();
     }
 
@@ -80,43 +70,88 @@ class MeetingQuerydslRepository {
         return meeting.meetingTime.startDate.eq(date);
     }
 
-    public List<YearMeetingsCountQueryDto> findYearMeetingsCount(String searchType, List<Long> searchIds) {
-        if (searchType.equals(WORKSPACE_USER)) {
-            return queryFactory.select(new QYearMeetingsCountQueryDto(meeting.meetingTime.startDate.year(),
-                    meeting.meetingTime.startDate.count()))
-                    .from(attendee)
-                    .join(attendee.meeting, meeting)
-                    .where(attendee.workspaceUser.id.in(searchIds))
-                    .groupBy(meeting.meetingTime.startDate.year())
-                    .orderBy(meeting.meetingTime.startDate.year().desc())
-                    .fetch();
-        }
+    public List<Meeting> findTeamDayMeetings(Long teamId, LocalDate localDate) {
+        return queryFactory.selectFrom(meeting)
+                .where(meeting.team.id.eq(teamId),
+                        dateEq(localDate))
+                .fetch();
+    }
 
+    public List<Meeting> findWorkspaceDayMeetings(Long workspaceUserId, LocalDate localDate) {
+        return queryFactory.selectFrom(meeting)
+                .join(meeting.workspace, workspace).fetchJoin()
+                .join(meeting.attendees.values, attendee)
+                .where(attendee.workspaceUser.id.eq(workspaceUserId),
+                        dateEq(localDate))
+                .fetch();
+    }
+
+    public List<YearMeetingsCountQueryDto> findMyYearMeetingsCount(List<Long> myWorkspaceUserIds) {
         return queryFactory.select(new QYearMeetingsCountQueryDto(meeting.meetingTime.startDate.year(),
                 meeting.meetingTime.startDate.count()))
-                .from(meeting)
-                .where(searchTypePredicateOnlyWorkspaceAndTeam(searchType, searchIds))
+                .from(attendee)
+                .join(attendee.meeting, meeting)
+                .where(attendee.workspaceUser.id.in(myWorkspaceUserIds))
                 .groupBy(meeting.meetingTime.startDate.year())
                 .orderBy(meeting.meetingTime.startDate.year().desc())
                 .fetch();
     }
 
-    public List<MonthMeetingsCountQueryDto> findMonthMeetingsCount(String searchType, List<Long> searchIds, Year year) {
-        if (searchType.equals(WORKSPACE_USER)) {
-            return queryFactory.select(new QMonthMeetingsCountQueryDto(meeting.meetingTime.startDate.month(),
-                    meeting.meetingTime.startDate.count()))
-                    .from(attendee)
-                    .join(attendee.meeting, meeting)
-                    .where(attendee.workspaceUser.id.in(searchIds))
-                    .groupBy(meeting.meetingTime.startDate.month())
-                    .orderBy(meeting.meetingTime.startDate.month().asc())
-                    .fetch();
-        }
+    public List<YearMeetingsCountQueryDto> findTeamYearMeetingsCount(Long teamId) {
+        return queryFactory.select(new QYearMeetingsCountQueryDto(meeting.meetingTime.startDate.year(),
+                meeting.meetingTime.startDate.count()))
+                .from(meeting)
+                .where(meeting.team.id.eq(teamId))
+                .groupBy(meeting.meetingTime.startDate.year())
+                .orderBy(meeting.meetingTime.startDate.year().desc())
+                .fetch();
+    }
 
+    public List<YearMeetingsCountQueryDto> findWorkspaceYearMeetingsCount(Long workspaceUserId) {
+        return queryFactory.select(new QYearMeetingsCountQueryDto(meeting.meetingTime.startDate.year(),
+                meeting.meetingTime.startDate.count()))
+                .from(attendee)
+                .join(attendee.meeting, meeting)
+                .where(attendee.workspaceUser.id.eq(workspaceUserId))
+                .groupBy(meeting.meetingTime.startDate.year())
+                .orderBy(meeting.meetingTime.startDate.year().desc())
+                .fetch();
+    }
+
+    public List<MonthMeetingsCountQueryDto> findMyMonthMeetingsCount(List<Long> myWorkspaceUserIds, Year year) {
+        return queryFactory.select(new QMonthMeetingsCountQueryDto(meeting.meetingTime.startDate.month(),
+                meeting.meetingTime.startDate.count()))
+                .from(attendee)
+                .join(attendee.meeting, meeting)
+                .where(yearEq(year),
+                        attendee.workspaceUser.id.in(myWorkspaceUserIds))
+                .groupBy(meeting.meetingTime.startDate.month())
+                .orderBy(meeting.meetingTime.startDate.month().asc())
+                .fetch();
+    }
+
+    private BooleanExpression yearEq(Year year) {
+        return meeting.meetingTime.startDate.year().eq(year.getValue());
+    }
+
+    public List<MonthMeetingsCountQueryDto> findTeamMonthMeetingsCount(Long teamId, Year year) {
         return queryFactory.select(new QMonthMeetingsCountQueryDto(meeting.meetingTime.startDate.month(),
                 meeting.meetingTime.startDate.count()))
                 .from(meeting)
-                .where(searchTypePredicateOnlyWorkspaceAndTeam(searchType, searchIds))
+                .where(yearEq(year),
+                        meeting.team.id.eq(teamId))
+                .groupBy(meeting.meetingTime.startDate.month())
+                .orderBy(meeting.meetingTime.startDate.month().asc())
+                .fetch();
+    }
+
+    public List<MonthMeetingsCountQueryDto> findWorkspaceMonthMeetingsCount(Long workspaceUserId, Year year) {
+        return queryFactory.select(new QMonthMeetingsCountQueryDto(meeting.meetingTime.startDate.month(),
+                meeting.meetingTime.startDate.count()))
+                .from(attendee)
+                .join(attendee.meeting, meeting)
+                .where(yearEq(year),
+                        attendee.workspaceUser.id.eq(workspaceUserId))
                 .groupBy(meeting.meetingTime.startDate.month())
                 .orderBy(meeting.meetingTime.startDate.month().asc())
                 .fetch();

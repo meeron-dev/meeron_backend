@@ -2,6 +2,7 @@ package com.cmc.meeron.user;
 
 import com.cmc.meeron.user.domain.WorkspaceUser;
 
+import static com.cmc.meeron.user.UserFixture.USER;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_2;
 
@@ -11,6 +12,7 @@ public class WorkspaceUserFixture {
             .id(59L)
             .workspace(WORKSPACE_1)
             .nickname("무무")
+            .user(USER)
             .build();
 
     public static final WorkspaceUser WORKSPACE_USER_2 = WorkspaceUser.builder()
