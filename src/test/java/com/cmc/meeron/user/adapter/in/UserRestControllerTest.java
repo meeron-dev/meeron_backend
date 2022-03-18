@@ -1,6 +1,7 @@
 package com.cmc.meeron.user.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -10,6 +11,9 @@ import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseD
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
@@ -18,11 +22,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -335,49 +341,58 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    @DisplayName("유저의 성함 실패 - 성함을 주지 않을 경우")
-    @Test
-    void set_user_name_fail_name_not_blank() throws Exception {
-
-        // given
-        SetNameRequest request = SetNameRequest.builder()
-                .name("    ")
-                .build();
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
-    }
-
-    @DisplayName("유저의 성함 실패 - 5자를 초과할 경우")
-    @Test
-    void set_user_name_fail_name_max_five_words() throws Exception {
-
-        // given
-        SetNameRequest request = SetNameRequest.builder()
-                .name("다섯글자를넘었어")
-                .build();
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
-    }
-
     private SetNameRequest createSetNameRequest() {
         return SetNameRequest.builder()
-                .name("테스트")
+                .name("고범석")
                 .build();
+    }
+
+    @DisplayName("유저의 성함 실패 - 제약조건을 지키지 않은 경우")
+    @ParameterizedTest
+    @MethodSource("createFailSetNameRequests")
+    void set_user_name_fail_name_not_blank(SetNameRequest request) throws Exception {
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    private static Stream<Arguments> createFailSetNameRequests() {
+        SetNameRequest request1 = SetNameRequest.builder()
+                .name("다섯글자를넘었어")
+                .build();
+        SetNameRequest request2 = SetNameRequest.builder()
+                .name("    ")
+                .build();
+        return Stream.of(
+                Arguments.of(request1),
+                Arguments.of(request2)
+        );
+    }
+
+    @DisplayName("유저의 성함 실패 - 유저를 찾지 못할 경우")
+    @Test
+    void set_user_name_fail_not_found_user() throws Exception {
+
+        // given
+        doThrow(new UserNotFoundException())
+                .when(userCommandUseCase)
+                .setName(any(), any());
+        SetNameRequest request = createSetNameRequest();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
     }
 }

@@ -52,3 +52,18 @@ include::{snippets}/user-rest-controller-test/get_team_members_success/request-h
 include::{snippets}/user-rest-controller-test/get_team_members_success/path-parameters.adoc[]
 include::{snippets}/user-rest-controller-test/get_team_members_success/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/get_team_members_success/response-fields.adoc[]
+
+[[user-name]]
+== 로그인한 유저의 성함 저장
+include::{snippets}/user-rest-controller-test/set_user_name_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/set_user_name_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/set_user_name_success/request-fields.adoc[]
+include::{snippets}/user-rest-controller-test/set_user_name_success/http-response.adoc[]
+
+=== 이름에 대한 제약조건을 지키지 않을 경우
+include::{snippets}/user-rest-controller-test/set_user_name_fail_name_not_blank/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/set_user_name_fail_name_not_blank/http-response.adoc[]
+
+=== 유저가 존재하지 않을 경우
+include::{snippets}/user-rest-controller-test/set_user_name_fail_not_found_user/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/set_user_name_fail_not_found_user/http-response.adoc[]
