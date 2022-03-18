@@ -5,7 +5,10 @@ import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.adapter.in.response.WorkspaceUserResponse;
+import com.cmc.meeron.user.application.port.out.UserQueryPort;
+import com.cmc.meeron.user.domain.User;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,13 +24,14 @@ import org.springframework.util.MultiValueMap;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    AuthUseCase authUseCase;
+    @Autowired AuthUseCase authUseCase;
+    @Autowired UserQueryPort userQueryPort;
 
     @DisplayName("내 정보 조회 - 성공")
     @Test
@@ -148,5 +152,31 @@ public class UserIntegrationTest extends IntegrationTest {
                 Arguments.of(2L, 1),
                 Arguments.of(3L, 3)
         );
+    }
+
+    @WithMockJwt
+    @DisplayName("유저의 성함 등록 - 성공")
+    @Test
+    void set_name_success() throws Exception {
+
+        // given
+        SetNameRequest request = createSetNameRequest();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/users/name")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // then
+        flushAndClear();
+        User user = userQueryPort.findByEmail("test1@test.com").orElseThrow();
+        assertEquals(request.getName(), user.getName());
+    }
+
+    private SetNameRequest createSetNameRequest() {
+        return SetNameRequest.builder()
+                .name("테스트")
+                .build();
     }
 }

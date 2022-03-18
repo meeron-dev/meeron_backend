@@ -52,4 +52,9 @@ class UserQueryRepository implements UserQueryPort {
     public Optional<WorkspaceUser> findByUserWorkspaceId(Long userId, Long workspaceId) {
         return workspaceUserJpaRepository.findByUserWorkspaceId(userId, workspaceId);
     }
+
+    @Override
+    public Optional<User> findById(Long userId) {
+        return userJpaRepository.findById(userId);
+    }
 }

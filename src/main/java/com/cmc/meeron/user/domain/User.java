@@ -1,5 +1,6 @@
 package com.cmc.meeron.user.domain;
 
+import com.amazonaws.util.StringUtils;
 import com.cmc.meeron.common.domain.BaseEntity;
 import lombok.*;
 
@@ -20,20 +21,11 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true, length = 200)
     private String email;
 
-    @Column(length = 200)
-    private String contactEmail;
-
     @Column(length = 20)
     private String name;
 
     @Column(length = 200)
     private String profileImageUrl;
-
-    @Column(length = 25)
-    private String phone;
-
-    @Column(length = 30)
-    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -43,12 +35,16 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private UserProvider userProvider;
 
-    public static User of(String email, String nickname, String provider) {
+    public static User of(String email, String provider, String profileImageUrl) {
         return User.builder()
                 .email(email)
-                .role(Role.USER)
                 .userProvider(UserProvider.valueOf(provider))
-                .nickname(nickname)
+                .profileImageUrl(StringUtils.isNullOrEmpty(profileImageUrl) ? "" : profileImageUrl)
+                .role(Role.USER)
                 .build();
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

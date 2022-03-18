@@ -50,10 +50,8 @@ class UserQueryServiceTest {
         assertAll(
                 () -> assertEquals(user.getId(), meResponseDto.getUserId()),
                 () -> assertEquals(user.getEmail(), meResponseDto.getLoginEmail()),
-                () -> assertEquals(user.getContactEmail(), meResponseDto.getContactEmail()),
                 () -> assertEquals(user.getName(), meResponseDto.getName()),
-                () -> assertEquals(user.getProfileImageUrl(), meResponseDto.getProfileImageUrl()),
-                () -> assertEquals(user.getPhone(), meResponseDto.getPhone())
+                () -> assertEquals(user.getProfileImageUrl(), meResponseDto.getProfileImageUrl())
         );
     }
 
@@ -64,9 +62,7 @@ class UserQueryServiceTest {
                 .role(Role.USER)
                 .userProvider(UserProvider.KAKAO)
                 .name("테스트")
-                .nickname("테스트닉네임")
                 .profileImageUrl(null)
-                .contactEmail("test@naver.com")
                 .build();
     }
 

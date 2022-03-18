@@ -2,9 +2,11 @@ package com.cmc.meeron.user.adapter.in;
 
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequest;
+import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.adapter.in.response.WorkspaceUserResponse;
 import com.cmc.meeron.user.adapter.in.response.MyWorkspaceUsersResponse;
 import com.cmc.meeron.user.adapter.in.response.WorkspaceUsersResponse;
+import com.cmc.meeron.user.application.port.in.UserCommandUseCase;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
@@ -22,6 +24,7 @@ import java.util.List;
 public class UserRestController {
 
     private final UserQueryUseCase userQueryUseCase;
+    private final UserCommandUseCase userCommandUseCase;
 
     @GetMapping("/users/me")
     @ResponseStatus(HttpStatus.OK)
@@ -56,5 +59,12 @@ public class UserRestController {
     public WorkspaceUsersResponse getTeamUsers(@PathVariable Long teamId) {
         List<MyWorkspaceUserResponseDto> myWorkspaceUserResponseDtos = userQueryUseCase.getTeamUsers(teamId);
         return WorkspaceUsersResponse.fromWorkspaceUsers(myWorkspaceUserResponseDtos);
+    }
+
+    @PatchMapping("/users/name")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void setName(@RequestBody @Valid SetNameRequest setNameRequest,
+                        @AuthenticationPrincipal AuthUser authUser) {
+        userCommandUseCase.setName(authUser, setNameRequest.getName());
     }
 }

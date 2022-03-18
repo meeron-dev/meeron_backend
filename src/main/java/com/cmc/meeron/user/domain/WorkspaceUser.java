@@ -39,6 +39,12 @@ public class WorkspaceUser extends BaseEntity {
     @Column(length = 200)
     private String profileImageUrl;
 
+    @Column(length = 200)
+    private String contactMail;
+
+    @Column(length = 20)
+    private String phone;
+
     public void validInWorkspace(Workspace workspace) {
         if (!this.workspace.equals(workspace)) {
             throw new WorkspaceUsersNotInEqualWorkspaceException();

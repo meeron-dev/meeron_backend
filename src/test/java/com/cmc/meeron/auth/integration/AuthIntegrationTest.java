@@ -96,8 +96,8 @@ public class AuthIntegrationTest extends IntegrationTest {
 
     private User createMockUser(LoginRequest loginRequest) {
         return User.of(loginRequest.getEmail(),
-                loginRequest.getNickname(),
-                loginRequest.getProvider());
+                loginRequest.getProvider(),
+                loginRequest.getProfileImageUrl());
     }
 
     private TokenResponseDto login(LoginRequest loginRequest) throws Exception {

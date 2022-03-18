@@ -4,6 +4,7 @@ import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import com.google.common.net.HttpHeaders;
@@ -26,8 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,10 +50,8 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId", is(me.getUserId().intValue())))
                 .andExpect(jsonPath("$.loginEmail", is(me.getLoginEmail())))
-                .andExpect(jsonPath("$.contactEmail", is(me.getContactEmail())))
                 .andExpect(jsonPath("$.name", is(me.getName())))
                 .andExpect(jsonPath("$.profileImageUrl", is(me.getProfileImageUrl())))
-                .andExpect(jsonPath("$.phone", is(me.getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -61,10 +59,8 @@ class UserRestControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 ID"),
                                 fieldWithPath("loginEmail").type(JsonFieldType.STRING).description("소셜 로그인 이메일"),
-                                fieldWithPath("contactEmail").type(JsonFieldType.STRING).description("연락 메일"),
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("유저 이름"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL"),
-                                fieldWithPath("phone").type(JsonFieldType.STRING).description("유저 휴대전화번호")
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL")
                         )
                 ));
     }
@@ -73,10 +69,8 @@ class UserRestControllerTest extends RestDocsTestSupport {
         return MeResponseDto.builder()
                 .userId(1L)
                 .loginEmail("test@gmail.com")
-                .contactEmail("test@naver.com")
                 .name("테스트")
                 .profileImageUrl("https://test.images.com/12341234")
-                .phone("01023412341")
                 .build();
     }
 
@@ -316,5 +310,74 @@ class UserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무")
                         )
                 ));
+    }
+
+    @DisplayName("유저의 성함 등록 - 성공")
+    @Test
+    void set_user_name_success() throws Exception {
+
+        // given
+        SetNameRequest request = createSetNameRequest();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("성함").attributes(field("constraints", "1자 이상 5자 이하"))
+                        )
+                ));
+    }
+
+    @DisplayName("유저의 성함 실패 - 성함을 주지 않을 경우")
+    @Test
+    void set_user_name_fail_name_not_blank() throws Exception {
+
+        // given
+        SetNameRequest request = SetNameRequest.builder()
+                .name("    ")
+                .build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("유저의 성함 실패 - 5자를 초과할 경우")
+    @Test
+    void set_user_name_fail_name_max_five_words() throws Exception {
+
+        // given
+        SetNameRequest request = SetNameRequest.builder()
+                .name("다섯글자를넘었어")
+                .build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    private SetNameRequest createSetNameRequest() {
+        return SetNameRequest.builder()
+                .name("테스트")
+                .build();
     }
 }

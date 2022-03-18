@@ -16,11 +16,8 @@ CREATE TABLE USER
     `CREATED_DATE`        TIMESTAMP       NOT NULL    DEFAULT current_timestamp,
     `LAST_MODIFIED_DATE`  TIMESTAMP       NOT NULL    DEFAULT current_timestamp,
     `EMAIL`               VARCHAR(200)    NOT NULL,
-    `CONTACT_EMAIL`       VARCHAR(200)    NULL,
     `NAME`                VARCHAR(20)     NULL,
     `PROFILE_IMAGE_URL`   VARCHAR(200)    NULL,
-    `PHONE`               VARCHAR(25)     NULL,
-    `NICKNAME`            VARCHAR(30)     NULL,
     `ROLE`                VARCHAR(20)     NOT NULL,
     `USER_PROVIDER`       VARCHAR(20)     NOT NULL,
     PRIMARY KEY (USER_ID)
@@ -41,6 +38,8 @@ CREATE TABLE WORKSPACE_USER
     `NICKNAME`            VARCHAR(20)     NOT NULL,
     `PROFILE_IMAGE_URL`   VARCHAR(200)    NULL,
     `POSITION`            VARCHAR(20)     NULL,
+    `CONTACT_MAIL`        VARCHAR(200)    NULL,
+    `PHONE`               VARCHAR(20)     NULL,
     PRIMARY KEY (WORKSPACE_USER_ID)
 );
 

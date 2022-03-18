@@ -4,16 +4,16 @@ import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
 import com.cmc.meeron.auth.application.port.out.TokenCommandPort;
-import com.cmc.meeron.common.security.AuthUser;
+import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
 import com.cmc.meeron.auth.domain.LogoutAccessToken;
 import com.cmc.meeron.auth.domain.LogoutRefreshToken;
 import com.cmc.meeron.auth.domain.RefreshToken;
-import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
+import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.security.JwtProvider;
 import com.cmc.meeron.user.application.port.out.UserCommandPort;
-import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
+import com.cmc.meeron.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +34,8 @@ class AuthService implements AuthUseCase {
         User user = userQueryPort.findByEmail(loginRequestDto.getEmail())
                 .orElseGet(() -> userCommandPort.save(User.of(
                         loginRequestDto.getEmail(),
-                        loginRequestDto.getNickname(),
-                        loginRequestDto.getProvider())));
+                        loginRequestDto.getProvider(),
+                        loginRequestDto.getProfileImageUrl())));
         AuthUser authUser = AuthUser.of(user);
         String accessToken = jwtProvider.createAccessToken(authUser);
         String refreshToken = createAndSaveRefreshToken(authUser);

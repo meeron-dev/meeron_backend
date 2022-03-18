@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 class UserQueryService implements UserQueryUseCase {
 
     private final UserQueryPort userQueryPort;
