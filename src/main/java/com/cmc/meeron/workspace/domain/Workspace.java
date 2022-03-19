@@ -22,4 +22,11 @@ public class Workspace extends BaseEntity {
 
     @Column(length = 200)
     private String workspaceLogoUrl;
+
+    public static Workspace of(String name) {
+        return Workspace.builder()
+                .name(name)
+                .workspaceLogoUrl("")
+                .build();
+    }
 }

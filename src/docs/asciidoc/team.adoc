@@ -13,3 +13,15 @@ include::{snippets}/team-rest-controller-test/get_workspace_teams_success/reques
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/request-parameters.adoc[]
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/http-response.adoc[]
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/response-fields.adoc[]
+
+[[create-team]]
+== 팀 생성
+include::{snippets}/team-rest-controller-test/create_team_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/create_team_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/create_team_success/request-fields.adoc[]
+include::{snippets}/team-rest-controller-test/create_team_success/http-response.adoc[]
+include::{snippets}/team-rest-controller-test/create_team_success/response-fields.adoc[]
+
+=== 제약조건을 지키지 않을 경우
+include::{snippets}/team-rest-controller-test/create_team_fail_not_valid/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/create_team_fail_not_valid/http-response.adoc[]

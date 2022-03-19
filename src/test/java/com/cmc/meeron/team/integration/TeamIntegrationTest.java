@@ -2,7 +2,9 @@ package com.cmc.meeron.team.integration;
 
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.team.adapter.in.request.CreateTeamRequest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,5 +45,27 @@ public class TeamIntegrationTest extends IntegrationTest {
                 Arguments.of(params1, 3),
                 Arguments.of(params2, 0)
         );
+    }
+
+    @DisplayName("팀 생성 - 성공")
+    @Test
+    void create_team_success() throws Exception {
+
+        // given
+        CreateTeamRequest request = createCreateTeamRequest();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/teams")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.createdTeamId", is(4)));
+    }
+
+    private CreateTeamRequest createCreateTeamRequest() {
+        return CreateTeamRequest.builder()
+                .workspaceId(1L)
+                .teamName("테스트 팀")
+                .build();
     }
 }

@@ -15,11 +15,13 @@ import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
 import com.cmc.meeron.support.security.SecuritySupport;
 import com.cmc.meeron.team.adapter.in.TeamRestController;
+import com.cmc.meeron.team.application.port.in.TeamCommandUseCase;
 import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.user.adapter.in.UserRestController;
 import com.cmc.meeron.user.application.port.in.UserCommandUseCase;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
 import com.cmc.meeron.workspace.adapter.in.WorkspaceRestController;
+import com.cmc.meeron.workspace.application.port.in.WorkspaceCommandUseCase;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceQueryUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,6 +71,8 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected FileManager fileManager;
     @MockBean protected MeetingCalendarQueryUseCaseFactory meetingCalendarQueryUseCaseFactory;
     @MockBean protected UserCommandUseCase userCommandUseCase;
+    @MockBean protected WorkspaceCommandUseCase workspaceCommandUseCase;
+    @MockBean protected TeamCommandUseCase teamCommandUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

@@ -4,6 +4,7 @@ import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.workspace.adapter.in.request.CreateWorkspaceRequest;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceResponseDto;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -133,5 +133,65 @@ class WorkspaceRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.message", notNullValue()))
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("워크스페이스 생성 - 성공")
+    @Test
+    void create_workspace_success() throws Exception {
+
+        // given
+        CreateWorkspaceRequest request = createCreateWorkspaceRequest();
+        WorkspaceResponseDto responseDto = createWorkspaceResponseDto();
+        when(workspaceCommandUseCase.createWorkspace(any()))
+                .thenReturn(responseDto);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/workspaces")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceId", is(responseDto.getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceName", is(responseDto.getWorkspaceName())))
+                .andExpect(jsonPath("$.workspaceLogoUrl", is(responseDto.getWorkspaceLogoUrl())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").description("생성하는 워크스페이스 명")
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID"),
+                                fieldWithPath("workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명"),
+                                fieldWithPath("workspaceLogoUrl").type(JsonFieldType.STRING).description("워크스페이스 로고 이미지 URL")
+                        )
+                ));
+    }
+
+    private CreateWorkspaceRequest createCreateWorkspaceRequest() {
+        return CreateWorkspaceRequest.builder()
+                .name("테스트워크스페이스")
+                .build();
+    }
+
+    @DisplayName("워크스페이스 생성 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void create_workspace_fail_not_valid() throws Exception {
+
+        // given
+        CreateWorkspaceRequest request = CreateWorkspaceRequest.builder()
+                .name("                                ")
+                .build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/workspaces")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
     }
 }

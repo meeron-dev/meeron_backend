@@ -29,6 +29,14 @@ public class Team extends BaseEntity {
     @Column(length = 200)
     private String teamLogoUrl;
 
+    public static Team of(Workspace workspace, String name) {
+        return Team.builder()
+                .workspace(workspace)
+                .name(name)
+                .teamLogoUrl("")
+                .build();
+    }
+
     public void validWorkspace(Workspace target) {
         if (!workspace.equals(target)) {
             throw new NotWorkspacesTeamException();

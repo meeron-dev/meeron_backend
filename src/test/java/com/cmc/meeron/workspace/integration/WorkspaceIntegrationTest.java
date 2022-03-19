@@ -2,6 +2,7 @@ package com.cmc.meeron.workspace.integration;
 
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.workspace.adapter.in.request.CreateWorkspaceRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,5 +40,24 @@ public class WorkspaceIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.workspaceId", is(1)))
                 .andExpect(jsonPath("$.workspaceName", is("4tune")))
                 .andExpect(jsonPath("$.workspaceLogoUrl", nullValue()));
+    }
+
+    @DisplayName("워크스페이스 생성 - 성공")
+    @Test
+    void create_workspace_success() throws Exception {
+
+        // given
+        CreateWorkspaceRequest request = CreateWorkspaceRequest.builder()
+                .name("테스트")
+                .build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/workspaces", 1L)
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceId", is(2)))
+                .andExpect(jsonPath("$.workspaceName", is(request.getName())))
+                .andExpect(jsonPath("$.workspaceLogoUrl", emptyString()));
     }
 }
