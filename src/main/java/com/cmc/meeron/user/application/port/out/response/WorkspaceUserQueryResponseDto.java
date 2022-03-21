@@ -18,14 +18,16 @@ public class WorkspaceUserQueryResponseDto {
     private String nickname;
     private String position;
     private boolean workspaceAdmin;
+    private String email;
 
     @QueryProjection
-    public WorkspaceUserQueryResponseDto(Long workspaceId, Long workspaceUserId, String profileImageUrl, String nickname, String position, boolean workspaceAdmin) {
+    public WorkspaceUserQueryResponseDto(Long workspaceId, Long workspaceUserId, String profileImageUrl, String nickname, String position, boolean workspaceAdmin, String email) {
         this.workspaceId = workspaceId;
         this.workspaceUserId = workspaceUserId;
         this.profileImageUrl = profileImageUrl;
         this.nickname = nickname;
         this.position = position;
         this.workspaceAdmin = workspaceAdmin;
+        this.email = email;
     }
 }

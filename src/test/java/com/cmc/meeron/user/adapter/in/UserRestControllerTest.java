@@ -1,13 +1,17 @@
 package com.cmc.meeron.user.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.user.adapter.in.request.CreateWorkspaceUserRequest;
 import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.user.application.port.in.response.WorkspaceUserResponseDto;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +20,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,6 +30,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
+import static com.cmc.meeron.file.FileFixture.FILE;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -100,12 +106,14 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.myWorkspaceUsers[0].nickname", is(myWorkspaceUsers.get(0).getNickname())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[0].profileImageUrl", is(myWorkspaceUsers.get(0).getProfileImageUrl())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[0].position", is(myWorkspaceUsers.get(0).getPosition())))
+                .andExpect(jsonPath("$.myWorkspaceUsers[0].email", is(myWorkspaceUsers.get(0).getEmail())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].workspaceUserId", is(myWorkspaceUsers.get(1).getWorkspaceUserId().intValue())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].workspaceId", is(myWorkspaceUsers.get(1).getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].workspaceAdmin", is(myWorkspaceUsers.get(1).isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].nickname", is(myWorkspaceUsers.get(1).getNickname())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].profileImageUrl", is(myWorkspaceUsers.get(1).getProfileImageUrl())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].position", is(myWorkspaceUsers.get(1).getPosition())))
+                .andExpect(jsonPath("$.myWorkspaceUsers[1].email", is(myWorkspaceUsers.get(1).getEmail())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -114,12 +122,13 @@ class UserRestControllerTest extends RestDocsTestSupport {
                                 parameterWithName("userId").description("유저 ID")
                         ),
                         responseFields(
-                                fieldWithPath("myWorkspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("유저의 워크스페이스 유저 ID"),
+                                fieldWithPath("myWorkspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("워크스페이스 유저 ID"),
+                                fieldWithPath("myWorkspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\" 반환"),
+                                fieldWithPath("myWorkspaceUsers[].nickname").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 닉네임"),
+                                fieldWithPath("myWorkspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("myWorkspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
                                 fieldWithPath("myWorkspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
-                                fieldWithPath("myWorkspaceUsers[].nickname").type(JsonFieldType.STRING).description("워크스페이스 유저 닉네임"),
-                                fieldWithPath("myWorkspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).description("워크스페이스 유저 프로필 이미지 URL"),
-                                fieldWithPath("myWorkspaceUsers[].position").type(JsonFieldType.STRING).description("워크스페이스 유저 직책")
+                                fieldWithPath("myWorkspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
                         )
                 ));
     }
@@ -133,6 +142,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                         .nickname("테스트닉네임1")
                         .profileImageUrl("https://test.images.com/12341234")
                         .position("대리")
+                        .email("test@test.com")
                         .build(),
                 MyWorkspaceUserResponseDto.builder()
                         .workspaceUserId(2L)
@@ -141,6 +151,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                         .nickname("테스트닉네임2")
                         .profileImageUrl("https://test.images.com/12341235")
                         .position("매니저")
+                        .email("test2@test.com")
                         .build()
         );
     }
@@ -176,8 +187,9 @@ class UserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
                                 fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("워크스페이스 유저 닉네임"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("워크스페이스 유저 프로필 이미지 URL"),
-                                fieldWithPath("position").type(JsonFieldType.STRING).description("워크스페이스 유저 직책")
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\" 반환"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
                         )
                 ));
     }
@@ -190,6 +202,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .nickname("테스트닉네임")
                 .profileImageUrl("https://test.images.com/12341")
                 .position("관리자")
+                .email("test@test.com")
                 .build();
     }
 
@@ -250,11 +263,12 @@ class UserRestControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("workspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("워크스페이스 유저 ID"),
-                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].nickname").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 닉네임"),
-                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책"),
+                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
-                                fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무")
+                                fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
+                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
                         )
                 ));
     }
@@ -309,11 +323,12 @@ class UserRestControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("workspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("워크스페이스 유저 ID"),
-                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].nickname").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 닉네임"),
-                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책"),
+                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
-                                fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무")
+                                fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
+                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
                         )
                 ));
     }
@@ -394,5 +409,270 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("워크스페이스 유저 관리자 생성 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void create_workspace_user_fail_not_valid() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = CreateWorkspaceUserRequest.builder()
+                .nickname("      ")
+                .position("      ")
+                .build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/workspace-users/admin")
+                .file(createJsonFile(request))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(3)));
+    }
+
+    @DisplayName("워크스페이스 유저 관리자  생성 - 실패 / 닉네임이 중복된 경우")
+    @Test
+    void create_workspace_user_fail_duplicate_nickname() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+        when(userCommandUseCase.createWorkspaceUser(any()))
+                .thenThrow(new NicknameDuplicateException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/workspace-users/admin")
+                .file(profile)
+                .file(createJsonFile(request))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    private CreateWorkspaceUserRequest createCreateWorkspaceUserRequest() {
+        return CreateWorkspaceUserRequest.builder()
+                .workspaceId(1L)
+                .nickname("테스트")
+                .position("개발자")
+                .email("test@test.com")
+                .phone("010-1234-1234")
+                .build();
+    }
+
+    @DisplayName("워크스페이스 유저 관리자 생성 - 실패 / 워크스페이스가 없을 경우")
+    @Test
+    void create_workspace_user_fail_not_found_workspace() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+        when(userCommandUseCase.createWorkspaceUser(any()))
+                .thenThrow(new WorkspaceNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/workspace-users/admin")
+                .file(profile)
+                .file(createJsonFile(request))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 관리자 생성 - 실패 / 유저가 없을 경우")
+    @Test
+    void create_workspace_user_fail_not_found_user() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+        when(userCommandUseCase.createWorkspaceUser(any()))
+                .thenThrow(new UserNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/workspace-users/admin")
+                .file(profile)
+                .file(createJsonFile(request))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 관리자 생성 - 성공")
+    @Test
+    void create_workspace_success() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+        WorkspaceUserResponseDto responseDto = createWorkspaceUserAdminResponseDto();
+        when(userCommandUseCase.createWorkspaceUser(any()))
+                .thenReturn(responseDto);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/workspace-users/admin")
+                .file(profile)
+                .file(createJsonFile(request))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUserId", is(responseDto.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.nickname", is(responseDto.getNickname())))
+                .andExpect(jsonPath("$.workspaceAdmin", is(responseDto.isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.position", is(responseDto.getPosition())))
+                .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
+                .andExpect(jsonPath("$.email", is(responseDto.getContactMail())))
+                .andExpect(jsonPath("$.phone", is(responseDto.getPhone())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParts(
+                                partWithName("files").optional().description("업로드할 프로필 이미지 파일"),
+                                partWithName("request").description("요청하는 JSON Body")
+                        ),
+                        requestFields(
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임").attributes(field("constraints", "워크스페이스 내 중복될 경우 에러 발생, 5자 이하로 작성")),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("직첵").attributes(field("constraints", "5자 이하로 작성")),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일").optional(),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("휴대전화번호").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceUserId").type(JsonFieldType.NUMBER).description("생성된 워크스페이스 유저 ID"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 닉네임"),
+                                fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("생성된 워크스페이스 유저의 관리자 여부"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 직책"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\""),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 메일, 없을 경우 \"\""),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 휴대전화번호, 없을 경우 \"\"")
+                        )
+                ));
+    }
+
+    private WorkspaceUserResponseDto createWorkspaceUserAdminResponseDto() {
+        return WorkspaceUserResponseDto.builder()
+                .workspaceUserId(1L)
+                .nickname("테스트닉네임")
+                .workspaceAdmin(true)
+                .position("개발자")
+                .profileImageUrl("")
+                .contactMail("")
+                .phone("")
+                .build();
+    }
+
+    @DisplayName("워크스페이스 일반 유저 생성 - 성공")
+    @Test
+    void create_workspace_common_success() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+        WorkspaceUserResponseDto responseDto = createWorkspaceUserResponseDto();
+        when(userCommandUseCase.createWorkspaceUser(any()))
+                .thenReturn(responseDto);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/workspace-users")
+                .file(profile)
+                .file(createJsonFile(request))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUserId", is(responseDto.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.nickname", is(responseDto.getNickname())))
+                .andExpect(jsonPath("$.workspaceAdmin", is(responseDto.isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.position", is(responseDto.getPosition())))
+                .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
+                .andExpect(jsonPath("$.email", is(responseDto.getContactMail())))
+                .andExpect(jsonPath("$.phone", is(responseDto.getPhone())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParts(
+                                partWithName("files").optional().description("업로드할 프로필 이미지 파일"),
+                                partWithName("request").description("요청하는 JSON Body")
+                        ),
+                        requestFields(
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임").attributes(field("constraints", "워크스페이스 내 중복될 경우 에러 발생, 5자 이하로 작성")),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("직첵").attributes(field("constraints", "5자 이하로 작성")),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일").optional(),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("휴대전화번호").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceUserId").type(JsonFieldType.NUMBER).description("생성된 워크스페이스 유저 ID"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 닉네임"),
+                                fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("생성된 워크스페이스 유저의 관리자 여부"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 직책"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\""),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 메일, 없을 경우 \"\""),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 휴대전화번호, 없을 경우 \"\"")
+                        )
+                ));
+    }
+
+    private WorkspaceUserResponseDto createWorkspaceUserResponseDto() {
+        return WorkspaceUserResponseDto.builder()
+                .workspaceUserId(1L)
+                .nickname("테스트닉네임")
+                .workspaceAdmin(false)
+                .position("개발자")
+                .profileImageUrl("")
+                .contactMail("")
+                .phone("")
+                .build();
+    }
+
+    @DisplayName("유저가 이름을 입력했는지 검증 - 실패 / 존재하지 않는 유저인 경우")
+    @Test
+    void check_named_user_fail_not_found_user() throws Exception {
+
+        // given
+        when(userQueryUseCase.checkNamedUser(any()))
+                .thenThrow(new UserNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("유저가 이름을 입력했는지 검증 - 성공")
+    @Test
+    void check_named_user_success_named() throws Exception {
+
+        // given
+        when(userQueryUseCase.checkNamedUser(any()))
+                .thenReturn(true);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/users/name")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.named", is(true)))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        responseFields(
+                                fieldWithPath("named").type(JsonFieldType.BOOLEAN).description("이름이 작성되었는지 여부")
+                        )
+                ));
     }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 public interface FileManager {
 
     void saveAgendaFiles(Long agendaId, List<MultipartFile> files);
+
+    String saveProfileImage(MultipartFile file);
 }

@@ -18,4 +18,6 @@ public interface UserQueryUseCase {
     List<MyWorkspaceUserResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto);
 
     List<MyWorkspaceUserResponseDto> getTeamUsers(Long teamId);
+
+    boolean checkNamedUser(Long userId);
 }

@@ -96,4 +96,21 @@ class FileServiceTest {
                 () -> verify(agendaFileCommandPort, times(2)).save(any(AgendaFile.class))
         );
     }
+
+    @DisplayName("프로필 이미지 저장 - 성공")
+    @Test
+    void save_profile_image_success() throws Exception {
+
+        // given
+        MultipartFile file = FILE;
+
+        // when
+        String savedImageUrl = fileService.saveProfileImage(file);
+
+        // then
+        assertAll(
+                () -> verify(storagePort).upload(any(), any(), any()),
+                () -> verify(storagePort).getUrl(any())
+        );
+    }
 }

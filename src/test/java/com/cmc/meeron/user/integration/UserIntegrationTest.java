@@ -5,6 +5,7 @@ import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.user.adapter.in.request.CreateWorkspaceUserRequest;
 import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.adapter.in.response.WorkspaceUserResponse;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
@@ -17,12 +18,15 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.stream.Stream;
 
+import static com.cmc.meeron.file.FileFixture.FILE;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -178,5 +182,88 @@ public class UserIntegrationTest extends IntegrationTest {
         return SetNameRequest.builder()
                 .name("테스트")
                 .build();
+    }
+
+    @Sql("classpath:user-test.sql")
+    @WithMockJwt(id = 6L, email = "test6@test.com")
+    @DisplayName("유저가 성함을 입력했는지 검증 - 성공 / 입력했을 경우")
+    @Test
+    void check_named_user_success_named() throws Exception {
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/name")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.named", is(true)));
+    }
+
+    @WithMockJwt
+    @DisplayName("유저가 성함을 입력했는지 검증 - 성공 / 입력하지 않았을 경우")
+    @Test
+    void check_named_user_success_not_named() throws Exception {
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/name")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.named", is(false)));
+    }
+
+    @WithMockJwt
+    @DisplayName("워크스페이스 유저 관리자 생성 - 성공")
+    @Test
+    void create_workspace_user_admin_success() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/workspace-users/admin")
+                .file(profile)
+                .file(createJsonFile(request))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUserId", notNullValue()))
+                .andExpect(jsonPath("$.nickname", is(request.getNickname())))
+                .andExpect(jsonPath("$.workspaceAdmin", is(true)))
+                .andExpect(jsonPath("$.position", is(request.getPosition())))
+                .andExpect(jsonPath("$.profileImageUrl", notNullValue()))
+                .andExpect(jsonPath("$.email", is(request.getEmail())))
+                .andExpect(jsonPath("$.phone", is(request.getPhone())));
+    }
+
+    private CreateWorkspaceUserRequest createCreateWorkspaceUserRequest() {
+        return CreateWorkspaceUserRequest.builder()
+                .workspaceId(1L)
+                .nickname("테스트")
+                .position("개발자")
+                .email("test@test.com")
+                .phone("010-1234-1234")
+                .build();
+    }
+
+    @WithMockJwt
+    @DisplayName("워크스페이스 유저 생성 - 성공")
+    @Test
+    void create_workspace_user_success() throws Exception {
+
+        // given
+        CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
+        MockMultipartFile profile = FILE;
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/workspace-users")
+                .file(profile)
+                .file(createJsonFile(request))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUserId", notNullValue()))
+                .andExpect(jsonPath("$.nickname", is(request.getNickname())))
+                .andExpect(jsonPath("$.workspaceAdmin", is(false)))
+                .andExpect(jsonPath("$.position", is(request.getPosition())))
+                .andExpect(jsonPath("$.profileImageUrl", notNullValue()))
+                .andExpect(jsonPath("$.email", is(request.getEmail())))
+                .andExpect(jsonPath("$.phone", is(request.getPhone())));
     }
 }

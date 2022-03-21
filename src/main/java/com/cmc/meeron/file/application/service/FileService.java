@@ -73,4 +73,12 @@ class FileService implements FileManager {
             throw new FileUploadException(String.format("파일 업로드 중 예외가 발생했습니다. (%s)", file.getOriginalFilename()));
         }
     }
+
+    @Override
+    public String saveProfileImage(MultipartFile file) {
+        String originFileName = file.getOriginalFilename();
+        String renameFileName = getRenameFileName(file);
+        uploadToFileStorage(file, renameFileName);
+        return storagePort.getUrl(renameFileName);
+    }
 }

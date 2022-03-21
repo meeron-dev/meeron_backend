@@ -27,23 +27,18 @@ public class WorkspaceUser extends BaseEntity {
     @JoinColumn(name = "WORKSPACE_ID", nullable = false)
     private Workspace workspace;
 
-    @Column(nullable = false, length = 20)
-    private String nickname;
+    @Embedded
+    private WorkspaceUserInfo workspaceUserInfo;
 
-    @Column(nullable = false, columnDefinition = "TINYINT")
-    private boolean isWorkspaceAdmin;
-
-    @Column(length = 20)
-    private String position;
-
-    @Column(length = 200)
-    private String profileImageUrl;
-
-    @Column(length = 200)
-    private String contactMail;
-
-    @Column(length = 20)
-    private String phone;
+    public static WorkspaceUser of(User user,
+                                   Workspace workspace,
+                                   WorkspaceUserInfo info) {
+        return WorkspaceUser.builder()
+                .user(user)
+                .workspace(workspace)
+                .workspaceUserInfo(info)
+                .build();
+    }
 
     public void validInWorkspace(Workspace workspace) {
         if (!this.workspace.equals(workspace)) {

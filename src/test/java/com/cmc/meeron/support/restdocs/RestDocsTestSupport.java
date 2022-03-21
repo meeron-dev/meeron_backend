@@ -23,6 +23,7 @@ import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
 import com.cmc.meeron.workspace.adapter.in.WorkspaceRestController;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceCommandUseCase;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceQueryUseCase;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -31,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -92,5 +95,14 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
                 .alwaysDo(restDocumentationResultHandler)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))
                 .build();
+    }
+
+    protected MockMultipartFile createJsonFile(Object request) throws JsonProcessingException {
+        return new MockMultipartFile(
+                "request",
+                "",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsString(request).getBytes()
+        );
     }
 }

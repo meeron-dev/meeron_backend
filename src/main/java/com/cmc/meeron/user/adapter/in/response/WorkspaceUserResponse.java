@@ -16,6 +16,7 @@ public class WorkspaceUserResponse {
     private String nickname;
     private String profileImageUrl;
     private String position;
+    private String email;
 
     public static WorkspaceUserResponse fromWorkspaceUser(MyWorkspaceUserResponseDto myWorkspaceUserResponseDto) {
         return WorkspaceUserResponse.builder()
@@ -25,6 +26,7 @@ public class WorkspaceUserResponse {
                 .nickname(myWorkspaceUserResponseDto.getNickname())
                 .profileImageUrl(myWorkspaceUserResponseDto.getProfileImageUrl())
                 .position(myWorkspaceUserResponseDto.getPosition())
+                .email(myWorkspaceUserResponseDto.getEmail())
                 .build();
     }
 }

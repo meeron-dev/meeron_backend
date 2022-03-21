@@ -1,10 +1,13 @@
 package com.cmc.meeron.support;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -40,5 +43,14 @@ public abstract class IntegrationTest {
     protected void flushAndClear() {
         entityManager.flush();
         entityManager.clear();
+    }
+
+    protected MockMultipartFile createJsonFile(Object request) throws JsonProcessingException {
+        return new MockMultipartFile(
+                "request",
+                "",
+                MediaType.APPLICATION_JSON_VALUE,
+                objectMapper.writeValueAsString(request).getBytes()
+        );
     }
 }

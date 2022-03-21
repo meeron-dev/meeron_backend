@@ -20,6 +20,7 @@ public class MyWorkspaceUserResponseDto {
     private String nickname;
     private String profileImageUrl;
     private String position;
+    private String email;
 
     public static List<MyWorkspaceUserResponseDto> fromEntities(List<WorkspaceUser> myWorkspaceUsers) {
         return myWorkspaceUsers.stream()
@@ -31,10 +32,11 @@ public class MyWorkspaceUserResponseDto {
         return MyWorkspaceUserResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
                 .workspaceId(workspaceUser.getWorkspace().getId())
-                .isWorkspaceAdmin(workspaceUser.isWorkspaceAdmin())
-                .nickname(workspaceUser.getNickname())
-                .profileImageUrl(workspaceUser.getProfileImageUrl())
-                .position(workspaceUser.getPosition())
+                .isWorkspaceAdmin(workspaceUser.getWorkspaceUserInfo().isWorkspaceAdmin())
+                .nickname(workspaceUser.getWorkspaceUserInfo().getNickname())
+                .profileImageUrl(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl())
+                .position(workspaceUser.getWorkspaceUserInfo().getPosition())
+                .email(workspaceUser.getWorkspaceUserInfo().getContactMail())
                 .build();
     }
 
@@ -52,6 +54,7 @@ public class MyWorkspaceUserResponseDto {
                 .nickname(workspaceUserQueryResponseDto.getNickname())
                 .profileImageUrl(workspaceUserQueryResponseDto.getProfileImageUrl())
                 .position(workspaceUserQueryResponseDto.getPosition())
+                .email(workspaceUserQueryResponseDto.getEmail())
                 .build();
     }
 }

@@ -24,4 +24,6 @@ public interface UserQueryPort {
     Optional<WorkspaceUser> findByUserWorkspaceId(Long userId, Long workspaceId);
 
     Optional<User> findById(Long userId);
+
+    boolean existsByNicknameInWorkspace(Long workspaceId, String nickname);
 }

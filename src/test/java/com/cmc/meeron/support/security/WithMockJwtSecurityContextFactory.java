@@ -19,16 +19,16 @@ final class WithMockJwtSecurityContextFactory implements WithSecurityContextFact
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
-                        AuthUser.of(createUser(annotation.email())),
+                        AuthUser.of(createUser(annotation.id(), annotation.email())),
                         null,
                         createAuthorityList(annotation.role().getRole()));
         context.setAuthentication(authentication);
         return context;
     }
 
-    private User createUser(String email) {
+    private User createUser(Long id, String email) {
         return User.builder()
-                .id(1L)
+                .id(id)
                 .email(email)
                 .role(Role.USER)
                 .userProvider(UserProvider.KAKAO)

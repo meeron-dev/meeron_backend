@@ -12,6 +12,8 @@ import java.lang.annotation.*;
 @WithSecurityContext(factory = WithMockJwtSecurityContextFactory.class)
 public @interface WithMockJwt {
 
+    long id() default 1L;
+
     String email() default "test1@test.com";
 
     Role role() default Role.USER;

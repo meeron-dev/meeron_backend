@@ -1,5 +1,6 @@
 package com.cmc.meeron.user.application.service;
 
+import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
@@ -7,11 +8,9 @@ import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.application.port.out.response.WorkspaceUserQueryResponseDto;
-import com.cmc.meeron.user.domain.Role;
-import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.user.domain.UserProvider;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.user.domain.*;
 import com.cmc.meeron.workspace.domain.Workspace;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cmc.meeron.user.UserFixture.NOT_NAMED_USER;
+import static com.cmc.meeron.user.UserFixture.USER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -34,6 +35,15 @@ class UserQueryServiceTest {
     UserQueryPort userQueryPort;
     @InjectMocks
     UserQueryService userQueryService;
+
+    private User user;
+    private User notNamedUser;
+
+    @BeforeEach
+    void setUp() {
+        user = USER;
+        notNamedUser = NOT_NAMED_USER;
+    }
 
     @DisplayName("회원 정보 가져오기 - 성공")
     @Test
@@ -93,17 +103,25 @@ class UserQueryServiceTest {
                         .id(1L)
                         .user(user)
                         .workspace(Workspace.builder().id(1L).build())
-                        .nickname("테스트닉네임1")
-                        .isWorkspaceAdmin(false)
-                        .position("과장")
+                        .workspaceUserInfo(
+                                WorkspaceUserInfo.builder()
+                                        .nickname("테스트닉네임1")
+                                        .isWorkspaceAdmin(false)
+                                        .position("과장")
+                                        .profileImageUrl("https://test.com/123")
+                                        .build())
                         .build(),
                 WorkspaceUser.builder()
                         .id(2L)
                         .user(user)
                         .workspace(Workspace.builder().id(2L).build())
-                        .nickname("테스트닉네임2")
-                        .isWorkspaceAdmin(true)
-                        .position("매니저")
+                        .workspaceUserInfo(
+                                WorkspaceUserInfo.builder()
+                                        .nickname("테스트닉네임2")
+                                        .isWorkspaceAdmin(true)
+                                        .position("매니저")
+                                        .profileImageUrl("https://test.com/123")
+                                        .build())
                         .build()
         );
     }
@@ -146,9 +164,13 @@ class UserQueryServiceTest {
                 .id(1L)
                 .user(user)
                 .workspace(Workspace.builder().id(1L).build())
-                .nickname("테스트닉네임1")
-                .isWorkspaceAdmin(false)
-                .position("과장")
+                .workspaceUserInfo(
+                        WorkspaceUserInfo.builder()
+                                .profileImageUrl("https://test.com/123")
+                                .nickname("테스트닉네임1")
+                                .isWorkspaceAdmin(false)
+                                .position("과장")
+                                .build())
                 .build();
     }
 
@@ -217,5 +239,54 @@ class UserQueryServiceTest {
                 () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size()),
                 () -> verify(userQueryPort).findByTeamId(1L)
         );
+    }
+
+    @DisplayName("사용자가 이름을 입력했는지 체크 - 성공 / 입력했을경우")
+    @Test
+    void check_named_user_success_named() throws Exception {
+
+        // given
+        when(userQueryPort.findById(any()))
+                .thenReturn(Optional.of(user));
+
+        // when
+        boolean result = userQueryService.checkNamedUser(1L);
+
+        // then
+        assertAll(
+                () -> verify(userQueryPort).findById(1L),
+                () -> assertTrue(result)
+        );
+    }
+
+    @DisplayName("사용자가 이름을 입력했는지 체크 - 성공 / 입력하지 않았을경우")
+    @Test
+    void check_named_user_success_not_named() throws Exception {
+
+        // given
+        when(userQueryPort.findById(any()))
+                .thenReturn(Optional.of(notNamedUser));
+
+        // when
+        boolean result = userQueryService.checkNamedUser(1L);
+
+        // then
+        assertAll(
+                () -> verify(userQueryPort).findById(1L),
+                () -> assertFalse(result)
+        );
+    }
+
+    @DisplayName("사용자가 이름을 입력했는지 체크 - 실패 / 유저가 존재하지 않을 경우")
+    @Test
+    void check_entered_user_name_fail_not_found_user() throws Exception {
+
+        // given
+        when(userQueryPort.findById(any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(UserNotFoundException.class,
+                () -> userQueryService.checkNamedUser(1L));
     }
 }

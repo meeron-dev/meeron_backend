@@ -12,4 +12,11 @@ public class UserFixture {
             .email("kobumssh@naver.com")
             .role(Role.USER)
             .build();
+
+    public static final User NOT_NAMED_USER = User.builder()
+            .id(2L)
+            .profileImageUrl("")
+            .email("test@test.com")
+            .role(Role.USER)
+            .build();
 }

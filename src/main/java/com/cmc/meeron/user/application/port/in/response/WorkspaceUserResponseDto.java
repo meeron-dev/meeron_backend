@@ -21,11 +21,12 @@ public class WorkspaceUserResponseDto {
     public static WorkspaceUserResponseDto of(WorkspaceUser workspaceUser) {
         return WorkspaceUserResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
-                .nickname(workspaceUser.getNickname())
-                .workspaceAdmin(workspaceUser.isWorkspaceAdmin())
-                .position(workspaceUser.getPosition())
-                .profileImageUrl(workspaceUser.getProfileImageUrl())
-                .contactMail(workspaceUser.getContactMail())
+                .nickname(workspaceUser.getWorkspaceUserInfo().getNickname())
+                .workspaceAdmin(workspaceUser.getWorkspaceUserInfo().isWorkspaceAdmin())
+                .position(workspaceUser.getWorkspaceUserInfo().getPosition())
+                .profileImageUrl(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl())
+                .contactMail(workspaceUser.getWorkspaceUserInfo().getContactMail())
+                .phone(workspaceUser.getWorkspaceUserInfo().getPhone())
                 .build();
     }
 }
