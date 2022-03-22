@@ -58,6 +58,7 @@ jobs:
         run: |
           mkdir -p deploy
           cp -r .ebextensions deploy/.ebextensions
+          cp -r .platform deploy/.platform
           cp Dockerrun.aws.json deploy/Dockerrun.aws.json
           cd deploy && zip -r deploy.zip .
 

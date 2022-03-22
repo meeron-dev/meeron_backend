@@ -27,7 +27,6 @@ public class JasyptTest {
 
         // when
 
-
         // then
 
     }

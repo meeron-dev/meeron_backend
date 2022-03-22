@@ -1,14 +1,17 @@
 spring:
   profiles:
     default: local
+
   sql:
     init:
       mode: always
+
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MYSQL;
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.H2Dialect
@@ -18,19 +21,24 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+
   h2:
     console:
       enabled: true
+
   redis:
     port: 16379
     host: localhost
+
   mvc:
     format:
       date: yyyy/M/d
+
   servlet:
     multipart:
       max-request-size: 10MB
       max-file-size: 10MB
+
 cloud:
   aws:
     credentials:
@@ -68,3 +76,28 @@ spring:
   config:
     activate:
       on-profile: prod
+
+#  sql:
+#    init:
+#      mode: never
+#
+#  datasource:
+#    url: ENC(UmV71SEn/TgjQBM0AGCDFDgdv/3V0rJEVAoKG7xzhiGykwb8ue976l9fVhk3lUaqsFJfHpuZ/e8HzV60i5i0EWWFlftehhWoVFi3VOtRBQzRRhpaPpHO6SpN5hNqsyQ+Gv8mYGWRSG1NAOayADqNT3d9jwOwO0+PnFoGFA6oZ20u4sr50lbHPW7EwM3vQt+Y)
+#    username: ENC(2jqHU2BLbv3YhNwkO0ND3Q==)
+#    password: ENC(/F0X8StR+/pZd37v7kQEP0twx57pCb94)
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL57Dialect
+#    properties:
+#      hibernate:
+#        format_sql: false
+#        show_sql: false
+#
+#  h2:
+#    console:
+#      enabled: false
+#
+#  redis:
+#    port: 6379
+#    host: ENC()
