@@ -19,4 +19,5 @@ public class HealthRestController {
     public String authenticated() {
         return "AUTHENTICATED";
     }
+
 }
