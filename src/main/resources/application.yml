@@ -77,27 +77,27 @@ spring:
     activate:
       on-profile: prod
 
-#  sql:
-#    init:
-#      mode: never
-#
-#  datasource:
-#    url: ENC(UmV71SEn/TgjQBM0AGCDFDgdv/3V0rJEVAoKG7xzhiGykwb8ue976l9fVhk3lUaqsFJfHpuZ/e8HzV60i5i0EWWFlftehhWoVFi3VOtRBQzRRhpaPpHO6SpN5hNqsyQ+Gv8mYGWRSG1NAOayADqNT3d9jwOwO0+PnFoGFA6oZ20u4sr50lbHPW7EwM3vQt+Y)
-#    username: ENC(2jqHU2BLbv3YhNwkO0ND3Q==)
-#    password: ENC(/F0X8StR+/pZd37v7kQEP0twx57pCb94)
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#
-#  jpa:
-#    database-platform: org.hibernate.dialect.MySQL57Dialect
-#    properties:
-#      hibernate:
-#        format_sql: false
-#        show_sql: false
-#
-#  h2:
-#    console:
-#      enabled: false
-#
-#  redis:
-#    port: 6379
-#    host: ENC()
+  sql:
+    init:
+      mode: never
+
+  datasource:
+    url: ENC(kXriwBWOi86NBkvhL9K/RZTqCR1A2KZi/sWGghRYBc0itQeOi5nXvjN9EK4g6qjRn5epU4e2uDs4JHL0AZZ5g+7X7iDKZxX8Frosocdo4DjwJytZ8li6JjynMvrD2sctG/KTXB+1CzJZoxPQznaZJejAj2Enl18rgpc3ipf/2y1hXzdXWUFyUVFVGRT2rafs)
+    username: ENC(2jqHU2BLbv3YhNwkO0ND3Q==)
+    password: ENC(/F0X8StR+/pZd37v7kQEP0twx57pCb94)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+
+  h2:
+    console:
+      enabled: false
+
+  redis:
+    port: 6379
+    host: ENC(N9IwsDHBw25KxfteV+SiKKgjlaMKb3FleE/pn5VPASi9YByohHShXL7R6Rx+kUJ19PMdO5IY9qUNF9R1LH/LsiQuX/+pnZmo)
