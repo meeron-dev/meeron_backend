@@ -10,6 +10,7 @@
 == 참가자 상태 변경
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_success/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_success/request-headers.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_success/path-parameters.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_success/request-fields.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_success/http-response.adoc[]
 

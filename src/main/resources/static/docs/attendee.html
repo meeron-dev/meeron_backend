@@ -493,6 +493,25 @@ Host: dev.meeron.net
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /api/attendees/{workspaceUserId}</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUserId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 참여 상태를 변경할 워크스페이스 유저 ID</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 20%;">
 <col style="width: 20%;">
@@ -566,18 +585,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 436
 
 {
-  "time" : "2022-03-24T22:56:12.230624",
+  "time" : "2022-03-24T23:15:29.655541",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "status",
-    "value" : "    ",
-    "reason" : "지원하지 않는 참여 상태입니다. 'attend', 'accident', 'absent' 중 하나를 입력해주세요."
-  }, {
     "field" : "meetingId",
     "value" : null,
     "reason" : "회의 ID를 입력해주세요."
+  }, {
+    "field" : "status",
+    "value" : "    ",
+    "reason" : "지원하지 않는 참여 상태입니다. 'attend', 'accident', 'absent' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -613,7 +632,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 149
 
 {
-  "time" : "2022-03-24T22:56:11.85676",
+  "time" : "2022-03-24T23:15:29.37845",
   "status" : 400,
   "message" : "존재하지 않는 회의입니다.",
   "code" : 1000,
@@ -649,10 +668,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 153
+Content-Length: 152
 
 {
-  "time" : "2022-03-24T22:56:12.030469",
+  "time" : "2022-03-24T23:15:29.51829",
   "status" : 400,
   "message" : "존재하지 않는 참가자입니다.",
   "code" : 1000,
@@ -667,7 +686,7 @@ Content-Length: 153
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-24 22:54:56 +0900
+Last updated 2022-03-24 23:12:13 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
