@@ -25,22 +25,22 @@ values(5, 5, 1, current_timestamp, current_timestamp, false, '미소', '', 'Desi
 
 insert into team(team_id, workspace_id, created_date, last_modified_date, name)
 values(1, 1, current_timestamp, current_timestamp, '디자인팀');
-insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date, is_team_admin)
-values(1, 5, 1, current_timestamp, current_timestamp, 1);
+insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date)
+values(1, 5, 1, current_timestamp, current_timestamp);
 
 insert into team(team_id, workspace_id, created_date, last_modified_date, name)
 values(2, 1, current_timestamp, current_timestamp, '기획팀');
-insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date, is_team_admin)
-values(2, 2, 2, current_timestamp, current_timestamp, 1);
+insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date)
+values(2, 2, 2, current_timestamp, current_timestamp);
 
 insert into team(team_id, workspace_id, created_date, last_modified_date, name)
 values(3, 1, current_timestamp, current_timestamp, '개발팀');
-insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date, is_team_admin)
-values(3, 1, 3, current_timestamp, current_timestamp, 1);
-insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date, is_team_admin)
-values(4, 3, 3, current_timestamp, current_timestamp, 0);
-insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date, is_team_admin)
-values(5, 4, 3, current_timestamp, current_timestamp, 0);
+insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date)
+values(3, 1, 3, current_timestamp, current_timestamp);
+insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date)
+values(4, 3, 3, current_timestamp, current_timestamp);
+insert into team_user(team_user_id, workspace_user_id, team_id, created_date, last_modified_date)
+values(5, 4, 3, current_timestamp, current_timestamp);
 
 insert into meeting(meeting_id, workspace_id, team_id, name, purpose, start_date, start_time, end_time, place, meeting_status, created_date, last_modified_date)
 values(1, 1, 1, '1주차 디자인 공지', '공지사항', '2022-02-18', '14:00', '16:00', '구글 밋', 'END', current_timestamp, current_timestamp);

@@ -8,9 +8,4 @@ public class AgendaFixture {
             .id(3L)
             .agendaOrder(1)
             .build();
-
-    public static final Agenda AGENDA2 = Agenda.builder()
-            .id(4L)
-            .agendaOrder(2)
-            .build();
 }

@@ -29,3 +29,6 @@ include::notice.adoc[]
 
 == 팀 관련 API
 * link:team.html[Team API, window=_blank]
+
+== 참가자 관련 API
+* link:attendee.html[Attendee API, window=_blank]

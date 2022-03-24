@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum AttendStatus {
 
     ATTEND("참석"),
-    SURPRISE("갑작스러운 불참"),
+    ACCIDENT("갑작스러운 이슈"),
     ABSENT("불참석"),
     ;
 

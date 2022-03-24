@@ -29,7 +29,7 @@ public class Attendee extends BaseEntity {
     private WorkspaceUser workspaceUser;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private AttendStatus attendStatus;
 
     @Column(nullable = false, columnDefinition = "TINYINT")
@@ -45,7 +45,6 @@ public class Attendee extends BaseEntity {
         return Attendee.builder()
                 .workspaceUser(workspaceUser)
                 .meeting(meeting)
-                .attendStatus(AttendStatus.ATTEND)
                 .isMeetingAdmin(isAdmin)
                 .build();
     }
@@ -54,5 +53,14 @@ public class Attendee extends BaseEntity {
         return attendees.stream()
                 .map(attendee -> Attendee.createAttendee(attendee, meeting, false))
                 .collect(Collectors.toList());
+    }
+
+    public void changeStatus(AttendStatus status) {
+        this.attendStatus = status;
+    }
+
+    public boolean equalsWorkspaceUserId(Long workspaceUserId) {
+        return workspaceUser.getId()
+                .equals(workspaceUserId);
     }
 }

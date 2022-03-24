@@ -2,15 +2,14 @@ package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
+import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
-import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
-import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
-import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
+import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
@@ -514,5 +513,94 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("createdAgendaIds[]").type(JsonFieldType.ARRAY).description("생성된 아젠다 ID들")
                         )
                 ));
+    }
+
+    @DisplayName("참가자의 상태 변경 - 성공")
+    @Test
+    void change_attendee_status_success() throws Exception {
+
+        // given
+        ChangeAttendStatusRequest request = ChangeAttendStatusRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/attendees/{workspaceUserId}",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("workspaceUserId").description("회의 참여 상태를 변경할 워크스페이스 유저 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("변경할 상태").attributes(field("constraints", "'attend', 'accident', 'absent' 중 하나를 입력해야 함"))
+                        )
+                ));
+    }
+
+    @DisplayName("참가자의 상태 변경 - 실패 / 제약조건을 지키지 않은 경우")
+    @Test
+    void change_attendee_status_fail_not_valid() throws Exception {
+
+        // given
+        ChangeAttendStatusRequest request = ChangeAttendStatusRequestBuilder.buildNotValid();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/attendees/{workspaceUserId}",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+
+    @DisplayName("참가자의 상태 변경 - 실패 / 회의가 존재하지 않을 경우")
+    @Test
+    void change_attendee_status_fail_not_found_meeting() throws Exception {
+
+        // given
+        ChangeAttendStatusRequest request = ChangeAttendStatusRequestBuilder.build();
+        doThrow(new MeetingNotFoundException())
+                .when(meetingCommandUseCase)
+                .changeAttendStatus(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/attendees/{workspaceUserId}",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("참가자의 상태 변경 - 실패 / 참여하지 않는 참여자일 경우")
+    @Test
+    void change_attendee_status_fail_not_found_attendee() throws Exception {
+
+        // given
+        ChangeAttendStatusRequest request = ChangeAttendStatusRequestBuilder.build();
+        doThrow(new AttendeeNotFoundException())
+                .when(meetingCommandUseCase)
+                .changeAttendStatus(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/attendees/{workspaceUserId}",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 }

@@ -25,7 +25,4 @@ public class TeamUser extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "WORKSPACE_USER_ID", nullable = false)
     private WorkspaceUser workspaceUser;
-
-    @Column(nullable = false, columnDefinition = "TINYINT")
-    private boolean isTeamAdmin;
 }

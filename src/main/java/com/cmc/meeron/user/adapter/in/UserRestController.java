@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.util.List;
 
-// TODO: 2022/03/20 kobeomseok95 workspaceUser, teamUser 별 Controller를 만드는 것은 어때?
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")

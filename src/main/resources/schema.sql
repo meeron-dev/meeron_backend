@@ -84,7 +84,6 @@ CREATE TABLE TEAM_USER
     `TEAM_ID`             BIGINT        NOT NULL,
     `CREATED_DATE`        TIMESTAMP     NOT NULL    DEFAULT current_timestamp,
     `LAST_MODIFIED_DATE`  TIMESTAMP     NOT NULL    DEFAULT current_timestamp,
-    `IS_TEAM_ADMIN`       TINYINT       NOT NULL,
     PRIMARY KEY (TEAM_USER_ID)
 );
 
@@ -142,7 +141,7 @@ CREATE TABLE ATTENDEE
     `WORKSPACE_USER_ID`   BIGINT         NOT NULL,
     `CREATED_DATE`        TIMESTAMP      NOT NULL    DEFAULT current_timestamp,
     `LAST_MODIFIED_DATE`  TIMESTAMP      NOT NULL    DEFAULT current_timestamp,
-    `ATTEND_STATUS`       VARCHAR(20)    NOT NULL,
+    `ATTEND_STATUS`       VARCHAR(20)    NULL,
     `IS_MEETING_ADMIN`    TINYINT        NOT NULL,
     PRIMARY KEY (ATTENDEE_ID)
 );

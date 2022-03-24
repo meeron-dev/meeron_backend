@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.application.service;
 
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
+import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
@@ -8,9 +9,7 @@ import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.common.security.AuthUser;
-import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
-import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
-import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.*;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Agenda;
@@ -424,5 +423,49 @@ class MeetingCommandServiceTest {
                 WorkspaceUsersNotInEqualWorkspaceException.class,
                 () -> meetingCommandService.joinAttendees(requestDto)
         );
+    }
+
+    @DisplayName("회의 참가자 상태 변경 - 실패 / 회의를 찾을 수 없을 경우")
+    @Test
+    void change_attend_status_fail_not_found_meeting() throws Exception {
+
+        // given
+        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
+        when(meetingQueryPort.findWithAttendeesById(any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(MeetingNotFoundException.class,
+                () -> meetingCommandService.changeAttendStatus(requestDto));
+    }
+
+    @DisplayName("회의 참가자 상태 변경 - 실패 / 존재하지 않는 참가자인 경우")
+    @Test
+    void change_attend_status_fail_not_attendee() throws Exception {
+
+        // given
+        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.buildFailRequest();
+        when(meetingQueryPort.findWithAttendeesById(any()))
+                .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
+
+        // when, then
+        assertThrows(AttendeeNotFoundException.class,
+                () -> meetingCommandService.changeAttendStatus(requestDto));
+    }
+
+    @DisplayName("회의 참가자 상태 변경 - 성공")
+    @Test
+    void change_attend_status_success() throws Exception {
+
+        // given
+        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
+        when(meetingQueryPort.findWithAttendeesById(any()))
+                .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
+
+        // when
+        meetingCommandService.changeAttendStatus(requestDto);
+
+        // then
+        verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId());
     }
 }

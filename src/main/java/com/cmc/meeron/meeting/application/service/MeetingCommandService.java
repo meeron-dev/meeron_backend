@@ -6,15 +6,13 @@ import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
+import com.cmc.meeron.meeting.application.port.in.request.ChangeAttendStatusRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
-import com.cmc.meeron.meeting.domain.Agenda;
-import com.cmc.meeron.meeting.domain.Meeting;
-import com.cmc.meeron.meeting.domain.MeetingInfo;
-import com.cmc.meeron.meeting.domain.MeetingTime;
+import com.cmc.meeron.meeting.domain.*;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
@@ -97,5 +95,14 @@ class MeetingCommandService implements MeetingCommandUseCase {
                     return agenda.getId();
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void changeAttendStatus(ChangeAttendStatusRequestDto changeAttendStatusRequestDto) {
+        Attendees attendees = meetingQueryPort.findWithAttendeesById(changeAttendStatusRequestDto.getMeetingId())
+                .orElseThrow(MeetingNotFoundException::new)
+                .getAttendees();
+        Attendee attendee = attendees.findByWorkspaceUserId(changeAttendStatusRequestDto.getWorkspaceUserId());
+        attendee.changeStatus(AttendStatus.valueOf(changeAttendStatusRequestDto.getStatus()));
     }
 }

@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.domain;
 
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
+import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.user.domain.WorkspaceUser;
 import lombok.*;
 
@@ -56,5 +57,12 @@ public class Attendees {
 
     public int size() {
         return values.size();
+    }
+
+    public Attendee findByWorkspaceUserId(Long workspaceUserId) {
+        return values.stream()
+                .filter(attendee -> attendee.equalsWorkspaceUserId(workspaceUserId))
+                .findFirst()
+                .orElseThrow(AttendeeNotFoundException::new);
     }
 }
