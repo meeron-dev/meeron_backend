@@ -1,9 +1,11 @@
 package com.cmc.meeron.user.application.service;
 
+import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
+import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDtoBuilder;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
@@ -179,7 +181,7 @@ class UserQueryServiceTest {
     void search_workspace_users_success() throws Exception {
 
         // given
-        FindWorkspaceUserRequestDto requestDto = createFindWorkspaceUserRequestDto();
+        FindWorkspaceUserRequestDto requestDto = FindWorkspaceUserRequestDtoBuilder.build();
         List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = createWorkspaceUserQueryResponseDtos();
         when(userQueryPort.findByWorkspaceIdNickname(any(), any()))
                 .thenReturn(workspaceUserQueryResponseDtos);
@@ -189,16 +191,9 @@ class UserQueryServiceTest {
 
         // then
         assertAll(
-                () -> verify(userQueryPort).findByWorkspaceIdNickname(1L, "무"),
+                () -> verify(userQueryPort).findByWorkspaceIdNickname(requestDto.getWorkspaceId(), requestDto.getNickname()),
                 () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size())
         );
-    }
-
-    private FindWorkspaceUserRequestDto createFindWorkspaceUserRequestDto() {
-        return FindWorkspaceUserRequestDto.builder()
-                .workspaceId(1L)
-                .nickname("무")
-                .build();
     }
 
     private List<WorkspaceUserQueryResponseDto> createWorkspaceUserQueryResponseDtos() {
@@ -288,5 +283,37 @@ class UserQueryServiceTest {
         // when, then
         assertThrows(UserNotFoundException.class,
                 () -> userQueryService.checkNamedUser(1L));
+    }
+
+    @DisplayName("닉네임 중복 검사 조회 - 성공 / 중복되지 않았을 경우")
+    @Test
+    void check_duplicate_nickname_success_not_duplicate() throws Exception {
+
+        // given
+        FindWorkspaceUserRequestDto requestDto = FindWorkspaceUserRequestDtoBuilder.build();
+        when(userQueryPort.existsByNicknameInWorkspace(requestDto.getWorkspaceId(),
+                requestDto.getNickname()))
+                .thenReturn(false);
+
+        // when
+        userQueryService.checkDuplicateNickname(requestDto);
+
+        // then
+        verify(userQueryPort).existsByNicknameInWorkspace(requestDto.getWorkspaceId(), requestDto.getNickname());
+    }
+
+    @DisplayName("닉네임 중복 검사 조회 - 실패 / 중복되었을 경우")
+    @Test
+    void check_duplicate_nickname_fail_duplicate() throws Exception {
+
+        // given
+        FindWorkspaceUserRequestDto requestDto = FindWorkspaceUserRequestDtoBuilder.build();
+        when(userQueryPort.existsByNicknameInWorkspace(requestDto.getWorkspaceId(),
+                requestDto.getNickname()))
+                .thenReturn(true);
+
+        // when, then
+        assertThrows(NicknameDuplicateException.class,
+                () -> userQueryService.checkDuplicateNickname(requestDto));
     }
 }

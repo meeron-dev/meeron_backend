@@ -3,9 +3,12 @@ package com.cmc.meeron.user.integration;
 import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
+import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.CreateWorkspaceUserRequest;
+import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequest;
+import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
 import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.adapter.in.response.WorkspaceUserResponse;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
@@ -17,6 +20,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.jdbc.Sql;
@@ -265,5 +269,43 @@ public class UserIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.profileImageUrl", notNullValue()))
                 .andExpect(jsonPath("$.email", is(request.getEmail())))
                 .andExpect(jsonPath("$.phone", is(request.getPhone())));
+    }
+
+    @WithMockJwt
+    @DisplayName("닉네임 중복 체크 - 성공 / 중복된 닉네임이 없을 경우")
+    @Test
+    void check_duplicate_nickname_success_not_duplicate() throws Exception {
+
+        // given
+        FindWorkspaceUserRequest request = FindWorkspaceUserRequestBuilder.build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", request.getWorkspaceId().toString());
+        params.add("nickname", request.getNickname());
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/workspace-users/nickname")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.duplicate", is(false)));
+    }
+
+    @WithMockJwt
+    @DisplayName("닉네임 중복 체크 - 실패 / 중복된 닉네임이 있을 경우")
+    @Test
+    void check_duplicate_nickname_success_duplicate() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", "1");
+        params.add("nickname", "무무");
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/workspace-users/nickname")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 }

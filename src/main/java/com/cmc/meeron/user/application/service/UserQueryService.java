@@ -1,5 +1,6 @@
 package com.cmc.meeron.user.application.service;
 
+import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
@@ -62,5 +63,13 @@ class UserQueryService implements UserQueryUseCase {
         User user = userQueryPort.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         return StringUtils.hasText(user.getName());
+    }
+
+    @Override
+    public void checkDuplicateNickname(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto) {
+        if (userQueryPort.existsByNicknameInWorkspace(findWorkspaceUserRequestDto.getWorkspaceId(),
+                findWorkspaceUserRequestDto.getNickname())) {
+            throw new NicknameDuplicateException();
+        }
     }
 }

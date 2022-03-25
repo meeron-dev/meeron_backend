@@ -8,6 +8,8 @@ import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.CreateWorkspaceUserRequest;
+import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequest;
+import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
 import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
 import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
 import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
@@ -674,5 +676,57 @@ class UserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("named").type(JsonFieldType.BOOLEAN).description("이름이 작성되었는지 여부")
                         )
                 ));
+    }
+
+    @DisplayName("닉네임 중복 체크 - 성공")
+    @Test
+    void check_duplicate_nickname_success() throws Exception {
+
+        // given
+        FindWorkspaceUserRequest request = FindWorkspaceUserRequestBuilder.build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", request.getWorkspaceId().toString());
+        params.add("nickname", request.getNickname());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/workspace-users/nickname")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.duplicate", is(false)))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("workspaceId").description("워크스페이스 ID"),
+                                parameterWithName("nickname").description("검사할 유저 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("duplicate").type(JsonFieldType.BOOLEAN).description("false 리턴 시 중복되지 않았음을 의미")
+                        )
+                ));
+    }
+
+    @DisplayName("닉네임 중복 체크 - 실패 / 닉네임이 중복되었을 경우")
+    @Test
+    void check_duplicate_nickname_fail_duplicate() throws Exception {
+
+        // given
+        doThrow(new NicknameDuplicateException())
+                .when(userQueryUseCase)
+                .checkDuplicateNickname(any());
+        FindWorkspaceUserRequest request = FindWorkspaceUserRequestBuilder.build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", request.getWorkspaceId().toString());
+        params.add("nickname", request.getNickname());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/workspace-users/nickname")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .params(params))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 }

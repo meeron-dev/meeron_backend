@@ -77,6 +77,13 @@ public class UserRestController {
         userCommandUseCase.setName(authUser, setNameRequest.getName());
     }
 
+    @GetMapping("/workspace-users/nickname")
+    @ResponseStatus(HttpStatus.OK)
+    public CheckDuplicateNicknameResponse checkDuplicateNickname(@Valid FindWorkspaceUserRequest findWorkspaceUserRequest) {
+        userQueryUseCase.checkDuplicateNickname(findWorkspaceUserRequest.toRequestDto());
+        return CheckDuplicateNicknameResponse.isNotDuplicate();
+    }
+
     @PostMapping(value = "/workspace-users/admin", consumes = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE

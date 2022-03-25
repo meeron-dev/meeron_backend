@@ -20,4 +20,6 @@ public interface UserQueryUseCase {
     List<MyWorkspaceUserResponseDto> getTeamUsers(Long teamId);
 
     boolean checkNamedUser(Long userId);
+
+    void checkDuplicateNickname(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto);
 }

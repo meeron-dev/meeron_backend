@@ -1,4 +1,4 @@
-= 유저 API
+= 유저 / 워크스페이스 유 / 팀 유저 API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -112,3 +112,15 @@ include::{snippets}/user-rest-controller-test/create_workspace_common_success/re
 include::{snippets}/user-rest-controller-test/create_workspace_common_success/request-fields.adoc[]
 include::{snippets}/user-rest-controller-test/create_workspace_common_success/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/create_workspace_common_success/response-fields.adoc[]
+
+[[duplicate_nickname]]
+== 닉네임 중복 체크
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/request-parameters.adoc[]
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/http-response.adoc[]
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/response-fields.adoc[]
+
+=== 중복된 닉네임일 경우
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-response.adoc[]
