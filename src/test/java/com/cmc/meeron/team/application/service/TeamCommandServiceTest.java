@@ -1,8 +1,10 @@
 package com.cmc.meeron.team.application.service;
 
+import com.cmc.meeron.common.exception.team.TeamCountsConditionException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.team.application.port.in.request.CreateTeamRequestDto;
 import com.cmc.meeron.team.application.port.out.TeamCommandPort;
+import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
@@ -26,6 +28,7 @@ class TeamCommandServiceTest {
 
     @Mock TeamCommandPort teamCommandPort;
     @Mock WorkspaceQueryPort workspaceQueryPort;
+    @Mock TeamQueryPort teamQueryPort;
     @InjectMocks TeamCommandService teamCommandService;
 
     private Workspace workspace;
@@ -51,6 +54,22 @@ class TeamCommandServiceTest {
                 () -> teamCommandService.createTeam(requestDto));
     }
 
+    @DisplayName("팀 생성 - 실패 / 존재하지 않는 워크스페이스의 경우")
+    @Test
+    void create_team_fail_not_over_five_teams() throws Exception {
+
+        // given
+        CreateTeamRequestDto requestDto = createCreateTeamRequestDto();
+        when(workspaceQueryPort.findById(any()))
+                .thenReturn(Optional.of(workspace));
+        when(teamQueryPort.countByWorkspaceId(any()))
+                .thenReturn(5L);
+
+        // when, then
+        assertThrows(TeamCountsConditionException.class,
+                () -> teamCommandService.createTeam(requestDto));
+    }
+
     @DisplayName("팀 생성 - 성공")
     @Test
     void create_team_success() throws Exception {
@@ -59,6 +78,8 @@ class TeamCommandServiceTest {
         CreateTeamRequestDto requestDto = createCreateTeamRequestDto();
         when(workspaceQueryPort.findById(requestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(workspace));
+        when(teamQueryPort.countByWorkspaceId(any()))
+                .thenReturn(4L);
         when(teamCommandPort.save(any()))
                 .thenReturn(team.getId());
 
@@ -68,6 +89,7 @@ class TeamCommandServiceTest {
         // then
         assertAll(
                 () -> verify(workspaceQueryPort).findById(requestDto.getWorkspaceId()),
+                () -> verify(teamQueryPort).countByWorkspaceId(requestDto.getWorkspaceId()),
                 () -> verify(teamCommandPort).save(any(Team.class)),
                 () -> assertEquals(team.getId(), teamId)
         );

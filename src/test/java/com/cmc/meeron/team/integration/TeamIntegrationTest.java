@@ -9,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -67,5 +68,20 @@ public class TeamIntegrationTest extends IntegrationTest {
                 .workspaceId(1L)
                 .teamName("테스트 팀")
                 .build();
+    }
+
+    @Sql("classpath:team-test.sql")
+    @DisplayName("팀 생성 - 실패 / 워크스페이스에 팀이 5팀 이상일 경우")
+    @Test
+    void create_team_fali_over_five_teams() throws Exception {
+
+        // given
+        CreateTeamRequest request = createCreateTeamRequest();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/teams")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

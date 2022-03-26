@@ -450,6 +450,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#create-team">팀 생성</a>
 <ul class="sectlevel2">
 <li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
+<li><a href="#_워크스페이스_내_팀이_다섯개_이상일_경우">워크스페이스 내 팀이 다섯개 이상일 경우</a></li>
 </ul>
 </li>
 </ul>
@@ -691,23 +692,62 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 575
 
 {
-  "time" : "2022-03-26T20:38:57.877292",
+  "time" : "2022-03-26T21:25:59.297445",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
+    "field" : "teamName",
+    "value" : "                                  ",
+    "reason" : "팀 이름을 10자 이하로 입력해주세요."
+  }, {
+    "field" : "teamName",
+    "value" : "                                  ",
+    "reason" : "팀 이름을 10자 이하로 입력해주세요."
+  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
-    "field" : "teamName",
-    "value" : "                                  ",
-    "reason" : "팀 이름을 10자 이하로 입력해주세요."
-  }, {
-    "field" : "teamName",
-    "value" : "                                  ",
-    "reason" : "팀 이름을 10자 이하로 입력해주세요."
   } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_워크스페이스_내_팀이_다섯개_이상일_경우"><a class="link" href="#_워크스페이스_내_팀이_다섯개_이상일_경우">워크스페이스 내 팀이 다섯개 이상일 경우</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/teams HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 51
+Host: dev.meeron.net
+
+{
+  "workspaceId" : 1,
+  "teamName" : "테스트"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 186
+
+{
+  "time" : "2022-03-26T21:25:59.261236",
+  "status" : 400,
+  "message" : "워크스페이스 내에서는 다섯 팀까지 보유 가능합니다.",
+  "code" : 1000,
+  "errors" : [ ]
 }</code></pre>
 </div>
 </div>
@@ -718,7 +758,7 @@ Content-Length: 575
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-19 21:03:26 +0900
+Last updated 2022-03-26 21:25:25 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

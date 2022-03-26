@@ -11,4 +11,6 @@ public interface TeamQueryPort {
     List<WorkspaceTeamsQueryResponseDto> findByWorkspaceId(Long workspaceId);
 
     Optional<Team> findById(Long teamId);
+
+    long countByWorkspaceId(Long workspaceId);
 }

@@ -1,6 +1,7 @@
 package com.cmc.meeron.team.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.team.TeamCountsConditionException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.team.adapter.in.request.CreateTeamRequest;
@@ -18,8 +19,8 @@ import org.springframework.util.MultiValueMap;
 import java.util.List;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -102,6 +103,25 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("createdTeamId").type(JsonFieldType.NUMBER).description("생성된 팀 ID")
                         )
                 ));
+    }
+
+    @DisplayName("팀 생성 - 실패 / 팀이 다섯개를 넘어가는 경우")
+    @Test
+    void create_team_fail_over_five_teams() throws Exception {
+
+        // given
+        CreateTeamRequest request = createCreateTeamRequest();
+        when(teamCommandUseCase.createTeam(any()))
+                .thenThrow(new TeamCountsConditionException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/teams")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
     }
 
     public CreateTeamRequest createCreateTeamRequest() {

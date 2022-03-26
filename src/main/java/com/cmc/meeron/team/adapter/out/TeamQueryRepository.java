@@ -25,4 +25,9 @@ class TeamQueryRepository implements TeamQueryPort {
     public Optional<Team> findById(Long teamId) {
         return teamJpaRepository.findById(teamId);
     }
+
+    @Override
+    public long countByWorkspaceId(Long workspaceId) {
+        return teamJpaRepository.countByWorkspaceId(workspaceId);
+    }
 }

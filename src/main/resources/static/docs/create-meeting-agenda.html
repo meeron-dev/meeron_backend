@@ -690,14 +690,14 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 1083
 
 {
-  "time" : "2022-03-26T20:38:55.441042",
+  "time" : "2022-03-26T21:25:56.657418",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "workspaceId",
+    "field" : "meetingPurpose",
     "value" : null,
-    "reason" : "회의를 생성할 워크스페이스 ID를 입력해주세요."
+    "reason" : "회의 성격을 1자 이상 10자 이하로 입력해주세요."
   }, {
     "field" : "startTime",
     "value" : null,
@@ -707,21 +707,21 @@ Content-Length: 1083
     "value" : null,
     "reason" : "회의명을 30자 이하로 입력해주세요."
   }, {
-    "field" : "endTime",
+    "field" : "operationTeamId",
     "value" : null,
-    "reason" : "회의 마감 시간을 'hh:mm a' 형식으로 입력해주세요."
-  }, {
-    "field" : "meetingPurpose",
-    "value" : null,
-    "reason" : "회의 성격을 1자 이상 10자 이하로 입력해주세요."
+    "reason" : "담당 팀 ID를 입력해주세요."
   }, {
     "field" : "meetingDate",
     "value" : null,
     "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
   }, {
-    "field" : "operationTeamId",
+    "field" : "endTime",
     "value" : null,
-    "reason" : "담당 팀 ID를 입력해주세요."
+    "reason" : "회의 마감 시간을 'hh:mm a' 형식으로 입력해주세요."
+  }, {
+    "field" : "workspaceId",
+    "value" : null,
+    "reason" : "회의를 생성할 워크스페이스 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -763,7 +763,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 473
 
 {
-  "time" : "2022-03-26T20:38:55.357748",
+  "time" : "2022-03-26T21:25:56.550476",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -816,7 +816,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-03-26T20:38:55.477725",
+  "time" : "2022-03-26T21:25:56.705844",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
   "code" : 1000,
@@ -861,7 +861,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-03-26T20:38:55.340842",
+  "time" : "2022-03-26T21:25:56.530301",
   "status" : 400,
   "message" : "해당 워크스페이스를 찾을 수 없습니다.",
   "code" : 1000,
@@ -906,7 +906,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 166
 
 {
-  "time" : "2022-03-26T20:38:55.620617",
+  "time" : "2022-03-26T21:25:56.883879",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾지 못했습니다.",
   "code" : 1000,
@@ -951,7 +951,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 186
 
 {
-  "time" : "2022-03-26T20:38:55.585828",
+  "time" : "2022-03-26T21:25:56.845398",
   "status" : 400,
   "message" : "해당 유저는 같은 워크스페이스에 속해있지 않습니다.",
   "code" : 1000,
@@ -996,7 +996,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 177
 
 {
-  "time" : "2022-03-26T20:38:55.668944",
+  "time" : "2022-03-26T21:25:56.935762",
   "status" : 400,
   "message" : "해당 팀은 워크스페이스에 속해 있지 않습니다.",
   "code" : 1000,
@@ -1126,7 +1126,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 320
 
 {
-  "time" : "2022-03-26T20:38:55.635438",
+  "time" : "2022-03-26T21:25:56.899945",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1168,7 +1168,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 150
 
 {
-  "time" : "2022-03-26T20:38:55.457034",
+  "time" : "2022-03-26T21:25:56.683562",
   "status" : 400,
   "message" : "존재하지 않는 회의입니다.",
   "code" : 1000,
@@ -1206,7 +1206,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-03-26T20:38:55.289443",
+  "time" : "2022-03-26T21:25:56.462739",
   "status" : 400,
   "message" : "해당 워크스페이스를 찾을 수 없습니다.",
   "code" : 1000,
@@ -1244,7 +1244,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 186
 
 {
-  "time" : "2022-03-26T20:38:55.426222",
+  "time" : "2022-03-26T21:25:56.634909",
   "status" : 400,
   "message" : "해당 유저는 같은 워크스페이스에 속해있지 않습니다.",
   "code" : 1000,
@@ -1279,10 +1279,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 157
+Content-Length: 156
 
 {
-  "time" : "2022-03-26T20:38:55.304538",
+  "time" : "2022-03-26T21:25:56.48541",
   "status" : 400,
   "message" : "이미 참여중인 유저가 있습니다.",
   "code" : 1000,
@@ -1492,16 +1492,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 804
+Content-Length: 801
 
 {
-  "time" : "2022-03-26T20:38:55.543215",
+  "time" : "2022-03-26T21:25:56.794147",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
     "field" : "agendas",
-    "value" : "[com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@6f99d91f, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@772f022b, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@15c76b50, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@1e81ebc8, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@3ff19826, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@3040fba9]",
+    "value" : "[com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@3cbe75ce, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@b945c43, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@9bd2d60, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@69052034, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@26da28df, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@f851e03]",
     "reason" : "아젠다는 최소 1개 최대 5개 까지 생성 가능합니다."
   } ]
 }</code></pre>
@@ -1540,10 +1540,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 573
+Content-Length: 571
 
 {
-  "time" : "2022-03-26T20:38:55.529119",
+  "time" : "2022-03-26T21:25:56.7742",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1591,7 +1591,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 150
 
 {
-  "time" : "2022-03-26T20:38:55.266001",
+  "time" : "2022-03-26T21:25:56.431667",
   "status" : 400,
   "message" : "존재하지 않는 회의입니다.",
   "code" : 1000,
