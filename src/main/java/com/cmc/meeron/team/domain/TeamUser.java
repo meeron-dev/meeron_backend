@@ -1,7 +1,7 @@
-package com.cmc.meeron.user.domain;
+package com.cmc.meeron.team.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
-import com.cmc.meeron.team.domain.Team;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.*;
 
 import javax.persistence.*;

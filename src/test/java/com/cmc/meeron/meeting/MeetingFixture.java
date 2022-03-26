@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static com.cmc.meeron.team.TeamFixture.TEAM;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_1;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_2;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_2;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 
 public class MeetingFixture {

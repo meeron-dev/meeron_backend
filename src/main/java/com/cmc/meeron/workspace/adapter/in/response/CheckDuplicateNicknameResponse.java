@@ -1,4 +1,4 @@
-package com.cmc.meeron.user.adapter.in.response;
+package com.cmc.meeron.workspace.adapter.in.response;
 
 import lombok.*;
 

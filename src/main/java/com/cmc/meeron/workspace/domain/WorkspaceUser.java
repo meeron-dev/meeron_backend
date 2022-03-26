@@ -1,8 +1,8 @@
-package com.cmc.meeron.user.domain;
+package com.cmc.meeron.workspace.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
-import com.cmc.meeron.workspace.domain.Workspace;
+import com.cmc.meeron.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;

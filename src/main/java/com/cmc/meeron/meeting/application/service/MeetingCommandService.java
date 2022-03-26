@@ -15,10 +15,10 @@ import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.*;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
-import com.cmc.meeron.user.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ class MeetingCommandService implements MeetingCommandUseCase {
 
     private final TeamQueryPort teamQueryPort;
     private final WorkspaceQueryPort workspaceQueryPort;
-    private final UserQueryPort userQueryPort;
+    private final WorkspaceUserQueryPort workspaceUserQueryPort;
     private final MeetingCommandPort meetingCommandPort;
     private final MeetingQueryPort meetingQueryPort;
 
@@ -55,8 +55,8 @@ class MeetingCommandService implements MeetingCommandUseCase {
 
     private List<WorkspaceUser> findAdminsAndMe(CreateMeetingRequestDto createMeetingRequestDto, AuthUser authUser, Workspace workspace) {
         // TODO: 2022/03/13 kobeomseok95 쿼리를 두번치는건 조금 별로인듯 우선은 이렇게 진행하자.
-        List<WorkspaceUser> admins = userQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds());
-        WorkspaceUser me = userQueryPort.findByUserWorkspaceId(authUser.getUserId(), workspace.getId())
+        List<WorkspaceUser> admins = workspaceUserQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds());
+        WorkspaceUser me = workspaceUserQueryPort.findByUserWorkspaceId(authUser.getUserId(), workspace.getId())
                 .orElseThrow(() -> new WorkspaceUserNotFoundException("회의 생성자가 존재하지 않습니다."));
         List<WorkspaceUser> adminsIncludeMe = new ArrayList<>(admins);
         adminsIncludeMe.add(me);
@@ -78,7 +78,7 @@ class MeetingCommandService implements MeetingCommandUseCase {
                 .orElseThrow(MeetingNotFoundException::new);
         Workspace workspace = workspaceQueryPort.findById(meeting.getWorkspace().getId())
                 .orElseThrow(WorkspaceNotFoundException::new);
-        List<WorkspaceUser> attendees = userQueryPort.findAllWorkspaceUsersByIds(joinAttendeesRequestDto.getWorkspaceUserIds());
+        List<WorkspaceUser> attendees = workspaceUserQueryPort.findAllWorkspaceUsersByIds(joinAttendeesRequestDto.getWorkspaceUserIds());
         validWorkspaceAndWorkspaceUsers(workspace, attendees);
         meeting.addAttendees(attendees);
     }

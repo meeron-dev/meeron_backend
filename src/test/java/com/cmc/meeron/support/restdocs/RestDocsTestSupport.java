@@ -21,8 +21,11 @@ import com.cmc.meeron.user.adapter.in.UserRestController;
 import com.cmc.meeron.user.application.port.in.UserCommandUseCase;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
 import com.cmc.meeron.workspace.adapter.in.WorkspaceRestController;
+import com.cmc.meeron.workspace.adapter.in.WorkspaceUserRestController;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceCommandUseCase;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceQueryUseCase;
+import com.cmc.meeron.workspace.application.port.in.WorkspaceUserCommandUseCase;
+import com.cmc.meeron.workspace.application.port.in.WorkspaceUserQueryUseCase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         WorkspaceRestController.class,
         TeamRestController.class,
         FileRestController.class,
+        WorkspaceUserRestController.class,
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import({
@@ -76,6 +80,8 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected UserCommandUseCase userCommandUseCase;
     @MockBean protected WorkspaceCommandUseCase workspaceCommandUseCase;
     @MockBean protected TeamCommandUseCase teamCommandUseCase;
+    @MockBean protected WorkspaceUserQueryUseCase workspaceUserQueryUseCase;
+    @MockBean protected WorkspaceUserCommandUseCase workspaceUserCommandUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

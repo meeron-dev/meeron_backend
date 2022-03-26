@@ -1,6 +1,6 @@
-package com.cmc.meeron.user.adapter.in.request;
+package com.cmc.meeron.workspace.adapter.in.request;
 
-import com.cmc.meeron.user.application.port.in.request.CreateWorkspaceUserRequestDto;
+import com.cmc.meeron.workspace.application.port.in.request.CreateWorkspaceUserRequestDto;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.StringUtils;

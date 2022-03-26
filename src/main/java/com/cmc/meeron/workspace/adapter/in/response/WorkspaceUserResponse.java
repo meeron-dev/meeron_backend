@@ -1,6 +1,6 @@
-package com.cmc.meeron.user.adapter.in.response;
+package com.cmc.meeron.workspace.adapter.in.response;
 
-import com.cmc.meeron.user.application.port.in.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.MyWorkspaceUserResponseDto;
 import lombok.*;
 
 @Getter

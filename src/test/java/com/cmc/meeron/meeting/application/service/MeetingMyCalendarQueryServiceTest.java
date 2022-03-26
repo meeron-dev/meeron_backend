@@ -9,8 +9,8 @@ import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQue
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +27,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 class MeetingMyCalendarQueryServiceTest {
 
     @Mock MeetingMyCalendarQueryPort meetingMyCalendarQueryPort;
-    @Mock UserQueryPort userQueryPort;
+    @Mock WorkspaceUserQueryPort workspaceUserQueryPort;
     @InjectMocks MeetingMyCalendarQueryService meetingMyCalendarQueryService;
 
     private final String TYPE = "WORKSPACE_USER";
@@ -68,7 +68,7 @@ class MeetingMyCalendarQueryServiceTest {
     }
 
     private void findMyWorkspaceUsersStub() {
-        when(userQueryPort.findMyWorkspaceUsers(any())).thenReturn(List.of(WORKSPACE_USER_1));
+        when(workspaceUserQueryPort.findMyWorkspaceUsers(any())).thenReturn(List.of(WORKSPACE_USER_1));
     }
 
     @DisplayName("'나의 미론' 지정한 날짜의 회의 조회 - 성공")

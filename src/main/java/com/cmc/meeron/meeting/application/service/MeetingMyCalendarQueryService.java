@@ -8,8 +8,8 @@ import com.cmc.meeron.meeting.application.port.out.MeetingMyCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.domain.Meeting;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 class MeetingMyCalendarQueryService implements MeetingCalendarQueryUseCase {
 
-    private final UserQueryPort userQueryPort;
+    private final WorkspaceUserQueryPort workspaceUserQueryPort;
     private final MeetingMyCalendarQueryPort meetingMyCalendarQueryPort;
 
     @Override
@@ -39,7 +39,7 @@ class MeetingMyCalendarQueryService implements MeetingCalendarQueryUseCase {
     }
 
     private List<Long> getMyWorkspaceUserIds(Long userId) {
-        List<WorkspaceUser> workspaceUsers = userQueryPort.findMyWorkspaceUsers(userId);
+        List<WorkspaceUser> workspaceUsers = workspaceUserQueryPort.findMyWorkspaceUsers(userId);
         return workspaceUsers.stream().map(WorkspaceUser::getId).collect(Collectors.toList());
     }
 

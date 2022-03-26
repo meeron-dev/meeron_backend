@@ -1,6 +1,6 @@
-package com.cmc.meeron.user.adapter.out;
+package com.cmc.meeron.workspace.adapter.out;
 
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

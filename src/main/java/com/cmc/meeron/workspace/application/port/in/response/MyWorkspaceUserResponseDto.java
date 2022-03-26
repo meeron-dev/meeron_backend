@@ -1,7 +1,7 @@
-package com.cmc.meeron.user.application.port.in.response;
+package com.cmc.meeron.workspace.application.port.in.response;
 
-import com.cmc.meeron.user.application.port.out.response.WorkspaceUserQueryResponseDto;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.*;
 
 import java.util.List;

@@ -1,15 +1,16 @@
-package com.cmc.meeron.user.adapter.out;
+package com.cmc.meeron.workspace.adapter.out;
 
-import com.cmc.meeron.user.application.port.out.response.QWorkspaceUserQueryResponseDto;
-import com.cmc.meeron.user.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.out.response.QWorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQueryResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.cmc.meeron.user.domain.QTeamUser.teamUser;
-import static com.cmc.meeron.user.domain.QWorkspaceUser.workspaceUser;
+import static com.cmc.meeron.team.domain.QTeamUser.teamUser;
+import static com.cmc.meeron.workspace.domain.QWorkspaceUser.workspaceUser;
+
 
 @Repository
 @RequiredArgsConstructor

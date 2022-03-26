@@ -1,6 +1,6 @@
-package com.cmc.meeron.user.application.port.in.request;
+package com.cmc.meeron.workspace.application.port.in.request;
 
-import com.cmc.meeron.user.domain.WorkspaceUserInfo;
+import com.cmc.meeron.workspace.domain.WorkspaceUserInfo;
 import lombok.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;

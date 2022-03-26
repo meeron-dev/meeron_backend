@@ -1,4 +1,4 @@
-package com.cmc.meeron.user.domain;
+package com.cmc.meeron.workspace.domain;
 
 import lombok.*;
 

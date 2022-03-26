@@ -16,8 +16,8 @@ import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ import static com.cmc.meeron.auth.AuthUserFixture.AUTH_USER;
 import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
-import static com.cmc.meeron.user.WorkspaceUserFixture.*;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.*;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_2;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,7 +50,7 @@ class MeetingCommandServiceTest {
 
     @Mock TeamQueryPort teamQueryPort;
     @Mock WorkspaceQueryPort workspaceQueryPort;
-    @Mock UserQueryPort userQueryPort;
+    @Mock WorkspaceUserQueryPort workspaceUserQueryPort;
     @Mock MeetingCommandPort meetingCommandPort;
     @Mock MeetingQueryPort meetingQueryPort;
     @InjectMocks MeetingCommandService meetingCommandService;
@@ -138,9 +138,9 @@ class MeetingCommandServiceTest {
         Workspace workspace = createWorkspace();
         when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(workspace));
-        when(userQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()))
                 .thenReturn(Collections.emptyList());
-        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+        when(workspaceUserQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -160,11 +160,11 @@ class MeetingCommandServiceTest {
         Workspace workspace = createWorkspace();
         when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(workspace));
-        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
                 .thenReturn(List.of(WorkspaceUser.builder()
                         .workspace(WORKSPACE_2)
                         .id(1728L).build()));
-        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+        when(workspaceUserQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(WorkspaceUser.builder()
                         .id(1234L)
                         .workspace(WORKSPACE_1)
@@ -191,11 +191,11 @@ class MeetingCommandServiceTest {
         Workspace workspace = createWorkspace();
         when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(workspace));
-        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
                 .thenReturn(List.of(WorkspaceUser.builder()
                         .workspace(workspace)
                         .id(1728L).build()));
-        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+        when(workspaceUserQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(WorkspaceUser.builder()
                         .id(1234L)
                         .workspace(workspace)
@@ -220,9 +220,9 @@ class MeetingCommandServiceTest {
         when(workspaceQueryPort.findById(createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(workspace));
         List<WorkspaceUser> workspaceUsers = createWorkspaceUsers(workspace);
-        when(userQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()))
                 .thenReturn(workspaceUsers);
-        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+        when(workspaceUserQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(WorkspaceUser.builder()
                         .id(1234L)
                         .workspace(workspace)
@@ -230,7 +230,7 @@ class MeetingCommandServiceTest {
                         .build()));
         when(meetingCommandPort.saveMeeting(any(Meeting.class)))
                 .thenReturn(1L);
-        when(userQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
+        when(workspaceUserQueryPort.findByUserWorkspaceId(authUser.getUserId(), createMeetingRequestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(WorkspaceUser.builder()
                         .id(1234L)
                         .workspace(workspace)
@@ -244,8 +244,8 @@ class MeetingCommandServiceTest {
         assertAll(
                 () -> verify(teamQueryPort).findById(createMeetingRequestDto.getOperationTeamId()),
                 () -> verify(workspaceQueryPort).findById(createMeetingRequestDto.getWorkspaceId()),
-                () -> verify(userQueryPort).findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()),
-                () -> verify(userQueryPort).findByUserWorkspaceId(authUser.getUserId(), workspace.getId()),
+                () -> verify(workspaceUserQueryPort).findAllWorkspaceUsersByIds(createMeetingRequestDto.getMeetingAdminIds()),
+                () -> verify(workspaceUserQueryPort).findByUserWorkspaceId(authUser.getUserId(), workspace.getId()),
                 () -> verify(meetingCommandPort).saveMeeting(any(Meeting.class))
         );
     }
@@ -331,7 +331,7 @@ class MeetingCommandServiceTest {
                 .thenReturn(Optional.of(meeting));
         when(workspaceQueryPort.findById(any()))
                 .thenReturn(Optional.of(WORKSPACE_1));
-        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
                 .thenReturn(List.of(WORKSPACE_USER_3, WORKSPACE_USER_4));
 
         // when
@@ -341,7 +341,7 @@ class MeetingCommandServiceTest {
         assertAll(
                 () -> verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId()),
                 () -> verify(workspaceQueryPort).findById(meeting.getWorkspace().getId()),
-                () -> verify(userQueryPort).findAllWorkspaceUsersByIds(requestDto.getWorkspaceUserIds()),
+                () -> verify(workspaceUserQueryPort).findAllWorkspaceUsersByIds(requestDto.getWorkspaceUserIds()),
                 () -> assertEquals(requestDto.getWorkspaceUserIds().size(), meeting.getAttendees().size())
         );
     }
@@ -397,7 +397,7 @@ class MeetingCommandServiceTest {
                 .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
         when(workspaceQueryPort.findById(any()))
                 .thenReturn(Optional.of(meeting.getWorkspace()));
-        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
                 .thenReturn(List.of(WORKSPACE_USER_1));
 
         // when, then
@@ -414,7 +414,7 @@ class MeetingCommandServiceTest {
                 .thenReturn(Optional.of(meeting));
         when(workspaceQueryPort.findById(any()))
                 .thenReturn(Optional.of(meeting.getWorkspace()));
-        when(userQueryPort.findAllWorkspaceUsersByIds(any()))
+        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
                 .thenReturn(List.of(WORKSPACE_USER_2));
         JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
 

@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
-public class WorkspaceIntegrationTest extends IntegrationTest {
+class WorkspaceIntegrationTest extends IntegrationTest {
 
     @DisplayName("유저의 속한 워크스페이스 조회 - 성공")
     @ParameterizedTest

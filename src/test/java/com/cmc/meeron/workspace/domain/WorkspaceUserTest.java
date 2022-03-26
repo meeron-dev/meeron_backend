@@ -1,7 +1,7 @@
-package com.cmc.meeron.user.domain;
+package com.cmc.meeron.workspace.domain;
 
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
-import com.cmc.meeron.workspace.domain.Workspace;
+import com.cmc.meeron.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,9 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.cmc.meeron.user.UserFixture.USER;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_1;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_2;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_2;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceUserTest {

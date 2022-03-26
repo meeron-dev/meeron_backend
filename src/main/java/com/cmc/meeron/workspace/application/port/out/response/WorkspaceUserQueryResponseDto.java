@@ -1,4 +1,4 @@
-package com.cmc.meeron.user.application.port.out.response;
+package com.cmc.meeron.workspace.application.port.out.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

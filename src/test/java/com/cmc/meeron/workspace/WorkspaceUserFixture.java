@@ -1,7 +1,7 @@
-package com.cmc.meeron.user;
+package com.cmc.meeron.workspace;
 
-import com.cmc.meeron.user.domain.WorkspaceUser;
-import com.cmc.meeron.user.domain.WorkspaceUserInfo;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.domain.WorkspaceUserInfo;
 
 import static com.cmc.meeron.user.UserFixture.USER;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;

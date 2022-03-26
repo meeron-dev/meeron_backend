@@ -1,6 +1,6 @@
-package com.cmc.meeron.user.adapter.in.request;
+package com.cmc.meeron.workspace.adapter.in.request;
 
-import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDto;
+import com.cmc.meeron.workspace.application.port.in.request.FindWorkspaceUserRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;

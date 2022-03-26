@@ -1,4 +1,4 @@
-package com.cmc.meeron.user.application.port.in.request;
+package com.cmc.meeron.workspace.application.port.in.request;
 
 import lombok.*;
 

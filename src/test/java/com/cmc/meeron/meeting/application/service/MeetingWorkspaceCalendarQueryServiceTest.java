@@ -10,8 +10,8 @@ import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQue
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
-import com.cmc.meeron.user.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,8 +31,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.cmc.meeron.user.UserFixture.USER;
-import static com.cmc.meeron.user.WorkspaceUserFixture.WORKSPACE_USER_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 class MeetingWorkspaceCalendarQueryServiceTest {
 
     @Mock MeetingWorkspaceCalendarQueryPort meetingWorkspaceCalendarQueryPort;
-    @Mock UserQueryPort userQueryPort;
+    @Mock WorkspaceUserQueryPort workspaceUserQueryPort;
     @InjectMocks MeetingWorkspaceCalendarQueryService meetingWorkspaceCalendarQueryService;
 
     private WorkspaceUser workspaceUser;
@@ -63,7 +63,7 @@ class MeetingWorkspaceCalendarQueryServiceTest {
         YearMonth now = YearMonth.now();
         try (MockedStatic<SecurityUtil> securityUtil = Mockito.mockStatic(SecurityUtil.class)) {
             securityUtil.when(SecurityUtil::getUserId).thenReturn(USER.getId());
-            when(userQueryPort.findByUserWorkspaceId(any(), any()))
+            when(workspaceUserQueryPort.findByUserWorkspaceId(any(), any()))
                     .thenReturn(Optional.of(WORKSPACE_USER_1));
             when(meetingWorkspaceCalendarQueryPort.findWorkspaceMeetingDays(any(), any()))
                     .thenReturn(days);
@@ -86,7 +86,7 @@ class MeetingWorkspaceCalendarQueryServiceTest {
 
         try (MockedStatic<SecurityUtil> securityUtil = Mockito.mockStatic(SecurityUtil.class)) {
             securityUtil.when(SecurityUtil::getUserId).thenReturn(USER.getId());
-            when(userQueryPort.findByUserWorkspaceId(any(), any()))
+            when(workspaceUserQueryPort.findByUserWorkspaceId(any(), any()))
                     .thenReturn(Optional.of(WORKSPACE_USER_1));
             when(meetingWorkspaceCalendarQueryPort.findWorkspaceDayMeetings(any(), any()))
                     .thenReturn(meetings);
@@ -135,7 +135,7 @@ class MeetingWorkspaceCalendarQueryServiceTest {
         Long workspaceId = 1L;
         try (MockedStatic<SecurityUtil> securityUtil = Mockito.mockStatic(SecurityUtil.class)) {
             securityUtil.when(SecurityUtil::getUserId).thenReturn(USER.getId());
-            when(userQueryPort.findByUserWorkspaceId(any(), any()))
+            when(workspaceUserQueryPort.findByUserWorkspaceId(any(), any()))
                     .thenReturn(Optional.of(WORKSPACE_USER_1));
             when(meetingWorkspaceCalendarQueryPort.findWorkspaceYearMeetingsCount(any()))
                     .thenReturn(responseDtos);
@@ -169,7 +169,7 @@ class MeetingWorkspaceCalendarQueryServiceTest {
         Year now = Year.now();
         try (MockedStatic<SecurityUtil> securityUtil = Mockito.mockStatic(SecurityUtil.class)) {
             securityUtil.when(SecurityUtil::getUserId).thenReturn(USER.getId());
-            when(userQueryPort.findByUserWorkspaceId(any(), any()))
+            when(workspaceUserQueryPort.findByUserWorkspaceId(any(), any()))
                     .thenReturn(Optional.of(WORKSPACE_USER_1));
             when(meetingWorkspaceCalendarQueryPort.findWorkspaceMonthMeetingsCount(any(), any()))
                     .thenReturn(responseDtos);
