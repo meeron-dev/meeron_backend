@@ -2,6 +2,7 @@ package com.cmc.meeron.workspace.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
+import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.domain.User;
 import lombok.*;
 
@@ -26,6 +27,10 @@ public class WorkspaceUser extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "WORKSPACE_ID", nullable = false)
     private Workspace workspace;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
 
     @Embedded
     private WorkspaceUserInfo workspaceUserInfo;

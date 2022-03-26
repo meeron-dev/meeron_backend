@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.cmc.meeron.team.domain.QTeamUser.teamUser;
+import static com.cmc.meeron.team.domain.QTeam.team;
 import static com.cmc.meeron.workspace.domain.QWorkspaceUser.workspaceUser;
 
 
@@ -35,9 +35,9 @@ class WorkspaceUserQuerydslRepository {
                 workspaceUser.workspace.id, workspaceUser.id, workspaceUser.workspaceUserInfo.profileImageUrl,
                 workspaceUser.workspaceUserInfo.nickname, workspaceUser.workspaceUserInfo.position, workspaceUser.workspaceUserInfo.isWorkspaceAdmin,
                 workspaceUser.workspaceUserInfo.contactMail))
-                .from(teamUser)
-                .join(teamUser.workspaceUser, workspaceUser)
-                .where(teamUser.team.id.eq(teamId))
+                .from(workspaceUser)
+                .join(workspaceUser.team, team)
+                .where(team.id.eq(teamId))
                 .orderBy(workspaceUser.workspaceUserInfo.nickname.asc())
                 .fetch();
     }

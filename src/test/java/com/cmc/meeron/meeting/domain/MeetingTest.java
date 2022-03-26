@@ -26,7 +26,6 @@ class MeetingTest {
                 .id(1L)
                 .workspace(Workspace.builder().id(2L).build())
                 .team(Team.builder().id(3L).build())
-                .meetingStatus(MeetingStatus.EXPECT)
                 .meetingTime(MeetingTime.builder()
                         .startDate(localDateNow)
                         .startTime(localTimeNow)
@@ -69,8 +68,7 @@ class MeetingTest {
                 () -> assertEquals(meetingTime.getStartTime(), meeting.getMeetingTime().getStartTime()),
                 () -> assertEquals(meetingTime.getEndTime(), meeting.getMeetingTime().getEndTime()),
                 () -> assertEquals(meetingInfo.getName(), meeting.getMeetingInfo().getName()),
-                () -> assertEquals(meetingInfo.getPurpose(), meeting.getMeetingInfo().getPurpose()),
-                () -> assertEquals(MeetingStatus.EXPECT, meeting.getMeetingStatus())
+                () -> assertEquals(meetingInfo.getPurpose(), meeting.getMeetingInfo().getPurpose())
         );
     }
 

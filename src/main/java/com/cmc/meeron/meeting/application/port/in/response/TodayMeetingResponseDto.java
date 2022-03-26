@@ -39,7 +39,6 @@ public class TodayMeetingResponseDto {
                 .endTime(todayMeeting.getMeetingTime().getEndTime())
                 .operationTeamId(todayMeeting.getTeam().getId())
                 .operationTeamName(todayMeeting.getTeam().getName())
-                .meetingStatus(todayMeeting.getMeetingStatus().name())
                 .build();
     }
 }

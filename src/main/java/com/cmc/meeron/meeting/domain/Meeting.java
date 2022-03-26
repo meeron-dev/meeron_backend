@@ -41,10 +41,6 @@ public class Meeting extends BaseEntity {
     @Column(length = 200)
     private String place;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private MeetingStatus meetingStatus;
-
     public static Meeting create(Team operationTeam,
                                  Workspace workspace,
                                  MeetingTime meetingTime,
@@ -52,7 +48,6 @@ public class Meeting extends BaseEntity {
         return Meeting.builder()
                 .team(operationTeam)
                 .workspace(workspace)
-                .meetingStatus(MeetingStatus.EXPECT)
                 .meetingTime(meetingTime)
                 .meetingInfo(meetingInfo)
                 .build();

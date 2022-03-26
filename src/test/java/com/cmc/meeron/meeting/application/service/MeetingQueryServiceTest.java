@@ -5,7 +5,6 @@ import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseD
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
-import com.cmc.meeron.meeting.domain.MeetingStatus;
 import com.cmc.meeron.meeting.domain.MeetingTime;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.domain.Workspace;
@@ -67,7 +66,6 @@ class MeetingQueryServiceTest {
                                 .endTime(LocalTime.now().minusHours(2))
                                 .build())
                         .place("테스트 장소1")
-                        .meetingStatus(MeetingStatus.END)
                         .team(Team.builder().id(1L).name("테스트팀1").build())
                         .build(),
                 Meeting.builder()
@@ -83,7 +81,6 @@ class MeetingQueryServiceTest {
                                 .endTime(LocalTime.now().plusHours(2))
                                 .build())
                         .place("테스트 장소2")
-                        .meetingStatus(MeetingStatus.EXPECT)
                         .team(Team.builder().id(2L).name("테스트팀2").build())
                         .build()
         );
