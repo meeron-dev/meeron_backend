@@ -19,4 +19,8 @@ interface WorkspaceUserJpaRepository extends JpaRepository<WorkspaceUser, Long> 
             " and wu.workspace.id = :workspaceId")
     Optional<WorkspaceUser> findByUserWorkspaceId(@Param("userId") Long userId,
                                                   @Param("workspaceId") Long workspaceId);
+
+    List<WorkspaceUser> findByTeamId(Long teamId);
+
+    List<WorkspaceUser> findByWorkspaceIdAndTeamIsNull(Long workspaceId);
 }

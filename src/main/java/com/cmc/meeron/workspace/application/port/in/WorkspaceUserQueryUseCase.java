@@ -1,19 +1,21 @@
 package com.cmc.meeron.workspace.application.port.in;
 
 import com.cmc.meeron.workspace.application.port.in.request.FindWorkspaceUserRequestDto;
-import com.cmc.meeron.workspace.application.port.in.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 
 import java.util.List;
 
 public interface WorkspaceUserQueryUseCase {
 
-    List<MyWorkspaceUserResponseDto> getMyWorkspaceUsers(Long userId);
+    List<WorkspaceUserQueryResponseDto> getMyWorkspaceUsers(Long userId);
 
-    MyWorkspaceUserResponseDto getMyWorkspaceUser(Long workspaceUserId);
+    WorkspaceUserQueryResponseDto getMyWorkspaceUser(Long workspaceUserId);
 
-    List<MyWorkspaceUserResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto);
+    List<WorkspaceUserQueryResponseDto> searchWorkspaceUsers(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto);
 
-    List<MyWorkspaceUserResponseDto> getTeamUsers(Long teamId);
+    List<WorkspaceUserQueryResponseDto> getTeamUsers(Long teamId);
 
     void checkDuplicateNickname(FindWorkspaceUserRequestDto findWorkspaceUserRequestDto);
+
+    List<WorkspaceUserQueryResponseDto> getNoneTeamWorkspaceUsers(Long workspaceId);
 }

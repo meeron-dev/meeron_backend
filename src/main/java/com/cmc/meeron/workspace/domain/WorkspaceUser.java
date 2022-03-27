@@ -1,6 +1,8 @@
 package com.cmc.meeron.workspace.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
+import com.cmc.meeron.common.exception.team.PreviousBelongToTeamException;
+import com.cmc.meeron.common.exception.workspace.NotAdminException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.domain.User;
@@ -48,6 +50,23 @@ public class WorkspaceUser extends BaseEntity {
     public void validInWorkspace(Workspace workspace) {
         if (!this.workspace.equals(workspace)) {
             throw new WorkspaceUsersNotInEqualWorkspaceException();
+        }
+    }
+
+    public void joinTeam(Team team) {
+        if (this.team != null) {
+            throw new PreviousBelongToTeamException();
+        }
+        this.team = team;
+    }
+
+    public void exitTeam() {
+        team = null;
+    }
+
+    public void isAdminOrThrow() {
+        if (!workspaceUserInfo.isWorkspaceAdmin()) {
+            throw new NotAdminException();
         }
     }
 }

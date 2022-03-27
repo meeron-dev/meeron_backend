@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkspaceUserResponseDto {
+public class WorkspaceUserCommandResponseDto {
 
     private Long workspaceUserId;
     private String nickname;
@@ -18,8 +18,8 @@ public class WorkspaceUserResponseDto {
     private String contactMail;
     private String phone;
 
-    public static WorkspaceUserResponseDto of(WorkspaceUser workspaceUser) {
-        return WorkspaceUserResponseDto.builder()
+    public static WorkspaceUserCommandResponseDto of(WorkspaceUser workspaceUser) {
+        return WorkspaceUserCommandResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
                 .nickname(workspaceUser.getWorkspaceUserInfo().getNickname())
                 .workspaceAdmin(workspaceUser.getWorkspaceUserInfo().isWorkspaceAdmin())

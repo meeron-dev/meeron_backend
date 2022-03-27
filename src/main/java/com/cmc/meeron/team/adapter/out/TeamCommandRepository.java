@@ -15,4 +15,9 @@ class TeamCommandRepository implements TeamCommandPort {
     public Long save(Team team) {
         return teamJpaRepository.save(team).getId();
     }
+
+    @Override
+    public void deleteById(Long teamId) {
+        teamJpaRepository.deleteById(teamId);
+    }
 }

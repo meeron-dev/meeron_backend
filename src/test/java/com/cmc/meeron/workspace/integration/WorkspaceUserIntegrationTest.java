@@ -4,30 +4,38 @@ import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
-import com.cmc.meeron.workspace.adapter.in.request.CreateWorkspaceUserRequest;
-import com.cmc.meeron.workspace.adapter.in.request.FindWorkspaceUserRequest;
+import com.cmc.meeron.workspace.adapter.in.request.*;
 import com.cmc.meeron.workspace.adapter.in.response.WorkspaceUserResponse;
+import com.cmc.meeron.workspace.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.cmc.meeron.file.FileFixture.FILE;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
 class WorkspaceUserIntegrationTest extends IntegrationTest {
+
+    @Autowired WorkspaceUserQueryPort workspaceUserQueryPort;
 
     @DisplayName("유저의 워크스페이스 유저 조회 - 성공")
     @Test
@@ -216,5 +224,95 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀에 속하지 않은 팀원 조회 - 성공")
+    @Test
+    void get_none_team_users_success() throws Exception {
+
+        // given
+        FindNoneTeamWorkspaceUsersParameters parameters = FindNoneTeamWorkspaceUsersParametersBuilder.build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", parameters.getWorkspaceId().toString());
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/teams/none/workspace-users")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUsers", hasSize(2)));
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추가 - 성공")
+    @Test
+    void join_team_users_success() throws Exception {
+
+        // given
+        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.buildIntegrationSuccessCase();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "3")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // then
+        flushAndClear();
+        List<WorkspaceUser> noneTeamUsers = workspaceUserQueryPort.findByWorkspaceIdAndTeamIsNull(1L);
+        assertEquals(0, noneTeamUsers.size());
+        List<WorkspaceUser> devTeamUsers = workspaceUserQueryPort.findByTeamId(3L);
+        assertEquals(6, devTeamUsers.size());
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추가 - 실패 / 관리자가 아닌 경우")
+    @Test
+    void join_team_users_fail_not_admin() throws Exception {
+
+        // given
+        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "3")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추방 - 실패 / 관리자가 아닌 경우")
+    @Test
+    void kick_out_team_user_fail_not_admin() throws Exception {
+
+        // given
+        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "8")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추방 - 성공")
+    @Test
+    void kick_out_team_success() throws Exception {
+
+        // given
+        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.buildIntegrationSuccessCase();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "8")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // then
+        flushAndClear();
+        List<WorkspaceUser> workspaceUsers = workspaceUserQueryPort.findByTeamId(3L);
+        assertEquals(3, workspaceUsers.size());
     }
 }

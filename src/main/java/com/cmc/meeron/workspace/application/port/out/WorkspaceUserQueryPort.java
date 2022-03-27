@@ -1,6 +1,6 @@
 package com.cmc.meeron.workspace.application.port.out;
 
-import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQuerydslResponseDto;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 
 import java.util.List;
@@ -10,15 +10,19 @@ public interface WorkspaceUserQueryPort {
 
     List<WorkspaceUser> findMyWorkspaceUsers(Long userId);
 
-    Optional<WorkspaceUser> findWorkspaceUserById(Long workspaceUserId);
+    Optional<WorkspaceUser> findById(Long workspaceUserId);
 
-    List<WorkspaceUserQueryResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname);
+    List<WorkspaceUserQuerydslResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname);
 
-    List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId);
+    List<WorkspaceUserQuerydslResponseDto> findQueryByTeamId(Long teamId);
+
+    List<WorkspaceUser> findByTeamId(Long teamId);
 
     List<WorkspaceUser> findAllWorkspaceUsersByIds(List<Long> workspaceUserIds);
 
     Optional<WorkspaceUser> findByUserWorkspaceId(Long userId, Long workspaceId);
 
     boolean existsByNicknameInWorkspace(Long workspaceId, String nickname);
+
+    List<WorkspaceUser> findByWorkspaceIdAndTeamIsNull(Long workspaceId);
 }

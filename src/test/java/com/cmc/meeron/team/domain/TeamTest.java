@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.cmc.meeron.team.TeamFixture.TEAM;
+import static com.cmc.meeron.team.TeamFixture.TEAM_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_2;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,7 +19,7 @@ class TeamTest {
     @BeforeEach
     void setUp() {
         workspace = WORKSPACE_1;
-        team = TEAM;
+        team = TEAM_1;
     }
 
     @DisplayName("팀 생성 - 성공")

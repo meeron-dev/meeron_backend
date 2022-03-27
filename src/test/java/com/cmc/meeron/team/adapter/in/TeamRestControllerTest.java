@@ -4,7 +4,7 @@ import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.team.TeamCountsConditionException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
-import com.cmc.meeron.team.adapter.in.request.CreateTeamRequest;
+import com.cmc.meeron.team.adapter.in.request.*;
 import com.cmc.meeron.team.application.port.in.response.WorkspaceTeamsResponseDto;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -148,5 +147,95 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.errors", hasSize(3)))
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("팀 삭제 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void delete_team_fail_invalid() throws Exception {
+
+        // given
+        DeleteTeamRequest request = DeleteTeamRequestBuilder.buildNotValid();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/teams/{teamId}", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("팀 삭제 - 성공")
+    @Test
+    void delete_team_success() throws Exception {
+
+        // given
+        DeleteTeamRequest request = DeleteTeamRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/teams/{teamId}", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("teamId").description("삭제할 팀 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)")
+                        )
+                ));
+
+    }
+
+    @DisplayName("팀명 변경 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void modify_team_name_fail_not_valid() throws Exception {
+
+        // given
+        ModifyTeamNameRequest request = ModifyTeamNameRequestBuilder.notValid();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/name", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errors", hasSize(3)))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("팀명 변경 - 성공")
+    @Test
+    void modify_team_name_success() throws Exception {
+
+        // given
+        ModifyTeamNameRequest request = ModifyTeamNameRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/name", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("teamId").description("팀명을 변경할 팀 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)"),
+                                fieldWithPath("teamName").type(JsonFieldType.STRING).description("변경할 팀명")
+                        )
+                ));
     }
 }

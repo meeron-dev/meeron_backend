@@ -3,11 +3,11 @@ package com.cmc.meeron.workspace.application.service;
 import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDtoBuilder;
-import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.workspace.application.port.in.request.FindWorkspaceUserRequestDto;
-import com.cmc.meeron.workspace.application.port.in.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQuerydslResponseDto;
 import com.cmc.meeron.workspace.domain.Workspace;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.domain.WorkspaceUserInfo;
@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cmc.meeron.user.UserFixture.USER;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_2;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -35,10 +37,14 @@ class WorkspaceUserQueryServiceTest {
     @InjectMocks WorkspaceUserQueryService workspaceUserQueryService;
 
     private User user;
+    private WorkspaceUser noneTeamWorkspaceUser1;
+    private WorkspaceUser noneTeamWorkspaceUser2;
 
     @BeforeEach
     void setUp() {
         user = USER;
+        noneTeamWorkspaceUser1 = WORKSPACE_USER_1;
+        noneTeamWorkspaceUser2 = WORKSPACE_USER_2;
     }
 
     @DisplayName("회원의 모든 워크스페이스 유저 프로필 가져오기 - 성공")
@@ -51,7 +57,7 @@ class WorkspaceUserQueryServiceTest {
                 .thenReturn(workspaceUsers);
 
         // when
-        List<MyWorkspaceUserResponseDto> myWorkspaceUsers = workspaceUserQueryService.getMyWorkspaceUsers(user.getId());
+        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = workspaceUserQueryService.getMyWorkspaceUsers(user.getId());
 
         // then
         assertAll(
@@ -95,15 +101,15 @@ class WorkspaceUserQueryServiceTest {
 
         // given
         WorkspaceUser workspaceUser = createWorkspaceUser();
-        when(workspaceUserQueryPort.findWorkspaceUserById(any()))
+        when(workspaceUserQueryPort.findById(any()))
                 .thenReturn(Optional.of(workspaceUser));
 
         // when
-        MyWorkspaceUserResponseDto myWorkspaceUser = workspaceUserQueryService.getMyWorkspaceUser(workspaceUser.getId());
+        WorkspaceUserQueryResponseDto myWorkspaceUser = workspaceUserQueryService.getMyWorkspaceUser(workspaceUser.getId());
 
         // then
         assertAll(
-                () -> verify(workspaceUserQueryPort).findWorkspaceUserById(workspaceUser.getId()),
+                () -> verify(workspaceUserQueryPort).findById(workspaceUser.getId()),
                 () -> assertEquals(workspaceUser.getId(), myWorkspaceUser.getWorkspaceUserId())
         );
     }
@@ -113,7 +119,7 @@ class WorkspaceUserQueryServiceTest {
     void get_my_workspace_user_fail_workspace_user_not_found() throws Exception {
 
         // given
-        when(workspaceUserQueryPort.findWorkspaceUserById(any()))
+        when(workspaceUserQueryPort.findById(any()))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -142,23 +148,23 @@ class WorkspaceUserQueryServiceTest {
 
         // given
         FindWorkspaceUserRequestDto requestDto = FindWorkspaceUserRequestDtoBuilder.build();
-        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = createWorkspaceUserQueryResponseDtos();
+        List<WorkspaceUserQuerydslResponseDto> workspaceUserQuerydslResponseDtos = createWorkspaceUserQueryResponseDtos();
         when(workspaceUserQueryPort.findByWorkspaceIdNickname(any(), any()))
-                .thenReturn(workspaceUserQueryResponseDtos);
+                .thenReturn(workspaceUserQuerydslResponseDtos);
 
         // when
-        List<MyWorkspaceUserResponseDto> responseDtos = workspaceUserQueryService.searchWorkspaceUsers(requestDto);
+        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQueryService.searchWorkspaceUsers(requestDto);
 
         // then
         assertAll(
                 () -> verify(workspaceUserQueryPort).findByWorkspaceIdNickname(requestDto.getWorkspaceId(), requestDto.getNickname()),
-                () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size())
+                () -> assertEquals(workspaceUserQuerydslResponseDtos.size(), responseDtos.size())
         );
     }
 
-    private List<WorkspaceUserQueryResponseDto> createWorkspaceUserQueryResponseDtos() {
+    private List<WorkspaceUserQuerydslResponseDto> createWorkspaceUserQueryResponseDtos() {
         return List.of(
-                WorkspaceUserQueryResponseDto.builder()
+                WorkspaceUserQuerydslResponseDto.builder()
                         .workspaceId(1L)
                         .workspaceAdmin(false)
                         .workspaceUserId(1L)
@@ -166,7 +172,7 @@ class WorkspaceUserQueryServiceTest {
                         .profileImageUrl(null)
                         .position("사원")
                         .build(),
-                WorkspaceUserQueryResponseDto.builder()
+                WorkspaceUserQuerydslResponseDto.builder()
                         .workspaceId(1L)
                         .workspaceAdmin(true)
                         .workspaceUserId(2L)
@@ -182,17 +188,17 @@ class WorkspaceUserQueryServiceTest {
     void get_team_users_success() throws Exception {
 
         // given
-        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = createWorkspaceUserQueryResponseDtos();
-        when(workspaceUserQueryPort.findByTeamId(any()))
-                .thenReturn(workspaceUserQueryResponseDtos);
+        List<WorkspaceUserQuerydslResponseDto> workspaceUserQuerydslResponseDtos = createWorkspaceUserQueryResponseDtos();
+        when(workspaceUserQueryPort.findQueryByTeamId(any()))
+                .thenReturn(workspaceUserQuerydslResponseDtos);
 
         // when
-        List<MyWorkspaceUserResponseDto> responseDtos = workspaceUserQueryService.getTeamUsers(1L);
+        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQueryService.getTeamUsers(1L);
 
         // then
         assertAll(
-                () -> assertEquals(workspaceUserQueryResponseDtos.size(), responseDtos.size()),
-                () -> verify(workspaceUserQueryPort).findByTeamId(1L)
+                () -> assertEquals(workspaceUserQuerydslResponseDtos.size(), responseDtos.size()),
+                () -> verify(workspaceUserQueryPort).findQueryByTeamId(1L)
         );
     }@DisplayName("닉네임 중복 검사 조회 - 성공 / 중복되지 않았을 경우")
     @Test
@@ -224,5 +230,24 @@ class WorkspaceUserQueryServiceTest {
         // when, then
         assertThrows(NicknameDuplicateException.class,
                 () -> workspaceUserQueryService.checkDuplicateNickname(requestDto));
+    }
+
+    @DisplayName("팀에 속하지 않은 워크스페이스 유저 조회 - 성공")
+    @Test
+    void get_none_team_workspace_users_success() throws Exception {
+
+        // given
+        when(workspaceUserQueryPort.findByWorkspaceIdAndTeamIsNull(any()))
+                .thenReturn(List.of(noneTeamWorkspaceUser1, noneTeamWorkspaceUser2));
+
+        // when
+        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQueryService.getNoneTeamWorkspaceUsers(1L);
+
+        // then
+        assertAll(
+                () -> verify(workspaceUserQueryPort).findByWorkspaceIdAndTeamIsNull(1L),
+                () -> assertEquals(noneTeamWorkspaceUser1.getId(), responseDtos.get(0).getWorkspaceUserId()),
+                () -> assertEquals(noneTeamWorkspaceUser2.getId(), responseDtos.get(1).getWorkspaceUserId())
+        );
     }
 }

@@ -2,12 +2,15 @@ package com.cmc.meeron.team.integration;
 
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
-import com.cmc.meeron.team.adapter.in.request.CreateTeamRequest;
+import com.cmc.meeron.team.adapter.in.request.*;
+import com.cmc.meeron.team.application.port.out.TeamQueryPort;
+import com.cmc.meeron.team.domain.Team;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -17,12 +20,14 @@ import org.springframework.util.MultiValueMap;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
 public class TeamIntegrationTest extends IntegrationTest {
+
+    @Autowired TeamQueryPort teamQueryPort;
 
     @DisplayName("워크스페이스 내 팀 조회 - 성공")
     @ParameterizedTest
@@ -59,8 +64,7 @@ public class TeamIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/teams")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.createdTeamId", is(4)));
+                .andExpect(status().isOk());
     }
 
     private CreateTeamRequest createCreateTeamRequest() {
@@ -73,7 +77,7 @@ public class TeamIntegrationTest extends IntegrationTest {
     @Sql("classpath:team-test.sql")
     @DisplayName("팀 생성 - 실패 / 워크스페이스에 팀이 5팀 이상일 경우")
     @Test
-    void create_team_fali_over_five_teams() throws Exception {
+    void create_team_fail_over_five_teams() throws Exception {
 
         // given
         CreateTeamRequest request = createCreateTeamRequest();
@@ -83,5 +87,70 @@ public class TeamIntegrationTest extends IntegrationTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:team-test.sql")
+    @DisplayName("팀 삭제 - 실패 / 관리자가 아닌 경우")
+    @Test
+    void delete_team_fail_not_admin() throws Exception {
+
+        // given
+        DeleteTeamRequest request = DeleteTeamRequestBuilder.build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/teams/{teamId}", "5")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:team-test.sql")
+    @DisplayName("팀 삭제 - 성공")
+    @Test
+    void delete_team_success() throws Exception {
+
+        // given
+        DeleteTeamRequest request = DeleteTeamRequestBuilder.buildIntegrationSuccessCase();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/teams/{teamId}", "5")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Sql("classpath:team-test.sql")
+    @DisplayName("팀명 변경 - 실패 / 관리자 권한이 없을 경우")
+    @Test
+    void modify_team_name_fail_not_admin() throws Exception {
+
+        // given
+        ModifyTeamNameRequest request = ModifyTeamNameRequestBuilder.build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/name", "5")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:team-test.sql")
+    @DisplayName("팀명 변경 - 성공")
+    @Test
+    void modify_team_name_success() throws Exception {
+
+        // given
+        ModifyTeamNameRequest request = ModifyTeamNameRequestBuilder.buildIntegrationSuccessCase();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/name", "5")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+        flushAndClear();
+
+        // then
+        Team team = teamQueryPort.findById(5L).orElseThrow();
+        assertEquals(request.getTeamName(), team.getName());
     }
 }

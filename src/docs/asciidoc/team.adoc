@@ -29,3 +29,26 @@ include::{snippets}/team-rest-controller-test/create_team_fail_not_valid/http-re
 === 워크스페이스 내 팀이 다섯개 이상일 경우
 include::{snippets}/team-rest-controller-test/create_team_fail_over_five_teams/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_fail_over_five_teams/http-response.adoc[]
+
+[[delete-team]]
+== 팀 삭제
+include::{snippets}/team-rest-controller-test/delete_team_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/delete_team_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/delete_team_success/request-fields.adoc[]
+include::{snippets}/team-rest-controller-test/delete_team_success/http-response.adoc[]
+
+=== 제약조건을 지키지 않은 경우
+include::{snippets}/team-rest-controller-test/delete_team_fail_invalid/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/delete_team_fail_invalid/http-response.adoc[]
+
+[[modify-team-name]]
+== 팀 이름 변경
+include::{snippets}/team-rest-controller-test/modify_team_name_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/modify_team_name_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/modify_team_name_success/path-parameters.adoc[]
+include::{snippets}/team-rest-controller-test/modify_team_name_success/request-fields.adoc[]
+include::{snippets}/team-rest-controller-test/modify_team_name_success/http-response.adoc[]
+
+=== 제약조건을 지키지 않은 경우
+include::{snippets}/team-rest-controller-test/modify_team_name_fail_not_valid/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/modify_team_name_fail_not_valid/http-response.adoc[]

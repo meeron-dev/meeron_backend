@@ -1,17 +1,19 @@
 package com.cmc.meeron.workspace.adapter.in;
 
 import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
-import com.cmc.meeron.workspace.adapter.in.request.CreateWorkspaceUserRequest;
-import com.cmc.meeron.workspace.adapter.in.request.FindWorkspaceUserRequest;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
-import com.cmc.meeron.workspace.application.port.in.response.MyWorkspaceUserResponseDto;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserResponseDto;
+import com.cmc.meeron.workspace.adapter.in.request.*;
+import com.cmc.meeron.workspace.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDtoBuilder;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,7 +51,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_my_workspace_users_success() throws Exception {
 
         // given
-        List<MyWorkspaceUserResponseDto> myWorkspaceUsers = createWorkspaceUsers();
+        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = createWorkspaceUsers();
         when(workspaceUserQueryUseCase.getMyWorkspaceUsers(any()))
                 .thenReturn(myWorkspaceUsers);
 
@@ -92,9 +93,9 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    private List<MyWorkspaceUserResponseDto> createWorkspaceUsers() {
+    private List<WorkspaceUserQueryResponseDto> createWorkspaceUsers() {
         return List.of(
-                MyWorkspaceUserResponseDto.builder()
+                WorkspaceUserQueryResponseDto.builder()
                         .workspaceUserId(1L)
                         .workspaceId(1L)
                         .isWorkspaceAdmin(false)
@@ -103,7 +104,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                         .position("대리")
                         .email("test@test.com")
                         .build(),
-                MyWorkspaceUserResponseDto.builder()
+                WorkspaceUserQueryResponseDto.builder()
                         .workspaceUserId(2L)
                         .workspaceId(1L)
                         .isWorkspaceAdmin(true)
@@ -120,7 +121,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_my_workspace_user_success() throws Exception {
 
         // given
-        MyWorkspaceUserResponseDto myWorkspaceUser = createWorkspaceUser();
+        WorkspaceUserQueryResponseDto myWorkspaceUser = createWorkspaceUser();
         when(workspaceUserQueryUseCase.getMyWorkspaceUser(any()))
                 .thenReturn(myWorkspaceUser);
 
@@ -153,8 +154,8 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    private MyWorkspaceUserResponseDto createWorkspaceUser() {
-        return MyWorkspaceUserResponseDto.builder()
+    private WorkspaceUserQueryResponseDto createWorkspaceUser() {
+        return WorkspaceUserQueryResponseDto.builder()
                 .workspaceUserId(1L)
                 .workspaceId(1L)
                 .isWorkspaceAdmin(true)
@@ -189,7 +190,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", "1");
         params.add("nickname", "테스트");
-        List<MyWorkspaceUserResponseDto> workspaceUsers = createWorkspaceUsers();
+        List<WorkspaceUserQueryResponseDto> workspaceUsers = createWorkspaceUsers();
         when(workspaceUserQueryUseCase.searchWorkspaceUsers(any()))
                 .thenReturn(workspaceUsers);
 
@@ -251,7 +252,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_team_members_success() throws Exception {
 
         // given
-        List<MyWorkspaceUserResponseDto> workspaceUsers = createWorkspaceUsers();
+        List<WorkspaceUserQueryResponseDto> workspaceUsers = createWorkspaceUsers();
         when(workspaceUserQueryUseCase.getTeamUsers(any()))
                 .thenReturn(workspaceUsers);
 
@@ -392,7 +393,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         // given
         CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
         MockMultipartFile profile = FILE;
-        WorkspaceUserResponseDto responseDto = createWorkspaceUserAdminResponseDto();
+        WorkspaceUserCommandResponseDto responseDto = createWorkspaceUserAdminResponseDto();
         when(workspaceUserCommandUseCase.createWorkspaceUser(any()))
                 .thenReturn(responseDto);
 
@@ -438,8 +439,8 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    private WorkspaceUserResponseDto createWorkspaceUserAdminResponseDto() {
-        return WorkspaceUserResponseDto.builder()
+    private WorkspaceUserCommandResponseDto createWorkspaceUserAdminResponseDto() {
+        return WorkspaceUserCommandResponseDto.builder()
                 .workspaceUserId(1L)
                 .nickname("테스트닉네임")
                 .workspaceAdmin(true)
@@ -457,7 +458,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         // given
         CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
         MockMultipartFile profile = FILE;
-        WorkspaceUserResponseDto responseDto = createWorkspaceUserResponseDto();
+        WorkspaceUserCommandResponseDto responseDto = createWorkspaceUserResponseDto();
         when(workspaceUserCommandUseCase.createWorkspaceUser(any()))
                 .thenReturn(responseDto);
 
@@ -503,8 +504,8 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    private WorkspaceUserResponseDto createWorkspaceUserResponseDto() {
-        return WorkspaceUserResponseDto.builder()
+    private WorkspaceUserCommandResponseDto createWorkspaceUserResponseDto() {
+        return WorkspaceUserCommandResponseDto.builder()
                 .workspaceUserId(1L)
                 .nickname("테스트닉네임")
                 .workspaceAdmin(false)
@@ -565,5 +566,219 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("팀원 추가 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void join_team_users_fail_not_valid() throws Exception {
+
+        // given
+        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.buildNotValid();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+
+    @DisplayName("팀원 추가 - 실패 / 팀이 존재하지 않는 경우")
+    @Test
+    void join_team_users_fail_not_found_team() throws Exception {
+
+        // given
+        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+        doThrow(new TeamNotFoundException())
+                .when(workspaceUserCommandUseCase)
+                .joinTeamUsers(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("팀원 추가 - 실패 / 팀에 가입시킬 유저 수가 맞지 않는 경우")
+    @Test
+    void join_team_users_fail_invalid_find_workspace_users_count() throws Exception {
+
+        // given
+        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+        doThrow(new WorkspaceUserNotFoundException("존재하지 않는 유저가 있습니다."))
+                .when(workspaceUserCommandUseCase)
+                .joinTeamUsers(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+    
+    @DisplayName("팀원 추가 - 성공")
+    @Test
+    void join_team_users_success() throws Exception {
+        
+        // given
+        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+        
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("teamId").description("팀원을 추가할 팀 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)"),
+                                fieldWithPath("joinTeamWorkspaceUserIds").type(JsonFieldType.ARRAY).description("팀에 소속 시킬 워크스페이스 유저 ID").attributes(field("constraints", "하나 이상의 ID를 리스트로 줄 것."))
+                        )
+                ));
+    }
+
+    @DisplayName("팀에서 추방 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void kick_out_team_user_fail_invalid() throws Exception {
+
+        // given
+        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.buildInvalid();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(1)));
+    }
+
+    @DisplayName("팀에서 추방 - 실패 / 유저를 찾지 못한 경우")
+    @Test
+    void kick_out_team_user_fail_not_found_workspace_user() throws Exception {
+
+        // given
+        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.build();
+        doThrow(new WorkspaceUserNotFoundException())
+                .when(workspaceUserCommandUseCase)
+                .kickOutTeamUser(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+    }
+
+    @DisplayName("팀에서 추방 / 성공")
+    @Test
+    void kick_out_team_user_success() throws Exception {
+
+        // given
+        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("workspaceUserId").description("추방할 워크스페이스 유저 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)")
+                        )
+                ));
+    }
+
+    @DisplayName("팀에 소속되지 않은 유저 조회 - 실패 / 필수 파라미터를 주지 않을 경우")
+    @Test
+    void get_none_team_users_fail_invalid_parameters() throws Exception {
+
+        // given, when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/teams/none/workspace-users")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(1)));
+    }
+
+    @DisplayName("팀에 소속되지 않은 유저 조회 - 성공")
+    @Test
+    void get_none_team_users_success() throws Exception {
+
+        // given
+        FindNoneTeamWorkspaceUsersParameters parameters = FindNoneTeamWorkspaceUsersParametersBuilder.build();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", parameters.getWorkspaceId().toString());
+
+        List<WorkspaceUserQueryResponseDto> responseDtos = WorkspaceUserQueryResponseDtoBuilder.build();
+        when(workspaceUserQueryUseCase.getNoneTeamWorkspaceUsers(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/teams/none/workspace-users")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUsers", hasSize(2)))
+                .andExpect(jsonPath("$.workspaceUsers[0].workspaceUserId", is(responseDtos.get(0).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[0].profileImageUrl", is(responseDtos.get(0).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[0].nickname", is(responseDtos.get(0).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[0].position", is(responseDtos.get(0).getPosition())))
+                .andExpect(jsonPath("$.workspaceUsers[0].workspaceAdmin", is(responseDtos.get(0).isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.workspaceUsers[0].workspaceId", is(responseDtos.get(0).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[1].workspaceUserId", is(responseDtos.get(1).getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[1].profileImageUrl", is(responseDtos.get(1).getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUsers[1].nickname", is(responseDtos.get(1).getNickname())))
+                .andExpect(jsonPath("$.workspaceUsers[1].position", is(responseDtos.get(1).getPosition())))
+                .andExpect(jsonPath("$.workspaceUsers[1].workspaceAdmin", is(responseDtos.get(1).isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.workspaceUsers[1].workspaceId", is(responseDtos.get(1).getWorkspaceId().intValue())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        requestParameters(
+                                parameterWithName("workspaceId").description("워크스페이스 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceUsers[].workspaceUserId").type(JsonFieldType.NUMBER).description("워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceUsers[].profileImageUrl").type(JsonFieldType.STRING).optional().description("워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\" 반환"),
+                                fieldWithPath("workspaceUsers[].nickname").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 닉네임"),
+                                fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
+                                fieldWithPath("workspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
+                                fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
+                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
+                        )
+                ));
     }
 }

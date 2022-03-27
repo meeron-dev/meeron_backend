@@ -42,4 +42,8 @@ public class Team extends BaseEntity {
             throw new NotWorkspacesTeamException();
         }
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Builder
-public class WorkspaceUserQueryResponseDto {
+public class WorkspaceUserQuerydslResponseDto {
 
     private Long workspaceId;
     private Long workspaceUserId;
@@ -21,7 +21,7 @@ public class WorkspaceUserQueryResponseDto {
     private String email;
 
     @QueryProjection
-    public WorkspaceUserQueryResponseDto(Long workspaceId, Long workspaceUserId, String profileImageUrl, String nickname, String position, boolean workspaceAdmin, String email) {
+    public WorkspaceUserQuerydslResponseDto(Long workspaceId, Long workspaceUserId, String profileImageUrl, String nickname, String position, boolean workspaceAdmin, String email) {
         this.workspaceId = workspaceId;
         this.workspaceUserId = workspaceUserId;
         this.profileImageUrl = profileImageUrl;
