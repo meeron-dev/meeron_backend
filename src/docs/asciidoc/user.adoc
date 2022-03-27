@@ -15,43 +15,43 @@ include::{snippets}/user-rest-controller-test/get_me_success/response-fields.ado
 
 [[workspace-users]]
 == 유저의 모든 '워크스페이스 유저' 조회
-include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/path-parameters.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_users_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/response-fields.adoc[]
 
 [[workspace-user]]
 == 유저의 모든 '워크스페이스 유저' 중 하나 조회
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/path-parameters.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_success/response-fields.adoc[]
 
 === 워크스페이스 유저가 존재하지 않을 경우
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-response.adoc[]
 
 [[search-workspace-users]]
 == 워크스페이스 내 유저 닉네임 검색
-include::{snippets}/user-rest-controller-test/search_workspace_users_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/search_workspace_users_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/search_workspace_users_success/request-parameters.adoc[]
-include::{snippets}/user-rest-controller-test/search_workspace_users_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/search_workspace_users_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_success/request-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_success/response-fields.adoc[]
 
 === 파라미터를 모두 주지 않을 경우
-include::{snippets}/user-rest-controller-test/search_workspace_users_fail_require_workspace_id_nickname/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/search_workspace_users_fail_require_workspace_id_nickname/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_fail_require_workspace_id_nickname/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/search_workspace_users_fail_require_workspace_id_nickname/http-response.adoc[]
 
 [[team-workspace-users]]
 == 팀에 속한 워크스페이스 유저 조회
-include::{snippets}/user-rest-controller-test/get_team_members_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/get_team_members_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/get_team_members_success/path-parameters.adoc[]
-include::{snippets}/user-rest-controller-test/get_team_members_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/get_team_members_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/response-fields.adoc[]
 
 [[user-name]]
 == 로그인한 유저의 성함 저장
@@ -81,46 +81,46 @@ include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_us
 
 [[workspace_users_admin]]
 == 워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)
-include::{snippets}/user-rest-controller-test/create_workspace_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_success/request-parts.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_success/request-fields.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/request-parts.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/response-fields.adoc[]
 
 === 제약조건을 지키지 않을 경우
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_not_valid/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_not_valid/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_valid/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_valid/http-response.adoc[]
 
 === 닉네임이 중복된 경우
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_duplicate_nickname/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_duplicate_nickname/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_duplicate_nickname/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_duplicate_nickname/http-response.adoc[]
 
 === 워크스페이스가 없을 경우
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_not_found_workspace/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_not_found_workspace/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_found_workspace/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_found_workspace/http-response.adoc[]
 
 === 유저가 없을 경우
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_not_found_user/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_user_fail_not_found_user/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_found_user/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_found_user/http-response.adoc[]
 
 [[workspace_users]]
 == 워크스페이스 유저 생성 (워크스페이스 참가자가 호출)
-include::{snippets}/user-rest-controller-test/create_workspace_common_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_common_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_common_success/request-parts.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_common_success/request-fields.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_common_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/create_workspace_common_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/request-parts.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/response-fields.adoc[]
 
 [[duplicate_nickname]]
 == 닉네임 중복 체크
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/request-headers.adoc[]
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/request-parameters.adoc[]
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/http-response.adoc[]
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_success/request-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_success/response-fields.adoc[]
 
 === 중복된 닉네임일 경우
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-request.adoc[]
-include::{snippets}/user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-response.adoc[]
