@@ -555,8 +555,8 @@ Content-Length: 546
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
     "meetingDate" : "2022/3/29",
-    "startTime" : "02:00 AM",
-    "endTime" : "03:00 AM",
+    "startTime" : "03:00 AM",
+    "endTime" : "04:00 AM",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "meetingStatus" : "EXPECT"
@@ -564,8 +564,8 @@ Content-Length: 546
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
     "meetingDate" : "2022/3/29",
-    "startTime" : "09:00 PM",
-    "endTime" : "10:00 PM",
+    "startTime" : "10:00 PM",
+    "endTime" : "11:00 PM",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "meetingStatus" : "END"
@@ -652,18 +652,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-03-29T00:10:33.342321",
+  "time" : "2022-03-29T01:23:17.609179",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "workspaceUserId",
-    "value" : null,
-    "reason" : "워크스페이스 유저 ID를 입력해주세요."
-  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "workspaceUserId",
+    "value" : null,
+    "reason" : "워크스페이스 유저 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -698,7 +698,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 607
 
 {
-  "time" : "2022-03-29T00:10:33.245402",
+  "time" : "2022-03-29T01:23:17.512156",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1039,7 +1039,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 607
 
 {
-  "time" : "2022-03-29T00:10:32.979883",
+  "time" : "2022-03-29T01:23:17.253814",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1048,13 +1048,13 @@ Content-Length: 607
     "value" : "2022/02",
     "reason" : "형변환 중 예외가 발생했습니다. 값을 입력형식에 맞게 입력해주세요."
   }, {
-    "field" : "type",
-    "value" : null,
-    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
-  }, {
     "field" : "id",
     "value" : null,
     "reason" : "검색 유형의 ID를 입력해주세요."
+  }, {
+    "field" : "type",
+    "value" : null,
+    "reason" : "지원하지 않는 검색 유형입니다. 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1134,15 +1134,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "01:10 AM",
-    "endTime" : "03:10 AM",
+    "startTime" : "02:23 AM",
+    "endTime" : "04:23 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "04:10 AM",
-    "endTime" : "06:10 AM",
+    "startTime" : "05:23 AM",
+    "endTime" : "07:23 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1270,15 +1270,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "01:10 AM",
-    "endTime" : "03:10 AM",
+    "startTime" : "02:23 AM",
+    "endTime" : "04:23 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "04:10 AM",
-    "endTime" : "06:10 AM",
+    "startTime" : "05:23 AM",
+    "endTime" : "07:23 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1406,15 +1406,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "01:10 AM",
-    "endTime" : "03:10 AM",
+    "startTime" : "02:23 AM",
+    "endTime" : "04:23 AM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "04:10 AM",
-    "endTime" : "06:10 AM",
+    "startTime" : "05:23 AM",
+    "endTime" : "07:23 AM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]

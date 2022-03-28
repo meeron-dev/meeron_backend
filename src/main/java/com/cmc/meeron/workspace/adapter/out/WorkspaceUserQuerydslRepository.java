@@ -26,7 +26,6 @@ class WorkspaceUserQuerydslRepository {
                 .from(workspaceUser)
                 .where(workspaceUser.workspace.id.eq(workspaceId),
                         workspaceUser.workspaceUserInfo.nickname.startsWith(nickname))
-                .orderBy(workspaceUser.workspaceUserInfo.nickname.asc())
                 .fetch();
     }
 
@@ -38,7 +37,6 @@ class WorkspaceUserQuerydslRepository {
                 .from(workspaceUser)
                 .join(workspaceUser.team, team)
                 .where(team.id.eq(teamId))
-                .orderBy(workspaceUser.workspaceUserInfo.nickname.asc())
                 .fetch();
     }
 

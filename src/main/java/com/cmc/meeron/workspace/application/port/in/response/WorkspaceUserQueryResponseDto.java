@@ -23,9 +23,15 @@ public class WorkspaceUserQueryResponseDto {
     private String email;
 
     public static List<WorkspaceUserQueryResponseDto> fromEntities(List<WorkspaceUser> myWorkspaceUsers) {
-        return myWorkspaceUsers.stream()
+        List<WorkspaceUserQueryResponseDto> responseDtos = myWorkspaceUsers.stream()
                 .map(WorkspaceUserQueryResponseDto::fromEntity)
                 .collect(Collectors.toList());
+        return sortByNickname(responseDtos);
+    }
+
+    private static List<WorkspaceUserQueryResponseDto> sortByNickname(List<WorkspaceUserQueryResponseDto> responseDto) {
+        responseDto.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
+        return responseDto;
     }
 
     public static WorkspaceUserQueryResponseDto fromEntity(WorkspaceUser workspaceUser) {
@@ -41,9 +47,10 @@ public class WorkspaceUserQueryResponseDto {
     }
 
     public static List<WorkspaceUserQueryResponseDto> fromQueryResponseDtos(List<WorkspaceUserQuerydslResponseDto> workspaceUserQuerydslResponseDtos) {
-        return workspaceUserQuerydslResponseDtos.stream()
+        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQuerydslResponseDtos.stream()
                 .map(WorkspaceUserQueryResponseDto::fromQueryResponseDto)
                 .collect(Collectors.toList());
+        return sortByNickname(responseDtos);
     }
 
     private static WorkspaceUserQueryResponseDto fromQueryResponseDto(WorkspaceUserQuerydslResponseDto workspaceUserQuerydslResponseDto) {
