@@ -21,14 +21,17 @@ include::notice.adoc[]
 == 아젠다 파일 생성 API
 * link:agenda-file.html[Agenda-File API, window=_blank]
 
-== 유저 / 워크스페이스 유저 / 팀 유저 조회 API
-* link:user.html[User / Workspace-User / Team-User API, window=_blank]
+== 유저 API
+* link:user.html[User API, window=_blank]
 
-== 워크스페이스 관련 API
+== 워크스페이스 유저 API
+* link:workspace-user.html[Workspace-User API, window=_blank]
+
+== 워크스페이스 API
 * link:workspace.html[Workspace API, window=_blank]
 
-== 팀 관련 API
+== 팀 API
 * link:team.html[Team API, window=_blank]
 
-== 참가자 관련 API
+== 참가자 API
 * link:attendee.html[Attendee API, window=_blank]

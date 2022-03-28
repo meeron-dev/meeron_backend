@@ -1,7 +1,7 @@
 package com.cmc.meeron.workspace.adapter.out;
 
-import com.cmc.meeron.workspace.application.port.out.response.QWorkspaceUserQueryResponseDto;
-import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.out.response.QWorkspaceUserQuerydslResponseDto;
+import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQuerydslResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,8 +18,8 @@ class WorkspaceUserQuerydslRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public List<WorkspaceUserQueryResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname) {
-        return queryFactory.select(new QWorkspaceUserQueryResponseDto(
+    public List<WorkspaceUserQuerydslResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname) {
+        return queryFactory.select(new QWorkspaceUserQuerydslResponseDto(
                 workspaceUser.workspace.id, workspaceUser.id, workspaceUser.workspaceUserInfo.profileImageUrl,
                 workspaceUser.workspaceUserInfo.nickname, workspaceUser.workspaceUserInfo.position, workspaceUser.workspaceUserInfo.isWorkspaceAdmin,
                 workspaceUser.workspaceUserInfo.contactMail))
@@ -30,8 +30,8 @@ class WorkspaceUserQuerydslRepository {
                 .fetch();
     }
 
-    public List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId) {
-        return queryFactory.select(new QWorkspaceUserQueryResponseDto(
+    public List<WorkspaceUserQuerydslResponseDto> findByTeamId(Long teamId) {
+        return queryFactory.select(new QWorkspaceUserQuerydslResponseDto(
                 workspaceUser.workspace.id, workspaceUser.id, workspaceUser.workspaceUserInfo.profileImageUrl,
                 workspaceUser.workspaceUserInfo.nickname, workspaceUser.workspaceUserInfo.position, workspaceUser.workspaceUserInfo.isWorkspaceAdmin,
                 workspaceUser.workspaceUserInfo.contactMail))

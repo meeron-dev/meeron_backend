@@ -1,7 +1,7 @@
 package com.cmc.meeron.workspace.adapter.out;
 
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
-import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQuerydslResponseDto;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,18 +22,23 @@ class WorkspaceUserQueryRepository implements WorkspaceUserQueryPort {
     }
 
     @Override
-    public Optional<WorkspaceUser> findWorkspaceUserById(Long workspaceUserId) {
+    public Optional<WorkspaceUser> findById(Long workspaceUserId) {
         return workspaceUserJpaRepository.findById(workspaceUserId);
     }
 
     @Override
-    public List<WorkspaceUserQueryResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname) {
+    public List<WorkspaceUserQuerydslResponseDto> findByWorkspaceIdNickname(Long workspaceId, String nickname) {
         return workspaceUserQuerydslRepository.findByWorkspaceIdNickname(workspaceId, nickname);
     }
 
     @Override
-    public List<WorkspaceUserQueryResponseDto> findByTeamId(Long teamId) {
+    public List<WorkspaceUserQuerydslResponseDto> findQueryByTeamId(Long teamId) {
         return workspaceUserQuerydslRepository.findByTeamId(teamId);
+    }
+
+    @Override
+    public List<WorkspaceUser> findByTeamId(Long teamId) {
+        return workspaceUserJpaRepository.findByTeamId(teamId);
     }
 
     @Override
@@ -49,5 +54,10 @@ class WorkspaceUserQueryRepository implements WorkspaceUserQueryPort {
     @Override
     public boolean existsByNicknameInWorkspace(Long workspaceId, String nickname) {
         return workspaceUserQuerydslRepository.existsByNicknameInWorkspace(workspaceId, nickname);
+    }
+
+    @Override
+    public List<WorkspaceUser> findByWorkspaceIdAndTeamIsNull(Long workspaceId) {
+        return workspaceUserJpaRepository.findByWorkspaceIdAndTeamIsNull(workspaceId);
     }
 }

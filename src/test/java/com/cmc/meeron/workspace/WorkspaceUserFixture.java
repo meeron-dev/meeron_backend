@@ -3,6 +3,7 @@ package com.cmc.meeron.workspace;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.domain.WorkspaceUserInfo;
 
+import static com.cmc.meeron.team.TeamFixture.TEAM_1;
 import static com.cmc.meeron.user.UserFixture.USER;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_2;
@@ -68,5 +69,50 @@ public class WorkspaceUserFixture {
             .id(14L)
             .workspace(WORKSPACE_1)
             .workspaceUserInfo(WORKSPACE_USER_INFO_4)
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_WITH_TEAM = WorkspaceUser.builder()
+            .id(20L)
+            .team(TEAM_1)
+            .workspace(WORKSPACE_1)
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_WITH_TEAM2 = WorkspaceUser.builder()
+            .id(20L)
+            .team(TEAM_1)
+            .workspace(WORKSPACE_1)
+            .build();
+
+    private static final WorkspaceUserInfo WORKSPACE_USER_INFO_ADMIN = WorkspaceUserInfo.builder()
+            .profileImageUrl("")
+            .isWorkspaceAdmin(true)
+            .contactMail("test@test.com")
+            .nickname("관리자")
+            .phone("01012341238")
+            .position("관리자")
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_ADMIN = WorkspaceUser.builder()
+            .id(20L)
+            .team(TEAM_1)
+            .workspace(WORKSPACE_1)
+            .workspaceUserInfo(WORKSPACE_USER_INFO_ADMIN)
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_FOR_JOIN_TEAM = WorkspaceUser.builder()
+            .id(22L)
+            .workspace(WORKSPACE_1)
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_FOR_JOIN_TEAM2 = WorkspaceUser.builder()
+            .id(22L)
+            .workspace(WORKSPACE_1)
+            .workspaceUserInfo(WORKSPACE_USER_INFO_2)
+            .build();
+
+    public static final WorkspaceUser WORKSPACE_USER_WITH_TEAM_FOR_EXIT = WorkspaceUser.builder()
+            .id(23L)
+            .team(TEAM_1)
+            .workspace(WORKSPACE_1)
             .build();
 }

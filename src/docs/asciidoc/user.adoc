@@ -1,4 +1,4 @@
-= 유저 / 워크스페이스 유 / 팀 유저 API
+= 유저 API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -13,6 +13,7 @@ include::{snippets}/user-rest-controller-test/get_me_success/request-headers.ado
 include::{snippets}/user-rest-controller-test/get_me_success/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/response-fields.adoc[]
 
+<<<<<<< HEAD
 [[workspace-users]]
 == 유저의 모든 '워크스페이스 유저' 조회
 include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/http-request.adoc[]
@@ -53,6 +54,8 @@ include::{snippets}/workspace-user-rest-controller-test/get_team_members_success
 include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/http-response.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/response-fields.adoc[]
 
+=======
+>>>>>>> 802ed125001a35208f7c5e47fa8d082694cadd92
 [[user-name]]
 == 로그인한 유저의 성함 저장
 include::{snippets}/user-rest-controller-test/set_user_name_success/http-request.adoc[]
@@ -78,6 +81,7 @@ include::{snippets}/user-rest-controller-test/check_named_user_success_named/res
 === 존재하지 않는 유저일 경우
 include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_user/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_user/http-response.adoc[]
+<<<<<<< HEAD
 
 [[workspace_users_admin]]
 == 워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)
@@ -124,3 +128,5 @@ include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname
 === 중복된 닉네임일 경우
 include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-request.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/check_duplicate_nickname_fail_duplicate/http-response.adoc[]
+=======
+>>>>>>> 802ed125001a35208f7c5e47fa8d082694cadd92

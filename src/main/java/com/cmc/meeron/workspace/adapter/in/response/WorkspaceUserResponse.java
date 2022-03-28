@@ -1,6 +1,6 @@
 package com.cmc.meeron.workspace.adapter.in.response;
 
-import com.cmc.meeron.workspace.application.port.in.response.MyWorkspaceUserResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import lombok.*;
 
 @Getter
@@ -18,15 +18,15 @@ public class WorkspaceUserResponse {
     private String position;
     private String email;
 
-    public static WorkspaceUserResponse fromWorkspaceUser(MyWorkspaceUserResponseDto myWorkspaceUserResponseDto) {
+    public static WorkspaceUserResponse fromWorkspaceUser(WorkspaceUserQueryResponseDto workspaceUserQueryResponseDto) {
         return WorkspaceUserResponse.builder()
-                .workspaceUserId(myWorkspaceUserResponseDto.getWorkspaceUserId())
-                .workspaceId(myWorkspaceUserResponseDto.getWorkspaceId())
-                .isWorkspaceAdmin(myWorkspaceUserResponseDto.isWorkspaceAdmin())
-                .nickname(myWorkspaceUserResponseDto.getNickname())
-                .profileImageUrl(myWorkspaceUserResponseDto.getProfileImageUrl())
-                .position(myWorkspaceUserResponseDto.getPosition())
-                .email(myWorkspaceUserResponseDto.getEmail())
+                .workspaceUserId(workspaceUserQueryResponseDto.getWorkspaceUserId())
+                .workspaceId(workspaceUserQueryResponseDto.getWorkspaceId())
+                .isWorkspaceAdmin(workspaceUserQueryResponseDto.isWorkspaceAdmin())
+                .nickname(workspaceUserQueryResponseDto.getNickname())
+                .profileImageUrl(workspaceUserQueryResponseDto.getProfileImageUrl())
+                .position(workspaceUserQueryResponseDto.getPosition())
+                .email(workspaceUserQueryResponseDto.getEmail())
                 .build();
     }
 }
