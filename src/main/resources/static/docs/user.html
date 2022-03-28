@@ -459,6 +459,31 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#team-workspace-users">팀에 속한 워크스페이스 유저 조회</a></li>
+<li><a href="#user-name">로그인한 유저의 성함 저장</a>
+<ul class="sectlevel2">
+<li><a href="#_이름에_대한_제약조건을_지키지_않을_경우">이름에 대한 제약조건을 지키지 않을 경우</a></li>
+<li><a href="#_유저가_존재하지_않을_경우">유저가 존재하지 않을 경우</a></li>
+</ul>
+</li>
+<li><a href="#check_named_user">유저가 이름을 작성했는지 확인</a>
+<ul class="sectlevel2">
+<li><a href="#_존재하지_않는_유저일_경우">존재하지 않는 유저일 경우</a></li>
+</ul>
+</li>
+<li><a href="#workspace_users_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a>
+<ul class="sectlevel2">
+<li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
+<li><a href="#_닉네임이_중복된_경우">닉네임이 중복된 경우</a></li>
+<li><a href="#_워크스페이스가_없을_경우">워크스페이스가 없을 경우</a></li>
+<li><a href="#_유저가_없을_경우">유저가 없을 경우</a></li>
+</ul>
+</li>
+<li><a href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a></li>
+<li><a href="#duplicate_nickname">닉네임 중복 체크</a>
+<ul class="sectlevel2">
+<li><a href="#_중복된_닉네임일_경우">중복된 닉네임일 경우</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -548,9 +573,6 @@ Content-Length: 135
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -832,7 +854,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 166
 
 {
-  "time" : "2022-03-28T23:44:07.190038",
+  "time" : "2022-03-28T23:47:08.846446",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾지 못했습니다.",
   "code" : 1000,
@@ -1005,7 +1027,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 420
 
 {
-  "time" : "2022-03-28T23:44:07.521993",
+  "time" : "2022-03-28T23:47:09.127027",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1157,14 +1179,11 @@ Content-Length: 518
 </tr>
 </tbody>
 </table>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 802ed125001a35208f7c5e47fa8d082694cadd92</p>
 </div>
-<div id="user-name" class="paragraph">
-<p>== 로그인한 유저의 성함 저장</p>
 </div>
+<div class="sect1">
+<h2 id="user-name"><a class="link" href="#user-name">로그인한 유저의 성함 저장</a></h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/users/name HTTP/1.1
@@ -1233,9 +1252,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>=== 이름에 대한 제약조건을 지키지 않을 경우</p>
-</div>
+<div class="sect2">
+<h3 id="_이름에_대한_제약조건을_지키지_않을_경우"><a class="link" href="#_이름에_대한_제약조건을_지키지_않을_경우">이름에 대한 제약조건을 지키지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/users/name HTTP/1.1
@@ -1263,7 +1281,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 251
 
 {
-  "time" : "2022-03-28T23:44:06.870374",
+  "time" : "2022-03-28T23:47:08.552698",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1275,9 +1293,9 @@ Content-Length: 251
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>=== 유저가 존재하지 않을 경우</p>
 </div>
+<div class="sect2">
+<h3 id="_유저가_존재하지_않을_경우"><a class="link" href="#_유저가_존재하지_않을_경우">유저가 존재하지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/users/name HTTP/1.1
@@ -1305,7 +1323,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-03-28T23:44:06.910315",
+  "time" : "2022-03-28T23:47:08.587465",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
   "code" : 1000,
@@ -1313,9 +1331,12 @@ Content-Length: 147
 }</code></pre>
 </div>
 </div>
-<div id="check_named_user" class="paragraph">
-<p>== 유저가 이름을 작성했는지 확인</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="check_named_user"><a class="link" href="#check_named_user">유저가 이름을 작성했는지 확인</a></h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/name HTTP/1.1
@@ -1381,9 +1402,8 @@ Content-Length: 20
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>=== 존재하지 않는 유저일 경우</p>
-</div>
+<div class="sect2">
+<h3 id="_존재하지_않는_유저일_경우"><a class="link" href="#_존재하지_않는_유저일_경우">존재하지 않는 유저일 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/name HTTP/1.1
@@ -1406,7 +1426,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-03-28T23:44:06.921975",
+  "time" : "2022-03-28T23:47:08.598813",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
   "code" : 1000,
@@ -1414,12 +1434,12 @@ Content-Length: 147
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
 </div>
-<div id="workspace_users_admin" class="paragraph">
-<p>== 워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="workspace_users_admin"><a class="link" href="#workspace_users_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a></h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1605,9 +1625,8 @@ Content-Length: 177
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>=== 제약조건을 지키지 않을 경우</p>
-</div>
+<div class="sect2">
+<h3 id="_제약조건을_지키지_않을_경우"><a class="link" href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1637,7 +1656,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 512
 
 {
-  "time" : "2022-03-28T23:44:07.215851",
+  "time" : "2022-03-28T23:47:08.874867",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1646,20 +1665,20 @@ Content-Length: 512
     "value" : "      ",
     "reason" : "닉네임을 5자 이하로 입력해주세요."
   }, {
-    "field" : "workspaceId",
-    "value" : null,
-    "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
     "field" : "position",
     "value" : "      ",
     "reason" : "직책을 5자 이하로 입력해주세요."
+  }, {
+    "field" : "workspaceId",
+    "value" : null,
+    "reason" : "워크스페이스 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>=== 닉네임이 중복된 경우</p>
 </div>
+<div class="sect2">
+<h3 id="_닉네임이_중복된_경우"><a class="link" href="#_닉네임이_중복된_경우">닉네임이 중복된 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1691,10 +1710,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 177
+Content-Length: 176
 
 {
-  "time" : "2022-03-28T23:44:07.647412",
+  "time" : "2022-03-28T23:47:09.21912",
   "status" : 400,
   "message" : "워크스페이스 내 닉네임은 중복될 수 없습니다.",
   "code" : 1000,
@@ -1702,9 +1721,9 @@ Content-Length: 177
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>=== 워크스페이스가 없을 경우</p>
 </div>
+<div class="sect2">
+<h3 id="_워크스페이스가_없을_경우"><a class="link" href="#_워크스페이스가_없을_경우">워크스페이스가 없을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1739,7 +1758,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-03-28T23:44:07.359651",
+  "time" : "2022-03-28T23:47:08.995805",
   "status" : 400,
   "message" : "해당 워크스페이스를 찾을 수 없습니다.",
   "code" : 1000,
@@ -1747,9 +1766,9 @@ Content-Length: 167
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>=== 유저가 없을 경우</p>
 </div>
+<div class="sect2">
+<h3 id="_유저가_없을_경우"><a class="link" href="#_유저가_없을_경우">유저가 없을 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1784,7 +1803,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-03-28T23:44:07.475995",
+  "time" : "2022-03-28T23:47:09.088435",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
   "code" : 1000,
@@ -1792,9 +1811,12 @@ Content-Length: 147
 }</code></pre>
 </div>
 </div>
-<div id="workspace_users" class="paragraph">
-<p>== 워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="workspace_users"><a class="link" href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a></h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users HTTP/1.1
@@ -1980,9 +2002,11 @@ Content-Length: 178
 </tr>
 </tbody>
 </table>
-<div id="duplicate_nickname" class="paragraph">
-<p>== 닉네임 중복 체크</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="duplicate_nickname"><a class="link" href="#duplicate_nickname">닉네임 중복 체크</a></h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/nickname?workspaceId=1&amp;nickname=test HTTP/1.1
@@ -2071,9 +2095,8 @@ Content-Length: 25
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>=== 중복된 닉네임일 경우</p>
-</div>
+<div class="sect2">
+<h3 id="_중복된_닉네임일_경우"><a class="link" href="#_중복된_닉네임일_경우">중복된 닉네임일 경우</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/nickname?workspaceId=1&amp;nickname=test HTTP/1.1
@@ -2095,7 +2118,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 177
 
 {
-  "time" : "2022-03-28T23:44:07.603201",
+  "time" : "2022-03-28T23:47:09.185381",
   "status" : 400,
   "message" : "워크스페이스 내 닉네임은 중복될 수 없습니다.",
   "code" : 1000,
@@ -2105,16 +2128,12 @@ Content-Length: 177
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>&gt;&gt;&gt;&gt;&gt;&gt;&gt; 802ed125001a35208f7c5e47fa8d082694cadd92</p>
-</div>
-</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-28 23:42:54 +0900
+Last updated 2022-03-28 23:46:17 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
