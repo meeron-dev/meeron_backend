@@ -11,11 +11,11 @@ class NicknameOrderByKoreanEnglishNumberSpecial {
     private static final int LEFT_FIRST = -1;
     private static final int RIGHT_FIRST = 1;
 
-    public static Comparator<WorkspaceUserQueryResponseDto> getComparator() {
+    public static Comparator<SortableByNickname> getComparator() {
         return NicknameOrderByKoreanEnglishNumberSpecial::compare;
     }
 
-    public static int compare(WorkspaceUserQueryResponseDto leftDto, WorkspaceUserQueryResponseDto rightDto) {
+    public static int compare(SortableByNickname leftDto, SortableByNickname rightDto) {
         String left = leftDto.getNickname();
         left = left.toUpperCase().replaceAll(" ", "");
         String right = rightDto.getNickname();

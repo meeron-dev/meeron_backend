@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkspaceUserQueryResponseDto {
+public class WorkspaceUserQueryResponseDto implements SortableByNickname {
 
     private Long workspaceUserId;
     private Long workspaceId;
