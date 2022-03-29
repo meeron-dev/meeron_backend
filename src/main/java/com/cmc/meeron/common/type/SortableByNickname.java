@@ -1,4 +1,4 @@
-package com.cmc.meeron.workspace.application.port.in.response;
+package com.cmc.meeron.common.type;
 
 public interface SortableByNickname {
 

@@ -1,11 +1,13 @@
-package com.cmc.meeron.workspace.application.port.in.response;
+package com.cmc.meeron.common.util;
 
+
+import com.cmc.meeron.common.type.SortableByNickname;
 
 import java.util.Comparator;
 
 import static com.cmc.meeron.common.util.CharUtil.*;
 
-class NicknameOrderByKoreanEnglishNumberSpecial {
+public class NicknameOrderByKoreanEnglishNumberSpecial {
 
     private static final int REVERSE = -1;
     private static final int LEFT_FIRST = -1;

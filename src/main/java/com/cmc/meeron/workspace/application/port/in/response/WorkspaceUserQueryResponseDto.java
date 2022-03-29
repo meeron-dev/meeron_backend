@@ -1,5 +1,7 @@
 package com.cmc.meeron.workspace.application.port.in.response;
 
+import com.cmc.meeron.common.type.SortableByNickname;
+import com.cmc.meeron.common.util.NicknameOrderByKoreanEnglishNumberSpecial;
 import com.cmc.meeron.workspace.application.port.out.response.WorkspaceUserQuerydslResponseDto;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.*;
