@@ -8,33 +8,36 @@
 
 [[user]]
 == 유저 정보 조회
+=== [GET] /api/users/me
 include::{snippets}/user-rest-controller-test/get_me_success/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/request-headers.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/get_me_success/response-fields.adoc[]
 
-[[user-name]]
+[[user_name]]
 == 로그인한 유저의 성함 저장
+=== [PATCH] /api/users/name
 include::{snippets}/user-rest-controller-test/set_user_name_success/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/set_user_name_success/request-headers.adoc[]
 include::{snippets}/user-rest-controller-test/set_user_name_success/request-fields.adoc[]
 include::{snippets}/user-rest-controller-test/set_user_name_success/http-response.adoc[]
 
-=== 이름에 대한 제약조건을 지키지 않을 경우
+==== 1001
 include::{snippets}/user-rest-controller-test/set_user_name_fail_name_not_blank/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/set_user_name_fail_name_not_blank/http-response.adoc[]
 
-=== 유저가 존재하지 않을 경우
+==== 1500
 include::{snippets}/user-rest-controller-test/set_user_name_fail_not_found_user/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/set_user_name_fail_not_found_user/http-response.adoc[]
 
 [[check_named_user]]
 == 유저가 이름을 작성했는지 확인
+=== [GET] /api/users/name
 include::{snippets}/user-rest-controller-test/check_named_user_success_named/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/check_named_user_success_named/request-headers.adoc[]
 include::{snippets}/user-rest-controller-test/check_named_user_success_named/http-response.adoc[]
 include::{snippets}/user-rest-controller-test/check_named_user_success_named/response-fields.adoc[]
 
-=== 존재하지 않는 유저일 경우
+==== 1500
 include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_user/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_user/http-response.adoc[]

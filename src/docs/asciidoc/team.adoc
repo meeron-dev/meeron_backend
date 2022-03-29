@@ -8,47 +8,51 @@
 
 [[teams]]
 == 워크스페이스 내 모든 팀 조회
+=== [GET] /api/teams
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/request-headers.adoc[]
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/request-parameters.adoc[]
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/http-response.adoc[]
 include::{snippets}/team-rest-controller-test/get_workspace_teams_success/response-fields.adoc[]
 
-[[create-team]]
+[[create_team]]
 == 팀 생성
+=== [POST] /api/teams
 include::{snippets}/team-rest-controller-test/create_team_success/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_success/request-headers.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_success/request-fields.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_success/http-response.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_success/response-fields.adoc[]
 
-=== 제약조건을 지키지 않을 경우
+==== 1001
 include::{snippets}/team-rest-controller-test/create_team_fail_not_valid/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_fail_not_valid/http-response.adoc[]
 
-=== 워크스페이스 내 팀이 다섯개 이상일 경우
+==== 1400
 include::{snippets}/team-rest-controller-test/create_team_fail_over_five_teams/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/create_team_fail_over_five_teams/http-response.adoc[]
 
-[[delete-team]]
+[[delete_team]]
 == 팀 삭제
+=== [POST] /api/teams/{id}
 include::{snippets}/team-rest-controller-test/delete_team_success/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/delete_team_success/request-headers.adoc[]
 include::{snippets}/team-rest-controller-test/delete_team_success/request-fields.adoc[]
 include::{snippets}/team-rest-controller-test/delete_team_success/http-response.adoc[]
 
-=== 제약조건을 지키지 않은 경우
+==== 1001
 include::{snippets}/team-rest-controller-test/delete_team_fail_invalid/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/delete_team_fail_invalid/http-response.adoc[]
 
 [[modify-team-name]]
 == 팀 이름 변경
+=== [PATCH] /api/teams/{id}/name
 include::{snippets}/team-rest-controller-test/modify_team_name_success/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/modify_team_name_success/request-headers.adoc[]
 include::{snippets}/team-rest-controller-test/modify_team_name_success/path-parameters.adoc[]
 include::{snippets}/team-rest-controller-test/modify_team_name_success/request-fields.adoc[]
 include::{snippets}/team-rest-controller-test/modify_team_name_success/http-response.adoc[]
 
-=== 제약조건을 지키지 않은 경우
+==== 1001
 include::{snippets}/team-rest-controller-test/modify_team_name_fail_not_valid/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/modify_team_name_fail_not_valid/http-response.adoc[]

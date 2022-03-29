@@ -8,6 +8,7 @@
 
 [[user_workspaces]]
 == 유저가 속한 워크스페이스 조회
+=== [GET] /api/users/{id}/workspaces
 include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/http-request.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/path-parameters.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/request-headers.adoc[]
@@ -16,24 +17,26 @@ include::{snippets}/workspace-rest-controller-test/get_user_workspaces_success/r
 
 [[workspace]]
 == 워크스페이스 조회
+=== [GET] /api/workspaces/{id}
 include::{snippets}/workspace-rest-controller-test/get_workspace_success/http-request.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_workspace_success/path-parameters.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_workspace_success/request-headers.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_workspace_success/http-response.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_workspace_success/response-fields.adoc[]
 
-=== 존재하지 않는 워크스페이스일 경우
+==== 1600
 include::{snippets}/workspace-rest-controller-test/get_workspace_fail_not_found_workspace/http-request.adoc[]
 include::{snippets}/workspace-rest-controller-test/get_workspace_fail_not_found_workspace/http-response.adoc[]
 
 [[create-workspace]]
 == 워크스페이스 생성
+=== [POST] /api/workspaces
 include::{snippets}/workspace-rest-controller-test/create_workspace_success/http-request.adoc[]
 include::{snippets}/workspace-rest-controller-test/create_workspace_success/request-headers.adoc[]
 include::{snippets}/workspace-rest-controller-test/create_workspace_success/request-fields.adoc[]
 include::{snippets}/workspace-rest-controller-test/create_workspace_success/http-response.adoc[]
 include::{snippets}/workspace-rest-controller-test/create_workspace_success/response-fields.adoc[]
 
-=== 제약조건을 지키지 않을 경우
+==== 1001
 include::{snippets}/workspace-rest-controller-test/create_workspace_fail_not_valid/http-request.adoc[]
 include::{snippets}/workspace-rest-controller-test/create_workspace_fail_not_valid/http-response.adoc[]

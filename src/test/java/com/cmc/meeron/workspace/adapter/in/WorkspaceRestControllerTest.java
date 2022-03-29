@@ -1,6 +1,7 @@
 package com.cmc.meeron.workspace.adapter.in;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.ClientErrorCode;
+import com.cmc.meeron.common.exception.workspace.WorkspaceErrorCode;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -132,7 +133,7 @@ class WorkspaceRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.message", notNullValue()))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("워크스페이스 생성 - 성공")
@@ -190,7 +191,7 @@ class WorkspaceRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.errors", hasSize(2)));
     }

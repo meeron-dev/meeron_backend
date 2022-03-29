@@ -2,9 +2,10 @@ package com.cmc.meeron.workspace.application.service;
 
 import com.cmc.meeron.common.advice.workspaceuser.CheckWorkspaceAdmin;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
+import com.cmc.meeron.common.exception.workspace.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.NotAllFoundWorkspaceUsersException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
@@ -76,8 +77,7 @@ class WorkspaceUserCommandService implements WorkspaceUserCommandUseCase {
 
     private void validCountWorkspaceUsers(List<Long> workspaceUserIds, List<WorkspaceUser> workspaceUsers) {
         if (workspaceUsers.size() != workspaceUserIds.size()) {
-            // TODO: 2022/03/28 kobeomseok95 에러 코드를 다르게 보여주는게 맞겠다.
-            throw new WorkspaceUserNotFoundException("존재하지 않는 유저가 있습니다.");
+            throw new NotAllFoundWorkspaceUsersException();
         }
     }
 

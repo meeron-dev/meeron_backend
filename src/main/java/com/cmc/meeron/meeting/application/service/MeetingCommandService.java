@@ -2,7 +2,7 @@ package com.cmc.meeron.meeting.application.service;
 
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;

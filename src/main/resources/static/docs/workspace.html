@@ -446,15 +446,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#user_workspaces">유저가 속한 워크스페이스 조회</a></li>
+<li><a href="#user_workspaces">유저가 속한 워크스페이스 조회</a>
+<ul class="sectlevel2">
+<li><a href="#_get_apiusersidworkspaces">[GET] /api/users/{id}/workspaces</a></li>
+</ul>
+</li>
 <li><a href="#workspace">워크스페이스 조회</a>
 <ul class="sectlevel2">
-<li><a href="#_존재하지_않는_워크스페이스일_경우">존재하지 않는 워크스페이스일 경우</a></li>
+<li><a href="#_get_apiworkspacesid">[GET] /api/workspaces/{id}</a>
+<ul class="sectlevel3">
+<li><a href="#_1600">1600</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#create-workspace">워크스페이스 생성</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
+<li><a href="#_post_apiworkspaces">[POST] /api/workspaces</a>
+<ul class="sectlevel3">
+<li><a href="#_1001">1001</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -464,6 +476,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="user_workspaces"><a class="link" href="#user_workspaces">유저가 속한 워크스페이스 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiusersidworkspaces"><a class="link" href="#_get_apiusersidworkspaces">[GET] /api/users/{id}/workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/1/workspaces HTTP/1.1
@@ -568,9 +582,12 @@ Content-Length: 313
 </table>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="workspace"><a class="link" href="#workspace">워크스페이스 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiworkspacesid"><a class="link" href="#_get_apiworkspacesid">[GET] /api/workspaces/{id}</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspaces/1 HTTP/1.1
@@ -667,8 +684,8 @@ Content-Length: 134
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_존재하지_않는_워크스페이스일_경우"><a class="link" href="#_존재하지_않는_워크스페이스일_경우">존재하지 않는 워크스페이스일 경우</a></h3>
+<div class="sect3">
+<h4 id="_1600"><a class="link" href="#_1600">1600</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspaces/1 HTTP/1.1
@@ -688,15 +705,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 167
+Content-Length: 159
 
 {
-  "time" : "2022-03-29T01:23:19.766734",
+  "time" : "2022-03-30T03:16:08.971927",
   "status" : 400,
-  "message" : "해당 워크스페이스를 찾을 수 없습니다.",
-  "code" : 1000,
+  "message" : "워크스페이스를 찾지 못했습니다.",
+  "code" : 1600,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -705,6 +723,8 @@ Content-Length: 167
 <div class="sect1">
 <h2 id="create-workspace"><a class="link" href="#create-workspace">워크스페이스 생성</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apiworkspaces"><a class="link" href="#_post_apiworkspaces">[POST] /api/workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspaces HTTP/1.1
@@ -812,8 +832,8 @@ Content-Length: 134
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않을_경우"><a class="link" href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspaces HTTP/1.1
@@ -841,7 +861,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 475
 
 {
-  "time" : "2022-03-29T01:23:19.754663",
+  "time" : "2022-03-30T03:16:08.958496",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -861,10 +881,11 @@ Content-Length: 475
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-19 21:03:26 +0900
+Last updated 2022-03-30 03:11:28 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

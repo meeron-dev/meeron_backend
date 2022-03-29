@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.cmc.meeron.common.exception.CommonErrorCode.TYPE_MISMATCH_EXCEPTION;
+import static com.cmc.meeron.common.exception.ClientErrorCode.TYPE_MISMATCH_EXCEPTION;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -28,7 +28,7 @@ public class ErrorResponse {
         this.time = LocalDateTime.now();
         this.status = HttpStatus.BAD_REQUEST.value();
         this.message = "입력 조건에 대한 예외입니다.";
-        this.code = CommonErrorCode.BIND_EXCEPTION.getCode();
+        this.code = ClientErrorCode.BIND_EXCEPTION.getCode();
         this.errors = FieldError.of(bindingResult);
     }
 

@@ -1,6 +1,6 @@
 package com.cmc.meeron.meeting.adapter.in;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.ClientErrorCode;
 import com.cmc.meeron.common.util.LocalDateTimeUtil;
 import com.cmc.meeron.meeting.adapter.in.request.FindMeetingAttendeesParameters;
 import com.cmc.meeron.meeting.adapter.in.request.FindMeetingAttendeesParametersBuilder;
@@ -155,7 +155,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(3)));
     }
 
@@ -309,7 +309,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(3)));
     }
 

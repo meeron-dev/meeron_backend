@@ -7,9 +7,8 @@
 :sectlinks:
 
 include::overview.adoc[]
-include::notice.adoc[]
 
-== 인증(로그인, 로그아웃, 토큰 재발급) API
+== 인증 API
 * link:auth.html[Auth API, window=_blank]
 
 == 회의 조회 API
@@ -33,5 +32,5 @@ include::notice.adoc[]
 == 팀 API
 * link:team.html[Team API, window=_blank]
 
-== 참가자 API
+== 회의 참가자 API
 * link:attendee.html[Attendee API, window=_blank]

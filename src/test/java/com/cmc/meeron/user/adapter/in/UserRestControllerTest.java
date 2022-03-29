@@ -1,6 +1,7 @@
 package com.cmc.meeron.user.adapter.in;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.ClientErrorCode;
+import com.cmc.meeron.common.exception.user.UserErrorCode;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -115,7 +116,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
     }
 
@@ -148,7 +149,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(UserErrorCode.NOT_FOUND_USER.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
     }
 
@@ -166,7 +167,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(UserErrorCode.NOT_FOUND_USER.getCode())));
     }
 
     @DisplayName("유저가 이름을 입력했는지 검증 - 성공")

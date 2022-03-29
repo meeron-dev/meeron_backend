@@ -6,79 +6,71 @@
 :toclevels: 4
 :sectlinks:
 
-== 회의를 만들때 필요한 API 정리
-====
-- link:user.html#search-workspace-users[/api/workspace-users?workspaceId=:id&nickname='닉네임', window=_blank] (닉네임으로 워크스페이스 내부 유저 검색)
-- link:team.html#teams[/api/teams?workspaceId=:id, window=_blank] (워크스페이스 내의 모든 팀 조회)
-- link:user.html#team-workspace-users[/api/teams/:id/workspace-users, window=_blank] (팀 선택시, 팀에 속한 유저 리스트)
-====
-
-[[create-meeting]]
+[[create_meeting]]
 == 회의 생성
+=== [POST] /api/meetings
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/request-headers.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/request-fields.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/http-response.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_success/response-fields.adoc[]
 
-=== 제약조건을 지키지 않을 경우
+==== 1001
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_valid/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_valid/http-response.adoc[]
 
-=== 회의 제목은 1 ~ 30자, 회의 성격은 1 ~ 10자를 지키지 않을 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_text_valid/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_text_valid/http-response.adoc[]
-
-=== 주관하는 팀이 존재하지 않을 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-response.adoc[]
-
-=== 워크스페이스가 존재하지 않을 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace/http-response.adoc[]
-
-=== 회의 작성자가 존재하지 않을 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace_user_me/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace_user_me/http-response.adoc[]
-
-=== 관리자가 한 워크스페이스에 같이 있지 않은 경우
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-response.adoc[]
-
-=== 워크스페이스 유저와 팀이 속한 워크스페이스가 다를 경우
+==== 1304
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_and_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_team_and_workspace/http-response.adoc[]
 
+==== 1402
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_operation_team/http-response.adoc[]
+
+==== 1600
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace/http-response.adoc[]
+
+==== 1701
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace_user_me/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_found_workspace_user_me/http-response.adoc[]
+
+==== 1703
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-response.adoc[]
+
 [[join-attendees]]
 == 만들어진 회의에 참가자 추가하기
+=== [POST] /api/meetings/{id}/attendees
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/request-headers.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/path-parameters.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/request-fields.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-response.adoc[]
 
-=== 회의 참가자의 워크스페이스 유저 ID를 주지 않을 경우
+==== 1001
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_empty_workspace_user_ids/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_empty_workspace_user_ids/http-response.adoc[]
 
-=== 존재하지 않는 회의일 경우
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-response.adoc[]
-
-=== 존재하지 않는 워크스페이스일 경우
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-response.adoc[]
-
-=== 참가자가 같은 워크스페이스에 속하지 않은 경우
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-response.adoc[]
-
-=== 이미 회의에 참여한 워크스페이스 유저인 경우
+==== 1301
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-response.adoc[]
 
+==== 1303
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-response.adoc[]
+
+==== 1600
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-response.adoc[]
+
+==== 1703
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-response.adoc[]
+
 [[create-agenda]]
 == 아젠다 생성
+=== [POST] /api/meetings/{id}/agendas
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/request-headers.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/path-parameters.adoc[]
@@ -86,14 +78,12 @@ include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/r
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/http-response.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_success/response-fields.adoc[]
 
-=== 아젠다의 갯수가 5개를 초과할 경우
+==== 1001
+include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exceeded_agenda_name_over_48/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exceeded_agenda_name_over_48/http-response.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exceeded_agenda_over_5/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exceeded_agenda_over_5/http-response.adoc[]
 
-=== 아젠다 명이 48자를 초과할 경우
-include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exceeded_agenda_name_over_48/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exceeded_agenda_name_over_48/http-response.adoc[]
-
-=== 아젠다가 속할 회의를 찾을 수 없을 경우
+==== 1303
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_not_found_meeting/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_not_found_meeting/http-response.adoc[]

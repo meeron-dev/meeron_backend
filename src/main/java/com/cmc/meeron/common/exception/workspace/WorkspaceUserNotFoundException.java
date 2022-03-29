@@ -1,13 +1,11 @@
-package com.cmc.meeron.common.exception.user;
+package com.cmc.meeron.common.exception.workspace;
 
 import com.cmc.meeron.common.exception.ApplicationException;
-import com.cmc.meeron.common.exception.CommonErrorCode;
 import com.cmc.meeron.common.exception.ErrorEnumCode;
 
 public class WorkspaceUserNotFoundException extends ApplicationException {
 
-    private static final String MESSAGE = "워크스페이스 유저를 찾지 못했습니다.";
-    private static final ErrorEnumCode CODE = CommonErrorCode.APPLICATION_EXCEPTION;
+    private static final ErrorEnumCode CODE = WorkspaceUserErrorCode.NOT_FOUND;
 
     private WorkspaceUserNotFoundException(ErrorEnumCode errorEnumCode, String message) {
         super(errorEnumCode, message);
@@ -18,6 +16,6 @@ public class WorkspaceUserNotFoundException extends ApplicationException {
     }
 
     public WorkspaceUserNotFoundException() {
-        this(CODE, MESSAGE);
+        this(CODE, CODE.getMessage());
     }
 }

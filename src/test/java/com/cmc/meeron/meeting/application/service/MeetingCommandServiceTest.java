@@ -5,7 +5,7 @@ import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.common.security.AuthUser;

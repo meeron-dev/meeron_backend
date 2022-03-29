@@ -2,9 +2,10 @@ package com.cmc.meeron.workspace.application.service;
 
 import com.cmc.meeron.common.exception.team.PreviousBelongToTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
+import com.cmc.meeron.common.exception.workspace.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.NotAllFoundWorkspaceUsersException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.workspace.application.port.in.request.KickOutTeamUserRequestDtoBuilder;
@@ -236,7 +237,7 @@ class WorkspaceUserCommandServiceTest {
                 .thenReturn(List.of(workspaceUser));
 
         // when, then
-        assertThrows(WorkspaceUserNotFoundException.class,
+        assertThrows(NotAllFoundWorkspaceUsersException.class,
                 () -> workspaceUserCommandService.joinTeamUsers(requestDto));
     }
 

@@ -450,16 +450,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#overview-host">호스트</a></li>
 <li><a href="#overview-http-status-codes">HTTP 상태 코드</a></li>
-<li><a href="#not-authenticated-user">인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우</a></li>
-<li><a href="#expired-token">토큰이 만료되었을 경우</a></li>
 </ul>
 </li>
-<li><a href="#notice">API 변경사항</a>
-<ul class="sectlevel2">
-<li><a href="#_없음">없음</a></li>
-</ul>
-</li>
-<li><a href="#_인증로그인_로그아웃_토큰_재발급_api">인증(로그인, 로그아웃, 토큰 재발급) API</a></li>
+<li><a href="#_인증_api">인증 API</a></li>
 <li><a href="#_회의_조회_api">회의 조회 API</a></li>
 <li><a href="#_회의_아젠다_생성_api">회의, 아젠다 생성 API</a></li>
 <li><a href="#_아젠다_파일_생성_api">아젠다 파일 생성 API</a></li>
@@ -467,7 +460,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_워크스페이스_유저_api">워크스페이스 유저 API</a></li>
 <li><a href="#_워크스페이스_api">워크스페이스 API</a></li>
 <li><a href="#_팀_api">팀 API</a></li>
-<li><a href="#_참가자_api">참가자 API</a></li>
+<li><a href="#_회의_참가자_api">회의 참가자 API</a></li>
 </ul>
 </div>
 </div>
@@ -553,83 +546,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 </div>
-<div class="sect2">
-<h3 id="not-authenticated-user"><a class="link" href="#not-authenticated-user">인증되지 않은 사용자가 인증이 필요한 API를 요청할 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/health/authenticated HTTP/1.1
-Authorization: Bearer ex
-Host: dev.meeron.net</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 143
-
-{
-  "time" : "2022-03-29T01:23:02.211288",
-  "status" : 401,
-  "message" : "인증에 실패했습니다.",
-  "code" : 1100,
-  "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="expired-token"><a class="link" href="#expired-token">토큰이 만료되었을 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/authenticated HTTP/1.1
-Authorization: Bearer ExpiredAccessToken
-Host: dev.meeron.net</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 140
-
-{
-  "time" : "2022-03-29T01:23:02.031916",
-  "status" : 401,
-  "message" : "만료된 토큰입니다.",
-  "code" : 1101,
-  "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="notice"><a class="link" href="#notice">API 변경사항</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_없음"><a class="link" href="#_없음">없음</a></h3>
-
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_인증로그인_로그아웃_토큰_재발급_api"><a class="link" href="#_인증로그인_로그아웃_토큰_재발급_api">인증(로그인, 로그아웃, 토큰 재발급) API</a></h2>
+<h2 id="_인증_api"><a class="link" href="#_인증_api">인증 API</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -725,7 +645,7 @@ Content-Length: 140
 </div>
 </div>
 <div class="sect1">
-<h2 id="_참가자_api"><a class="link" href="#_참가자_api">참가자 API</a></h2>
+<h2 id="_회의_참가자_api"><a class="link" href="#_회의_참가자_api">회의 참가자 API</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -740,7 +660,7 @@ Content-Length: 140
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-29 00:18:33 +0900
+Last updated 2022-03-30 02:45:09 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

@@ -448,12 +448,31 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#login">로그인</a>
 <ul class="sectlevel2">
-<li><a href="#_email_provider가_없을_경우">email, provider가 없을 경우</a></li>
-<li><a href="#_제공하지_않는_provider일_경우">제공하지 않는 provider일 경우</a></li>
+<li><a href="#_post_apilogin">[POST] /api/login</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_입력값">1001 (입력값)</a></li>
+<li><a href="#_1100_인증되지_않은_회원">1100 (인증되지 않은 회원)</a></li>
+<li><a href="#_1101_만료된_토큰">1101 (만료된 토큰)</a></li>
+<li><a href="#_1102_refreshtoken을_찾을_수_없음">1102 (RefreshToken을 찾을 수 없음)</a></li>
+<li><a href="#_1103_유효하지_않은_서명">1103 (유효하지 않은 서명)</a></li>
+<li><a href="#_1104_유효하지_않은_토큰">1104 (유효하지 않은 토큰)</a></li>
+<li><a href="#_1105_지원하지_않는_토큰">1105 (지원하지 않는 토큰)</a></li>
+<li><a href="#_1106_claim이_존재하지_않음">1106 (Claim이 존재하지 않음)</a></li>
+<li><a href="#_1107_권한이_필요한_요청">1107 (권한이 필요한 요청)</a></li>
 </ul>
 </li>
-<li><a href="#logout">로그아웃</a></li>
-<li><a href="#reissue">토큰 재발급</a></li>
+</ul>
+</li>
+<li><a href="#logout">로그아웃</a>
+<ul class="sectlevel2">
+<li><a href="#_post_apilogout">[POST] /api/logout</a></li>
+</ul>
+</li>
+<li><a href="#reissue">토큰 재발급</a>
+<ul class="sectlevel2">
+<li><a href="#_post_apireissue">[POST] /api/reissue</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -461,6 +480,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="login"><a class="link" href="#login">로그인</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apilogin"><a class="link" href="#_post_apilogin">[POST] /api/login</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/login HTTP/1.1
@@ -573,8 +594,8 @@ Content-Length: 99
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_email_provider가_없을_경우"><a class="link" href="#_email_provider가_없을_경우">email, provider가 없을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_입력값"><a class="link" href="#_1001_입력값">1001 (입력값)</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/login HTTP/1.1
@@ -601,10 +622,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 377
+Content-Length: 376
 
 {
-  "time" : "2022-03-29T01:23:15.023899",
+  "time" : "2022-03-30T03:16:04.15943",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -621,26 +642,18 @@ Content-Length: 377
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_제공하지_않는_provider일_경우"><a class="link" href="#_제공하지_않는_provider일_경우">제공하지 않는 provider일 경우</a></h3>
+<div class="sect3">
+<h4 id="_1100_인증되지_않은_회원"><a class="link" href="#_1100_인증되지_않은_회원">1100 (인증되지 않은 회원)</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/login HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Content-Length: 105
-Host: dev.meeron.net
-
-{
-  "email" : "test@naver.com",
-  "nickname" : null,
-  "profileImageUrl" : null,
-  "provider" : "naver"
-}</code></pre>
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/health/authenticated HTTP/1.1
+Authorization: Bearer ex
+Host: dev.meeron.net</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -649,20 +662,73 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 280
+Content-Length: 143
 
 {
-  "time" : "2022-03-29T01:23:15.002796",
-  "status" : 400,
-  "message" : "입력 조건에 대한 예외입니다.",
-  "code" : 1001,
-  "errors" : [ {
-    "field" : "provider",
-    "value" : "naver",
-    "reason" : "지원하지 않는 소셜 로그인 방식입니다."
-  } ]
+  "time" : "2022-03-30T03:15:51.455464",
+  "status" : 401,
+  "message" : "인증에 실패했습니다.",
+  "code" : 1100,
+  "errors" : [ ]
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1101_만료된_토큰"><a class="link" href="#_1101_만료된_토큰">1101 (만료된 토큰)</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/authenticated HTTP/1.1
+Authorization: Bearer ExpiredAccessToken
+Host: dev.meeron.net</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 140
+
+{
+  "time" : "2022-03-30T03:15:51.271776",
+  "status" : 401,
+  "message" : "만료된 토큰입니다.",
+  "code" : 1101,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1102_refreshtoken을_찾을_수_없음"><a class="link" href="#_1102_refreshtoken을_찾을_수_없음">1102 (RefreshToken을 찾을 수 없음)</a></h4>
+
+</div>
+<div class="sect3">
+<h4 id="_1103_유효하지_않은_서명"><a class="link" href="#_1103_유효하지_않은_서명">1103 (유효하지 않은 서명)</a></h4>
+
+</div>
+<div class="sect3">
+<h4 id="_1104_유효하지_않은_토큰"><a class="link" href="#_1104_유효하지_않은_토큰">1104 (유효하지 않은 토큰)</a></h4>
+
+</div>
+<div class="sect3">
+<h4 id="_1105_지원하지_않는_토큰"><a class="link" href="#_1105_지원하지_않는_토큰">1105 (지원하지 않는 토큰)</a></h4>
+
+</div>
+<div class="sect3">
+<h4 id="_1106_claim이_존재하지_않음"><a class="link" href="#_1106_claim이_존재하지_않음">1106 (Claim이 존재하지 않음)</a></h4>
+
+</div>
+<div class="sect3">
+<h4 id="_1107_권한이_필요한_요청"><a class="link" href="#_1107_권한이_필요한_요청">1107 (권한이 필요한 요청)</a></h4>
+
 </div>
 </div>
 </div>
@@ -670,6 +736,8 @@ Content-Length: 280
 <div class="sect1">
 <h2 id="logout"><a class="link" href="#logout">로그아웃</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apilogout"><a class="link" href="#_post_apilogout">[POST] /api/logout</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/logout HTTP/1.1
@@ -714,9 +782,12 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="reissue"><a class="link" href="#reissue">토큰 재발급</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apireissue"><a class="link" href="#_post_apireissue">[POST] /api/reissue</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/reissue HTTP/1.1
@@ -796,10 +867,11 @@ Content-Length: 99
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-02-25 16:02:30 +0900
+Last updated 2022-03-30 02:22:35 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
