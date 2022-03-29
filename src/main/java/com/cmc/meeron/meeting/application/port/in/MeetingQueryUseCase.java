@@ -8,4 +8,6 @@ import java.util.List;
 public interface MeetingQueryUseCase {
 
     List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto);
+
+    MeetingAttendeesResponseDto getMeetingAttendees(MeetingAttendeesRequestDto meetingAttendeesRequestDto);
 }

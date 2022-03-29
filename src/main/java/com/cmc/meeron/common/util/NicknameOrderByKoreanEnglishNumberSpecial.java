@@ -17,7 +17,7 @@ public class NicknameOrderByKoreanEnglishNumberSpecial {
         return NicknameOrderByKoreanEnglishNumberSpecial::compare;
     }
 
-    public static int compare(SortableByNickname leftDto, SortableByNickname rightDto) {
+    private static int compare(SortableByNickname leftDto, SortableByNickname rightDto) {
         String left = leftDto.getNickname();
         left = left.toUpperCase().replaceAll(" ", "");
         String right = rightDto.getNickname();

@@ -3,16 +3,10 @@ package com.cmc.meeron.meeting.adapter.in;
 import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.meeting.adapter.in.response.*;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
-import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.MonthMeetingsCountResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.YearMeetingsCountResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -68,5 +62,14 @@ public class MeetingQueryRestController {
                 monthMeetingsCountRequest.getId(),
                 monthMeetingsCountRequest.getYear());
         return MonthMeetingsCountResponse.of(meetingCountPerMonth);
+    }
+
+    @GetMapping("/{meetingId}/attendees")
+    @ResponseStatus(HttpStatus.OK)
+    public MeetingAttendeesResponse getMeetingAttendees(@PathVariable Long meetingId,
+                                    @Valid FindMeetingAttendeesParameters findMeetingAttendeesParameters) {
+        MeetingAttendeesResponseDto responseDto = meetingQueryUseCase
+                .getMeetingAttendees(findMeetingAttendeesParameters.toRequestDto(meetingId));
+        return MeetingAttendeesResponse.fromResponseDto(responseDto);
     }
 }

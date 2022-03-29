@@ -1,8 +1,12 @@
 package com.cmc.meeron.meeting.application.service;
 
+import com.cmc.meeron.meeting.application.port.in.request.MeetingAttendeesRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingAttendeesRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto;
+import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.domain.Attendee;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
@@ -19,6 +23,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.cmc.meeron.meeting.AttendeeFixture.ATTENDEE_1;
+import static com.cmc.meeron.meeting.AttendeeFixture.ATTENDEE_2;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -91,5 +97,30 @@ class MeetingQueryServiceTest {
                 .workspaceId(1L)
                 .workspaceUserId(2L)
                 .build();
+    }
+
+    @DisplayName("회의 참가자 조회 - 성공")
+    @Test
+    void get_meeting_attendees_success() throws Exception {
+
+        // given
+        Attendee attendee1 = ATTENDEE_1;
+        Attendee attendee2 = ATTENDEE_2;
+        List<Attendee> attendees = List.of(attendee1, attendee2);
+        when(meetingQueryPort.findWithWorkspaceUserByMeetingIdTeamId(any(), any()))
+                .thenReturn(attendees);
+        MeetingAttendeesRequestDto requestDto = MeetingAttendeesRequestDtoBuilder.build();
+
+        // when
+        MeetingAttendeesResponseDto responseDto = meetingQueryService.getMeetingAttendees(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(meetingQueryPort).findWithWorkspaceUserByMeetingIdTeamId(
+                        requestDto.getMeetingId(), requestDto.getTeamId()),
+                () -> assertEquals(1, responseDto.getUnknowns().size()),
+                () -> assertEquals(1, responseDto.getAttends().size()),
+                () -> assertEquals(0, responseDto.getAbsents().size())
+        );
     }
 }
