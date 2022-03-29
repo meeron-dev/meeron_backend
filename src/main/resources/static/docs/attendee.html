@@ -448,9 +448,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#change_attendee_status">참가자 상태 변경</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
-<li><a href="#_회의가_존재하지_않을_경우">회의가 존재하지 않을 경우</a></li>
-<li><a href="#_회의에_없는_참가자인_경우">회의에 없는 참가자인 경우</a></li>
+<li><a href="#_patch_apiattendeesid">[PATCH] /api/attendees/{id}</a>
+<ul class="sectlevel3">
+<li><a href="#_1001">1001</a></li>
+<li><a href="#_1302">1302</a></li>
+<li><a href="#_1303">1303</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -460,6 +464,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="change_attendee_status"><a class="link" href="#change_attendee_status">참가자 상태 변경</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_patch_apiattendeesid"><a class="link" href="#_patch_apiattendeesid">[PATCH] /api/attendees/{id}</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/attendees/1 HTTP/1.1
@@ -555,8 +561,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않을_경우"><a class="link" href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/attendees/1 HTTP/1.1
@@ -585,7 +591,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 436
 
 {
-  "time" : "2022-03-29T01:23:17.073408",
+  "time" : "2022-03-30T03:16:06.176067",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -602,8 +608,8 @@ Content-Length: 436
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_회의가_존재하지_않을_경우"><a class="link" href="#_회의가_존재하지_않을_경우">회의가 존재하지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1302"><a class="link" href="#_1302">1302</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/attendees/1 HTTP/1.1
@@ -629,20 +635,20 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 150
+Content-Length: 158
 
 {
-  "time" : "2022-03-29T01:23:16.754374",
+  "time" : "2022-03-30T03:16:06.029842",
   "status" : 400,
-  "message" : "존재하지 않는 회의입니다.",
-  "code" : 1000,
+  "message" : "회의 참가자를 찾을 수 없습니다.",
+  "code" : 1302,
   "errors" : [ ]
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_회의에_없는_참가자인_경우"><a class="link" href="#_회의에_없는_참가자인_경우">회의에 없는 참가자인 경우</a></h3>
+<div class="sect3">
+<h4 id="_1303"><a class="link" href="#_1303">1303</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/attendees/1 HTTP/1.1
@@ -668,15 +674,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 153
+Content-Length: 148
 
 {
-  "time" : "2022-03-29T01:23:16.911971",
+  "time" : "2022-03-30T03:16:05.884939",
   "status" : 400,
-  "message" : "존재하지 않는 참가자입니다.",
-  "code" : 1000,
+  "message" : "회의를 찾을 수 없습니다.",
+  "code" : 1303,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -686,7 +693,7 @@ Content-Length: 153
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-24 23:49:16 +0900
+Last updated 2022-03-30 03:15:08 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

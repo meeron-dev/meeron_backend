@@ -1,17 +1,15 @@
 package com.cmc.meeron.file.adapter.in;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.file.FileErrorCode;
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
+import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
-import org.apache.http.entity.ContentType;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,26 +39,7 @@ class FileRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
-    }
-
-    // TODO: 2022/03/09 kobeomseok95 확장자 명 검증하기
-    @Disabled
-    @DisplayName("아젠다 파일 생성 - 실패 / 파일에 확장자 명이 없을 경우")
-    @Test
-    void create_agenda_files_fail_not_found_extension() throws Exception {
-
-        // given
-        MockMultipartFile file = new MockMultipartFile("test", "test", ContentType.IMAGE_JPEG.getMimeType(), "test".getBytes());
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/api/agendas/{agendaId}/files", "1")
-                .file("files", file.getBytes())
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is("MEERON-400")));
+                .andExpect(jsonPath("$.code", is(FileErrorCode.FILE_UPLOAD.getCode())));
     }
 
     @DisplayName("아젠다 파일 생성 - 실패 / 아젠다가 존재하지 않을 경우")
@@ -81,7 +60,7 @@ class FileRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_AGENDA.getCode())));
     }
 
     @DisplayName("아젠다 파일 생성 - 성공")

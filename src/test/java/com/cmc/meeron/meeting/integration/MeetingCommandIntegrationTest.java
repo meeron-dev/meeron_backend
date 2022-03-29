@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.integration;
 
+import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
 import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
@@ -21,7 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.cmc.meeron.common.exception.CommonErrorCode.APPLICATION_EXCEPTION;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,7 +91,7 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.ATTENDEE_DUPLICATE.getCode())));
     }
 
     @DisplayName("회의 참여자 추가 - 성공 / 존재하지 않는 워크스페이스 유저를 참여시키는 경우")

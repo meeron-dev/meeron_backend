@@ -446,21 +446,37 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#teams">워크스페이스 내 모든 팀 조회</a></li>
-<li><a href="#create-team">팀 생성</a>
+<li><a href="#teams">워크스페이스 내 모든 팀 조회</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
-<li><a href="#_워크스페이스_내_팀이_다섯개_이상일_경우">워크스페이스 내 팀이 다섯개 이상일 경우</a></li>
+<li><a href="#_get_apiteams">[GET] /api/teams</a></li>
 </ul>
 </li>
-<li><a href="#delete-team">팀 삭제</a>
+<li><a href="#create_team">팀 생성</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않은_경우">제약조건을 지키지 않은 경우</a></li>
+<li><a href="#_post_apiteams">[POST] /api/teams</a>
+<ul class="sectlevel3">
+<li><a href="#_1001">1001</a></li>
+<li><a href="#_1400">1400</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#delete_team">팀 삭제</a>
+<ul class="sectlevel2">
+<li><a href="#_post_apiteamsid">[POST] /api/teams/{id}</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_2">1001</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#modify-team-name">팀 이름 변경</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않은_경우_2">제약조건을 지키지 않은 경우</a></li>
+<li><a href="#_patch_apiteamsidname">[PATCH] /api/teams/{id}/name</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_3">1001</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -470,6 +486,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="teams"><a class="link" href="#teams">워크스페이스 내 모든 팀 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiteams"><a class="link" href="#_get_apiteams">[GET] /api/teams</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/teams?workspaceId=1 HTTP/1.1
@@ -566,9 +584,12 @@ Content-Length: 134
 </table>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="create-team"><a class="link" href="#create-team">팀 생성</a></h2>
+<h2 id="create_team"><a class="link" href="#create_team">팀 생성</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apiteams"><a class="link" href="#_post_apiteams">[POST] /api/teams</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/teams HTTP/1.1
@@ -672,8 +693,8 @@ Content-Length: 25
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않을_경우"><a class="link" href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/teams HTTP/1.1
@@ -702,29 +723,29 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 575
 
 {
-  "time" : "2022-03-29T01:23:19.120472",
+  "time" : "2022-03-30T03:16:08.316027",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
+    "field" : "teamName",
+    "value" : "                                  ",
+    "reason" : "팀 이름을 10자 이하로 입력해주세요."
+  }, {
+    "field" : "teamName",
+    "value" : "                                  ",
+    "reason" : "팀 이름을 10자 이하로 입력해주세요."
+  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
-    "field" : "teamName",
-    "value" : "                                  ",
-    "reason" : "팀 이름을 10자 이하로 입력해주세요."
-  }, {
-    "field" : "teamName",
-    "value" : "                                  ",
-    "reason" : "팀 이름을 10자 이하로 입력해주세요."
   } ]
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_워크스페이스_내_팀이_다섯개_이상일_경우"><a class="link" href="#_워크스페이스_내_팀이_다섯개_이상일_경우">워크스페이스 내 팀이 다섯개 이상일 경우</a></h3>
+<div class="sect3">
+<h4 id="_1400"><a class="link" href="#_1400">1400</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/teams HTTP/1.1
@@ -753,10 +774,10 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 186
 
 {
-  "time" : "2022-03-29T01:23:19.073284",
+  "time" : "2022-03-30T03:16:08.265935",
   "status" : 400,
   "message" : "워크스페이스 내에서는 다섯 팀까지 보유 가능합니다.",
-  "code" : 1000,
+  "code" : 1400,
   "errors" : [ ]
 }</code></pre>
 </div>
@@ -764,9 +785,12 @@ Content-Length: 186
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="delete-team"><a class="link" href="#delete-team">팀 삭제</a></h2>
+<h2 id="delete_team"><a class="link" href="#delete_team">팀 삭제</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apiteamsid"><a class="link" href="#_post_apiteamsid">[POST] /api/teams/{id}</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/teams/1 HTTP/1.1
@@ -835,8 +859,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않은_경우"><a class="link" href="#_제약조건을_지키지_않은_경우">제약조건을 지키지 않은 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_2"><a class="link" href="#_1001_2">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/teams/1 HTTP/1.1
@@ -864,7 +888,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 300
 
 {
-  "time" : "2022-03-29T01:23:19.107957",
+  "time" : "2022-03-30T03:16:08.299286",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -879,9 +903,12 @@ Content-Length: 300
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="modify-team-name"><a class="link" href="#modify-team-name">팀 이름 변경</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_patch_apiteamsidname"><a class="link" href="#_patch_apiteamsidname">[PATCH] /api/teams/{id}/name</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/teams/1/name HTTP/1.1
@@ -977,8 +1004,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않은_경우_2"><a class="link" href="#_제약조건을_지키지_않은_경우_2">제약조건을 지키지 않은 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_3"><a class="link" href="#_1001_3">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/teams/1/name HTTP/1.1
@@ -1007,7 +1034,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 560
 
 {
-  "time" : "2022-03-29T01:23:19.055079",
+  "time" : "2022-03-30T03:16:08.247654",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1031,10 +1058,11 @@ Content-Length: 560
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-29 00:18:33 +0900
+Last updated 2022-03-30 03:13:52 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

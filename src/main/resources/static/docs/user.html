@@ -446,16 +446,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#user">유저 정보 조회</a></li>
-<li><a href="#user-name">로그인한 유저의 성함 저장</a>
+<li><a href="#user">유저 정보 조회</a>
 <ul class="sectlevel2">
-<li><a href="#_이름에_대한_제약조건을_지키지_않을_경우">이름에 대한 제약조건을 지키지 않을 경우</a></li>
-<li><a href="#_유저가_존재하지_않을_경우">유저가 존재하지 않을 경우</a></li>
+<li><a href="#_get_apiusersme">[GET] /api/users/me</a></li>
+</ul>
+</li>
+<li><a href="#user_name">로그인한 유저의 성함 저장</a>
+<ul class="sectlevel2">
+<li><a href="#_patch_apiusersname">[PATCH] /api/users/name</a>
+<ul class="sectlevel3">
+<li><a href="#_1001">1001</a></li>
+<li><a href="#_1500">1500</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#check_named_user">유저가 이름을 작성했는지 확인</a>
 <ul class="sectlevel2">
-<li><a href="#_존재하지_않는_유저일_경우">존재하지 않는 유저일 경우</a></li>
+<li><a href="#_get_apiusersname">[GET] /api/users/name</a>
+<ul class="sectlevel3">
+<li><a href="#_1500_2">1500</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -465,6 +477,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="user"><a class="link" href="#user">유저 정보 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiusersme"><a class="link" href="#_get_apiusersme">[GET] /api/users/me</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/me HTTP/1.1
@@ -549,9 +563,12 @@ Content-Length: 135
 </table>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="user-name"><a class="link" href="#user-name">로그인한 유저의 성함 저장</a></h2>
+<h2 id="user_name"><a class="link" href="#user_name">로그인한 유저의 성함 저장</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_patch_apiusersname"><a class="link" href="#_patch_apiusersname">[PATCH] /api/users/name</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/users/name HTTP/1.1
@@ -620,8 +637,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_이름에_대한_제약조건을_지키지_않을_경우"><a class="link" href="#_이름에_대한_제약조건을_지키지_않을_경우">이름에 대한 제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/users/name HTTP/1.1
@@ -649,7 +666,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 251
 
 {
-  "time" : "2022-03-29T01:23:19.559119",
+  "time" : "2022-03-30T03:16:08.761392",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -662,8 +679,8 @@ Content-Length: 251
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_유저가_존재하지_않을_경우"><a class="link" href="#_유저가_존재하지_않을_경우">유저가 존재하지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1500"><a class="link" href="#_1500">1500</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/users/name HTTP/1.1
@@ -691,12 +708,13 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-03-29T01:23:19.597858",
+  "time" : "2022-03-30T03:16:08.790375",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
-  "code" : 1000,
+  "code" : 1500,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -705,6 +723,8 @@ Content-Length: 147
 <div class="sect1">
 <h2 id="check_named_user"><a class="link" href="#check_named_user">유저가 이름을 작성했는지 확인</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiusersname"><a class="link" href="#_get_apiusersname">[GET] /api/users/name</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/name HTTP/1.1
@@ -770,8 +790,8 @@ Content-Length: 20
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_존재하지_않는_유저일_경우"><a class="link" href="#_존재하지_않는_유저일_경우">존재하지 않는 유저일 경우</a></h3>
+<div class="sect3">
+<h4 id="_1500_2"><a class="link" href="#_1500_2">1500</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/name HTTP/1.1
@@ -791,15 +811,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 147
+Content-Length: 146
 
 {
-  "time" : "2022-03-29T01:23:19.608461",
+  "time" : "2022-03-30T03:16:08.80765",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
-  "code" : 1000,
+  "code" : 1500,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -809,7 +830,7 @@ Content-Length: 147
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-29 00:18:33 +0900
+Last updated 2022-03-30 02:45:44 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

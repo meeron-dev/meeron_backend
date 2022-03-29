@@ -1,18 +1,18 @@
 package com.cmc.meeron.workspace.adapter.in;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.ClientErrorCode;
+import com.cmc.meeron.common.exception.team.TeamErrorCode;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.user.NicknameDuplicateException;
+import com.cmc.meeron.common.exception.user.UserErrorCode;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
+import com.cmc.meeron.common.exception.workspace.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
 import com.cmc.meeron.workspace.adapter.in.request.*;
 import com.cmc.meeron.workspace.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDtoBuilder;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -179,7 +179,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("워크스페이스 유저 검색 - 성공")
@@ -244,7 +244,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(2)))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     @DisplayName("팀에 속한 모든 워크스페이스 유저 정보 조회 - 성공")
@@ -309,7 +309,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(3)));
     }
 
@@ -331,7 +331,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.DUPLICATE_NICKNAME.getCode())));
     }
 
     private CreateWorkspaceUserRequest createCreateWorkspaceUserRequest() {
@@ -362,7 +362,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("워크스페이스 유저 관리자 생성 - 실패 / 유저가 없을 경우")
@@ -383,7 +383,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(UserErrorCode.NOT_FOUND_USER.getCode())));
     }
 
     @DisplayName("워크스페이스 유저 관리자 생성 - 성공")
@@ -565,7 +565,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .params(params))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.DUPLICATE_NICKNAME.getCode())));
     }
 
     @DisplayName("팀원 추가 - 실패 / 제약조건을 지키지 않을 경우")
@@ -582,7 +582,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(2)));
     }
 
@@ -603,7 +603,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(TeamErrorCode.NOT_FOUND_TEAM.getCode())));
     }
 
     @DisplayName("팀원 추가 - 실패 / 팀에 가입시킬 유저 수가 맞지 않는 경우")
@@ -612,7 +612,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
 
         // given
         JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
-        doThrow(new WorkspaceUserNotFoundException("존재하지 않는 유저가 있습니다."))
+        doThrow(new NotAllFoundWorkspaceUsersException())
                 .when(workspaceUserCommandUseCase)
                 .joinTeamUsers(any());
 
@@ -623,7 +623,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_ALL_FOUND.getCode())));
     }
     
     @DisplayName("팀원 추가 - 성공")
@@ -667,7 +667,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 
@@ -688,7 +688,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("팀에서 추방 / 성공")
@@ -727,7 +727,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 

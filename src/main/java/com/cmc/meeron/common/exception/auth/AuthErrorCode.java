@@ -19,5 +19,5 @@ public enum AuthErrorCode implements ErrorEnumCode {
     ;
 
     private final int code;
-    private String message;
+    private final String message;
 }

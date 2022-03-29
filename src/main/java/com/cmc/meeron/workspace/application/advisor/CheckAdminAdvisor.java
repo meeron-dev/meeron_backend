@@ -1,7 +1,7 @@
 package com.cmc.meeron.workspace.application.advisor;
 
 import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserIdCheckable;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;

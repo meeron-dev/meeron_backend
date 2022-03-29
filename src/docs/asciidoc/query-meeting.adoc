@@ -6,112 +6,124 @@
 :toclevels: 4
 :sectlinks:
 
-[[today-meetings]]
+[[today_meetings]]
 == 오늘의 회의 조회
+=== [GET] /api/meetings/today
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_success/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_success/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_success/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_success/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_success/response-fields.adoc[]
 
-=== 워크스페이스 ID, 워크스페이스 유저 ID를 주지 않을 경우
+==== 1001 (입력값)
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_fail_required_workspace_workspace_user_id/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/today_meetings_list_fail_required_workspace_workspace_user_id/http-response.adoc[]
 
-[[meeting-days]]
-== 회의 날짜 조회
-=== 회의 날짜 조회시 파라미터를 제대로 주지 않을 경우
-include::{snippets}/meeting-query-rest-controller-test/get_workspace_meeting_days_fail_require_year-month/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_workspace_meeting_days_fail_require_year-month/http-response.adoc[]
-
-=== 워크스페이스 캘린더에서의 회의 날짜 조회
+[[meeting_days_workspace_calendar]]
+== 워크스페이스 캘린더
+=== 월별 회의 날짜조회
+==== [GET] /api/meetings/days
 include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace/response-fields.adoc[]
 
-=== 팀 캘린더에서의 회의 날짜 조회
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/request-headers.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/request-parameters.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/http-response.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/response-fields.adoc[]
-
-=== '나의 미론' 캘린더에서의 회의 날짜 조회
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/request-headers.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/request-parameters.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/http-response.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/response-fields.adoc[]
-
-[[day-meetings]]
-== 선택한 날짜의 회의 조회
-=== 선택한 날짜의 회의 조회시 파라미터를 제대로 주지 않을 경우
-include::{snippets}/meeting-query-rest-controller-test/get_workspace_day_meetings_fail_require_local-date/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_workspace_day_meetings_fail_require_local-date/http-response.adoc[]
-
-=== 워크스페이스 캘린더에서의 선택한 날짜에 대한 회의 조회
+[[day_meetings_workspace_calendar]]
+=== 선택 날짜의 회의 조회
+==== [GET] /api/meetings/day
 include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace/response-fields.adoc[]
 
-=== 팀 캘린더에서의 선택한 날짜에 대한 회의 조회
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/request-headers.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/request-parameters.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/http-response.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/response-fields.adoc[]
-
-=== '나의 미론' 캘린더에서의 선택한 날짜에 대한 회의 조회
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/request-headers.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/request-parameters.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/http-response.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/response-fields.adoc[]
-
-[[year-meetings-count]]
-== 년도별 회의 갯수 조회
-=== 워크스페이스 캘린더의 경우
+[[year_meetings_count_workspace_calendar]]
+=== 년도별 회의 갯수
+==== [GET] /api/meetings/years
 include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace/response-fields.adoc[]
 
-=== 팀 캘린더의 경우
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/request-headers.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/request-parameters.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/http-response.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/response-fields.adoc[]
-
-=== '나의 미론'의 경우
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/http-request.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/request-headers.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/request-parameters.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/http-response.adoc[]
-include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/response-fields.adoc[]
-
-[[month-meetings-count]]
-== 선택한 년도의 월별 회의 갯수 조회
-=== 워크스페이스 캘린더의 경우
+[[month_meetings_count_workspace_calendar]]
+=== 월별 회의 갯수
+==== [GET] api/meetings/month
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace/response-fields.adoc[]
 
-=== 팀 캘린더의 경우
+[[meeting_days_team_calendar]]
+== 팀 캘린더
+=== 월별 회의 날짜조회
+==== [GET] /api/meetings/days
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/request-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_team/response-fields.adoc[]
+
+[[day_meetings_team_calendar]]
+=== 선택 날짜의 회의 조회
+==== [GET] /api/meetings/day
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/request-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_team/response-fields.adoc[]
+
+[[year_meetings_count_team_calendar]]
+=== 년도별 회의 갯수
+==== [GET] /api/meetings/years
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/request-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_team/response-fields.adoc[]
+
+[[month_meetings_count_team_calendar]]
+=== 월별 회의 갯수
+==== [GET] /api/meetings/month
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_team/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_team/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_team/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_team/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_team/response-fields.adoc[]
 
-=== '나의 미론'의 경우
+[[meeting_days_my_calendar]]
+== 나의 미론 캘린더
+=== 월별 회의 날짜조회
+==== [GET] /api/meetings/days
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/request-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_days_success_workspace_user/response-fields.adoc[]
+
+[[day_meetings_my_calendar]]
+=== 선택 날짜의 회의 조회
+==== [GET] /api/meetings/day
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/request-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_day_meetings_success_workspace_user/response-fields.adoc[]
+
+[[year_meetings_count_my_calendar]]
+=== 년도별 회의 갯수
+==== [GET] /api/meetings/years
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/request-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_year_meetings_count_success_workspace_user/response-fields.adoc[]
+
+[[month_meetings_count_my_calendar]]
+=== 월별 회의 갯수
+==== [GET] /api/meetings/month
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace_user/http-request.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace_user/request-headers.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace_user/request-parameters.adoc[]

@@ -1,14 +1,10 @@
 package com.cmc.meeron.meeting.adapter.in;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
-import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
-import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
-import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
-import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
+import com.cmc.meeron.common.exception.ClientErrorCode;
+import com.cmc.meeron.common.exception.meeting.*;
+import com.cmc.meeron.common.exception.team.TeamErrorCode;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.user.WorkspaceUserNotFoundException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
+import com.cmc.meeron.common.exception.workspace.*;
 import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -55,7 +51,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.errors", hasSize(7)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     @DisplayName("회의 생성 - 실패 / 회의명, 회의 성격 제약조건을 지키지 않을 경우")
@@ -82,7 +78,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.errors", hasSize(2)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     @DisplayName("회의 생성 - 실패 / 주관하는 팀이 존재하지 않을 경우")
@@ -101,7 +97,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(TeamErrorCode.NOT_FOUND_TEAM.getCode())));
     }
 
     private CreateMeetingRequest createCreateMeetingRequest() {
@@ -133,7 +129,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("회의 생성 - 실패 / 회의 작성자가 존재하지 않을 경우")
@@ -152,7 +148,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("회의 생성 - 실패 / 관리자가 선택한 워크스페이스에 속하지 않은 경우")
@@ -171,7 +167,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_BELONG_TO_WORKSPACE.getCode())));
     }
 
     @DisplayName("회의 생성 - 실패 / 워크스페이스 유저와 팀이 속한 워크스페이스가 다를 경우")
@@ -190,7 +186,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.OPERATION_TEAM_IS_NOT_IN_WORKSPACE.getCode())));
     }
 
     @DisplayName("회의 생성 - 성공")
@@ -244,7 +240,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     private JoinAttendeesRequest createJoinAttendeesRequest() {
@@ -270,7 +266,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_MEETING.getCode())));
     }
 
     @DisplayName("회의 참가자 추가 - 실패 / 존재하지 않는 워크스페이스일 경우")
@@ -290,7 +286,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceErrorCode.NOT_FOUND.getCode())));
     }
 
     @DisplayName("회의 참가자 추가 - 실패 / 참가자가 같은 워크스페이스에 속하지 않은 경우")
@@ -310,7 +306,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_BELONG_TO_WORKSPACE.getCode())));
     }
 
     @DisplayName("회의 참가자 추가 - 실패 / 이미 참여중인 참가자가 있을 경우")
@@ -330,7 +326,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.ATTENDEE_DUPLICATE.getCode())));
     }
 
     @DisplayName("회의 참가자 추가 - 성공")
@@ -382,7 +378,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     @DisplayName("아젠다 생성 - 실패 / 아젠다가 5개 초과일 경우")
@@ -444,7 +440,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
     }
 
     @DisplayName("아젠다 생성 - 실패 / 회의가 존재하지 않을 경우")
@@ -463,7 +459,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_MEETING.getCode())));
     }
 
     private CreateAgendaRequest createCreateAgendasRequest() {
@@ -558,7 +554,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.errors", hasSize(2)));
     }
 
@@ -580,10 +576,10 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_MEETING.getCode())));
     }
 
-    @DisplayName("참가자의 상태 변경 - 실패 / 참여하지 않는 참여자일 경우")
+    @DisplayName("참가자의 상태 변경 - 실패 / 회의 참가자를 찾을 수 없을 경우")
     @Test
     void change_attendee_status_fail_not_found_attendee() throws Exception {
 
@@ -601,6 +597,6 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_ATTENDEE.getCode())));
     }
 }

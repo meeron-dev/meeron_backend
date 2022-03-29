@@ -8,27 +8,41 @@
 
 [[login]]
 == 로그인
+=== [POST] /api/login
 include::{snippets}/auth-rest-controller-test/login_success/http-request.adoc[]
 include::{snippets}/auth-rest-controller-test/login_success/request-fields.adoc[]
 include::{snippets}/auth-rest-controller-test/login_success/http-response.adoc[]
 include::{snippets}/auth-rest-controller-test/login_success/response-fields.adoc[]
 
-=== email, provider가 없을 경우
+==== 1001 (입력값)
 include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-request.adoc[]
 include::{snippets}/auth-rest-controller-test/login_fail_not_valid/http-response.adoc[]
 
-=== 제공하지 않는 provider일 경우
-include::{snippets}/auth-rest-controller-test/login_fail_not_provider/http-request.adoc[]
-include::{snippets}/auth-rest-controller-test/login_fail_not_provider/http-response.adoc[]
+==== 1100 (인증되지 않은 회원)
+include::{snippets}/health-rest-controller-test/authentication_check_fail/http-request.adoc[]
+include::{snippets}/health-rest-controller-test/authentication_check_fail/http-response.adoc[]
+
+==== 1101 (만료된 토큰)
+include::{snippets}/health-rest-controller-test/login_fail_expired/http-request.adoc[]
+include::{snippets}/health-rest-controller-test/login_fail_expired/http-response.adoc[]
+
+==== 1102 (RefreshToken을 찾을 수 없음)
+==== 1103 (유효하지 않은 서명)
+==== 1104 (유효하지 않은 토큰)
+==== 1105 (지원하지 않는 토큰)
+==== 1106 (Claim이 존재하지 않음)
+==== 1107 (권한이 필요한 요청)
 
 [[logout]]
 == 로그아웃
+=== [POST] /api/logout
 include::{snippets}/auth-rest-controller-test/logout_success/http-request.adoc[]
 include::{snippets}/auth-rest-controller-test/logout_success/request-headers.adoc[]
 include::{snippets}/auth-rest-controller-test/logout_success/http-response.adoc[]
 
 [[reissue]]
 == 토큰 재발급
+=== [POST] /api/reissue
 include::{snippets}/auth-rest-controller-test/reissue_success/http-request.adoc[]
 include::{snippets}/auth-rest-controller-test/reissue_success/request-headers.adoc[]
 include::{snippets}/auth-rest-controller-test/reissue_success/http-response.adoc[]

@@ -446,48 +446,88 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#workspace-users">유저의 모든 '워크스페이스 유저' 조회</a></li>
-<li><a href="#workspace-user">유저의 모든 '워크스페이스 유저' 중 하나 조회</a>
+<li><a href="#workspace_users">유저의 모든 '워크스페이스 유저' 조회</a>
 <ul class="sectlevel2">
-<li><a href="#_워크스페이스_유저가_존재하지_않을_경우">워크스페이스 유저가 존재하지 않을 경우</a></li>
+<li><a href="#_get_apiusersidworkspace_users">[GET] /api/users/{id}/workspace-users</a></li>
 </ul>
 </li>
-<li><a href="#search-workspace-users">워크스페이스 내 유저 닉네임 검색</a>
+<li><a href="#workspace_user">유저의 모든 '워크스페이스 유저' 중 하나 조회</a>
 <ul class="sectlevel2">
-<li><a href="#_파라미터를_모두_주지_않을_경우">파라미터를 모두 주지 않을 경우</a></li>
+<li><a href="#_get_apiworkspace_usersid">[GET] /api/workspace-users/{id}</a>
+<ul class="sectlevel3">
+<li><a href="#_1701">1701</a></li>
 </ul>
 </li>
-<li><a href="#team-workspace-users">팀에 속한 워크스페이스 유저 조회</a></li>
+</ul>
+</li>
+<li><a href="#search_workspace_users">워크스페이스 내 유저 닉네임 검색</a>
+<ul class="sectlevel2">
+<li><a href="#_get_apiworkspace_users">[GET] /api/workspace-users</a>
+<ul class="sectlevel3">
+<li><a href="#_1001">1001</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#team_workspace_users">팀에 속한 워크스페이스 유저 조회</a>
+<ul class="sectlevel2">
+<li><a href="#_get_teamsidworkspace_users">[GET] /teams/{id}/workspace-users</a></li>
+</ul>
+</li>
 <li><a href="#workspace_users_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></li>
-<li><a href="#_닉네임이_중복된_경우">닉네임이 중복된 경우</a></li>
-<li><a href="#_워크스페이스가_없을_경우">워크스페이스가 없을 경우</a></li>
-<li><a href="#_유저가_없을_경우">유저가 없을 경우</a></li>
+<li><a href="#_post_apiworkspace_usersadmin">[POST] /api/workspace-users/admin</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_2">1001</a></li>
+<li><a href="#_1500">1500</a></li>
+<li><a href="#_1600">1600</a></li>
+<li><a href="#_1700">1700</a></li>
 </ul>
 </li>
-<li><a href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a></li>
+</ul>
+</li>
+<li><a href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a>
+<ul class="sectlevel2">
+<li><a href="#_post_apiworkspace_users">[POST] /api/workspace-users</a></li>
+</ul>
+</li>
 <li><a href="#duplicate_nickname">닉네임 중복 체크</a>
 <ul class="sectlevel2">
-<li><a href="#_중복된_닉네임일_경우">중복된 닉네임일 경우</a></li>
+<li><a href="#_get_apiworkspace_usersnickname">[GET] /api/workspace-users/nickname</a>
+<ul class="sectlevel3">
+<li><a href="#_1700_2">1700</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#none_team_workspace_users">팀이 없는 워크스페이스 유저 조회</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않을_경우_2">제약조건을 지키지 않을 경우</a></li>
+<li><a href="#_get_apiteamsnoneworkspace_users">[GET] /api/teams/none/workspace-users</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_3">1001</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#join_team_workspace_users">팀원 추가</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않을_경우_3">제약조건을 지키지 않을 경우</a></li>
-<li><a href="#_팀을_찾지_못할_경우">팀을 찾지 못할 경우</a></li>
-<li><a href="#_찾는_유저_수가_일치하지_않을_경우">찾는 유저 수가 일치하지 않을 경우</a></li>
+<li><a href="#_patch_apiteamsidworkspace_users">[PATCH] /api/teams/{id}/workspace-users</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_4">1001</a></li>
+<li><a href="#_1402">1402</a></li>
+<li><a href="#_1704">1704</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#kick_out_team_workspace_users">팀에서 추방</a>
 <ul class="sectlevel2">
-<li><a href="#_제약조건을_지키지_않은_경우">제약조건을 지키지 않은 경우</a></li>
-<li><a href="#_유저를_찾지_못한_경우">유저를 찾지 못한 경우</a></li>
+<li><a href="#_patch_apiworkspace_usersidteam">[PATCH] /api/workspace-users/{id}/team</a>
+<ul class="sectlevel3">
+<li><a href="#_1001_5">1001</a></li>
+<li><a href="#_1701_2">1701</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -495,8 +535,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="workspace-users"><a class="link" href="#workspace-users">유저의 모든 '워크스페이스 유저' 조회</a></h2>
+<h2 id="workspace_users"><a class="link" href="#workspace_users">유저의 모든 '워크스페이스 유저' 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiusersidworkspace_users"><a class="link" href="#_get_apiusersidworkspace_users">[GET] /api/users/{id}/workspace-users</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/users/1/workspace-users HTTP/1.1
@@ -628,9 +670,12 @@ Content-Length: 520
 </table>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="workspace-user"><a class="link" href="#workspace-user">유저의 모든 '워크스페이스 유저' 중 하나 조회</a></h2>
+<h2 id="workspace_user"><a class="link" href="#workspace_user">유저의 모든 '워크스페이스 유저' 중 하나 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiworkspace_usersid"><a class="link" href="#_get_apiworkspace_usersid">[GET] /api/workspace-users/{id}</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/1 HTTP/1.1
@@ -750,8 +795,8 @@ Content-Length: 224
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_워크스페이스_유저가_존재하지_않을_경우"><a class="link" href="#_워크스페이스_유저가_존재하지_않을_경우">워크스페이스 유저가 존재하지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1701"><a class="link" href="#_1701">1701</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/1 HTTP/1.1
@@ -770,13 +815,13 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 166
+Content-Length: 167
 
 {
-  "time" : "2022-03-29T01:23:19.865458",
+  "time" : "2022-03-30T03:16:09.054613",
   "status" : 400,
-  "message" : "워크스페이스 유저를 찾지 못했습니다.",
-  "code" : 1000,
+  "message" : "워크스페이스 유저를 찾을 수 없습니다.",
+  "code" : 1701,
   "errors" : [ ]
 }</code></pre>
 </div>
@@ -784,9 +829,12 @@ Content-Length: 166
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="search-workspace-users"><a class="link" href="#search-workspace-users">워크스페이스 내 유저 닉네임 검색</a></h2>
+<h2 id="search_workspace_users"><a class="link" href="#search_workspace_users">워크스페이스 내 유저 닉네임 검색</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiworkspace_users"><a class="link" href="#_get_apiworkspace_users">[GET] /api/workspace-users</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users?workspaceId=1&amp;nickname=%ED%85%8C%EC%8A%A4%ED%8A%B8 HTTP/1.1
@@ -922,8 +970,8 @@ Content-Length: 518
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_파라미터를_모두_주지_않을_경우"><a class="link" href="#_파라미터를_모두_주지_않을_경우">파라미터를 모두 주지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users HTTP/1.1
@@ -946,18 +994,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 420
 
 {
-  "time" : "2022-03-29T01:23:20.182306",
+  "time" : "2022-03-30T03:16:09.330653",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "nickname",
-    "value" : null,
-    "reason" : "검색할 워크스페이스 유저의 닉네임을 입력해주세요."
-  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "찾을 워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "nickname",
+    "value" : null,
+    "reason" : "검색할 워크스페이스 유저의 닉네임을 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -965,9 +1013,12 @@ Content-Length: 420
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="team-workspace-users"><a class="link" href="#team-workspace-users">팀에 속한 워크스페이스 유저 조회</a></h2>
+<h2 id="team_workspace_users"><a class="link" href="#team_workspace_users">팀에 속한 워크스페이스 유저 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_teamsidworkspace_users"><a class="link" href="#_get_teamsidworkspace_users">[GET] /teams/{id}/workspace-users</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/teams/1/workspace-users HTTP/1.1
@@ -1100,9 +1151,12 @@ Content-Length: 518
 </table>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="workspace_users_admin"><a class="link" href="#workspace_users_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apiworkspace_usersadmin"><a class="link" href="#_post_apiworkspace_usersadmin">[POST] /api/workspace-users/admin</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1288,8 +1342,8 @@ Content-Length: 177
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않을_경우"><a class="link" href="#_제약조건을_지키지_않을_경우">제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_2"><a class="link" href="#_1001_2">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1319,15 +1373,11 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 512
 
 {
-  "time" : "2022-03-29T01:23:19.891799",
+  "time" : "2022-03-30T03:16:09.079789",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "workspaceId",
-    "value" : null,
-    "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
     "field" : "nickname",
     "value" : "      ",
     "reason" : "닉네임을 5자 이하로 입력해주세요."
@@ -1335,103 +1385,17 @@ Content-Length: 512
     "field" : "position",
     "value" : "      ",
     "reason" : "직책을 5자 이하로 입력해주세요."
+  }, {
+    "field" : "workspaceId",
+    "value" : null,
+    "reason" : "워크스페이스 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_닉네임이_중복된_경우"><a class="link" href="#_닉네임이_중복된_경우">닉네임이 중복된 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
-Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer testAccessToken
-Host: dev.meeron.net
-
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=test.jpg
-Content-Type: image/jpeg
-
-테스트파일
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=request
-Content-Type: application/json
-
-{"workspaceId":1,"nickname":"테스트","position":"개발자","email":"test@test.com","phone":"010-1234-1234"}
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 177
-
-{
-  "time" : "2022-03-29T01:23:20.301348",
-  "status" : 400,
-  "message" : "워크스페이스 내 닉네임은 중복될 수 없습니다.",
-  "code" : 1000,
-  "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_워크스페이스가_없을_경우"><a class="link" href="#_워크스페이스가_없을_경우">워크스페이스가 없을 경우</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
-Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Authorization: Bearer testAccessToken
-Host: dev.meeron.net
-
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=files; filename=test.jpg
-Content-Type: image/jpeg
-
-테스트파일
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
-Content-Disposition: form-data; name=request
-Content-Type: application/json
-
-{"workspaceId":1,"nickname":"테스트","position":"개발자","email":"test@test.com","phone":"010-1234-1234"}
---6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Strict-Transport-Security: max-age=31536000 ; includeSubDomains
-X-Frame-Options: SAMEORIGIN
-Content-Length: 167
-
-{
-  "time" : "2022-03-29T01:23:20.027123",
-  "status" : 400,
-  "message" : "해당 워크스페이스를 찾을 수 없습니다.",
-  "code" : 1000,
-  "errors" : [ ]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_유저가_없을_경우"><a class="link" href="#_유저가_없을_경우">유저가 없을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1500"><a class="link" href="#_1500">1500</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
@@ -1466,12 +1430,103 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-03-29T01:23:20.138121",
+  "time" : "2022-03-30T03:16:09.292606",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
-  "code" : 1000,
+  "code" : 1500,
   "errors" : [ ]
 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1600"><a class="link" href="#_1600">1600</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Authorization: Bearer testAccessToken
+Host: dev.meeron.net
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=files; filename=test.jpg
+Content-Type: image/jpeg
+
+테스트파일
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=request
+Content-Type: application/json
+
+{"workspaceId":1,"nickname":"테스트","position":"개발자","email":"test@test.com","phone":"010-1234-1234"}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 159
+
+{
+  "time" : "2022-03-30T03:16:09.203947",
+  "status" : 400,
+  "message" : "워크스페이스를 찾지 못했습니다.",
+  "code" : 1600,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1700"><a class="link" href="#_1700">1700</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users/admin HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Authorization: Bearer testAccessToken
+Host: dev.meeron.net
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=files; filename=test.jpg
+Content-Type: image/jpeg
+
+테스트파일
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=request
+Content-Type: application/json
+
+{"workspaceId":1,"nickname":"테스트","position":"개발자","email":"test@test.com","phone":"010-1234-1234"}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 184
+
+{
+  "time" : "2022-03-30T03:16:09.442158",
+  "status" : 400,
+  "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
+  "code" : 1700,
+  "errors" : [ ]
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1480,6 +1535,8 @@ Content-Length: 147
 <div class="sect1">
 <h2 id="workspace_users"><a class="link" href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apiworkspace_users"><a class="link" href="#_post_apiworkspace_users">[POST] /api/workspace-users</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/workspace-users HTTP/1.1
@@ -1667,9 +1724,12 @@ Content-Length: 178
 </table>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="duplicate_nickname"><a class="link" href="#duplicate_nickname">닉네임 중복 체크</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiworkspace_usersnickname"><a class="link" href="#_get_apiworkspace_usersnickname">[GET] /api/workspace-users/nickname</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/nickname?workspaceId=1&amp;nickname=test HTTP/1.1
@@ -1758,8 +1818,8 @@ Content-Length: 25
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_중복된_닉네임일_경우"><a class="link" href="#_중복된_닉네임일_경우">중복된 닉네임일 경우</a></h3>
+<div class="sect3">
+<h4 id="_1700_2"><a class="link" href="#_1700_2">1700</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/workspace-users/nickname?workspaceId=1&amp;nickname=test HTTP/1.1
@@ -1778,15 +1838,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 177
+Content-Length: 184
 
 {
-  "time" : "2022-03-29T01:23:20.256151",
+  "time" : "2022-03-30T03:16:09.411927",
   "status" : 400,
-  "message" : "워크스페이스 내 닉네임은 중복될 수 없습니다.",
-  "code" : 1000,
+  "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
+  "code" : 1700,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -1795,6 +1856,8 @@ Content-Length: 177
 <div class="sect1">
 <h2 id="none_team_workspace_users"><a class="link" href="#none_team_workspace_users">팀이 없는 워크스페이스 유저 조회</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_get_apiteamsnoneworkspace_users"><a class="link" href="#_get_apiteamsnoneworkspace_users">[GET] /api/teams/none/workspace-users</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/teams/none/workspace-users?workspaceId=1 HTTP/1.1
@@ -1925,8 +1988,8 @@ Content-Length: 418
 </tr>
 </tbody>
 </table>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않을_경우_2"><a class="link" href="#_제약조건을_지키지_않을_경우_2">제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_3"><a class="link" href="#_1001_3">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/teams/none/workspace-users HTTP/1.1
@@ -1949,7 +2012,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 271
 
 {
-  "time" : "2022-03-29T01:23:20.238729",
+  "time" : "2022-03-30T03:16:09.393593",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1964,9 +2027,12 @@ Content-Length: 271
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="join_team_workspace_users"><a class="link" href="#join_team_workspace_users">팀원 추가</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_patch_apiteamsidworkspace_users"><a class="link" href="#_patch_apiteamsidworkspace_users">[PATCH] /api/teams/{id}/workspace-users</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/teams/1/workspace-users HTTP/1.1
@@ -2062,8 +2128,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않을_경우_3"><a class="link" href="#_제약조건을_지키지_않을_경우_3">제약조건을 지키지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_4"><a class="link" href="#_1001_4">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/teams/1/workspace-users HTTP/1.1
@@ -2089,28 +2155,28 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 479
+Content-Length: 478
 
 {
-  "time" : "2022-03-29T01:23:20.315182",
+  "time" : "2022-03-30T03:16:09.46139",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "joinTeamWorkspaceUserIds",
-    "value" : null,
-    "reason" : "팀에 들어갈 워크스페이스 유저의 ID를 최소 하나 이상 입력해주세요."
-  }, {
     "field" : "adminWorkspaceUserId",
     "value" : null,
     "reason" : "관리자의 워크스페이스 유저 ID를 입력해주세요."
+  }, {
+    "field" : "joinTeamWorkspaceUserIds",
+    "value" : null,
+    "reason" : "팀에 들어갈 워크스페이스 유저의 ID를 최소 하나 이상 입력해주세요."
   } ]
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_팀을_찾지_못할_경우"><a class="link" href="#_팀을_찾지_못할_경우">팀을 찾지 못할 경우</a></h3>
+<div class="sect3">
+<h4 id="_1402"><a class="link" href="#_1402">1402</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/teams/1/workspace-users HTTP/1.1
@@ -2139,17 +2205,17 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-03-29T01:23:20.122344",
+  "time" : "2022-03-30T03:16:09.281542",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
-  "code" : 1000,
+  "code" : 1402,
   "errors" : [ ]
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_찾는_유저_수가_일치하지_않을_경우"><a class="link" href="#_찾는_유저_수가_일치하지_않을_경우">찾는 유저 수가 일치하지 않을 경우</a></h3>
+<div class="sect3">
+<h4 id="_1704"><a class="link" href="#_1704">1704</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/teams/1/workspace-users HTTP/1.1
@@ -2175,15 +2241,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 157
+Content-Length: 170
 
 {
-  "time" : "2022-03-29T01:23:20.013601",
+  "time" : "2022-03-30T03:16:09.187579",
   "status" : 400,
-  "message" : "존재하지 않는 유저가 있습니다.",
-  "code" : 1000,
+  "message" : "워크스페이스 유저를 다 찾지 못했습니다.",
+  "code" : 1704,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -2192,6 +2259,8 @@ Content-Length: 157
 <div class="sect1">
 <h2 id="kick_out_team_workspace_users"><a class="link" href="#kick_out_team_workspace_users">팀에서 추방</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_patch_apiworkspace_usersidteam"><a class="link" href="#_patch_apiworkspace_usersidteam">[PATCH] /api/workspace-users/{id}/team</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/workspace-users/1/team HTTP/1.1
@@ -2279,8 +2348,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_제약조건을_지키지_않은_경우"><a class="link" href="#_제약조건을_지키지_않은_경우">제약조건을 지키지 않은 경우</a></h3>
+<div class="sect3">
+<h4 id="_1001_5"><a class="link" href="#_1001_5">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/workspace-users/1/team HTTP/1.1
@@ -2308,7 +2377,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 300
 
 {
-  "time" : "2022-03-29T01:23:20.083143",
+  "time" : "2022-03-30T03:16:09.247181",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -2321,8 +2390,8 @@ Content-Length: 300
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_유저를_찾지_못한_경우"><a class="link" href="#_유저를_찾지_못한_경우">유저를 찾지 못한 경우</a></h3>
+<div class="sect3">
+<h4 id="_1701_2"><a class="link" href="#_1701_2">1701</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/workspace-users/1/team HTTP/1.1
@@ -2347,15 +2416,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 165
+Content-Length: 167
 
 {
-  "time" : "2022-03-29T01:23:20.04782",
+  "time" : "2022-03-30T03:16:09.221909",
   "status" : 400,
-  "message" : "워크스페이스 유저를 찾지 못했습니다.",
-  "code" : 1000,
+  "message" : "워크스페이스 유저를 찾을 수 없습니다.",
+  "code" : 1701,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -2365,7 +2435,7 @@ Content-Length: 165
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-29 00:18:33 +0900
+Last updated 2022-03-30 02:49:11 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

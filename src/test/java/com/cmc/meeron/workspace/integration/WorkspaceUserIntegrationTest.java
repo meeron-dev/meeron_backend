@@ -1,6 +1,6 @@
 package com.cmc.meeron.workspace.integration;
 
-import com.cmc.meeron.common.exception.CommonErrorCode;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserErrorCode;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
@@ -223,7 +223,7 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(CommonErrorCode.APPLICATION_EXCEPTION.getCode())));
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.DUPLICATE_NICKNAME.getCode())));
     }
 
     @Sql("classpath:workspace-user-test.sql")

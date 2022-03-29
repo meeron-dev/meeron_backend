@@ -446,10 +446,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#create-agenda-file">아젠다 파일 생성</a>
+<li><a href="#create_agenda_file">아젠다 파일 생성</a>
 <ul class="sectlevel2">
-<li><a href="#_빈_파일을_리스트로_보낼_경우">빈 파일을 리스트로 보낼 경우</a></li>
-<li><a href="#_아젠다를_찾지_못한_경우">아젠다를 찾지 못한 경우</a></li>
+<li><a href="#_post_apiagendasidfiles">[POST] /api/agendas/{id}/files</a>
+<ul class="sectlevel3">
+<li><a href="#_1200">1200</a></li>
+<li><a href="#_1300">1300</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -457,8 +461,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="create-agenda-file"><a class="link" href="#create-agenda-file">아젠다 파일 생성</a></h2>
+<h2 id="create_agenda_file"><a class="link" href="#create_agenda_file">아젠다 파일 생성</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apiagendasidfiles"><a class="link" href="#_post_apiagendasidfiles">[POST] /api/agendas/{id}/files</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/agendas/1/files HTTP/1.1
@@ -544,8 +550,8 @@ Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_빈_파일을_리스트로_보낼_경우"><a class="link" href="#_빈_파일을_리스트로_보낼_경우">빈 파일을 리스트로 보낼 경우</a></h3>
+<div class="sect3">
+<h4 id="_1200"><a class="link" href="#_1200">1200</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/agendas/1/files HTTP/1.1
@@ -568,17 +574,17 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 164
 
 {
-  "time" : "2022-03-29T01:23:16.118165",
+  "time" : "2022-03-30T03:16:05.257412",
   "status" : 400,
   "message" : "파일을 최소 하나 이상 보내야합니다.",
-  "code" : 1000,
+  "code" : 1200,
   "errors" : [ ]
 }</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_아젠다를_찾지_못한_경우"><a class="link" href="#_아젠다를_찾지_못한_경우">아젠다를 찾지 못한 경우</a></h3>
+<div class="sect3">
+<h4 id="_1300"><a class="link" href="#_1300">1300</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/agendas/1/files HTTP/1.1
@@ -608,15 +614,16 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 153
+Content-Length: 151
 
 {
-  "time" : "2022-03-29T01:23:16.140593",
+  "time" : "2022-03-30T03:16:05.277383",
   "status" : 400,
-  "message" : "존재하지 않는 아젠다입니다.",
-  "code" : 1000,
+  "message" : "아젠다를 찾을 수 없습니다.",
+  "code" : 1300,
   "errors" : [ ]
 }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -626,7 +633,7 @@ Content-Length: 153
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-03-09 03:21:10 +0900
+Last updated 2022-03-30 02:45:54 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
