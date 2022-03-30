@@ -63,13 +63,4 @@ public class MeetingQueryRestController {
                 monthMeetingsCountRequest.getYear());
         return MonthMeetingsCountResponse.of(meetingCountPerMonth);
     }
-
-    @GetMapping("/{meetingId}/attendees")
-    @ResponseStatus(HttpStatus.OK)
-    public MeetingAttendeesResponse getMeetingAttendees(@PathVariable Long meetingId,
-                                    @Valid FindMeetingAttendeesParameters findMeetingAttendeesParameters) {
-        MeetingAttendeesResponseDto responseDto = meetingQueryUseCase
-                .getMeetingAttendees(findMeetingAttendeesParameters.toRequestDto(meetingId));
-        return MeetingAttendeesResponse.fromResponseDto(responseDto);
-    }
 }

@@ -26,3 +26,17 @@ include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_
 ==== 1303
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_fail_not_found_meeting/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_fail_not_found_meeting/http-response.adoc[]
+
+[[get_meeting_attendees]]
+== 팀별 회의 참여자 조회
+=== [GET] /api/meetings/{id}/attendees
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/request-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/response-fields.adoc[]
+
+==== 1001
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_fail_invalid/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_fail_invalid/http-response.adoc[]

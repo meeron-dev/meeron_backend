@@ -12,8 +12,8 @@ import org.springframework.util.MultiValueMap;
 
 import java.time.YearMonth;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -263,5 +263,23 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.monthCounts[1].count", is(3)))
                 .andExpect(jsonPath("$.monthCounts[2].month", is(3)))
                 .andExpect(jsonPath("$.monthCounts[2].count", is(2)));
+    }
+
+    @DisplayName("회의 참가자 조회 - 성공")
+    @Test
+    void get_meeting_attendees() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("teamId", "3");
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/attendees", 1)
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attends", hasSize(3)))
+                .andExpect(jsonPath("$.absents", hasSize(0)))
+                .andExpect(jsonPath("$.unknowns", hasSize(0)));
     }
 }
