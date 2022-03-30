@@ -73,7 +73,7 @@ public class UserIntegrationTest extends IntegrationTest {
     }
 
     @Sql("classpath:user-test.sql")
-    @WithMockJwt(id = 6L, email = "test6@test.com")
+    @WithMockJwt(id = 8L, email = "test8@test.com")
     @DisplayName("유저가 성함을 입력했는지 검증 - 성공 / 입력했을 경우")
     @Test
     void check_named_user_success_named() throws Exception {

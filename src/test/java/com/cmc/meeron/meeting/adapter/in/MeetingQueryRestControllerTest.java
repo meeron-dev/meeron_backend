@@ -2,10 +2,7 @@ package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.ClientErrorCode;
 import com.cmc.meeron.common.util.LocalDateTimeUtil;
-import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.MonthMeetingsCountResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.in.response.YearMeetingsCountResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
@@ -21,7 +18,6 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -50,7 +46,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", "1");
         params.add("workspaceUserId", "1");
-        List<TodayMeetingResponseDto> responseDto = createTodayMeetingResponseDto();
+        List<TodayMeetingResponseDto> responseDto = TodayMeetingResponseDtoBuilder.buildList();
         when(meetingQueryUseCase.getTodayMeetings(any()))
                 .thenReturn(responseDto);
 
@@ -67,7 +63,6 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[0].operationTeamId", is(responseDto.get(0).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].operationTeamName", is(responseDto.get(0).getOperationTeamName())))
-                .andExpect(jsonPath("$.meetings[0].meetingStatus", is(responseDto.get(0).getMeetingStatus())))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDto.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDto.get(1).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[1].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(1).getMeetingDate()))))
@@ -75,7 +70,6 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(1).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[1].operationTeamId", is(responseDto.get(1).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].operationTeamName", is(responseDto.get(1).getOperationTeamName())))
-                .andExpect(jsonPath("$.meetings[1].meetingStatus", is(responseDto.get(1).getMeetingStatus())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -90,9 +84,11 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("meetings[].meetingDate").type(JsonFieldType.STRING).description("회의 진행 날짜"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].operationTeamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID (현재 개발 중)"),
-                                fieldWithPath("meetings[].operationTeamName").type(JsonFieldType.STRING).description("회의 주최 팀 명(현재 개발 중)"),
-                                fieldWithPath("meetings[].meetingStatus").type(JsonFieldType.STRING).description("회의 상태 / EXPECT : 회의 예정, END : 회의 종료")
+                                fieldWithPath("meetings[].operationTeamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID"),
+                                fieldWithPath("meetings[].operationTeamName").type(JsonFieldType.STRING).description("회의 주최 팀 명"),
+                                fieldWithPath("meetings[].attends").type(JsonFieldType.NUMBER).description("회의 참가자 수"),
+                                fieldWithPath("meetings[].absents").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
+                                fieldWithPath("meetings[].unknowns").type(JsonFieldType.NUMBER).description("회의 참여 응답을 하지 않은 사람의 수")
                         )
                 ));
     }
@@ -112,32 +108,6 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .params(params))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors", hasSize(2)));
-    }
-
-    private List<TodayMeetingResponseDto> createTodayMeetingResponseDto() {
-        LocalTime now = LocalTime.now();
-        return List.of(
-                TodayMeetingResponseDto.builder()
-                    .meetingId(1L)
-                    .meetingName("테스트 회의 1")
-                    .meetingDate(LocalDate.now())
-                    .startTime(LocalTime.of(now.plusHours(2).getHour(), 0, 0))
-                    .endTime(LocalTime.of(now.plusHours(3).getHour(), 0, 0))
-                    .operationTeamId(1L)
-                    .operationTeamName("테스트 팀 1")
-                    .meetingStatus("EXPECT")
-                    .build(),
-                TodayMeetingResponseDto.builder()
-                        .meetingId(2L)
-                        .meetingName("테스트 회의 2")
-                        .meetingDate(LocalDate.now())
-                        .startTime(LocalTime.of(now.minusHours(3).getHour(), 0, 0))
-                        .endTime(LocalTime.of(now.minusHours(2).getHour(), 0, 0))
-                        .operationTeamId(2L)
-                        .operationTeamName("테스트 팀 2")
-                        .meetingStatus("END")
-                        .build()
-        );
     }
 
     private List<Integer> getDays() {

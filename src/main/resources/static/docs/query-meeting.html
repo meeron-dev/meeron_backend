@@ -596,27 +596,31 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 546
+Content-Length: 601
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
     "meetingDate" : "2022/3/30",
-    "startTime" : "05:00 PM",
-    "endTime" : "06:00 PM",
+    "startTime" : "12:00 AM",
+    "endTime" : "01:00 AM",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
-    "meetingStatus" : "EXPECT"
+    "attends" : 3,
+    "absents" : 2,
+    "unknowns" : 1
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
     "meetingDate" : "2022/3/30",
-    "startTime" : "12:00 PM",
-    "endTime" : "01:00 PM",
+    "startTime" : "07:00 PM",
+    "endTime" : "08:00 PM",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
-    "meetingStatus" : "END"
+    "attends" : 1,
+    "absents" : 2,
+    "unknowns" : 3
   } ]
 }</code></pre>
 </div>
@@ -663,17 +667,27 @@ Content-Length: 546
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].operationTeamId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회의 주최 팀 ID (현재 개발 중)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 주최 팀 ID</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].operationTeamName</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회의 주최 팀 명(현재 개발 중)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 주최 팀 명</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].meetingStatus</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회의 상태 / EXPECT : 회의 예정, END : 회의 종료</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].attends</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 참가자 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].absents</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 불참자 수</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].unknowns</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 참여 응답을 하지 않은 사람의 수</p></td>
 </tr>
 </tbody>
 </table>
@@ -700,7 +714,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-03-30T15:02:35.355533",
+  "time" : "2022-03-30T22:28:45.314099",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -899,15 +913,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "04:02 PM",
-    "endTime" : "06:02 PM",
+    "startTime" : "11:28 PM",
+    "endTime" : "01:28 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "07:02 PM",
-    "endTime" : "09:02 PM",
+    "startTime" : "02:28 AM",
+    "endTime" : "04:28 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1390,15 +1404,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "04:02 PM",
-    "endTime" : "06:02 PM",
+    "startTime" : "11:28 PM",
+    "endTime" : "01:28 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "07:02 PM",
-    "endTime" : "09:02 PM",
+    "startTime" : "02:28 AM",
+    "endTime" : "04:28 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1881,15 +1895,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "04:02 PM",
-    "endTime" : "06:02 PM",
+    "startTime" : "11:28 PM",
+    "endTime" : "01:28 AM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "07:02 PM",
-    "endTime" : "09:02 PM",
+    "startTime" : "02:28 AM",
+    "endTime" : "04:28 AM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]

@@ -6,6 +6,7 @@ import com.cmc.meeron.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,9 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockJwt
 public class MeetingQueryIntegrationTest extends IntegrationTest {
 
+    @Sql("classpath:meeting-test.sql")
     @DisplayName("오늘의 회의 조회 - 성공")
     @Test
-    void today_meetings_list_success() throws Exception {
+    void today_meetings_list_success_() throws Exception {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -33,7 +35,10 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/today")
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meetings", hasSize(0)));
+                .andExpect(jsonPath("$.meetings", hasSize(1)))
+                .andExpect(jsonPath("$.meetings[0].attends", is(2)))
+                .andExpect(jsonPath("$.meetings[0].absents", is(1)))
+                .andExpect(jsonPath("$.meetings[0].unknowns", is(2)));
     }
 
     @DisplayName("회의 날짜 조회 - 워크스페이스의 경우")

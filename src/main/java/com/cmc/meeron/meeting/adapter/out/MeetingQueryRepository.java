@@ -2,7 +2,6 @@ package com.cmc.meeron.meeting.adapter.out;
 
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Agenda;
-import com.cmc.meeron.meeting.domain.Attendee;
 import com.cmc.meeron.meeting.domain.Meeting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,6 @@ class MeetingQueryRepository implements MeetingQueryPort {
 
     private final MeetingJpaRepository meetingJpaRepository;
     private final AgendaJpaRepository agendaJpaRepository;
-    private final AttendeeJpaRepository attendeeJpaRepository;
 
     @Override
     public List<Meeting> findTodayMeetings(Long workspaceId, Long workspaceUserId) {

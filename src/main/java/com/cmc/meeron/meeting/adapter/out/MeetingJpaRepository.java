@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-interface MeetingJpaRepository
-        extends JpaRepository<Meeting, Long>{
+interface MeetingJpaRepository extends JpaRepository<Meeting, Long>{
 
     @Query(
             "select distinct m" +

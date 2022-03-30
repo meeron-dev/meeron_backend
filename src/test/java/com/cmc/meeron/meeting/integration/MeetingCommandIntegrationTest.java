@@ -51,8 +51,7 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.meetingId", is(6)));
+                .andExpect(status().isCreated());
 
         // then
         List<Meeting> myDayMeetings = meetingMyCalendarQueryPort.findMyDayMeetings(List.of(1L), LocalDate.now().plusDays(1));

@@ -241,7 +241,7 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
                 .params(params)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.workspaceUsers", hasSize(2)));
+                .andExpect(jsonPath("$.workspaceUsers", hasSize(4)));
     }
 
     @Sql("classpath:workspace-user-test.sql")
@@ -261,7 +261,7 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
         // then
         flushAndClear();
         List<WorkspaceUser> noneTeamUsers = workspaceUserQueryPort.findByWorkspaceIdAndTeamIsNull(1L);
-        assertEquals(0, noneTeamUsers.size());
+        assertEquals(2, noneTeamUsers.size());
         List<WorkspaceUser> devTeamUsers = workspaceUserQueryPort.findByTeamId(3L);
         assertEquals(6, devTeamUsers.size());
     }
@@ -305,7 +305,7 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
         KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.buildIntegrationSuccessCase();
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "8")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "10")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());

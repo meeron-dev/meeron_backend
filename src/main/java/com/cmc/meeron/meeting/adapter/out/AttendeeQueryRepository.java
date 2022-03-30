@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.adapter.out;
 
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
+import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountResponseDto;
 import com.cmc.meeron.meeting.domain.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,9 +13,15 @@ import java.util.List;
 class AttendeeQueryRepository implements AttendeeQueryPort {
 
     private final AttendeeJpaRepository attendeeJpaRepository;
+    private final AttendeeQuerydslRepository attendeeQuerydslRepository;
 
     @Override
     public List<Attendee> findWithWorkspaceUserByMeetingIdTeamId(Long meetingId, Long teamId) {
         return attendeeJpaRepository.findWithWorkspaceUserByMeetingIdTeamId(meetingId, teamId);
+    }
+
+    @Override
+    public List<AttendStatusCountResponseDto> countAttendStatusByMeetingIds(List<Long> meetingIds) {
+        return attendeeQuerydslRepository.countAttendStatusByMeetingIds(meetingIds);
     }
 }

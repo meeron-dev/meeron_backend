@@ -11,6 +11,10 @@ insert into user(user_id, email, role, user_provider, created_date, last_modifie
 values(4, 'test4@test.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
 insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
 values(5, 'test5@test.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
+insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
+values(6, 'test6@test.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
+insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
+values(7, 'test7@test.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
 
 insert into team(team_id, workspace_id, created_date, last_modified_date, name)
 values(1, 1, current_timestamp, current_timestamp, '디자인팀');
@@ -29,6 +33,10 @@ insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, cr
 values(4, 4, 1, 3, current_timestamp, current_timestamp, false, '주미', '', 'iOS');
 insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
 values(5, 5, 1, 1, current_timestamp, current_timestamp, false, '미소', '', 'Designer');
+insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
+values(6, 6, 1, null, current_timestamp, current_timestamp, false, '지노', '', 'iOS');
+insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
+values(7, 7, 1, null, current_timestamp, current_timestamp, false, '피치', '', 'Server');
 
 insert into meeting(meeting_id, workspace_id, team_id, name, purpose, start_date, start_time, end_time, place, created_date, last_modified_date)
 values(1, 1, 1, '1주차 디자인 공지', '공지사항', '2022-02-18', '14:00', '16:00', '구글 밋', current_timestamp, current_timestamp);
@@ -79,7 +87,6 @@ values(5, 1, 3, '테스트 회의', '테스트', '2022-03-05', '22:00', '23:00',
 insert into attendee(attendee_id, meeting_id, workspace_user_id, attend_status, created_date, last_modified_date, is_meeting_admin)
 values(17, 5, 1, 'ATTEND', current_timestamp, current_timestamp, 1);
 
--- AGENDA, ISSUE, AGENDA_FILE
 insert into agenda(agenda_id, meeting_id, created_date, last_modified_date, name, agenda_order)
 values(1, 5, current_timestamp, current_timestamp, '테스트아젠다1', 1);
 insert into issue(issue_id, agenda_id, created_date, last_modified_date, contents)
