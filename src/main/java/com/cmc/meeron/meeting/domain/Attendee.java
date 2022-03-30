@@ -29,7 +29,7 @@ public class Attendee extends BaseEntity {
     private WorkspaceUser workspaceUser;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private AttendStatus attendStatus;
 
     @Column(nullable = false, columnDefinition = "TINYINT")
@@ -37,21 +37,25 @@ public class Attendee extends BaseEntity {
 
     public static List<Attendee> createMeetingAdmins(List<WorkspaceUser> meetingAdmins, Meeting meeting) {
         return meetingAdmins.stream()
-                .map(admin -> Attendee.createAttendee(admin, meeting, true))
+                .map(admin -> Attendee.createAttendee(admin, meeting, true, AttendStatus.ATTEND))
                 .collect(Collectors.toList());
     }
 
-    private static Attendee createAttendee(WorkspaceUser workspaceUser, Meeting meeting, boolean isAdmin) {
+    private static Attendee createAttendee(WorkspaceUser workspaceUser,
+                                           Meeting meeting,
+                                           boolean isAdmin,
+                                           AttendStatus attendStatus) {
         return Attendee.builder()
                 .workspaceUser(workspaceUser)
                 .meeting(meeting)
                 .isMeetingAdmin(isAdmin)
+                .attendStatus(attendStatus)
                 .build();
     }
 
     public static List<Attendee> createAttendees(List<WorkspaceUser> attendees, Meeting meeting) {
         return attendees.stream()
-                .map(attendee -> Attendee.createAttendee(attendee, meeting, false))
+                .map(attendee -> Attendee.createAttendee(attendee, meeting, false, AttendStatus.UNKNOWN))
                 .collect(Collectors.toList());
     }
 

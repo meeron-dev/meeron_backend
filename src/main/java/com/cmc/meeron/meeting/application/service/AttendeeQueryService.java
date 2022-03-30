@@ -23,8 +23,6 @@ class AttendeeQueryService implements AttendeeQueryUseCase {
         List<Attendee> attendees = attendeeQueryPort.findWithWorkspaceUserByMeetingIdTeamId(
                 meetingAttendeesRequestDto.getMeetingId(),
                 meetingAttendeesRequestDto.getTeamId());
-        MeetingAttendeesResponseDto meetingAttendeesResponseDto = MeetingAttendeesResponseDto.fromEntities(attendees);
-        meetingAttendeesResponseDto.sort();
-        return meetingAttendeesResponseDto;
+        return MeetingAttendeesResponseDto.fromEntities(attendees);
     }
 }

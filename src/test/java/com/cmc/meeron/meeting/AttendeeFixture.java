@@ -23,5 +23,6 @@ public class AttendeeFixture {
             .isMeetingAdmin(true)
             .attendStatus(null)
             .meeting(MEETING)
+            .attendStatus(AttendStatus.UNKNOWN)
             .build();
 }

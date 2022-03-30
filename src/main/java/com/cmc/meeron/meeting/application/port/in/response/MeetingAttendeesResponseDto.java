@@ -30,7 +30,7 @@ public class MeetingAttendeesResponseDto {
                 .build();
 
         attendees.forEach(attendee -> {
-            if (attendee.getAttendStatus() == null) {
+            if (attendee.getAttendStatus().equals(AttendStatus.UNKNOWN)) {
                 responseDto.addUnknowns(attendee);
             }
             else if (attendee.getAttendStatus().equals(AttendStatus.ATTEND)) {
@@ -39,10 +39,11 @@ public class MeetingAttendeesResponseDto {
                 responseDto.addAbsents(attendee);
             }
         });
+        responseDto.sort();
         return responseDto;
     }
 
-    public void sort() {
+    private void sort() {
         attends.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
         absents.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
         unknowns.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
