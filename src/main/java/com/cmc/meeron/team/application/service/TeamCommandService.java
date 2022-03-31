@@ -52,9 +52,9 @@ class TeamCommandService implements TeamCommandUseCase {
     public void deleteTeam(DeleteTeamRequestDto deleteTeamRequestDto) {
         Long teamId = deleteTeamRequestDto.getTeamId();
         List<WorkspaceUser> teamUsers = workspaceUserQueryPort.findByTeamId(teamId);
-        // TODO: 2022/03/27 kobeomseok95 팀에 속한 유저가 많다면..?
         teamUsers.forEach(WorkspaceUser::exitTeam);
-        teamCommandPort.deleteById(teamId);
+        teamQueryPort.findById(teamId)
+                .ifPresent(team -> teamCommandPort.deleteById(team.getId()));
     }
 
     @Override

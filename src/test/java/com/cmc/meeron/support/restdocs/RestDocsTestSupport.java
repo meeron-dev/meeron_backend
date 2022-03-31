@@ -8,10 +8,8 @@ import com.cmc.meeron.config.JacksonTimeFormatConfig;
 import com.cmc.meeron.config.RestDocsConfig;
 import com.cmc.meeron.file.adapter.in.FileRestController;
 import com.cmc.meeron.file.application.port.in.FileManager;
-import com.cmc.meeron.meeting.adapter.in.AttendeeRestController;
-import com.cmc.meeron.meeting.adapter.in.MeetingCommandRestController;
-import com.cmc.meeron.meeting.adapter.in.MeetingCalendarQueryUseCaseFactory;
-import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
+import com.cmc.meeron.meeting.adapter.in.*;
+import com.cmc.meeron.meeting.application.port.in.AgendaQueryUseCase;
 import com.cmc.meeron.meeting.application.port.in.AttendeeQueryUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
@@ -64,6 +62,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         FileRestController.class,
         WorkspaceUserRestController.class,
         AttendeeRestController.class,
+        AgendaRestController.class,
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import({
@@ -86,6 +85,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected WorkspaceUserQueryUseCase workspaceUserQueryUseCase;
     @MockBean protected WorkspaceUserCommandUseCase workspaceUserCommandUseCase;
     @MockBean protected AttendeeQueryUseCase attendeeQueryUseCase;
+    @MockBean protected AgendaQueryUseCase agendaQueryUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

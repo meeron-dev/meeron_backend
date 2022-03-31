@@ -1,9 +1,11 @@
 package com.cmc.meeron.meeting.application.service;
 
 import com.cmc.meeron.meeting.application.port.in.AttendeeQueryUseCase;
-import com.cmc.meeron.meeting.application.port.in.request.MeetingAttendeesRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.MeetingTeamAttendeesRequestDto;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesResponseDto;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
+import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQueryDto;
 import com.cmc.meeron.meeting.domain.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,16 @@ class AttendeeQueryService implements AttendeeQueryUseCase {
     private final AttendeeQueryPort attendeeQueryPort;
 
     @Override
-    public MeetingAttendeesResponseDto getMeetingAttendees(MeetingAttendeesRequestDto meetingAttendeesRequestDto) {
-        List<Attendee> attendees = attendeeQueryPort.findWithWorkspaceUserByMeetingIdTeamId(
-                meetingAttendeesRequestDto.getMeetingId(),
-                meetingAttendeesRequestDto.getTeamId());
-        return MeetingAttendeesResponseDto.fromEntities(attendees);
+    public List<MeetingAttendeesResponseDto> getMeetingAttendees(Long meetingId) {
+        List<MeetingAttendeesQueryDto> queryDtos = attendeeQueryPort.getMeetingAttendees(meetingId);
+        return MeetingAttendeesResponseDto.fromQueryDtos(queryDtos);
+    }
+
+    @Override
+    public MeetingTeamAttendeesResponseDto getMeetingTeamAttendees(MeetingTeamAttendeesRequestDto meetingTeamAttendeesRequestDto) {
+        List<Attendee> attendees = attendeeQueryPort.getWithWorkspaceUserByMeetingIdTeamId(
+                meetingTeamAttendeesRequestDto.getMeetingId(),
+                meetingTeamAttendeesRequestDto.getTeamId());
+        return MeetingTeamAttendeesResponseDto.fromEntities(attendees);
     }
 }

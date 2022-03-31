@@ -8,7 +8,6 @@ import com.cmc.meeron.meeting.application.port.out.MeetingMyCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingTeamCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingWorkspaceCalendarQueryPort;
-import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
@@ -148,22 +147,11 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
         Meeting meeting = findTestMeeting(5L);
         CreateAgendaRequest request = createCreateAgendaRequest();
 
-        // when
+        // when, then
         mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/agendas", meeting.getId().intValue())
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-
-        // then
-        flushAndClear();
-        Meeting afterJoinAttendeesMeeting = findTestMeeting(5L);
-        // FIXME: 2022/03/11 kobeomseok95 추후 리팩토링
-        Agenda agenda1 = meetingQueryPort.findAgendaById(1L).orElseThrow();
-        Agenda agenda2 = meetingQueryPort.findAgendaById(2L).orElseThrow();
-        assertAll(
-                () -> assertEquals(afterJoinAttendeesMeeting, agenda1.getMeeting()),
-                () -> assertEquals(afterJoinAttendeesMeeting, agenda2.getMeeting())
-        );
     }
 
     private CreateAgendaRequest createCreateAgendaRequest() {

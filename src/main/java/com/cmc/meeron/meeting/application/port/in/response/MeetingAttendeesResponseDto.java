@@ -1,13 +1,13 @@
 package com.cmc.meeron.meeting.application.port.in.response;
 
-import com.cmc.meeron.common.type.SortableByNickname;
-import com.cmc.meeron.common.util.NicknameOrderByKoreanEnglishNumberSpecial;
+import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQueryDto;
 import com.cmc.meeron.meeting.domain.AttendStatus;
-import com.cmc.meeron.meeting.domain.Attendee;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,70 +16,40 @@ import java.util.List;
 @Builder
 public class MeetingAttendeesResponseDto {
 
-    @Builder.Default
-    private List<AttendeesResponseDto> attends = new ArrayList<>();
+    private Long teamId;
+    private String teamName;
+    private int attends;
+    private int absents;
+    private int unknowns;
 
-    @Builder.Default
-    private List<AttendeesResponseDto> absents = new ArrayList<>();
+    public static List<MeetingAttendeesResponseDto> fromQueryDtos(List<MeetingAttendeesQueryDto> queryDtos) {
+        List<MeetingAttendeesResponseDto> responseDtos = new ArrayList<>();
+        queryDtos.stream()
+                .collect(Collectors.groupingBy(MeetingAttendeesQueryDto::getTeamId))
+                .forEach((key, value) ->
+                        responseDtos.add(MeetingAttendeesResponseDto.fromGroupByTeamIdList(value)));
+        return responseDtos;
+    }
 
-    @Builder.Default
-    private List<AttendeesResponseDto> unknowns = new ArrayList<>();
-
-    public static MeetingAttendeesResponseDto fromEntities(List<Attendee> attendees) {
-        MeetingAttendeesResponseDto responseDto = MeetingAttendeesResponseDto.builder()
-                .build();
-
-        attendees.forEach(attendee -> {
-            if (attendee.getAttendStatus().equals(AttendStatus.UNKNOWN)) {
-                responseDto.addUnknowns(attendee);
-            }
-            else if (attendee.getAttendStatus().equals(AttendStatus.ATTEND)) {
-                responseDto.addAttends(attendee);
+    private static MeetingAttendeesResponseDto fromGroupByTeamIdList(List<MeetingAttendeesQueryDto> groupByTeamIdDtos) {
+        AtomicInteger attend = new AtomicInteger();
+        AtomicInteger absent = new AtomicInteger();
+        AtomicInteger unknowns = new AtomicInteger();
+        groupByTeamIdDtos.forEach(dto -> {
+            if (dto.getAttendStatus().equals(AttendStatus.ATTEND.name())) {
+                attend.set(dto.getCount());
+            } else if (dto.getAttendStatus().equals(AttendStatus.ABSENT.name())) {
+                absent.set(dto.getCount());
             } else {
-                responseDto.addAbsents(attendee);
+                unknowns.set(dto.getCount());
             }
         });
-        responseDto.sort();
-        return responseDto;
-    }
-
-    private void sort() {
-        attends.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
-        absents.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
-        unknowns.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
-    }
-
-    private void addAttends(Attendee attendee) {
-        this.attends.add(AttendeesResponseDto.fromEntity(attendee));
-    }
-
-    private void addAbsents(Attendee attendee) {
-        this.absents.add(AttendeesResponseDto.fromEntity(attendee));
-    }
-
-    private void addUnknowns(Attendee attendee) {
-        this.unknowns.add(AttendeesResponseDto.fromEntity(attendee));
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class AttendeesResponseDto implements SortableByNickname {
-
-        private Long workspaceUserId;
-        private String profileImageUrl;
-        private String nickname;
-        private String position;
-
-        public static AttendeesResponseDto fromEntity(Attendee attendee) {
-            return AttendeesResponseDto.builder()
-                    .workspaceUserId(attendee.getWorkspaceUser().getId())
-                    .profileImageUrl(attendee.getWorkspaceUser().getWorkspaceUserInfo().getProfileImageUrl())
-                    .nickname(attendee.getWorkspaceUser().getWorkspaceUserInfo().getNickname())
-                    .position(attendee.getWorkspaceUser().getWorkspaceUserInfo().getPosition())
-                    .build();
-        }
+        return MeetingAttendeesResponseDto.builder()
+                .teamId(groupByTeamIdDtos.get(0).getTeamId())
+                .teamName(groupByTeamIdDtos.get(0).getTeamName())
+                .attends(attend.get())
+                .absents(absent.get())
+                .unknowns(unknowns.get())
+                .build();
     }
 }

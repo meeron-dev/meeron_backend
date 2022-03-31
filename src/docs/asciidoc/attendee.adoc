@@ -28,15 +28,19 @@ include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_
 include::{snippets}/meeting-command-rest-controller-test/change_attendee_status_fail_not_found_meeting/http-response.adoc[]
 
 [[get_meeting_attendees]]
-== 팀별 회의 참여자 조회
-=== [GET] /api/meetings/{id}/attendees
+== 팀별 회의 참여자 수 조회
+=== [GET] /api/meetings/{id}/attendees/teams
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/path-parameters.adoc[]
-include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/request-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/response-fields.adoc[]
 
-==== 1001
-include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_fail_invalid/http-request.adoc[]
-include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_fail_invalid/http-response.adoc[]
+[[get_meeting_team_attendees]]
+== 팀에 속한 회의 참여자 조회
+=== [GET] /api/meetings/{id}/attendees/teams/{id}
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/response-fields.adoc[]

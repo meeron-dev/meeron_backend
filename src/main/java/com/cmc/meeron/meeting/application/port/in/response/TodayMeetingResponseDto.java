@@ -1,8 +1,8 @@
 package com.cmc.meeron.meeting.application.port.in.response;
 
-import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountResponseDto;
+import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
 import com.cmc.meeron.meeting.domain.AttendStatus;
-import com.cmc.meeron.meeting.domain.Meeting;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,18 +24,18 @@ public class TodayMeetingResponseDto {
     private LocalTime endTime;
     private Long operationTeamId;
     private String operationTeamName;
+    private String agendaContent;
     private int attends;
     private int unknowns;
     private int absents;
 
-    public static List<TodayMeetingResponseDto> fromEntitiesAndCounts(List<Meeting> todayMeetings,
-                                                                      List<AttendStatusCountResponseDto> attendStatusCountResponseDtos) {
+    public static List<TodayMeetingResponseDto> fromQueryDtos(List<TodayMeetingsQueryDto> todayMeetingsQueryDtos,
+                                                              List<AttendStatusCountQueryDto> attendStatusCountQueryDtos) {
 
-
-        List<TodayMeetingResponseDto> todayMeetingResponseDtos = todayMeetings.stream()
+        List<TodayMeetingResponseDto> todayMeetingResponseDtos = todayMeetingsQueryDtos.stream()
                 .map(TodayMeetingResponseDto::of)
                 .collect(Collectors.toList());
-        attendStatusCountResponseDtos.forEach(attendStatusCountDto -> {
+        attendStatusCountQueryDtos.forEach(attendStatusCountDto -> {
             todayMeetingResponseDtos.stream()
                     .filter(todayMeetingResponseDto -> todayMeetingResponseDto.getMeetingId().equals(attendStatusCountDto.getMeetingId()))
                     .findFirst()
@@ -44,25 +44,26 @@ public class TodayMeetingResponseDto {
         return todayMeetingResponseDtos;
     }
 
-    private static TodayMeetingResponseDto of(Meeting todayMeeting) {
+    private static TodayMeetingResponseDto of(TodayMeetingsQueryDto todayMeetingsQueryDto) {
         return TodayMeetingResponseDto.builder()
-                .meetingId(todayMeeting.getId())
-                .meetingName(todayMeeting.getMeetingInfo().getName())
-                .meetingDate(todayMeeting.getMeetingTime().getStartDate())
-                .startTime(todayMeeting.getMeetingTime().getStartTime())
-                .endTime(todayMeeting.getMeetingTime().getEndTime())
-                .operationTeamId(todayMeeting.getTeam().getId())
-                .operationTeamName(todayMeeting.getTeam().getName())
+                .meetingId(todayMeetingsQueryDto.getMeetingId())
+                .meetingName(todayMeetingsQueryDto.getMeetingName())
+                .meetingDate(todayMeetingsQueryDto.getMeetingDate())
+                .startTime(todayMeetingsQueryDto.getStartTime())
+                .endTime(todayMeetingsQueryDto.getEndTime())
+                .operationTeamId(todayMeetingsQueryDto.getOperationTeamId())
+                .operationTeamName(todayMeetingsQueryDto.getOperationTeamName())
+                .agendaContent(todayMeetingsQueryDto.getAgendaContent())
                 .build();
     }
 
-    private void setCount(AttendStatusCountResponseDto attendStatusCountResponseDto) {
-        if (attendStatusCountResponseDto.getMeetingStatus().equals(AttendStatus.ATTEND.name())) {
-            attends = attendStatusCountResponseDto.getCount();
-        } else if (attendStatusCountResponseDto.getMeetingStatus().equals(AttendStatus.ABSENT.name())) {
-            absents = attendStatusCountResponseDto.getCount();
+    private void setCount(AttendStatusCountQueryDto attendStatusCountQueryDto) {
+        if (attendStatusCountQueryDto.getMeetingStatus().equals(AttendStatus.ATTEND.name())) {
+            attends = attendStatusCountQueryDto.getCount();
+        } else if (attendStatusCountQueryDto.getMeetingStatus().equals(AttendStatus.ABSENT.name())) {
+            absents = attendStatusCountQueryDto.getCount();
         } else {
-            unknowns = attendStatusCountResponseDto.getCount();
+            unknowns = attendStatusCountQueryDto.getCount();
         }
     }
 }

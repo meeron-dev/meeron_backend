@@ -4,10 +4,14 @@ import com.cmc.meeron.common.domain.BaseEntity;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.workspace.domain.Workspace;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
+@SQLDelete(sql = "UPDATE TEAM SET DELETED = true WHERE TEAM_ID=?")
+@Where(clause = "DELETED=false")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,11 +33,15 @@ public class Team extends BaseEntity {
     @Column(length = 200)
     private String teamLogoUrl;
 
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private boolean deleted;
+
     public static Team of(Workspace workspace, String name) {
         return Team.builder()
                 .workspace(workspace)
                 .name(name)
                 .teamLogoUrl("")
+                .deleted(false)
                 .build();
     }
 

@@ -19,6 +19,7 @@ CREATE TABLE TEAM
     `LAST_MODIFIED_DATE`  TIMESTAMP       NOT NULL    DEFAULT current_timestamp,
     `NAME`                VARCHAR(30)     NOT NULL,
     `TEAM_LOGO_URL`       VARCHAR(200)    NULL,
+    `DELETED`             TINYINT(1)      NOT NULL,
     PRIMARY KEY (TEAM_ID)
 );
 

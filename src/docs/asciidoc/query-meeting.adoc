@@ -129,3 +129,16 @@ include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace_user/request-parameters.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace_user/http-response.adoc[]
 include::{snippets}/meeting-query-rest-controller-test/get_month_meetings_count_success_workspace_user/response-fields.adoc[]
+
+[[meeting]]
+== 회의 상세 조회
+=== [GET] /api/meetings/{id}
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_success/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_success/request-headers.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_success/path-parameters.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_success/http-response.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_success/response-fields.adoc[]
+
+==== 1303
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_fail_not_found_meeting/http-request.adoc[]
+include::{snippets}/meeting-query-rest-controller-test/get_meeting_fail_not_found_meeting/http-response.adoc[]

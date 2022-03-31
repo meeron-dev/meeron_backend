@@ -1,0 +1,16 @@
+= 아젠다 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[meetings_agenda_count]]
+== 회의의 아젠다 존재 및 확인 수, 첨부파일 수 조회
+=== [GET] /api/meetings/{id}/agendas/count
+include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/request-headers.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/path-parameters.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/http-response.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/response-fields.adoc[]

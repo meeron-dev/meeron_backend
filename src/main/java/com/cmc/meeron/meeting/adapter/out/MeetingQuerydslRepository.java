@@ -1,9 +1,7 @@
 package com.cmc.meeron.meeting.adapter.out;
 
-import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.QMonthMeetingsCountQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.QYearMeetingsCountQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
+import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
+import com.cmc.meeron.meeting.application.port.out.response.*;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,10 +12,14 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
+import static com.cmc.meeron.meeting.domain.QAgenda.agenda;
 import static com.cmc.meeron.meeting.domain.QAttendee.attendee;
 import static com.cmc.meeron.meeting.domain.QMeeting.meeting;
+import static com.cmc.meeron.team.domain.QTeam.team;
 import static com.cmc.meeron.workspace.domain.QWorkspace.workspace;
+import static com.cmc.meeron.workspace.domain.QWorkspaceUser.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -155,5 +157,45 @@ class MeetingQuerydslRepository {
                 .groupBy(meeting.meetingTime.startDate.month())
                 .orderBy(meeting.meetingTime.startDate.month().asc())
                 .fetch();
+    }
+
+    public List<TodayMeetingsQueryDto> findTodayMeetingsQuery(Long workspaceId, Long workspaceUserId) {
+        LocalDate now = LocalDate.now();
+        return queryFactory.select(new QTodayMeetingsQueryDto(
+                meeting.id, meeting.meetingInfo.name, meeting.meetingInfo.purpose,
+                meeting.meetingTime.startDate, meeting.meetingTime.startTime, meeting.meetingTime.endTime,
+                team.id, team.name, agenda.name
+        )).from(meeting)
+                .join(meeting.team, team)
+                .join(meeting.attendees.values, attendee)
+                .join(agenda).on(agenda.meeting.id.eq(meeting.id))
+                .where(meeting.workspace.id.eq(workspaceId),
+                        attendee.workspaceUser.id.eq(workspaceUserId),
+                        meeting.meetingTime.startDate.eq(now),
+                        agenda.agendaOrder.eq(1))
+                .fetch();
+    }
+
+    public Optional<MeetingAndAdminsQueryDto> findWithTeamAndAdminsById(Long meetingId) {
+        MeetingQueryDto meetingQueryDto = Optional.ofNullable(queryFactory.select(new QMeetingQueryDto(
+                meeting.id, meeting.meetingInfo.name, meeting.meetingInfo.purpose,
+                meeting.meetingTime.startDate, meeting.meetingTime.startTime, meeting.meetingTime.endTime,
+                team.id, team.name
+        )).from(meeting)
+                .join(meeting.team, team)
+                .where(meeting.id.eq(meetingId))
+                .fetchOne())
+                .orElseThrow(MeetingNotFoundException::new);
+
+        List<AdminQueryDto> adminQueryDtos = queryFactory.select(new QAdminQueryDto(
+                workspaceUser.id, workspaceUser.workspaceUserInfo.nickname
+        )).from(attendee)
+                .join(attendee.workspaceUser, workspaceUser)
+                .where(attendee.meeting.id.eq(meetingId),
+                        attendee.isMeetingAdmin.isTrue())
+                .fetch();
+
+        return Optional.of(MeetingAndAdminsQueryDto
+                .fromQueryDto(meetingQueryDto, adminQueryDtos));
     }
 }

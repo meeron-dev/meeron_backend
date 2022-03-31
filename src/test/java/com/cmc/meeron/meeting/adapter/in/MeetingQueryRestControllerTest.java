@@ -1,6 +1,8 @@
 package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.ClientErrorCode;
+import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
+import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.util.LocalDateTimeUtil;
 import com.cmc.meeron.meeting.application.port.in.response.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
@@ -30,8 +32,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,6 +64,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[0].operationTeamId", is(responseDto.get(0).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].operationTeamName", is(responseDto.get(0).getOperationTeamName())))
+                .andExpect(jsonPath("$.meetings[0].mainAgenda", is(responseDto.get(0).getAgendaContent())))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDto.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDto.get(1).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[1].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(1).getMeetingDate()))))
@@ -70,6 +72,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(1).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[1].operationTeamId", is(responseDto.get(1).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].operationTeamName", is(responseDto.get(1).getOperationTeamName())))
+                .andExpect(jsonPath("$.meetings[1].mainAgenda", is(responseDto.get(1).getAgendaContent())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -86,6 +89,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
                                 fieldWithPath("meetings[].operationTeamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID"),
                                 fieldWithPath("meetings[].operationTeamName").type(JsonFieldType.STRING).description("회의 주최 팀 명"),
+                                fieldWithPath("meetings[].mainAgenda").type(JsonFieldType.STRING).description("회의의 핵심 아젠다"),
                                 fieldWithPath("meetings[].attends").type(JsonFieldType.NUMBER).description("회의 참가자 수"),
                                 fieldWithPath("meetings[].absents").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
                                 fieldWithPath("meetings[].unknowns").type(JsonFieldType.NUMBER).description("회의 참여 응답을 하지 않은 사람의 수")
@@ -756,6 +760,59 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("monthCounts[].month").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
                                 fieldWithPath("monthCounts[].count").type(JsonFieldType.NUMBER).description("해당 년도의 회의 갯수")
+                        )
+                ));
+    }
+
+    @DisplayName("회의 상세 정보 조회 - 실패 / 회의가 존재하지 않을 경우")
+    @Test
+    void get_meeting_fail_not_found_meeting() throws Exception {
+
+        // given
+        when(meetingQueryUseCase.getMeeting(any()))
+                .thenThrow(new MeetingNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_MEETING.getCode())));
+    }
+
+    @DisplayName("회의 상세 정보 조회 - 성공")
+    @Test
+    void get_meeting_success() throws Exception {
+
+        // given
+        MeetingResponseDto responseDto = MeetingResponseDtoBuilder.build();
+        when(meetingQueryUseCase.getMeeting(any()))
+                .thenReturn(responseDto);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("조회할 회의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("회의가 존재하는 년도"),
+                                fieldWithPath("meetingName").type(JsonFieldType.STRING).description("해당 년도의 회의 갯수"),
+                                fieldWithPath("meetingPurpose").type(JsonFieldType.STRING).description("회의 성격"),
+                                fieldWithPath("meetingDate").type(JsonFieldType.STRING).description("회의 날짜"),
+                                fieldWithPath("startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
+                                fieldWithPath("endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
+                                fieldWithPath("operationTeamId").type(JsonFieldType.NUMBER).description("주관하는 팀 ID"),
+                                fieldWithPath("operationTeamName").type(JsonFieldType.STRING).description("주관하는 팀 이름"),
+                                fieldWithPath("admins[].workspaceUserId").type(JsonFieldType.NUMBER).description("회의 관리자 워크스페이스 유저 ID"),
+                                fieldWithPath("admins[].nickname").type(JsonFieldType.STRING).description("회의 관리자 워크스페이스 유저 닉네임")
                         )
                 ));
     }

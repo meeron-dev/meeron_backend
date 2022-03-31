@@ -16,12 +16,12 @@ values(6, 'test6@test.com', 'USER', 'KAKAO', current_timestamp, current_timestam
 insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
 values(7, 'test7@test.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
 
-insert into team(team_id, workspace_id, created_date, last_modified_date, name)
-values(1, 1, current_timestamp, current_timestamp, '디자인팀');
-insert into team(team_id, workspace_id, created_date, last_modified_date, name)
-values(2, 1, current_timestamp, current_timestamp, '기획팀');
-insert into team(team_id, workspace_id, created_date, last_modified_date, name)
-values(3, 1, current_timestamp, current_timestamp, '개발팀');
+insert into team(team_id, workspace_id, created_date, last_modified_date, name, deleted)
+values(1, 1, current_timestamp, current_timestamp, '디자인팀', false);
+insert into team(team_id, workspace_id, created_date, last_modified_date, name, deleted)
+values(2, 1, current_timestamp, current_timestamp, '기획팀', false);
+insert into team(team_id, workspace_id, created_date, last_modified_date, name, deleted)
+values(3, 1, current_timestamp, current_timestamp, '개발팀', false);
 
 insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
 values(1, 1, 1, 3, current_timestamp, current_timestamp, false, '무무', '', 'Server / PM');

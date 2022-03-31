@@ -28,6 +28,7 @@ public class TodayMeetingResponse {
                                 .endTime(meeting.getEndTime())
                                 .operationTeamId(meeting.getOperationTeamId())
                                 .operationTeamName(meeting.getOperationTeamName())
+                                .mainAgenda(meeting.getAgendaContent())
                                 .attends(meeting.getAttends())
                                 .absents(meeting.getAbsents())
                                 .unknowns(meeting.getUnknowns())
@@ -49,6 +50,7 @@ public class TodayMeetingResponse {
         private LocalTime endTime;
         private Long operationTeamId;
         private String operationTeamName;
+        private String mainAgenda;
         private int attends;
         private int absents;
         private int unknowns;

@@ -13,13 +13,12 @@ import org.springframework.util.MultiValueMap;
 
 import java.time.YearMonth;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
-public class MeetingQueryIntegrationTest extends IntegrationTest {
+class MeetingQueryIntegrationTest extends IntegrationTest {
 
     @Sql("classpath:meeting-test.sql")
     @DisplayName("오늘의 회의 조회 - 성공")
@@ -38,7 +37,8 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.meetings", hasSize(1)))
                 .andExpect(jsonPath("$.meetings[0].attends", is(2)))
                 .andExpect(jsonPath("$.meetings[0].absents", is(1)))
-                .andExpect(jsonPath("$.meetings[0].unknowns", is(2)));
+                .andExpect(jsonPath("$.meetings[0].unknowns", is(2)))
+                .andExpect(jsonPath("$.meetings[0].mainAgenda", not(emptyString())));
     }
 
     @DisplayName("회의 날짜 조회 - 워크스페이스의 경우")
@@ -270,21 +270,26 @@ public class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.monthCounts[2].count", is(2)));
     }
 
-    @DisplayName("회의 참가자 조회 - 성공")
+    @DisplayName("회의 상세 정보 조회 - 성공")
     @Test
-    void get_meeting_attendees() throws Exception {
+    void get_meeting_success() throws Exception {
 
-        // given
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("teamId", "3");
-
-        // when, then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/attendees", 1)
-                .params(params)
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}", "1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.attends", hasSize(3)))
-                .andExpect(jsonPath("$.absents", hasSize(0)))
-                .andExpect(jsonPath("$.unknowns", hasSize(0)));
+                .andExpect(jsonPath("$.meetingId", is(1)))
+                .andExpect(jsonPath("$.meetingName", is("1주차 디자인 공지")))
+                .andExpect(jsonPath("$.meetingPurpose", is("공지사항")))
+                .andExpect(jsonPath("$.meetingDate", is("2022/2/18")))
+                .andExpect(jsonPath("$.startTime", is("02:00 PM")))
+                .andExpect(jsonPath("$.endTime", is("04:00 PM")))
+                .andExpect(jsonPath("$.operationTeamId", is(1)))
+                .andExpect(jsonPath("$.operationTeamName", is("디자인팀")))
+                .andExpect(jsonPath("$.admins", hasSize(2)))
+                .andExpect(jsonPath("$.admins[0].workspaceUserId", is(2)))
+                .andExpect(jsonPath("$.admins[0].nickname", is("네코")))
+                .andExpect(jsonPath("$.admins[1].workspaceUserId", is(5)))
+                .andExpect(jsonPath("$.admins[1].nickname", is("미소")));
     }
 }

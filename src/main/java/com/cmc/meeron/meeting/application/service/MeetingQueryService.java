@@ -1,12 +1,15 @@
 package com.cmc.meeron.meeting.application.service;
 
+import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
 import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto;
+import com.cmc.meeron.meeting.application.port.in.response.MeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
-import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountResponseDto;
-import com.cmc.meeron.meeting.domain.Meeting;
+import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +27,19 @@ class MeetingQueryService implements MeetingQueryUseCase {
 
     @Override
     public List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto) {
-        List<Meeting> todayMeetings = meetingQueryPort.findTodayMeetings(todayMeetingRequestDto.getWorkspaceId(), todayMeetingRequestDto.getWorkspaceUserId());
-        List<AttendStatusCountResponseDto> countResponseDtos = attendeeQueryPort.countAttendStatusByMeetingIds(todayMeetings
+        List<TodayMeetingsQueryDto> todayMeetingsQueryDtos = meetingQueryPort
+                .findTodayMeetings(todayMeetingRequestDto.getWorkspaceId(), todayMeetingRequestDto.getWorkspaceUserId());
+        List<AttendStatusCountQueryDto> countResponseDtos = attendeeQueryPort.countAttendStatusByMeetingIds(todayMeetingsQueryDtos
                 .stream()
-                .map(Meeting::getId)
+                .map(TodayMeetingsQueryDto::getMeetingId)
                 .collect(Collectors.toList()));
-        return TodayMeetingResponseDto.fromEntitiesAndCounts(todayMeetings, countResponseDtos);
+        return TodayMeetingResponseDto.fromQueryDtos(todayMeetingsQueryDtos, countResponseDtos);
+    }
+
+    @Override
+    public MeetingResponseDto getMeeting(Long meetingId) {
+        MeetingAndAdminsQueryDto meetingAndAdminsQueryDto = meetingQueryPort.findWithTeamAndAdminsById(meetingId)
+                .orElseThrow(MeetingNotFoundException::new);
+        return MeetingResponseDto.fromQueryDto(meetingAndAdminsQueryDto);
     }
 }

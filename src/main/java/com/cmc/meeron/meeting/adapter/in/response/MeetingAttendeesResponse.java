@@ -1,63 +1,52 @@
 package com.cmc.meeron.meeting.adapter.in.response;
 
 import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class MeetingAttendeesResponse {
 
     @Builder.Default
-    private List<AttendeesResponse> attends = new ArrayList<>();
+    private List<AttendeeTeamCountResponse> attendees = new ArrayList<>();
 
-    @Builder.Default
-    private List<AttendeesResponse> absents = new ArrayList<>();
-
-    @Builder.Default
-    private List<AttendeesResponse> unknowns = new ArrayList<>();
-
-    public static MeetingAttendeesResponse fromResponseDto(MeetingAttendeesResponseDto responseDto) {
+    public static MeetingAttendeesResponse fromResponseDtos(List<MeetingAttendeesResponseDto> responseDtos) {
         return MeetingAttendeesResponse.builder()
-                .attends(responseDto.getAttends()
+                .attendees(responseDtos
                         .stream()
-                        .map(AttendeesResponse::fromResponseDto)
-                        .collect(Collectors.toList()))
-                .absents(responseDto.getAbsents()
-                        .stream()
-                        .map(AttendeesResponse::fromResponseDto)
-                        .collect(Collectors.toList()))
-                .unknowns(responseDto.getUnknowns()
-                        .stream()
-                        .map(AttendeesResponse::fromResponseDto)
+                        .map(AttendeeTeamCountResponse::fromResponseDto)
                         .collect(Collectors.toList()))
                 .build();
     }
 
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class AttendeesResponse {
+    public static class AttendeeTeamCountResponse {
 
-        private Long workspaceUserId;
-        private String profileImageUrl;
-        private String nickname;
-        private String position;
+        private Long teamId;
+        private String teamName;
+        private int attends;
+        private int absents;
+        private int unknowns;
 
-        public static AttendeesResponse fromResponseDto(MeetingAttendeesResponseDto.AttendeesResponseDto attendeesResponseDto) {
-            return AttendeesResponse.builder()
-                    .workspaceUserId(attendeesResponseDto.getWorkspaceUserId())
-                    .profileImageUrl(attendeesResponseDto.getProfileImageUrl())
-                    .nickname(attendeesResponseDto.getNickname())
-                    .position(attendeesResponseDto.getPosition())
+        public static AttendeeTeamCountResponse fromResponseDto(MeetingAttendeesResponseDto meetingAttendeesResponseDto) {
+            return AttendeeTeamCountResponse.builder()
+                    .teamId(meetingAttendeesResponseDto.getTeamId())
+                    .teamName(meetingAttendeesResponseDto.getTeamName())
+                    .attends(meetingAttendeesResponseDto.getAttends())
+                    .absents(meetingAttendeesResponseDto.getAbsents())
+                    .unknowns(meetingAttendeesResponseDto.getUnknowns())
                     .build();
         }
     }

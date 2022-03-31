@@ -1,25 +1,23 @@
 package com.cmc.meeron.meeting.adapter.in;
 
-import com.cmc.meeron.common.exception.ClientErrorCode;
-import com.cmc.meeron.meeting.adapter.in.request.FindMeetingAttendeesParameters;
-import com.cmc.meeron.meeting.adapter.in.request.FindMeetingAttendeesParametersBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDtoBuilder;
+import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesResponseDtoBuilder;
+import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesResponseDto;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+
+import java.util.List;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -33,21 +31,59 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockJwt
 class AttendeeRestControllerTest extends RestDocsTestSupport {
 
-    @DisplayName("회의 참가자 조회 - 성공")
+    @DisplayName("회의 상세 조회시 참가자 조회 - 성공")
     @Test
     void get_meeting_attendees_success() throws Exception {
 
         // given
-        FindMeetingAttendeesParameters parameters = FindMeetingAttendeesParametersBuilder.build();
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("teamId", parameters.getTeamId().toString());
-        MeetingAttendeesResponseDto responseDto = MeetingAttendeesResponseDtoBuilder.build();
+        List<MeetingAttendeesResponseDto> responseDtos = MeetingAttendeesResponseDtoBuilder.build();
         when(attendeeQueryUseCase.getMeetingAttendees(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/attendees/teams", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attendees[0].teamId", is(responseDtos.get(0).getTeamId().intValue())))
+                .andExpect(jsonPath("$.attendees[0].teamName", is(responseDtos.get(0).getTeamName())))
+                .andExpect(jsonPath("$.attendees[0].attends", is(responseDtos.get(0).getAttends())))
+                .andExpect(jsonPath("$.attendees[0].absents", is(responseDtos.get(0).getAbsents())))
+                .andExpect(jsonPath("$.attendees[0].unknowns", is(responseDtos.get(0).getUnknowns())))
+                .andExpect(jsonPath("$.attendees[1].teamId", is(responseDtos.get(1).getTeamId().intValue())))
+                .andExpect(jsonPath("$.attendees[1].teamName", is(responseDtos.get(1).getTeamName())))
+                .andExpect(jsonPath("$.attendees[1].attends", is(responseDtos.get(1).getAttends())))
+                .andExpect(jsonPath("$.attendees[1].absents", is(responseDtos.get(1).getAbsents())))
+                .andExpect(jsonPath("$.attendees[1].unknowns", is(responseDtos.get(1).getUnknowns())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("참가자를 찾을 회의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("attendees[].teamId").type(JsonFieldType.NUMBER).description("회의 참여자의 팀 ID"),
+                                fieldWithPath("attendees[].teamName").type(JsonFieldType.STRING).description("회의 참여자의 팀명"),
+                                fieldWithPath("attendees[].attends").type(JsonFieldType.NUMBER).description("회의 참여 확정자 수"),
+                                fieldWithPath("attendees[].absents").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
+                                fieldWithPath("attendees[].unknowns").type(JsonFieldType.NUMBER).description("회의 참여 미응답자 수")
+                        )
+                ));
+    }
+
+    @DisplayName("회의 참가자 팀별 상세 조회 - 성공")
+    @Test
+    void get_meeting_team_attendees_success() throws Exception {
+
+        // given
+        MeetingTeamAttendeesResponseDto responseDto = MeetingTeamAttendeesResponseDtoBuilder.build();
+        when(attendeeQueryUseCase.getMeetingTeamAttendees(any()))
                 .thenReturn(responseDto);
 
-        // given, when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/attendees", "1")
-                .params(params)
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/attendees/teams/{teamId}",
+                "1", "1")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -59,9 +95,7 @@ class AttendeeRestControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
                         ),
                         pathParameters(
-                                parameterWithName("meetingId").description("참가자를 찾을 회의 ID")
-                        ),
-                        requestParameters(
+                                parameterWithName("meetingId").description("참가자를 찾을 회의 ID"),
                                 parameterWithName("teamId").description("참가자를 찾을 팀 ID")
                         ),
                         responseFields(
@@ -81,19 +115,5 @@ class AttendeeRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("unknowns[].position").type(JsonFieldType.STRING).description("회의 참여 미정자의 직책")
                         )
                 ));
-    }
-
-    @DisplayName("회의 참가자 조회 - 실패 / 제약조건을 지키지 않을 경우")
-    @Test
-    void get_meeting_attendees_fail_invalid() throws Exception {
-
-        // given, when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/attendees", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
-                .andExpect(jsonPath("$.errors", hasSize(1)));
     }
 }

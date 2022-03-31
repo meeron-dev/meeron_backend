@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cmc.meeron.team.TeamFixture.DELETE_TEST_TEAM;
 import static com.cmc.meeron.team.TeamFixture.TEAM_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_ADMIN;
@@ -119,6 +120,8 @@ class TeamCommandServiceTest {
 
         // given
         DeleteTeamRequestDto requestDto = DeleteTeamRequestDtoBuilder.build();
+        when(teamQueryPort.findById(any()))
+                .thenReturn(Optional.of(DELETE_TEST_TEAM));
         when(workspaceUserQueryPort.findByTeamId(any()))
                 .thenReturn(List.of(workspaceUser2));
 
@@ -127,7 +130,8 @@ class TeamCommandServiceTest {
 
         // then
         assertAll(
-                () -> verify(teamCommandPort).deleteById(requestDto.getTeamId()),
+                () -> verify(teamQueryPort).findById(requestDto.getTeamId()),
+                () -> verify(teamCommandPort).deleteById(DELETE_TEST_TEAM.getId()),
                 () -> assertNull(workspaceUser2.getTeam())
         );
     }

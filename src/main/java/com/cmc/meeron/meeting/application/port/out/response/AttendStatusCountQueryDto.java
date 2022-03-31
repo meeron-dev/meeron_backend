@@ -6,14 +6,14 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @Builder
-public class AttendStatusCountResponseDto {
+public class AttendStatusCountQueryDto {
 
     private Long meetingId;
     private String meetingStatus;
     private int count;
 
     @QueryProjection
-    public AttendStatusCountResponseDto(Long meetingId, String meetingStatus, int count) {
+    public AttendStatusCountQueryDto(Long meetingId, String meetingStatus, int count) {
         this.meetingId = meetingId;
         this.meetingStatus = meetingStatus;
         this.count = count;

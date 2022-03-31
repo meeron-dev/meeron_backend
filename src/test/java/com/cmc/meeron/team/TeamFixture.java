@@ -10,5 +10,13 @@ public class TeamFixture {
             .id(5L)
             .workspace(WORKSPACE_1)
             .name("테스트팀")
+            .deleted(false)
+            .build();
+
+    public static final Team DELETE_TEST_TEAM = Team.builder()
+            .id(1L)
+            .workspace(WORKSPACE_1)
+            .name("지울팀")
+            .deleted(false)
             .build();
 }
