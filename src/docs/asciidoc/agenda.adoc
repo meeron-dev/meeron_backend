@@ -14,3 +14,16 @@ include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/reques
 include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/path-parameters.adoc[]
 include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/http-response.adoc[]
 include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/response-fields.adoc[]
+
+[[meetings_agenda_issues_files]]
+== 회의 상세(아젠다, 이슈, 파일) 조회
+=== [GET] /api/meetings/{id}/agendas/{agenda-order}
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_success/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_success/request-headers.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_success/path-parameters.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_success/http-response.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_success/response-fields.adoc[]
+
+==== 1300
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_fail_not_found_agenda/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_fail_not_found_agenda/http-response.adoc[]

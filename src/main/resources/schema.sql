@@ -155,6 +155,7 @@ CREATE TABLE AGENDA
     `LAST_MODIFIED_DATE`  TIMESTAMP      NOT NULL    DEFAULT current_timestamp,
     `NAME`                VARCHAR(48)    NOT NULL,
     `AGENDA_ORDER`        INT            NOT NULL,
+    `AGENDA_RESULT`       VARCHAR(1000)  NULL,
     PRIMARY KEY (AGENDA_ID)
 );
 
@@ -174,6 +175,7 @@ CREATE TABLE ISSUE
     `CREATED_DATE`        TIMESTAMP        NOT NULL    DEFAULT current_timestamp,
     `LAST_MODIFIED_DATE`  TIMESTAMP        NOT NULL    DEFAULT current_timestamp,
     `CONTENTS`            VARCHAR(1000)    NOT NULL,
+    `ISSUE_RESULT`        VARCHAR(1000)    NULL,
     PRIMARY KEY (ISSUE_ID)
 );
 

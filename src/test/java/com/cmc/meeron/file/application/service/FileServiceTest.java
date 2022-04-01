@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cmc.meeron.file.FileFixture.FILE;
-import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
+import static com.cmc.meeron.meeting.AgendaFixture.AGENDA;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -38,7 +38,7 @@ class FileServiceTest {
 
     @BeforeEach
     void setUp() {
-        agenda = AGENDA1;
+        agenda = AGENDA;
         files = List.of(FILE, FILE);
     }
 

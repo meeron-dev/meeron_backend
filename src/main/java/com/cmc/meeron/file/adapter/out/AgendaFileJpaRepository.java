@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 interface AgendaFileJpaRepository extends JpaRepository<AgendaFile, Long> {
 
     @Query(
@@ -15,4 +17,6 @@ interface AgendaFileJpaRepository extends JpaRepository<AgendaFile, Long> {
             " where m.id = :meetingId"
     )
     int countByMeetingId(@Param("meetingId") Long meetingId);
+
+    List<AgendaFile> findByAgendaId(Long agendaId);
 }

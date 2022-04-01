@@ -1,6 +1,10 @@
 package com.cmc.meeron.meeting.application.service;
 
+import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.file.application.port.out.AgendaFileQueryPort;
+import com.cmc.meeron.meeting.application.port.in.response.AgendaIssuesFilesResponseDto;
+import com.cmc.meeron.meeting.application.port.in.request.FindAgendaIssuesFilesRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.FindAgendaIssuesFilesRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.AgendaCountResponseDto;
 import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
 import org.junit.jupiter.api.DisplayName;
@@ -10,8 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
+import java.util.Optional;
+
+import static com.cmc.meeron.meeting.AgendaFileFixture.AGENDA_FILE_1;
+import static com.cmc.meeron.meeting.AgendaFixture.AGENDA;
+import static com.cmc.meeron.meeting.IssueFixture.ISSUE_1;
+import static com.cmc.meeron.meeting.IssueFixture.ISSUE_2;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +77,46 @@ class AgendaQueryServiceTest {
                 () -> assertTrue(responseDto.isActive()),
                 () -> assertEquals(0, responseDto.getChecks()),
                 () -> assertEquals(2, responseDto.getFiles())
+        );
+    }
+
+    @DisplayName("아젠다 상세 조회 - 실패 / 존재하지 않는 순서일 경우")
+    @Test
+    void get_agenda_issue_files_fail_not_found_agenda() throws Exception {
+
+        // given
+        FindAgendaIssuesFilesRequestDto requestDto = FindAgendaIssuesFilesRequestDtoBuilder.build();
+        when(agendaQueryPort.findByMeetingIdAndAgendaOrder(any(), anyInt()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(AgendaNotFoundException.class,
+                () -> agendaQueryService.getAgendaIssuesFiles(requestDto));
+    }
+
+    @DisplayName("아젠다 상세 조회 - 성공")
+    @Test
+    void get_agenda_issue_files_success() throws Exception {
+
+        // given
+        FindAgendaIssuesFilesRequestDto requestDto = FindAgendaIssuesFilesRequestDtoBuilder.build();
+        when(agendaQueryPort.findByMeetingIdAndAgendaOrder(any(), anyInt()))
+                .thenReturn(Optional.of(AGENDA));
+        when(agendaQueryPort.findByAgendaId(any()))
+                .thenReturn(List.of(ISSUE_1, ISSUE_2));
+        when(agendaFileQueryPort.findByAgendaId(any()))
+                .thenReturn(List.of(AGENDA_FILE_1));
+
+        // when
+        AgendaIssuesFilesResponseDto responseDto = agendaQueryService.getAgendaIssuesFiles(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(agendaQueryPort).findByMeetingIdAndAgendaOrder(requestDto.getMeetingId(), requestDto.getAgendaOrder()),
+                () -> verify(agendaQueryPort).findByAgendaId(AGENDA.getId()),
+                () -> verify(agendaFileQueryPort).findByAgendaId(AGENDA.getId()),
+                () -> assertEquals(2, responseDto.getIssues().size()),
+                () -> assertEquals(1, responseDto.getFiles().size())
         );
     }
 }

@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cmc.meeron.auth.AuthUserFixture.AUTH_USER;
-import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
+import static com.cmc.meeron.meeting.AgendaFixture.AGENDA;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.*;
@@ -63,7 +63,7 @@ class MeetingCommandServiceTest {
     @BeforeEach
     void setUp() {
         meeting = MEETING;
-        agenda = AGENDA1;
+        agenda = AGENDA;
         authUser = AUTH_USER;
         workspace = createWorkspace();
     }

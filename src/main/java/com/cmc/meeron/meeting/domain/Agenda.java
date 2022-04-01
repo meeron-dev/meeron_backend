@@ -26,4 +26,7 @@ public class Agenda extends BaseEntity {
 
     @Column(nullable = false, length = 48)
     private String name;
+
+    @Column(length = 1000)
+    private String agendaResult;
 }
