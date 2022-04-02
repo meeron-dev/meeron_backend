@@ -16,7 +16,7 @@ interface AgendaFileJpaRepository extends JpaRepository<AgendaFile, Long> {
             " join a.meeting m on a.meeting.id = m.id" +
             " where m.id = :meetingId"
     )
-    int countByMeetingId(@Param("meetingId") Long meetingId);
+    long countByMeetingId(@Param("meetingId") Long meetingId);
 
     List<AgendaFile> findByAgendaId(Long agendaId);
 }

@@ -2,10 +2,10 @@ package com.cmc.meeron.meeting.application.service;
 
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.file.application.port.out.AgendaFileQueryPort;
-import com.cmc.meeron.meeting.application.port.in.response.AgendaIssuesFilesResponseDto;
 import com.cmc.meeron.meeting.application.port.in.request.FindAgendaIssuesFilesRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.FindAgendaIssuesFilesRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.AgendaCountResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.AgendaIssuesFilesResponseDto;
 import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +24,7 @@ import static com.cmc.meeron.meeting.IssueFixture.ISSUE_2;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AgendaQueryServiceTest {
@@ -37,46 +36,46 @@ class AgendaQueryServiceTest {
     @InjectMocks
     AgendaQueryService agendaQueryService;
 
-    @DisplayName("아젠다 활성화 조회 - 성공 / 아젠다가 없을 때")
+    @DisplayName("아젠다 수, 체크 수, 파일 수 조회 - 성공 / 아젠다가 없을 경우")
     @Test
-    void get_agenda_active_by_meeting_id_success_not_exist_agenda() throws Exception {
+    void get_agenda_counts_by_meeting_id_success_not_found_agendas() throws Exception {
 
         // given
-        when(agendaQueryPort.existsByMeetingId(any()))
-                .thenReturn(false);
+        when(agendaQueryPort.countsByMeetingId(any()))
+                .thenReturn(0L);
 
         // when
         AgendaCountResponseDto responseDto = agendaQueryService.getAgendaCountsByMeetingId(1L);
 
         // then
         assertAll(
-                () -> verify(agendaQueryPort).existsByMeetingId(1L),
-                () -> assertFalse(responseDto.isActive()),
-                () -> assertEquals(0, responseDto.getChecks()),
-                () -> assertEquals(0, responseDto.getFiles())
+                () -> verify(agendaQueryPort).countsByMeetingId(1L),
+                () -> verify(agendaFileQueryPort, times(0)).countByMeetingId(1L),
+                () -> assertEquals(0, responseDto.getAgendas()),
+                () -> assertEquals(0, responseDto.getFiles()),
+                () -> assertEquals(0, responseDto.getChecks())
         );
     }
 
-    @DisplayName("아젠다 활성화 조회 - 성공 / 아젠다가 있을 때")
+    @DisplayName("아젠다 수, 체크 수, 파일 수 조회 - 성공 / 아젠다가 있을 경우")
     @Test
-    void get_agenda_active_by_meeting_id_success_exist_agenda() throws Exception {
+    void get_agenda_counts_by_meeting_id_success_found_agendas() throws Exception {
 
         // given
-        when(agendaQueryPort.existsByMeetingId(any()))
-                .thenReturn(true);
+        when(agendaQueryPort.countsByMeetingId(any()))
+                .thenReturn(2L);
         when(agendaFileQueryPort.countByMeetingId(any()))
-                .thenReturn(2);
+                .thenReturn(1L);
 
         // when
         AgendaCountResponseDto responseDto = agendaQueryService.getAgendaCountsByMeetingId(1L);
 
         // then
         assertAll(
-                () -> verify(agendaQueryPort).existsByMeetingId(1L),
+                () -> verify(agendaQueryPort).countsByMeetingId(1L),
                 () -> verify(agendaFileQueryPort).countByMeetingId(1L),
-                () -> assertTrue(responseDto.isActive()),
-                () -> assertEquals(0, responseDto.getChecks()),
-                () -> assertEquals(2, responseDto.getFiles())
+                () -> assertEquals(2, responseDto.getAgendas()),
+                () -> assertEquals(1, responseDto.getFiles())
         );
     }
 

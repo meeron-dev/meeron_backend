@@ -446,7 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#meetings_agenda_count">회의의 아젠다 존재 및 확인 수, 첨부파일 수 조회</a>
+<li><a href="#meetings_agenda_count">회의의 아젠다 수 및 확인 수, 첨부파일 수 조회</a>
 <ul class="sectlevel2">
 <li><a href="#_get_apimeetingsidagendascount">[GET] /api/meetings/{id}/agendas/count</a></li>
 </ul>
@@ -465,7 +465,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="meetings_agenda_count"><a class="link" href="#meetings_agenda_count">회의의 아젠다 존재 및 확인 수, 첨부파일 수 조회</a></h2>
+<h2 id="meetings_agenda_count"><a class="link" href="#meetings_agenda_count">회의의 아젠다 수 및 확인 수, 첨부파일 수 조회</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_get_apimeetingsidagendascount"><a class="link" href="#_get_apimeetingsidagendascount">[GET] /api/meetings/{id}/agendas/count</a></h3>
@@ -525,10 +525,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 52
+Content-Length: 50
 
 {
-  "active" : true,
+  "agendas" : 1,
   "checks" : 0,
   "files" : 2
 }</code></pre>
@@ -549,9 +549,9 @@ Content-Length: 52
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>active</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">화면 활성화 여부</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>agendas</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 아젠다 수, 0일 경우 버튼 비활성화</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>checks</code></p></td>
@@ -732,7 +732,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 151
 
 {
-  "time" : "2022-04-02T01:51:07.254747",
+  "time" : "2022-04-02T16:37:14.100422",
   "status" : 400,
   "message" : "아젠다를 찾을 수 없습니다.",
   "code" : 1300,
@@ -748,7 +748,7 @@ Content-Length: 151
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-04-02 01:50:33 +0900
+Last updated 2022-04-02 16:35:40 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

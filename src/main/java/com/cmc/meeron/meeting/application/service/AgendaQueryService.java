@@ -24,14 +24,13 @@ class AgendaQueryService implements AgendaQueryUseCase {
     private final AgendaQueryPort agendaQueryPort;
     private final AgendaFileQueryPort agendaFileQueryPort;
 
-    // TODO: 2022/04/01 kobeomseok95 exist가 아닌 count로 변경
     @Override
     public AgendaCountResponseDto getAgendaCountsByMeetingId(Long meetingId) {
-        if (!agendaQueryPort.existsByMeetingId(meetingId)) {
-            return AgendaCountResponseDto.ofFalse();
-        }
-        int fileCount = agendaFileQueryPort.countByMeetingId(meetingId);
-        return AgendaCountResponseDto.ofTrue(fileCount);
+        long agendaCount = agendaQueryPort.countsByMeetingId(meetingId);
+        if (agendaCount <= 0)
+            return AgendaCountResponseDto.notFound();
+        long fileCount = agendaFileQueryPort.countByMeetingId(meetingId);
+        return AgendaCountResponseDto.found(agendaCount, fileCount);
     }
 
     @Override

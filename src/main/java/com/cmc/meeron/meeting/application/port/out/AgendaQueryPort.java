@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface AgendaQueryPort {
 
-    boolean existsByMeetingId(Long meetingId);
+    long countsByMeetingId(Long meetingId);
 
     Optional<Agenda> findByMeetingIdAndAgendaOrder(Long meetingId, int agendaOrder);
 

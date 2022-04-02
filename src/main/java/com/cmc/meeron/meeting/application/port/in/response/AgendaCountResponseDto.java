@@ -8,21 +8,21 @@ import lombok.*;
 @Builder
 public class AgendaCountResponseDto {
 
-    private boolean active;
-    private int checks;
-    private int files;
+    private long agendas;
+    private long checks;
+    private long files;
 
-    public static AgendaCountResponseDto ofFalse() {
+    public static AgendaCountResponseDto notFound() {
         return AgendaCountResponseDto.builder()
-                .active(false)
+                .agendas(0)
                 .checks(0)
                 .files(0)
                 .build();
     }
 
-    public static AgendaCountResponseDto ofTrue(int fileCount) {
+    public static AgendaCountResponseDto found(long agendaCount, long fileCount) {
         return AgendaCountResponseDto.builder()
-                .active(true)
+                .agendas(agendaCount)
                 .checks(0)
                 .files(fileCount)
                 .build();
