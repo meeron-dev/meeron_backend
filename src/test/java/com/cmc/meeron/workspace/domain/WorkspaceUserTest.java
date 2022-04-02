@@ -16,6 +16,7 @@ import static com.cmc.meeron.team.TeamFixture.TEAM_1;
 import static com.cmc.meeron.user.UserFixture.USER;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.*;
+import static com.cmc.meeron.workspace.WorkspaceUserInfoFixture.WORKSPACE_USER_INFO;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceUserTest {
@@ -154,5 +155,40 @@ public class WorkspaceUserTest {
 
         // when, then
         assertDoesNotThrow(() -> admin.isAdminOrThrow());
+    }
+
+    @DisplayName("워크스페이스 유저 정보 수정 - 성공")
+    @Test
+    void modify_workspace_user_info_success() throws Exception {
+
+        // given
+        WorkspaceUser workspaceUser = createWorkspaceUser();
+        WorkspaceUserInfo info = WORKSPACE_USER_INFO;
+
+        // when
+        workspaceUser.modifyInfo(info);
+
+        // then
+        WorkspaceUserInfo after = workspaceUser.getWorkspaceUserInfo();
+        assertAll(
+                () -> assertEquals(info.getContactMail(), after.getContactMail()),
+                () -> assertEquals(info.getNickname(), after.getNickname()),
+                () -> assertEquals(info.getPhone(), after.getPhone()),
+                () -> assertEquals(info.getPosition(), after.getPosition()),
+                () -> assertEquals(info.getProfileImageUrl(), after.getProfileImageUrl())
+        );
+    }
+
+    private WorkspaceUser createWorkspaceUser() {
+        return WorkspaceUser.builder()
+                .id(1L)
+                .workspaceUserInfo(WorkspaceUserInfo.builder()
+                        .contactMail("beforemodify@test.com")
+                        .nickname("테스트으")
+                        .phone("01012341234")
+                        .position("사원")
+                        .profileImageUrl("https://test.test.com")
+                        .build())
+                .build();
     }
 }

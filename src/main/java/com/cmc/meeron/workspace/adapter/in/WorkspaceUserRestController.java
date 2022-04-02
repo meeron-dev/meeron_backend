@@ -44,7 +44,20 @@ public class WorkspaceUserRestController {
     @ResponseStatus(HttpStatus.OK)
     public WorkspaceUserResponse getMyWorkspaceUser(@PathVariable Long workspaceUserId) {
         WorkspaceUserQueryResponseDto myWorkspaceUser = workspaceUserQueryUseCase.getMyWorkspaceUser(workspaceUserId);
-        return WorkspaceUserResponse.fromWorkspaceUser(myWorkspaceUser);
+        return WorkspaceUserResponse.fromResponseDto(myWorkspaceUser);
+    }
+
+    @PutMapping(value = "/workspace-users/{workspaceUserId}", consumes = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.MULTIPART_FORM_DATA_VALUE
+    })
+    @ResponseStatus(HttpStatus.OK)
+    public CreateAndModifyWorkspaceUserResponse modifyWorkspaceUser(@PathVariable Long workspaceUserId,
+                                                     @RequestPart("request") @Valid ModifyWorkspaceUserRequest modifyWorkspaceUserRequest,
+                                                     @RequestPart(value = "files", required = false) MultipartFile file) {
+        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandUseCase
+                .modifyWorkspaceUser(modifyWorkspaceUserRequest.toRequestDto(workspaceUserId, file));
+        return CreateAndModifyWorkspaceUserResponse.fromResponseDto(responseDto);
     }
 
     @GetMapping("/teams/{teamId}/workspace-users")
@@ -89,12 +102,12 @@ public class WorkspaceUserRestController {
             MediaType.MULTIPART_FORM_DATA_VALUE
     })
     @ResponseStatus(HttpStatus.OK)
-    public CreateWorkspaceUserResponse createWorkspaceUserAdmin(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
-                                                                @RequestPart(value = "files", required = false) MultipartFile file,
-                                                                @AuthenticationPrincipal AuthUser authUser) {
+    public CreateAndModifyWorkspaceUserResponse createWorkspaceUserAdmin(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
+                                                                         @RequestPart(value = "files", required = false) MultipartFile file,
+                                                                         @AuthenticationPrincipal AuthUser authUser) {
         WorkspaceUserCommandResponseDto workspaceUserCommandResponseDto =
                 workspaceUserCommandUseCase.createWorkspaceUser(createWorkspaceUserRequest.toAdminRequestDto(file, authUser.getUserId()));
-        return CreateWorkspaceUserResponse.fromDto(workspaceUserCommandResponseDto);
+        return CreateAndModifyWorkspaceUserResponse.fromResponseDto(workspaceUserCommandResponseDto);
     }
 
     @PostMapping(value = "/workspace-users", consumes = {
@@ -102,11 +115,11 @@ public class WorkspaceUserRestController {
             MediaType.MULTIPART_FORM_DATA_VALUE
     })
     @ResponseStatus(HttpStatus.OK)
-    public CreateWorkspaceUserResponse createWorkspaceUser(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
-                                                           @RequestPart(value = "files", required = false) MultipartFile file,
-                                                           @AuthenticationPrincipal AuthUser authUser) {
+    public CreateAndModifyWorkspaceUserResponse createWorkspaceUser(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
+                                                                    @RequestPart(value = "files", required = false) MultipartFile file,
+                                                                    @AuthenticationPrincipal AuthUser authUser) {
         WorkspaceUserCommandResponseDto workspaceUserCommandResponseDto =
                 workspaceUserCommandUseCase.createWorkspaceUser(createWorkspaceUserRequest.toRequestDto(file, authUser.getUserId()));
-        return CreateWorkspaceUserResponse.fromDto(workspaceUserCommandResponseDto);
+        return CreateAndModifyWorkspaceUserResponse.fromResponseDto(workspaceUserCommandResponseDto);
     }
 }

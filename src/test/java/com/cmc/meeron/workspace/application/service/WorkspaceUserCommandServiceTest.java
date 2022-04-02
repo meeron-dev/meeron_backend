@@ -8,21 +8,18 @@ import com.cmc.meeron.common.exception.workspace.NotAllFoundWorkspaceUsersExcept
 import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
-import com.cmc.meeron.workspace.application.port.in.request.KickOutTeamUserRequestDtoBuilder;
-import com.cmc.meeron.workspace.application.port.in.request.JoinTeamUsersRequestDtoBuilder;
+import com.cmc.meeron.workspace.application.port.in.request.*;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.workspace.application.port.in.request.CreateWorkspaceUserRequestDto;
-import com.cmc.meeron.workspace.application.port.in.request.KickOutTeamUserRequestDto;
-import com.cmc.meeron.workspace.application.port.in.request.JoinTeamUsersRequestDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserCommandPort;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspace.domain.WorkspaceUserInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -161,6 +158,113 @@ class WorkspaceUserCommandServiceTest {
                 .thenReturn(workspaceUser);
     }
 
+    @DisplayName("워크스페이스 유저 정보 수정 - 실패 / 워크스페이스 유저가 없을 경우")
+    @Test
+    void modify_workspace_user_fail_not_found_workspace_user() throws Exception {
+
+        // given
+        ModifyWorkspaceUserRequestDto requestDto = ModifyWorkspaceUserRequestDtoBuilder.build();
+        when(workspaceUserQueryPort.findById(any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(WorkspaceUserNotFoundException.class,
+                () -> workspaceUserCommandService.modifyWorkspaceUser(requestDto));
+    }
+
+    @DisplayName("워크스페이스 유저 정보 수정 - 실패 / 닉네임이 중복될 경우")
+    @Test
+    void modify_workspace_user_fail_duplicate_nickname() throws Exception {
+
+        // given
+        ModifyWorkspaceUserRequestDto requestDto = ModifyWorkspaceUserRequestDtoBuilder.build();
+        WorkspaceUser workspaceUser = createWorkspaceUser();
+        when(workspaceUserQueryPort.findById(any()))
+                .thenReturn(Optional.of(workspaceUser));
+        when(workspaceUserQueryPort.existsByNicknameInWorkspace(any(), any()))
+                .thenReturn(true);
+
+        // when, then
+        assertThrows(NicknameDuplicateException.class,
+                () -> workspaceUserCommandService.modifyWorkspaceUser(requestDto));
+    }
+
+    private WorkspaceUser createWorkspaceUser() {
+        return WorkspaceUser.builder()
+                .id(59L)
+                .workspace(WORKSPACE_1)
+                .workspaceUserInfo(createWorkspaceUserInfo())
+                .user(USER)
+                .build();
+    }
+
+    private WorkspaceUserInfo createWorkspaceUserInfo() {
+        return WorkspaceUserInfo.builder()
+                .contactMail("beforemodify@test.com")
+                .nickname("테스트으")
+                .phone("01012341234")
+                .position("사원")
+                .profileImageUrl("https://test.test.com")
+                .build();
+    }
+
+    @DisplayName("워크스페이스 유저 정보 수정 - 성공 / 프로필 이미지를 줄 경우")
+    @Test
+    void modify_workspace_user_success_exists_file() throws Exception {
+
+        // given
+        ModifyWorkspaceUserRequestDto requestDto = ModifyWorkspaceUserRequestDtoBuilder.build();
+        WorkspaceUser workspaceUser = createWorkspaceUser();
+        when(workspaceUserQueryPort.findById(any()))
+                .thenReturn(Optional.of(workspaceUser));
+        when(workspaceUserQueryPort.existsByNicknameInWorkspace(any(), any()))
+                .thenReturn(false);
+
+        // when
+        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandService.modifyWorkspaceUser(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(workspaceUserQueryPort).findById(requestDto.getWorkspaceUserId()),
+                () -> verify(workspaceUserQueryPort).existsByNicknameInWorkspace(workspaceUser.getWorkspace().getId(),
+                        requestDto.getNickname()),
+                () -> verify(fileManager).saveProfileImage(any()),
+                () -> assertEquals(requestDto.getNickname(), responseDto.getNickname()),
+                () -> assertEquals(requestDto.getEmail(), responseDto.getContactMail()),
+                () -> assertEquals(requestDto.getPhone(), responseDto.getPhone()),
+                () -> assertEquals(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl(),
+                        responseDto.getProfileImageUrl())
+        );
+    }
+
+    @DisplayName("워크스페이스 유저 정보 수정 - 성공 / 프로필 이미지를 안줄 경우")
+    @Test
+    void modify_workspace_user_success_not_exists_file() throws Exception {
+
+        // given
+        ModifyWorkspaceUserRequestDto requestDto = ModifyWorkspaceUserRequestDtoBuilder.buildNotExistFile();
+        WorkspaceUser workspaceUser = createWorkspaceUser();
+        when(workspaceUserQueryPort.findById(any()))
+                .thenReturn(Optional.of(workspaceUser));
+        when(workspaceUserQueryPort.existsByNicknameInWorkspace(any(), any()))
+                .thenReturn(false);
+
+        // when
+        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandService.modifyWorkspaceUser(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(workspaceUserQueryPort).findById(requestDto.getWorkspaceUserId()),
+                () -> verify(workspaceUserQueryPort).existsByNicknameInWorkspace(workspaceUser.getWorkspace().getId(),
+                        requestDto.getNickname()),
+                () -> verify(fileManager, times(0)).saveProfileImage(any()),
+                () -> assertEquals(requestDto.getNickname(), responseDto.getNickname()),
+                () -> assertEquals(requestDto.getEmail(), responseDto.getContactMail()),
+                () -> assertEquals(requestDto.getPhone(), responseDto.getPhone()),
+                () -> assertEquals(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl(),
+                        responseDto.getProfileImageUrl())
+        );
+    }
 
     @DisplayName("워크스페이스 유저 생성 - 성공 / 파일이 없을 경우")
     @Test

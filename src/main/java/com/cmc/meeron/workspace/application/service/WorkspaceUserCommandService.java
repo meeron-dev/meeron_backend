@@ -15,6 +15,7 @@ import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.workspace.application.port.in.request.CreateWorkspaceUserRequestDto;
+import com.cmc.meeron.workspace.application.port.in.request.ModifyWorkspaceUserRequestDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceUserCommandUseCase;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,25 +46,41 @@ class WorkspaceUserCommandService implements WorkspaceUserCommandUseCase {
 
     @Override
     public WorkspaceUserCommandResponseDto createWorkspaceUser(CreateWorkspaceUserRequestDto createWorkspaceUserRequestDto) {
-        if (workspaceUserQueryPort.existsByNicknameInWorkspace(createWorkspaceUserRequestDto.getWorkspaceId(), createWorkspaceUserRequestDto.getNickname())) {
-            throw new NicknameDuplicateException();
-        }
+        checkDuplicateNickname(createWorkspaceUserRequestDto.getWorkspaceId(),
+                createWorkspaceUserRequestDto.getNickname());
         User user = userQueryPort.findById(createWorkspaceUserRequestDto.getUserId())
                 .orElseThrow(UserNotFoundException::new);
         Workspace workspace = workspaceQueryPort.findById(createWorkspaceUserRequestDto.getWorkspaceId())
                 .orElseThrow(WorkspaceNotFoundException::new);
-        String savedImageUrl = checkNullAndSaveImage(createWorkspaceUserRequestDto);
+        String savedImageUrl = checkNullAndSaveImage(createWorkspaceUserRequestDto.getProfileImage());
         WorkspaceUserInfo workspaceUserInfo = createWorkspaceUserRequestDto.toWorkspaceUserInfo(savedImageUrl);
         WorkspaceUser workspaceUser = workspaceUserCommandPort.saveWorkspaceUser(WorkspaceUser.of(user, workspace, workspaceUserInfo));
-        return WorkspaceUserCommandResponseDto.of(workspaceUser);
+        return WorkspaceUserCommandResponseDto.fromEntity(workspaceUser);
     }
 
-    private String checkNullAndSaveImage(CreateWorkspaceUserRequestDto createWorkspaceUserRequestDto) {
-        if (createWorkspaceUserRequestDto.getProfileImage() != null &&
-                StringUtils.hasText(createWorkspaceUserRequestDto.getOriginalFilename())) {
-            return fileManager.saveProfileImage(createWorkspaceUserRequestDto.getProfileImage());
+    private void checkDuplicateNickname(Long workspaceUserId, String nickname) {
+        if (workspaceUserQueryPort.existsByNicknameInWorkspace(workspaceUserId, nickname)) {
+            throw new NicknameDuplicateException();
+        }
+    }
+
+    private String checkNullAndSaveImage(MultipartFile imageFile) {
+        if (imageFile != null &&
+                StringUtils.hasText(imageFile.getOriginalFilename())) {
+            return fileManager.saveProfileImage(imageFile);
         }
         return "";
+    }
+
+    @Override
+    public WorkspaceUserCommandResponseDto modifyWorkspaceUser(ModifyWorkspaceUserRequestDto modifyWorkspaceUserRequestDto) {
+        WorkspaceUser workspaceUser = workspaceUserQueryPort.findById(modifyWorkspaceUserRequestDto.getWorkspaceUserId())
+                .orElseThrow(WorkspaceUserNotFoundException::new);
+        checkDuplicateNickname(workspaceUser.getWorkspace().getId(), modifyWorkspaceUserRequestDto.getNickname());
+        String savedImageUrl = checkNullAndSaveImage(modifyWorkspaceUserRequestDto.getProfileImage());
+        WorkspaceUserInfo workspaceUserInfo = modifyWorkspaceUserRequestDto.toWorkspaceUserInfo(savedImageUrl);
+        workspaceUser.modifyInfo(workspaceUserInfo);
+        return WorkspaceUserCommandResponseDto.fromEntity(workspaceUser);
     }
 
     @Override

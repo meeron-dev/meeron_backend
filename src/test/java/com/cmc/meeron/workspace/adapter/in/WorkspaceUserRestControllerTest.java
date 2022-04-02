@@ -1,6 +1,9 @@
 package com.cmc.meeron.workspace.adapter.in;
 
 import com.cmc.meeron.common.exception.ClientErrorCode;
+import com.cmc.meeron.common.exception.file.FileErrorCode;
+import com.cmc.meeron.common.exception.file.FileExtensionNotFoundException;
+import com.cmc.meeron.common.exception.file.FileUploadException;
 import com.cmc.meeron.common.exception.team.TeamErrorCode;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.user.UserErrorCode;
@@ -12,6 +15,7 @@ import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
 import com.cmc.meeron.workspace.adapter.in.request.*;
 import com.cmc.meeron.workspace.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDtoBuilder;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDtoBuilder;
 import com.google.common.net.HttpHeaders;
@@ -37,6 +41,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -180,6 +185,189 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void modify_workspace_user_fail_invalid() throws Exception {
+
+        // given
+        MockMultipartFile file = FILE;
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.buildInvalid();
+
+        // when, then, docs
+        mockMvc.perform(multipart("/api/workspace-users/{workspaceUserId}", 1L)
+                .file(file)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+
+    @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 워크스페이스 유저가 존재하지 않을 경우")
+    @Test
+    void modify_workspace_user_fail_not_found_workspace_user() throws Exception {
+
+        // given
+        MockMultipartFile file = FILE;
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.build();
+        when(workspaceUserCommandUseCase.modifyWorkspaceUser(any()))
+                .thenThrow(new WorkspaceUserNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(multipart("/api/workspace-users/{workspaceUserId}", 1L)
+                .file(file)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 파일 확장자가 없을 경우")
+    @Test
+    void modify_workspace_user_fail_not_found_file_extension() throws Exception {
+
+        // given
+        MockMultipartFile file = FILE;
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.build();
+        when(workspaceUserCommandUseCase.modifyWorkspaceUser(any()))
+                .thenThrow(new FileUploadException());
+
+        // when, then, docs
+        mockMvc.perform(multipart("/api/workspace-users/{workspaceUserId}", 1L)
+                .file(file)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(FileErrorCode.FILE_UPLOAD.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 파일 업로드 시 예외가 발생할 경우")
+    @Test
+    void modify_workspace_user_fail_file_upload_exception() throws Exception {
+
+        // given
+        MockMultipartFile file = FILE;
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.build();
+        when(workspaceUserCommandUseCase.modifyWorkspaceUser(any()))
+                .thenThrow(new FileExtensionNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(multipart("/api/workspace-users/{workspaceUserId}", 1L)
+                .file(file)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(FileErrorCode.FILE_EXTENSION_NOT_FOUND.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 닉네임이 중복되었을 경우")
+    @Test
+    void modify_workspace_user_fail_duplicate_nickname() throws Exception {
+
+        // given
+        MockMultipartFile file = FILE;
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.build();
+        when(workspaceUserCommandUseCase.modifyWorkspaceUser(any()))
+                .thenThrow(new NicknameDuplicateException());
+
+        // when, then, docs
+        mockMvc.perform(multipart("/api/workspace-users/{workspaceUserId}", 1L)
+                .file(file)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.DUPLICATE_NICKNAME.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저 프로필 수정 - 성공")
+    @Test
+    void modify_workspace_user_success() throws Exception {
+
+        // given
+        WorkspaceUserCommandResponseDto responseDto = WorkspaceUserCommandResponseDtoBuilder.build();
+        when(workspaceUserCommandUseCase.modifyWorkspaceUser(any()))
+                .thenReturn(responseDto);
+        MockMultipartFile file = FILE;
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(multipart("/api/workspace-users/{workspaceUserId}", 1L)
+                .file(file)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUserId", is(responseDto.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceAdmin", is(responseDto.isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.nickname", is(responseDto.getNickname())))
+                .andExpect(jsonPath("$.position", is(responseDto.getPosition())))
+                .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
+                .andExpect(jsonPath("$.email", is(responseDto.getContactMail())))
+                .andExpect(jsonPath("$.phone", is(responseDto.getPhone())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("workspaceUserId").description("수정할 워크스페이스 유저 ID")
+                        ),
+                        requestParts(
+                                partWithName("files").optional().description("업로드할 프로필 이미지 파일"),
+                                partWithName("request").description("요청하는 JSON Body")
+                        ),
+                        requestFields(
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임").attributes(field("constraints", "워크스페이스 내 중복될 경우 에러 발생, 5자 이하로 작성")),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("직첵").attributes(field("constraints", "5자 이하로 작성")),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일").optional(),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("휴대전화번호").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("workspaceUserId").type(JsonFieldType.NUMBER).description("수정된 워크스페이스 유저 ID"),
+                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 닉네임"),
+                                fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("수정된 워크스페이스 유저의 관리자 여부"),
+                                fieldWithPath("position").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 직책"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\""),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저의 연락용 메일, 없을 경우 \"\""),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저의 연락용 휴대전화번호, 없을 경우 \"\"")
+                        )
+                ));
     }
 
     @DisplayName("워크스페이스 유저 검색 - 성공")
@@ -388,7 +576,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
 
     @DisplayName("워크스페이스 유저 관리자 생성 - 성공")
     @Test
-    void create_workspace_success() throws Exception {
+    void create_workspace_user_admin_success() throws Exception {
 
         // given
         CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
@@ -453,7 +641,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
 
     @DisplayName("워크스페이스 일반 유저 생성 - 성공")
     @Test
-    void create_workspace_common_success() throws Exception {
+    void create_workspace_user_success() throws Exception {
 
         // given
         CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();

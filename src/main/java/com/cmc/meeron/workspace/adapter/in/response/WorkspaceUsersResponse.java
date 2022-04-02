@@ -21,7 +21,7 @@ public class WorkspaceUsersResponse {
         return WorkspaceUsersResponse.builder()
                 .workspaceUsers(myWorkspaceUsers
                         .stream()
-                        .map(WorkspaceUserResponse::fromWorkspaceUser)
+                        .map(WorkspaceUserResponse::fromResponseDto)
                         .collect(Collectors.toList()))
                 .build();
     }

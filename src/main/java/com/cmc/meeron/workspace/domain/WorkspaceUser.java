@@ -69,4 +69,8 @@ public class WorkspaceUser extends BaseEntity {
             throw new NotAdminException();
         }
     }
+
+    public void modifyInfo(WorkspaceUserInfo workspaceUserInfo) {
+        this.workspaceUserInfo = workspaceUserInfo;
+    }
 }

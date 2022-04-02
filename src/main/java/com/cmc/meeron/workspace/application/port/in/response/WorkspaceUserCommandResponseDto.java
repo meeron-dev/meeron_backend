@@ -18,7 +18,7 @@ public class WorkspaceUserCommandResponseDto {
     private String contactMail;
     private String phone;
 
-    public static WorkspaceUserCommandResponseDto of(WorkspaceUser workspaceUser) {
+    public static WorkspaceUserCommandResponseDto fromEntity(WorkspaceUser workspaceUser) {
         return WorkspaceUserCommandResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
                 .nickname(workspaceUser.getWorkspaceUserInfo().getNickname())

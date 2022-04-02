@@ -612,8 +612,8 @@ Content-Length: 699
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
     "meetingDate" : "2022/4/2",
-    "startTime" : "07:00 PM",
-    "endTime" : "08:00 PM",
+    "startTime" : "01:00 AM",
+    "endTime" : "02:00 AM",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
     "mainAgenda" : "1번회의 핵심 아젠다",
@@ -624,8 +624,8 @@ Content-Length: 699
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
     "meetingDate" : "2022/4/2",
-    "startTime" : "02:00 PM",
-    "endTime" : "03:00 PM",
+    "startTime" : "08:00 PM",
+    "endTime" : "09:00 PM",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
     "mainAgenda" : "2번회의 핵심 아젠다",
@@ -730,18 +730,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-04-02T17:57:11.001139",
+  "time" : "2022-04-02T23:29:16.123539",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "workspaceUserId",
-    "value" : null,
-    "reason" : "워크스페이스 유저 ID를 입력해주세요."
-  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "workspaceUserId",
+    "value" : null,
+    "reason" : "워크스페이스 유저 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -929,15 +929,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "06:57 PM",
-    "endTime" : "08:57 PM",
+    "startTime" : "12:29 AM",
+    "endTime" : "02:29 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "09:57 PM",
-    "endTime" : "11:57 PM",
+    "startTime" : "03:29 AM",
+    "endTime" : "05:29 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1420,15 +1420,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "06:57 PM",
-    "endTime" : "08:57 PM",
+    "startTime" : "12:29 AM",
+    "endTime" : "02:29 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "09:57 PM",
-    "endTime" : "11:57 PM",
+    "startTime" : "03:29 AM",
+    "endTime" : "05:29 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1911,15 +1911,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "06:57 PM",
-    "endTime" : "08:57 PM",
+    "startTime" : "12:29 AM",
+    "endTime" : "02:29 AM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "09:57 PM",
-    "endTime" : "11:57 PM",
+    "startTime" : "03:29 AM",
+    "endTime" : "05:29 AM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2291,8 +2291,8 @@ Content-Length: 333
   "meetingName" : "테스트회의",
   "meetingPurpose" : "테스트목적",
   "meetingDate" : "2022/4/2",
-  "startTime" : "05:57 PM",
-  "endTime" : "07:57 PM",
+  "startTime" : "11:29 PM",
+  "endTime" : "01:29 AM",
   "operationTeamId" : 1,
   "operationTeamName" : "테스트팀",
   "admins" : [ {
@@ -2392,7 +2392,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 148
 
 {
-  "time" : "2022-04-02T17:57:10.774564",
+  "time" : "2022-04-02T23:29:15.871699",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,

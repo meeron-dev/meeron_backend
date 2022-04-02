@@ -18,7 +18,7 @@ public class WorkspaceUserResponse {
     private String position;
     private String email;
 
-    public static WorkspaceUserResponse fromWorkspaceUser(WorkspaceUserQueryResponseDto workspaceUserQueryResponseDto) {
+    public static WorkspaceUserResponse fromResponseDto(WorkspaceUserQueryResponseDto workspaceUserQueryResponseDto) {
         return WorkspaceUserResponse.builder()
                 .workspaceUserId(workspaceUserQueryResponseDto.getWorkspaceUserId())
                 .workspaceId(workspaceUserQueryResponseDto.getWorkspaceId())

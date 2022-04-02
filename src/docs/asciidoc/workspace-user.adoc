@@ -53,12 +53,12 @@ include::{snippets}/workspace-user-rest-controller-test/get_team_members_success
 [[workspace_users_admin]]
 == 워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)
 === [POST] /api/workspace-users/admin
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/request-headers.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/request-parts.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/request-fields.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/http-response.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/request-parts.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/response-fields.adoc[]
 
 ==== 1001
 include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_not_valid/http-request.adoc[]
@@ -79,12 +79,12 @@ include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fa
 [[workspace_users]]
 == 워크스페이스 유저 생성 (워크스페이스 참가자가 호출)
 === [POST] /api/workspace-users
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/request-headers.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/request-parts.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/request-fields.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/http-response.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/create_workspace_common_success/response-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/request-parts.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/response-fields.adoc[]
 
 [[duplicate_nickname]]
 == 닉네임 중복 체크
@@ -149,3 +149,34 @@ include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_
 ==== 1701
 include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_not_found_workspace_user/http-request.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_not_found_workspace_user/http-response.adoc[]
+
+[[modify_workspace_user_info]]
+== 워크스페이스 유저 정보 수정
+=== [PUT] /api/workspace-users/{id}
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/request-parts.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_success/response-fields.adoc[]
+
+==== 1001
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_invalid/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_invalid/http-response.adoc[]
+
+==== 1200
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_not_found_file_extension/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_not_found_file_extension/http-response.adoc[]
+
+==== 1201
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_file_upload_exception/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_file_upload_exception/http-response.adoc[]
+
+==== 1700
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_duplicate_nickname/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_duplicate_nickname/http-response.adoc[]
+
+==== 1701
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_not_found_workspace_user/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/modify_workspace_user_fail_not_found_workspace_user/http-response.adoc[]
