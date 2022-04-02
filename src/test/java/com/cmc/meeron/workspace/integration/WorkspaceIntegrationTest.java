@@ -56,7 +56,7 @@ class WorkspaceIntegrationTest extends IntegrationTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.workspaceId", is(2)))
+                .andExpect(jsonPath("$.workspaceId", is(3)))
                 .andExpect(jsonPath("$.workspaceName", is(request.getName())))
                 .andExpect(jsonPath("$.workspaceLogoUrl", emptyString()));
     }

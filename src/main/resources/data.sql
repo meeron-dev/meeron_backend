@@ -93,3 +93,15 @@ insert into issue(issue_id, agenda_id, created_date, last_modified_date, content
 values(1, 1, current_timestamp, current_timestamp, '테스트이슈1');
 insert into agenda_file(agenda_file_id, agenda_id, created_date, last_modified_date, url, origin_file_name, rename_file_name)
 values(1, 1, current_timestamp, current_timestamp, 'test-url.com', '테스트사진.jpg', '1234.jpg');
+
+insert into workspace(workspace_id, created_date, last_modified_date, name, workspace_logo_url)
+values(2, current_timestamp, current_timestamp, '5tune', '');
+
+insert into team(team_id, workspace_id, created_date, last_modified_date, name, deleted)
+values(4, 2, current_timestamp, current_timestamp, '개발팀', false);
+
+insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
+values(8, 'android_develop@kakao.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
+
+insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
+values(8, 8, 2, 4, current_timestamp, current_timestamp, true, '찐제로', '', 'Android');

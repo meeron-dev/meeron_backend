@@ -49,7 +49,7 @@ public class TeamIntegrationTest extends IntegrationTest {
         params2.add("workspaceId", "2");
         return Stream.of(
                 Arguments.of(params1, 3),
-                Arguments.of(params2, 0)
+                Arguments.of(params2, 1)
         );
     }
 
@@ -128,7 +128,7 @@ public class TeamIntegrationTest extends IntegrationTest {
         ModifyTeamNameRequest request = ModifyTeamNameRequestBuilder.build();
 
         // when, then
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/name", "5")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/name", "6")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -143,14 +143,14 @@ public class TeamIntegrationTest extends IntegrationTest {
         ModifyTeamNameRequest request = ModifyTeamNameRequestBuilder.buildIntegrationSuccessCase();
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/name", "5")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/name", "6")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
         flushAndClear();
 
         // then
-        Team team = teamQueryPort.findById(5L).orElseThrow();
+        Team team = teamQueryPort.findById(6L).orElseThrow();
         assertEquals(request.getTeamName(), team.getName());
     }
 }

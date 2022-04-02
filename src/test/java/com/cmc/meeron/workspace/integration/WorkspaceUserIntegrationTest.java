@@ -305,7 +305,7 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
         KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.buildIntegrationSuccessCase();
 
         // when
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "10")
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "11")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
