@@ -4,7 +4,7 @@ public class AgendaCountResponseDtoBuilder {
 
     public static AgendaCountResponseDto build() {
         return AgendaCountResponseDto.builder()
-                .active(true)
+                .agendas(1)
                 .checks(0)
                 .files(2)
                 .build();

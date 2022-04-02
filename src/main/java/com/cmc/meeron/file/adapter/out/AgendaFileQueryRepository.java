@@ -14,7 +14,7 @@ class AgendaFileQueryRepository implements AgendaFileQueryPort {
     private final AgendaFileJpaRepository agendaFileJpaRepository;
 
     @Override
-    public int countByMeetingId(Long meetingId) {
+    public long countByMeetingId(Long meetingId) {
         return agendaFileJpaRepository.countByMeetingId(meetingId);
     }
 

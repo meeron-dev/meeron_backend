@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AgendaCountResponse {
 
-    private boolean active;
-    private int checks;
-    private int files;
+    private long agendas;
+    private long checks;
+    private long files;
 
     public static AgendaCountResponse fromResponseDto(AgendaCountResponseDto responseDto) {
         return AgendaCountResponse.builder()
-                .active(responseDto.isActive())
+                .agendas(responseDto.getAgendas())
                 .checks(responseDto.getChecks())
                 .files(responseDto.getFiles())
                 .build();

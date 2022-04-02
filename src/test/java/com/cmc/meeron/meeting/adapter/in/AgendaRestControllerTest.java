@@ -46,9 +46,9 @@ class AgendaRestControllerTest extends RestDocsTestSupport {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.active", is(true)))
-                .andExpect(jsonPath("$.checks", is(responseDto.getChecks())))
-                .andExpect(jsonPath("$.files", is(responseDto.getFiles())))
+                .andExpect(jsonPath("$.agendas", is((int) responseDto.getAgendas())))
+                .andExpect(jsonPath("$.checks", is((int) responseDto.getChecks())))
+                .andExpect(jsonPath("$.files", is((int) responseDto.getFiles())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -57,7 +57,7 @@ class AgendaRestControllerTest extends RestDocsTestSupport {
                                 parameterWithName("meetingId").description("참가자를 찾을 회의 ID")
                         ),
                         responseFields(
-                                fieldWithPath("active").type(JsonFieldType.BOOLEAN).description("화면 활성화 여부"),
+                                fieldWithPath("agendas").type(JsonFieldType.NUMBER).description("회의 아젠다 수, 0일 경우 버튼 비활성화"),
                                 fieldWithPath("checks").type(JsonFieldType.NUMBER).description("회의 확인 수"),
                                 fieldWithPath("files").type(JsonFieldType.NUMBER).description("회의 아젠다의 파일 수")
                         )

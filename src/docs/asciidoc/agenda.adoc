@@ -7,7 +7,7 @@
 :sectlinks:
 
 [[meetings_agenda_count]]
-== 회의의 아젠다 존재 및 확인 수, 첨부파일 수 조회
+== 회의의 아젠다 수 및 확인 수, 첨부파일 수 조회
 === [GET] /api/meetings/{id}/agendas/count
 include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/http-request.adoc[]
 include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/request-headers.adoc[]

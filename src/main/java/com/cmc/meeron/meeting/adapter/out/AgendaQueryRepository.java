@@ -17,8 +17,8 @@ class AgendaQueryRepository implements AgendaQueryPort {
     private final IssueJpaRepository issueJpaRepository;
 
     @Override
-    public boolean existsByMeetingId(Long meetingId) {
-        return agendaJpaRepository.existsByMeetingId(meetingId);
+    public long countsByMeetingId(Long meetingId) {
+        return agendaJpaRepository.countsByMeetingId(meetingId);
     }
 
     @Override

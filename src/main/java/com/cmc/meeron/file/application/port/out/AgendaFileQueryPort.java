@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AgendaFileQueryPort {
 
-    int countByMeetingId(Long meetingId);
+    long countByMeetingId(Long meetingId);
 
     List<AgendaFile> findByAgendaId(Long agendaId);
 }

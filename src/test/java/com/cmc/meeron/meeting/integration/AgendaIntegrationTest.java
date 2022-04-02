@@ -22,8 +22,11 @@ class AgendaIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/agendas/count", "5")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.active", is(true)))
+                .andExpect(jsonPath("$.agendas", is(1)))
                 .andExpect(jsonPath("$.checks", is(0)))
                 .andExpect(jsonPath("$.files", is(1)));
     }
+
+    // TODO: 2022/04/02 kobeomseok95 아젠다 상세 조회 통합 테스트 추가
+
 }
