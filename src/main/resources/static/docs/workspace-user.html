@@ -815,10 +815,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 166
+Content-Length: 167
 
 {
-  "time" : "2022-04-02T16:37:18.96531",
+  "time" : "2022-04-02T16:48:43.795009",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
@@ -994,18 +994,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 420
 
 {
-  "time" : "2022-04-02T16:37:19.287289",
+  "time" : "2022-04-02T16:48:44.117471",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "nickname",
-    "value" : null,
-    "reason" : "검색할 워크스페이스 유저의 닉네임을 입력해주세요."
-  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "찾을 워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "nickname",
+    "value" : null,
+    "reason" : "검색할 워크스페이스 유저의 닉네임을 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1370,14 +1370,18 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 511
+Content-Length: 512
 
 {
-  "time" : "2022-04-02T16:37:18.99505",
+  "time" : "2022-04-02T16:48:43.824475",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
+    "field" : "nickname",
+    "value" : "      ",
+    "reason" : "닉네임을 5자 이하로 입력해주세요."
+  }, {
     "field" : "position",
     "value" : "      ",
     "reason" : "직책을 5자 이하로 입력해주세요."
@@ -1385,10 +1389,6 @@ Content-Length: 511
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
-    "field" : "nickname",
-    "value" : "      ",
-    "reason" : "닉네임을 5자 이하로 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1430,7 +1430,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-04-02T16:37:19.247457",
+  "time" : "2022-04-02T16:48:44.076134",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
   "code" : 1500,
@@ -1475,7 +1475,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 159
 
 {
-  "time" : "2022-04-02T16:37:19.142991",
+  "time" : "2022-04-02T16:48:43.972242",
   "status" : 400,
   "message" : "워크스페이스를 찾지 못했습니다.",
   "code" : 1600,
@@ -1520,7 +1520,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 184
 
 {
-  "time" : "2022-04-02T16:37:19.433683",
+  "time" : "2022-04-02T16:48:44.223016",
   "status" : 400,
   "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
   "code" : 1700,
@@ -1838,10 +1838,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 184
+Content-Length: 183
 
 {
-  "time" : "2022-04-02T16:37:19.372557",
+  "time" : "2022-04-02T16:48:44.18235",
   "status" : 400,
   "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
   "code" : 1700,
@@ -2012,7 +2012,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 271
 
 {
-  "time" : "2022-04-02T16:37:19.343701",
+  "time" : "2022-04-02T16:48:44.170404",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -2158,18 +2158,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 479
 
 {
-  "time" : "2022-04-02T16:37:19.448498",
+  "time" : "2022-04-02T16:48:44.236039",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "adminWorkspaceUserId",
-    "value" : null,
-    "reason" : "관리자의 워크스페이스 유저 ID를 입력해주세요."
-  }, {
     "field" : "joinTeamWorkspaceUserIds",
     "value" : null,
     "reason" : "팀에 들어갈 워크스페이스 유저의 ID를 최소 하나 이상 입력해주세요."
+  }, {
+    "field" : "adminWorkspaceUserId",
+    "value" : null,
+    "reason" : "관리자의 워크스페이스 유저 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -2205,7 +2205,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-04-02T16:37:19.233703",
+  "time" : "2022-04-02T16:48:44.062633",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
   "code" : 1402,
@@ -2241,10 +2241,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 170
+Content-Length: 169
 
 {
-  "time" : "2022-04-02T16:37:19.125684",
+  "time" : "2022-04-02T16:48:43.95475",
   "status" : 400,
   "message" : "워크스페이스 유저를 다 찾지 못했습니다.",
   "code" : 1704,
@@ -2377,7 +2377,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 300
 
 {
-  "time" : "2022-04-02T16:37:19.195413",
+  "time" : "2022-04-02T16:48:44.024263",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -2419,7 +2419,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-04-02T16:37:19.160793",
+  "time" : "2022-04-02T16:48:43.987835",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
