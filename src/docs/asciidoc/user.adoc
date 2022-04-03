@@ -41,3 +41,10 @@ include::{snippets}/user-rest-controller-test/check_named_user_success_named/res
 ==== 1500
 include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_user/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_user/http-response.adoc[]
+
+[[quit]]
+== 회원 탈퇴
+=== [DELETE] /api/users/quit
+include::{snippets}/user-rest-controller-test/quit_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/quit_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/quit_success/http-response.adoc[]

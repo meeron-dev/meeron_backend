@@ -5,4 +5,6 @@ import com.cmc.meeron.common.security.AuthUser;
 public interface UserCommandUseCase {
 
     void setName(AuthUser authUser, String name);
+
+    void quit(AuthUser authUser);
 }

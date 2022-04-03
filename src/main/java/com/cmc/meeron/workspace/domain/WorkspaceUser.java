@@ -7,10 +7,12 @@ import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspa
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.domain.User;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Entity
+@Where(clause = "DELETED=false")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +38,9 @@ public class WorkspaceUser extends BaseEntity {
 
     @Embedded
     private WorkspaceUserInfo workspaceUserInfo;
+
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private boolean deleted;
 
     public static WorkspaceUser of(User user,
                                    Workspace workspace,
@@ -72,5 +77,16 @@ public class WorkspaceUser extends BaseEntity {
 
     public void modifyInfo(WorkspaceUserInfo workspaceUserInfo) {
         this.workspaceUserInfo = workspaceUserInfo;
+    }
+
+    public void quit() {
+        deleted = true;
+        if (workspaceUserInfo.isWorkspaceAdmin()) {
+            workspace.delete();
+        }
+    }
+
+    public boolean isAdmin() {
+        return workspaceUserInfo.isWorkspaceAdmin();
     }
 }

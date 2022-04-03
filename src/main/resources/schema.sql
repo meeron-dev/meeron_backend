@@ -6,6 +6,7 @@ CREATE TABLE WORKSPACE
     `LAST_MODIFIED_DATE`  TIMESTAMP       NOT NULL    DEFAULT current_timestamp,
     `NAME`                VARCHAR(50)     NOT NULL,
     `WORKSPACE_LOGO_URL`  VARCHAR(200)    NULL,
+    `DELETED`             TINYINT(1)      NOT NULL,
     PRIMARY KEY (WORKSPACE_ID)
 );
 
@@ -42,6 +43,7 @@ CREATE TABLE USER
     `PROFILE_IMAGE_URL`   VARCHAR(200)    NULL,
     `USER_PROVIDER`       VARCHAR(20)     NOT NULL,
     `ROLE`                VARCHAR(20)     NOT NULL,
+    `DELETED`             TINYINT(1)      NOT NULL,
     PRIMARY KEY (USER_ID)
 );
 
@@ -64,6 +66,7 @@ CREATE TABLE WORKSPACE_USER
     `POSITION`            VARCHAR(20)     NULL,
     `CONTACT_MAIL`        VARCHAR(200)    NULL,
     `PHONE`               VARCHAR(20)     NULL,
+    `DELETED`             TINYINT(1)      NOT NULL,
     PRIMARY KEY (WORKSPACE_USER_ID)
 );
 

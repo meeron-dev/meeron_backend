@@ -15,29 +15,35 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserRestController {
 
     private final UserQueryUseCase userQueryUseCase;
     private final UserCommandUseCase userCommandUseCase;
 
-    @GetMapping("/users/me")
+    @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public MeResponseDto getUser(@AuthenticationPrincipal AuthUser authUser) {
         return userQueryUseCase.getMe(authUser);
     }
 
-    @GetMapping("/users/name")
+    @GetMapping("/name")
     @ResponseStatus(HttpStatus.OK)
     public UserNamedResponse checkNamedUser(@AuthenticationPrincipal AuthUser authUser) {
         boolean isNamed = userQueryUseCase.checkNamedUser(authUser.getUserId());
         return UserNamedResponse.of(isNamed);
     }
 
-    @PatchMapping("/users/name")
+    @PatchMapping("/name")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void setName(@RequestBody @Valid SetNameRequest setNameRequest,
                         @AuthenticationPrincipal AuthUser authUser) {
         userCommandUseCase.setName(authUser, setNameRequest.getName());
+    }
+
+    @DeleteMapping("/quit")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void quit(@AuthenticationPrincipal AuthUser authUser) {
+        userCommandUseCase.quit(authUser);
     }
 }
