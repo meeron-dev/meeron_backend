@@ -102,6 +102,18 @@ values(4, 2, current_timestamp, current_timestamp, '개발팀', false);
 
 insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
 values(8, 'android_develop@kakao.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
+insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
+values(9, 'test1@kakao.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
+insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
+values(10, 'test2p@kakao.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
+insert into user(user_id, email, role, user_provider, created_date, last_modified_date)
+values(11, 'test3@kakao.com', 'USER', 'KAKAO', current_timestamp, current_timestamp);
 
 insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
 values(8, 8, 2, 4, current_timestamp, current_timestamp, true, '찐제로', '', 'Android');
+insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
+values(9, 9, 2, 4, current_timestamp, current_timestamp, false, '무무', '', 'Backend');
+insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
+values(10, 10, 2, 4, current_timestamp, current_timestamp, false, '곽봉팔', '', 'Frontend');
+insert into workspace_user(workspace_user_id, user_id, workspace_id, team_id, created_date, last_modified_date, is_workspace_admin, nickname, profile_image_url, position)
+values(11, 11, 2, 4, current_timestamp, current_timestamp, false, '김매튜', '', 'iOS');
