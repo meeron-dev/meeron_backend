@@ -188,7 +188,30 @@ public class WorkspaceUserTest {
                         .phone("01012341234")
                         .position("사원")
                         .profileImageUrl("https://test.test.com")
+                        .isWorkspaceAdmin(true)
+                        .build())
+                .deleted(false)
+                .workspace(Workspace.builder()
+                        .id(1L)
+                        .deleted(false)
                         .build())
                 .build();
+    }
+
+    @DisplayName("워크스페이스 유저 탈퇴 - 성공 / 관리자일 경우 워크스페이스 삭제")
+    @Test
+    void withdraw_success() throws Exception {
+
+        // given
+        WorkspaceUser workspaceUser = createWorkspaceUser();
+
+        // when
+        workspaceUser.quit();
+
+        // then
+        assertAll(
+                () -> assertTrue(workspaceUser.isDeleted()),
+                () -> assertTrue(workspaceUser.getWorkspace().isDeleted())
+        );
     }
 }

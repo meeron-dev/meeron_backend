@@ -193,4 +193,20 @@ class UserRestControllerTest extends RestDocsTestSupport {
                         )
                 ));
     }
+
+    @DisplayName("회원 탈퇴 - 성공")
+    @Test
+    void quit_success() throws Exception {
+
+        // given, when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.delete("/api/users/quit")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        )
+                ));
+    }
 }

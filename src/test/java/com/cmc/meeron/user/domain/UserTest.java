@@ -5,8 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.cmc.meeron.user.UserFixture.USER;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
 
@@ -68,5 +67,30 @@ class UserTest {
                 () -> assertEquals(provider, user.getUserProvider().getProvider()),
                 () -> assertEquals(profileImageUrl, user.getProfileImageUrl())
         );
+    }
+
+    @DisplayName("회원 탈퇴 - 성공")
+    @Test
+    void withdraw_user_success() throws Exception {
+
+        // given
+        User user = createUser();
+        String email = user.getEmail();
+
+        // when
+        user.quit();
+
+        // then
+        assertAll(
+                () -> assertNotEquals(email, user.getEmail()),
+                () -> assertTrue(user.isDeleted())
+        );
+    }
+
+    private User createUser() {
+        return User.builder()
+            .email("test@test.com")
+            .deleted(false)
+            .build();
     }
 }

@@ -32,14 +32,18 @@ class AuthService implements AuthUseCase {
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userQueryPort.findByEmail(loginRequestDto.getEmail())
-                .orElseGet(() -> userCommandPort.save(User.of(
-                        loginRequestDto.getEmail(),
-                        loginRequestDto.getProvider(),
-                        loginRequestDto.getProfileImageUrl())));
+                .orElseGet(() -> saveAndGetUser(loginRequestDto));
         AuthUser authUser = AuthUser.of(user);
         String accessToken = jwtProvider.createAccessToken(authUser);
         String refreshToken = createAndSaveRefreshToken(authUser);
         return TokenResponseDto.of(accessToken, refreshToken);
+    }
+
+    private User saveAndGetUser(LoginRequestDto loginRequestDto) {
+        return userCommandPort.save(User.of(
+                loginRequestDto.getEmail(),
+                loginRequestDto.getProvider(),
+                loginRequestDto.getProfileImageUrl()));
     }
 
     private String createAndSaveRefreshToken(AuthUser authUser) {

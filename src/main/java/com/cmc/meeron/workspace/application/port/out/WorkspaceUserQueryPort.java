@@ -25,4 +25,8 @@ public interface WorkspaceUserQueryPort {
     boolean existsByNicknameInWorkspace(Long workspaceId, String nickname);
 
     List<WorkspaceUser> findByWorkspaceIdAndTeamIsNull(Long workspaceId);
+
+    List<WorkspaceUser> findWithWorkspaceByUserId(Long userId);
+
+    List<WorkspaceUser> findByWorkspaceId(Long workspaceId);
 }
