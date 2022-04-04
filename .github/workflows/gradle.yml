@@ -16,6 +16,16 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: Set Application Deploy Environment variables
+        run: |
+          if [ ${GITHUB_REF##*/} == "main" ]; then
+            echo "APP_PROFILE_NAME=prod" >> $GITHUB_ENV
+            echo "APP_ENV_NAME=meeron-prod" >> $GITHUB_ENV
+          else
+            echo "APP_PROFILE_NAME=dev" >> $GITHUB_ENV
+            echo "APP_ENV_NAME=meeron-dev" >> $GITHUB_ENV
+          fi
+
       - name: Build With Gradle
         run: ./gradlew clean build -Pjasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
@@ -31,26 +41,14 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
-        if: github.ref_name == 'dev'
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: meeron-dev
+          ECR_REPOSITORY: ${{ env.APP_ENV_NAME }}
           IMAGE_TAG: latest
+          PROFILE: ${{ env.APP_PROFILE_NAME }}
         run: |
-          docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=dev -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-
-      - name: Build, tag, and push image to Amazon ECR
-        if: github.ref_name == 'main'
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: meeron-prod
-          IMAGE_TAG: latest
-        run: |
-          docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=$PROFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
@@ -70,27 +68,13 @@ jobs:
           cd deploy && zip -r deploy.zip .
 
       - name: Deploy to Elastic Beanstalk
-        if: github.ref_name == 'dev'
         uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_SECRET_KEY }}
           application_name: meeron
-          environment_name: meeron-dev
-          version_label: meeron-dev-${{steps.current-time.outputs.formattedTime}}
-          region: ${{ secrets.AWS_REGION }}
-          deployment_package: deploy/deploy.zip
-          wait_for_environment_recovery: 180
-
-      - name: Deploy to Elastic Beanstalk
-        if: github.ref_name == 'main'
-        uses: einaregilsson/beanstalk-deploy@v20
-        with:
-          aws_access_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_SECRET_KEY }}
-          application_name: meeron
-          environment_name: meeron-prod
-          version_label: meeron-dev-${{steps.current-time.outputs.formattedTime}}
+          environment_name: ${{ env.APP_ENV_NAME }}
+          version_label: ${{ env.APP_ENV_NAME }}-${{steps.current-time.outputs.formattedTime}}
           region: ${{ secrets.AWS_REGION }}
           deployment_package: deploy/deploy.zip
           wait_for_environment_recovery: 180
