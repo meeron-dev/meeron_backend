@@ -91,10 +91,8 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
                                 fieldWithPath("meetings[].operationTeamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID"),
                                 fieldWithPath("meetings[].operationTeamName").type(JsonFieldType.STRING).description("회의 주최 팀 명"),
-                                fieldWithPath("meetings[].mainAgendaId").type(JsonFieldType.NUMBER).optional().description("회의 핵심 아젠다 ID")
-                                        .attributes(field("constraints", "아젠다가 없을 경우 0 반환")),
-                                fieldWithPath("meetings[].mainAgenda").type(JsonFieldType.STRING).optional().description("회의 핵심 아젠다 명")
-                                        .attributes(field("constraints", "아젠다가 없을 경우 \"\" 반환")),
+                                fieldWithPath("meetings[].mainAgendaId").type(JsonFieldType.NUMBER).description("회의 핵심 아젠다 ID / 없을 경우 0 반환"),
+                                fieldWithPath("meetings[].mainAgenda").type(JsonFieldType.STRING).description("회의 핵심 아젠다 명 / 없을 경우 \"\" 반환"),
                                 fieldWithPath("meetings[].attends").type(JsonFieldType.NUMBER).description("회의 참가자 수"),
                                 fieldWithPath("meetings[].absents").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
                                 fieldWithPath("meetings[].unknowns").type(JsonFieldType.NUMBER).description("회의 참여 응답을 하지 않은 사람의 수")

@@ -690,12 +690,12 @@ Content-Length: 720
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].mainAgendaId</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회의 핵심 아젠다 ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 핵심 아젠다 ID / 없을 경우 0 반환</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].mainAgenda</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회의 핵심 아젠다 명</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 핵심 아젠다 명 / 없을 경우 "" 반환</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].attends</code></p></td>
@@ -737,7 +737,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-04-04T13:47:29.417102",
+  "time" : "2022-04-04T13:57:36.644296",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -936,15 +936,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "02:47 PM",
-    "endTime" : "04:47 PM",
+    "startTime" : "02:57 PM",
+    "endTime" : "04:57 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "05:47 PM",
-    "endTime" : "07:47 PM",
+    "startTime" : "05:57 PM",
+    "endTime" : "07:57 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1427,15 +1427,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "02:47 PM",
-    "endTime" : "04:47 PM",
+    "startTime" : "02:57 PM",
+    "endTime" : "04:57 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "05:47 PM",
-    "endTime" : "07:47 PM",
+    "startTime" : "05:57 PM",
+    "endTime" : "07:57 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1918,15 +1918,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "02:47 PM",
-    "endTime" : "04:47 PM",
+    "startTime" : "02:57 PM",
+    "endTime" : "04:57 PM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "05:47 PM",
-    "endTime" : "07:47 PM",
+    "startTime" : "05:57 PM",
+    "endTime" : "07:57 PM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2298,8 +2298,8 @@ Content-Length: 333
   "meetingName" : "테스트회의",
   "meetingPurpose" : "테스트목적",
   "meetingDate" : "2022/4/4",
-  "startTime" : "01:47 PM",
-  "endTime" : "03:47 PM",
+  "startTime" : "01:57 PM",
+  "endTime" : "03:57 PM",
   "operationTeamId" : 1,
   "operationTeamName" : "테스트팀",
   "admins" : [ {
@@ -2399,7 +2399,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 148
 
 {
-  "time" : "2022-04-04T13:47:29.154622",
+  "time" : "2022-04-04T13:57:36.424093",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,
