@@ -82,9 +82,9 @@ spring:
       mode: never
 
   datasource:
-    url: ENC(kXriwBWOi86NBkvhL9K/RZTqCR1A2KZi/sWGghRYBc0itQeOi5nXvjN9EK4g6qjRn5epU4e2uDs4JHL0AZZ5g+7X7iDKZxX8Frosocdo4DjwJytZ8li6JjynMvrD2sctG/KTXB+1CzJZoxPQznaZJejAj2Enl18rgpc3ipf/2y1hXzdXWUFyUVFVGRT2rafs)
-    username: ENC(2jqHU2BLbv3YhNwkO0ND3Q==)
-    password: ENC(/F0X8StR+/pZd37v7kQEP0twx57pCb94)
+    url: ENC(qKbfEDHWKFXgGjPEwrTWTRUpTtLv58DxID18pmdj3Qfw6EqbtutAqQOg/oc6XN95EjdvHs2PAuEvXQ+G15GmfaSjJSZH/LkuTVYGOKNr4LSpScAbR9Z4CJLWclhz2NchLO+o33x7BgTpCHGDA3818izmoMQKMbMAe5hpHQUeSl5aIQ1cbzPwCQtBHcLkMP9Q)
+    username: ENC(OMw2hY1Anbg72XglB0FoUQ==)
+    password: ENC(wO297z8dEwEKrqGVXPKfqARboaXBm9aA)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
