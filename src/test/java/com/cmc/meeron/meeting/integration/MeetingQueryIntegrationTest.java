@@ -21,9 +21,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MeetingQueryIntegrationTest extends IntegrationTest {
 
     @Sql("classpath:meeting-test.sql")
-    @DisplayName("오늘의 회의 조회 - 성공")
+    @DisplayName("오늘의 회의 조회 - 성공 / 아젠다가 없어도 조회 가능")
     @Test
-    void today_meetings_list_success_() throws Exception {
+    void today_meetingst_success() throws Exception {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -34,11 +34,17 @@ class MeetingQueryIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/today")
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meetings", hasSize(1)))
+                .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].attends", is(2)))
                 .andExpect(jsonPath("$.meetings[0].absents", is(1)))
                 .andExpect(jsonPath("$.meetings[0].unknowns", is(2)))
-                .andExpect(jsonPath("$.meetings[0].mainAgenda", not(emptyString())));
+                .andExpect(jsonPath("$.meetings[0].mainAgenda", not(emptyString())))
+                .andExpect(jsonPath("$.meetings[0].mainAgendaId", is(2)))
+                .andExpect(jsonPath("$.meetings[1].attends", is(2)))
+                .andExpect(jsonPath("$.meetings[1].absents", is(0)))
+                .andExpect(jsonPath("$.meetings[1].unknowns", is(0)))
+                .andExpect(jsonPath("$.meetings[1].mainAgenda", emptyString()))
+                .andExpect(jsonPath("$.meetings[1].mainAgendaId", is(0)));
     }
 
     @DisplayName("회의 날짜 조회 - 워크스페이스의 경우")

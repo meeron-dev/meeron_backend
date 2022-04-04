@@ -4,6 +4,7 @@ import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto
 import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.*;
@@ -18,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +29,8 @@ class MeetingQueryServiceTest {
     MeetingQueryPort meetingQueryPort;
     @Mock
     AttendeeQueryPort attendeeQueryPort;
+    @Mock
+    AgendaQueryPort agendaQueryPort;
     @InjectMocks
     MeetingQueryService meetingQueryService;
 
@@ -44,6 +46,9 @@ class MeetingQueryServiceTest {
         List<AttendStatusCountQueryDto> countResponseDtos = AttendStatusCountResponseDtoBuilder.buildList();
         when(attendeeQueryPort.countAttendStatusByMeetingIds(any()))
                 .thenReturn(countResponseDtos);
+        List<FirstAgendaQueryDto> firstAgendaQueryDtos = FirstAgendaQueryDtoBuilder.buildList();
+        when(agendaQueryPort.findFirstAgendaByMeetingIds(any()))
+                .thenReturn(firstAgendaQueryDtos);
 
         // when
         List<TodayMeetingResponseDto> result = meetingQueryService.getTodayMeetings(request);
@@ -57,7 +62,13 @@ class MeetingQueryServiceTest {
                         .stream()
                         .map(TodayMeetingsQueryDto::getMeetingId)
                         .collect(Collectors.toList())),
+                () -> verify(agendaQueryPort).findFirstAgendaByMeetingIds(responseDtos
+                        .stream()
+                        .map(TodayMeetingsQueryDto::getMeetingId)
+                        .collect(Collectors.toList())),
                 () -> assertEquals(responseDtos.size(), result.size()),
+                () -> assertNull(one.getAgendaContent()),
+                () -> assertEquals(firstAgendaQueryDtos.get(0).getAgendaContents(), two.getAgendaContent()),
                 () -> assertEquals(3, one.getAttends()),
                 () -> assertEquals(2, one.getUnknowns()),
                 () -> assertEquals(5, one.getAbsents()),

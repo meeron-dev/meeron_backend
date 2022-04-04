@@ -14,12 +14,11 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
-import static com.cmc.meeron.meeting.domain.QAgenda.agenda;
 import static com.cmc.meeron.meeting.domain.QAttendee.attendee;
 import static com.cmc.meeron.meeting.domain.QMeeting.meeting;
 import static com.cmc.meeron.team.domain.QTeam.team;
 import static com.cmc.meeron.workspace.domain.QWorkspace.workspace;
-import static com.cmc.meeron.workspace.domain.QWorkspaceUser.*;
+import static com.cmc.meeron.workspace.domain.QWorkspaceUser.workspaceUser;
 
 @Repository
 @RequiredArgsConstructor
@@ -164,15 +163,13 @@ class MeetingQuerydslRepository {
         return queryFactory.select(new QTodayMeetingsQueryDto(
                 meeting.id, meeting.meetingInfo.name, meeting.meetingInfo.purpose,
                 meeting.meetingTime.startDate, meeting.meetingTime.startTime, meeting.meetingTime.endTime,
-                team.id, team.name, agenda.name
+                team.id, team.name
         )).from(meeting)
                 .join(meeting.team, team)
                 .join(meeting.attendees.values, attendee)
-                .join(agenda).on(agenda.meeting.id.eq(meeting.id))
                 .where(meeting.workspace.id.eq(workspaceId),
                         attendee.workspaceUser.id.eq(workspaceUserId),
-                        meeting.meetingTime.startDate.eq(now),
-                        agenda.agendaOrder.eq(1))
+                        meeting.meetingTime.startDate.eq(now))
                 .fetch();
     }
 

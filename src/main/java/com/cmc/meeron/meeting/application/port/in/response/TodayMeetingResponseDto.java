@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.application.port.in.response;
 
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.FirstAgendaQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
 import com.cmc.meeron.meeting.domain.AttendStatus;
 import lombok.*;
@@ -24,13 +25,15 @@ public class TodayMeetingResponseDto {
     private LocalTime endTime;
     private Long operationTeamId;
     private String operationTeamName;
+    private Long agendaId;
     private String agendaContent;
     private int attends;
     private int unknowns;
     private int absents;
 
     public static List<TodayMeetingResponseDto> fromQueryDtos(List<TodayMeetingsQueryDto> todayMeetingsQueryDtos,
-                                                              List<AttendStatusCountQueryDto> attendStatusCountQueryDtos) {
+                                                              List<AttendStatusCountQueryDto> attendStatusCountQueryDtos,
+                                                              List<FirstAgendaQueryDto> firstAgendaDtos) {
 
         List<TodayMeetingResponseDto> todayMeetingResponseDtos = todayMeetingsQueryDtos.stream()
                 .map(TodayMeetingResponseDto::of)
@@ -40,6 +43,15 @@ public class TodayMeetingResponseDto {
                     .filter(todayMeetingResponseDto -> todayMeetingResponseDto.getMeetingId().equals(attendStatusCountDto.getMeetingId()))
                     .findFirst()
                     .ifPresent(todayMeetingResponseDto -> todayMeetingResponseDto.setCount(attendStatusCountDto));
+        });
+        todayMeetingResponseDtos.forEach(todayMeetingResponseDto -> {
+            firstAgendaDtos.stream()
+                    .filter(firstAgenda -> firstAgenda.getMeetingId().equals(todayMeetingResponseDto.getMeetingId()))
+                    .findFirst()
+                    .ifPresent(firstAgenda -> {
+                        todayMeetingResponseDto.setAgendaId(firstAgenda.getAgendaId());
+                        todayMeetingResponseDto.setAgendaContent(firstAgenda.getAgendaContents());
+                    });
         });
         return todayMeetingResponseDtos;
     }
@@ -53,7 +65,6 @@ public class TodayMeetingResponseDto {
                 .endTime(todayMeetingsQueryDto.getEndTime())
                 .operationTeamId(todayMeetingsQueryDto.getOperationTeamId())
                 .operationTeamName(todayMeetingsQueryDto.getOperationTeamName())
-                .agendaContent(todayMeetingsQueryDto.getAgendaContent())
                 .build();
     }
 
