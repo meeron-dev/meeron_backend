@@ -19,9 +19,10 @@ public class WorkspaceUserQuerydslResponseDto {
     private String position;
     private boolean workspaceAdmin;
     private String email;
+    private String phone;
 
     @QueryProjection
-    public WorkspaceUserQuerydslResponseDto(Long workspaceId, Long workspaceUserId, String profileImageUrl, String nickname, String position, boolean workspaceAdmin, String email) {
+    public WorkspaceUserQuerydslResponseDto(Long workspaceId, Long workspaceUserId, String profileImageUrl, String nickname, String position, boolean workspaceAdmin, String email, String phone) {
         this.workspaceId = workspaceId;
         this.workspaceUserId = workspaceUserId;
         this.profileImageUrl = profileImageUrl;
@@ -29,5 +30,6 @@ public class WorkspaceUserQuerydslResponseDto {
         this.position = position;
         this.workspaceAdmin = workspaceAdmin;
         this.email = email;
+        this.phone = phone;
     }
 }

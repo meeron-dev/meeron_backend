@@ -23,6 +23,7 @@ public class WorkspaceUserQueryResponseDto implements SortableByNickname {
     private String profileImageUrl;
     private String position;
     private String email;
+    private String phone;
 
     public static List<WorkspaceUserQueryResponseDto> fromEntities(List<WorkspaceUser> myWorkspaceUsers) {
         List<WorkspaceUserQueryResponseDto> responseDtos = myWorkspaceUsers.stream()
@@ -45,6 +46,7 @@ public class WorkspaceUserQueryResponseDto implements SortableByNickname {
                 .profileImageUrl(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl())
                 .position(workspaceUser.getWorkspaceUserInfo().getPosition())
                 .email(workspaceUser.getWorkspaceUserInfo().getContactMail())
+                .phone(workspaceUser.getWorkspaceUserInfo().getPhone())
                 .build();
     }
 
@@ -64,6 +66,7 @@ public class WorkspaceUserQueryResponseDto implements SortableByNickname {
                 .profileImageUrl(workspaceUserQuerydslResponseDto.getProfileImageUrl())
                 .position(workspaceUserQuerydslResponseDto.getPosition())
                 .email(workspaceUserQuerydslResponseDto.getEmail())
+                .phone(workspaceUserQuerydslResponseDto.getPhone())
                 .build();
     }
 }

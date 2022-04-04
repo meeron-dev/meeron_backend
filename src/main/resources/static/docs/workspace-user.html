@@ -446,7 +446,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#workspace_users">유저의 모든 '워크스페이스 유저' 조회</a>
+<li><a href="#get_workspace_users">유저의 모든 '워크스페이스 유저' 조회</a>
 <ul class="sectlevel2">
 <li><a href="#_get_apiusersidworkspace_users">[GET] /api/users/{id}/workspace-users</a></li>
 </ul>
@@ -474,7 +474,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_get_teamsidworkspace_users">[GET] /teams/{id}/workspace-users</a></li>
 </ul>
 </li>
-<li><a href="#workspace_users_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a>
+<li><a href="#workspace_user_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a>
 <ul class="sectlevel2">
 <li><a href="#_post_apiworkspace_usersadmin">[POST] /api/workspace-users/admin</a>
 <ul class="sectlevel3">
@@ -486,7 +486,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </li>
-<li><a href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a>
+<li><a href="#create_workspace_user">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a>
 <ul class="sectlevel2">
 <li><a href="#_post_apiworkspace_users">[POST] /api/workspace-users</a></li>
 </ul>
@@ -548,7 +548,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="workspace_users"><a class="link" href="#workspace_users">유저의 모든 '워크스페이스 유저' 조회</a></h2>
+<h2 id="get_workspace_users"><a class="link" href="#get_workspace_users">유저의 모든 '워크스페이스 유저' 조회</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_get_apiusersidworkspace_users"><a class="link" href="#_get_apiusersidworkspace_users">[GET] /api/users/{id}/workspace-users</a></h3>
@@ -607,25 +607,27 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 520
+Content-Length: 482
 
 {
   "myWorkspaceUsers" : [ {
     "workspaceUserId" : 1,
     "workspaceId" : 1,
-    "nickname" : "테스트닉네임1",
-    "profileImageUrl" : "https://test.images.com/12341234",
-    "position" : "대리",
-    "email" : "test@test.com",
+    "nickname" : "테스트1",
+    "profileImageUrl" : "",
+    "position" : "",
+    "email" : "",
+    "phone" : "010-1234-1234",
     "workspaceAdmin" : false
   }, {
     "workspaceUserId" : 2,
     "workspaceId" : 1,
-    "nickname" : "테스트닉네임2",
-    "profileImageUrl" : "https://test.images.com/12341235",
-    "position" : "매니저",
+    "nickname" : "테스트2",
+    "profileImageUrl" : "",
+    "position" : "개발자",
     "email" : "test2@test.com",
-    "workspaceAdmin" : true
+    "phone" : "010-1234-1235",
+    "workspaceAdmin" : false
   } ]
 }</code></pre>
 </div>
@@ -678,6 +680,11 @@ Content-Length: 520
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 이메일, 없을 경우 "" 반환</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>myWorkspaceUsers[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 휴대전화번호, 없을 경우 "" 반환</p></td>
 </tr>
 </tbody>
 </table>
@@ -744,16 +751,17 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 224
+Content-Length: 195
 
 {
   "workspaceUserId" : 1,
   "workspaceId" : 1,
-  "nickname" : "테스트닉네임",
-  "profileImageUrl" : "https://test.images.com/12341",
-  "position" : "관리자",
-  "email" : "test@test.com",
-  "workspaceAdmin" : true
+  "nickname" : "테스트1",
+  "profileImageUrl" : "",
+  "position" : "",
+  "email" : "",
+  "phone" : "010-1234-1234",
+  "workspaceAdmin" : false
 }</code></pre>
 </div>
 </div>
@@ -806,6 +814,11 @@ Content-Length: 224
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 이메일, 없을 경우 "" 반환</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 휴대전화번호, 없을 경우 "" 반환</p></td>
+</tr>
 </tbody>
 </table>
 <div class="sect3">
@@ -831,7 +844,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-04-04T21:10:16.340179",
+  "time" : "2022-04-05T04:23:18.412607",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
@@ -909,25 +922,27 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 518
+Content-Length: 480
 
 {
   "workspaceUsers" : [ {
     "workspaceUserId" : 1,
     "workspaceId" : 1,
-    "nickname" : "테스트닉네임1",
-    "profileImageUrl" : "https://test.images.com/12341234",
-    "position" : "대리",
-    "email" : "test@test.com",
+    "nickname" : "테스트1",
+    "profileImageUrl" : "",
+    "position" : "",
+    "email" : "",
+    "phone" : "010-1234-1234",
     "workspaceAdmin" : false
   }, {
     "workspaceUserId" : 2,
     "workspaceId" : 1,
-    "nickname" : "테스트닉네임2",
-    "profileImageUrl" : "https://test.images.com/12341235",
-    "position" : "매니저",
+    "nickname" : "테스트2",
+    "profileImageUrl" : "",
+    "position" : "개발자",
     "email" : "test2@test.com",
-    "workspaceAdmin" : true
+    "phone" : "010-1234-1235",
+    "workspaceAdmin" : false
   } ]
 }</code></pre>
 </div>
@@ -981,6 +996,11 @@ Content-Length: 518
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 이메일, 없을 경우 "" 반환</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUsers[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 휴대전화번호, 없을 경우 "" 반환</p></td>
+</tr>
 </tbody>
 </table>
 <div class="sect3">
@@ -1007,7 +1027,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 420
 
 {
-  "time" : "2022-04-04T21:10:16.744394",
+  "time" : "2022-04-05T04:23:18.724711",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1088,25 +1108,27 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 518
+Content-Length: 480
 
 {
   "workspaceUsers" : [ {
     "workspaceUserId" : 1,
     "workspaceId" : 1,
-    "nickname" : "테스트닉네임1",
-    "profileImageUrl" : "https://test.images.com/12341234",
-    "position" : "대리",
-    "email" : "test@test.com",
+    "nickname" : "테스트1",
+    "profileImageUrl" : "",
+    "position" : "",
+    "email" : "",
+    "phone" : "010-1234-1234",
     "workspaceAdmin" : false
   }, {
     "workspaceUserId" : 2,
     "workspaceId" : 1,
-    "nickname" : "테스트닉네임2",
-    "profileImageUrl" : "https://test.images.com/12341235",
-    "position" : "매니저",
+    "nickname" : "테스트2",
+    "profileImageUrl" : "",
+    "position" : "개발자",
     "email" : "test2@test.com",
-    "workspaceAdmin" : true
+    "phone" : "010-1234-1235",
+    "workspaceAdmin" : false
   } ]
 }</code></pre>
 </div>
@@ -1160,13 +1182,18 @@ Content-Length: 518
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 이메일, 없을 경우 "" 반환</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUsers[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 휴대전화번호, 없을 경우 "" 반환</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace_users_admin"><a class="link" href="#workspace_users_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a></h2>
+<h2 id="workspace_user_admin"><a class="link" href="#workspace_user_admin">워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_post_apiworkspace_usersadmin"><a class="link" href="#_post_apiworkspace_usersadmin">[POST] /api/workspace-users/admin</a></h3>
@@ -1386,22 +1413,22 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 512
 
 {
-  "time" : "2022-04-04T21:10:16.373548",
+  "time" : "2022-04-05T04:23:18.443874",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "position",
+    "field" : "nickname",
     "value" : "      ",
-    "reason" : "직책을 5자 이하로 입력해주세요."
+    "reason" : "닉네임을 5자 이하로 입력해주세요."
   }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "워크스페이스 ID를 입력해주세요."
   }, {
-    "field" : "nickname",
+    "field" : "position",
     "value" : "      ",
-    "reason" : "닉네임을 5자 이하로 입력해주세요."
+    "reason" : "직책을 5자 이하로 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -1443,7 +1470,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-04-04T21:10:16.727695",
+  "time" : "2022-04-05T04:23:18.714092",
   "status" : 400,
   "message" : "유저를 찾지 못했습니다.",
   "code" : 1500,
@@ -1488,7 +1515,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 159
 
 {
-  "time" : "2022-04-04T21:10:16.515067",
+  "time" : "2022-04-05T04:23:18.564029",
   "status" : 400,
   "message" : "워크스페이스를 찾지 못했습니다.",
   "code" : 1600,
@@ -1533,7 +1560,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 184
 
 {
-  "time" : "2022-04-04T21:10:16.827579",
+  "time" : "2022-04-05T04:23:18.800953",
   "status" : 400,
   "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
   "code" : 1700,
@@ -1546,7 +1573,7 @@ Content-Length: 184
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace_users"><a class="link" href="#workspace_users">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a></h2>
+<h2 id="create_workspace_user"><a class="link" href="#create_workspace_user">워크스페이스 유저 생성 (워크스페이스 참가자가 호출)</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_post_apiworkspace_users"><a class="link" href="#_post_apiworkspace_users">[POST] /api/workspace-users</a></h3>
@@ -1854,7 +1881,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 184
 
 {
-  "time" : "2022-04-04T21:10:16.815428",
+  "time" : "2022-04-05T04:23:18.789459",
   "status" : 400,
   "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
   "code" : 1700,
@@ -1927,7 +1954,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 418
+Content-Length: 480
 
 {
   "workspaceUsers" : [ {
@@ -1937,6 +1964,7 @@ Content-Length: 418
     "profileImageUrl" : "",
     "position" : "",
     "email" : "",
+    "phone" : "010-1234-1234",
     "workspaceAdmin" : false
   }, {
     "workspaceUserId" : 2,
@@ -1945,6 +1973,7 @@ Content-Length: 418
     "profileImageUrl" : "",
     "position" : "개발자",
     "email" : "test2@test.com",
+    "phone" : "010-1234-1235",
     "workspaceAdmin" : false
   } ]
 }</code></pre>
@@ -1999,6 +2028,11 @@ Content-Length: 418
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 이메일, 없을 경우 "" 반환</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUsers[].phone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">워크스페이스 유저 휴대전화번호, 없을 경우 "" 반환</p></td>
+</tr>
 </tbody>
 </table>
 <div class="sect3">
@@ -2025,7 +2059,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 271
 
 {
-  "time" : "2022-04-04T21:10:16.804583",
+  "time" : "2022-04-05T04:23:18.779013",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -2171,18 +2205,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 479
 
 {
-  "time" : "2022-04-04T21:10:16.845886",
+  "time" : "2022-04-05T04:23:18.817122",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "joinTeamWorkspaceUserIds",
-    "value" : null,
-    "reason" : "팀에 들어갈 워크스페이스 유저의 ID를 최소 하나 이상 입력해주세요."
-  }, {
     "field" : "adminWorkspaceUserId",
     "value" : null,
     "reason" : "관리자의 워크스페이스 유저 ID를 입력해주세요."
+  }, {
+    "field" : "joinTeamWorkspaceUserIds",
+    "value" : null,
+    "reason" : "팀에 들어갈 워크스페이스 유저의 ID를 최소 하나 이상 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -2218,7 +2252,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-04-04T21:10:16.677128",
+  "time" : "2022-04-05T04:23:18.671106",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
   "code" : 1402,
@@ -2257,7 +2291,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 170
 
 {
-  "time" : "2022-04-04T21:10:16.486003",
+  "time" : "2022-04-05T04:23:18.536862",
   "status" : 400,
   "message" : "워크스페이스 유저를 다 찾지 못했습니다.",
   "code" : 1704,
@@ -2390,7 +2424,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 300
 
 {
-  "time" : "2022-04-04T21:10:16.645342",
+  "time" : "2022-04-05T04:23:18.638698",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -2432,7 +2466,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-04-04T21:10:16.610311",
+  "time" : "2022-04-05T04:23:18.615565",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
@@ -2681,18 +2715,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 386
 
 {
-  "time" : "2022-04-04T21:10:16.503337",
+  "time" : "2022-04-05T04:23:18.548174",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "nickname",
-    "value" : null,
-    "reason" : "닉네임을 5자 이하로 입력해주세요."
-  }, {
     "field" : "position",
     "value" : null,
     "reason" : "직책을 5자 이하로 입력해주세요."
+  }, {
+    "field" : "nickname",
+    "value" : null,
+    "reason" : "닉네임을 5자 이하로 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -2734,7 +2768,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 164
 
 {
-  "time" : "2022-04-04T21:10:16.773063",
+  "time" : "2022-04-05T04:23:18.752168",
   "status" : 400,
   "message" : "파일 업로드 중 예외가 발생했습니다.",
   "code" : 1200,
@@ -2779,7 +2813,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 162
 
 {
-  "time" : "2022-04-04T21:10:16.320399",
+  "time" : "2022-04-05T04:23:18.390599",
   "status" : 400,
   "message" : "파일 확장자 명을 찾을 수 없습니다.",
   "code" : 1201,
@@ -2824,7 +2858,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 184
 
 {
-  "time" : "2022-04-04T21:10:16.355367",
+  "time" : "2022-04-05T04:23:18.426698",
   "status" : 400,
   "message" : "한 워크스페이스 내에 닉네임은 중복될 수 없습니다.",
   "code" : 1700,
@@ -2869,7 +2903,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-04-04T21:10:16.696328",
+  "time" : "2022-04-05T04:23:18.683079",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
@@ -2885,7 +2919,7 @@ Content-Length: 167
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-04-02 23:43:13 +0900
+Last updated 2022-04-05 04:22:44 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

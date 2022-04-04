@@ -6,7 +6,7 @@
 :toclevels: 4
 :sectlinks:
 
-[[workspace_users]]
+[[get_workspace_users]]
 == 유저의 모든 '워크스페이스 유저' 조회
 === [GET] /api/users/{id}/workspace-users
 include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_users_success/http-request.adoc[]
@@ -50,7 +50,7 @@ include::{snippets}/workspace-user-rest-controller-test/get_team_members_success
 include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/http-response.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/get_team_members_success/response-fields.adoc[]
 
-[[workspace_users_admin]]
+[[workspace_user_admin]]
 == 워크스페이스 유저 관리자 생성 (워크스페이스 생성자가 호출)
 === [POST] /api/workspace-users/admin
 include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_admin_success/http-request.adoc[]
@@ -76,7 +76,7 @@ include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fa
 include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_duplicate_nickname/http-request.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_fail_duplicate_nickname/http-response.adoc[]
 
-[[workspace_users]]
+[[create_workspace_user]]
 == 워크스페이스 유저 생성 (워크스페이스 참가자가 호출)
 === [POST] /api/workspace-users
 include::{snippets}/workspace-user-rest-controller-test/create_workspace_user_success/http-request.adoc[]

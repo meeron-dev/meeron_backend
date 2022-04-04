@@ -22,7 +22,7 @@ class WorkspaceUserQuerydslRepository {
         return queryFactory.select(new QWorkspaceUserQuerydslResponseDto(
                 workspaceUser.workspace.id, workspaceUser.id, workspaceUser.workspaceUserInfo.profileImageUrl,
                 workspaceUser.workspaceUserInfo.nickname, workspaceUser.workspaceUserInfo.position, workspaceUser.workspaceUserInfo.isWorkspaceAdmin,
-                workspaceUser.workspaceUserInfo.contactMail))
+                workspaceUser.workspaceUserInfo.contactMail, workspaceUser.workspaceUserInfo.phone))
                 .from(workspaceUser)
                 .where(workspaceUser.workspace.id.eq(workspaceId),
                         workspaceUser.workspaceUserInfo.nickname.startsWith(nickname))
@@ -33,7 +33,7 @@ class WorkspaceUserQuerydslRepository {
         return queryFactory.select(new QWorkspaceUserQuerydslResponseDto(
                 workspaceUser.workspace.id, workspaceUser.id, workspaceUser.workspaceUserInfo.profileImageUrl,
                 workspaceUser.workspaceUserInfo.nickname, workspaceUser.workspaceUserInfo.position, workspaceUser.workspaceUserInfo.isWorkspaceAdmin,
-                workspaceUser.workspaceUserInfo.contactMail))
+                workspaceUser.workspaceUserInfo.contactMail, workspaceUser.workspaceUserInfo.phone))
                 .from(workspaceUser)
                 .join(workspaceUser.team, team)
                 .where(team.id.eq(teamId))

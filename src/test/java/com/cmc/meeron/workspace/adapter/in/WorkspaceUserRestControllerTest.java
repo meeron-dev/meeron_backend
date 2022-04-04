@@ -56,7 +56,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_my_workspace_users_success() throws Exception {
 
         // given
-        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = createWorkspaceUsers();
+        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.getMyWorkspaceUsers(any()))
                 .thenReturn(myWorkspaceUsers);
 
@@ -72,6 +72,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.myWorkspaceUsers[0].profileImageUrl", is(myWorkspaceUsers.get(0).getProfileImageUrl())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[0].position", is(myWorkspaceUsers.get(0).getPosition())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[0].email", is(myWorkspaceUsers.get(0).getEmail())))
+                .andExpect(jsonPath("$.myWorkspaceUsers[0].phone", is(myWorkspaceUsers.get(0).getPhone())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].workspaceUserId", is(myWorkspaceUsers.get(1).getWorkspaceUserId().intValue())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].workspaceId", is(myWorkspaceUsers.get(1).getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].workspaceAdmin", is(myWorkspaceUsers.get(1).isWorkspaceAdmin())))
@@ -79,6 +80,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].profileImageUrl", is(myWorkspaceUsers.get(1).getProfileImageUrl())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].position", is(myWorkspaceUsers.get(1).getPosition())))
                 .andExpect(jsonPath("$.myWorkspaceUsers[1].email", is(myWorkspaceUsers.get(1).getEmail())))
+                .andExpect(jsonPath("$.myWorkspaceUsers[1].phone", is(myWorkspaceUsers.get(1).getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -93,32 +95,10 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("myWorkspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("myWorkspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
                                 fieldWithPath("myWorkspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
-                                fieldWithPath("myWorkspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
+                                fieldWithPath("myWorkspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환"),
+                                fieldWithPath("myWorkspaceUsers[].phone").type(JsonFieldType.STRING).description("워크스페이스 유저 휴대전화번호, 없을 경우 \"\" 반환")
                         )
                 ));
-    }
-
-    private List<WorkspaceUserQueryResponseDto> createWorkspaceUsers() {
-        return List.of(
-                WorkspaceUserQueryResponseDto.builder()
-                        .workspaceUserId(1L)
-                        .workspaceId(1L)
-                        .isWorkspaceAdmin(false)
-                        .nickname("테스트닉네임1")
-                        .profileImageUrl("https://test.images.com/12341234")
-                        .position("대리")
-                        .email("test@test.com")
-                        .build(),
-                WorkspaceUserQueryResponseDto.builder()
-                        .workspaceUserId(2L)
-                        .workspaceId(1L)
-                        .isWorkspaceAdmin(true)
-                        .nickname("테스트닉네임2")
-                        .profileImageUrl("https://test.images.com/12341235")
-                        .position("매니저")
-                        .email("test2@test.com")
-                        .build()
-        );
     }
 
     @DisplayName("회원의 워크스페이스 유저 중 하나 가져오기 - 성공")
@@ -126,7 +106,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_my_workspace_user_success() throws Exception {
 
         // given
-        WorkspaceUserQueryResponseDto myWorkspaceUser = createWorkspaceUser();
+        WorkspaceUserQueryResponseDto myWorkspaceUser = WorkspaceUserQueryResponseDtoBuilder.buildList().get(0);
         when(workspaceUserQueryUseCase.getMyWorkspaceUser(any()))
                 .thenReturn(myWorkspaceUser);
 
@@ -154,21 +134,10 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("워크스페이스 유저 닉네임"),
                                 fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\" 반환"),
                                 fieldWithPath("position").type(JsonFieldType.STRING).description("워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환"),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("워크스페이스 유저 휴대전화번호, 없을 경우 \"\" 반환")
                         )
                 ));
-    }
-
-    private WorkspaceUserQueryResponseDto createWorkspaceUser() {
-        return WorkspaceUserQueryResponseDto.builder()
-                .workspaceUserId(1L)
-                .workspaceId(1L)
-                .isWorkspaceAdmin(true)
-                .nickname("테스트닉네임")
-                .profileImageUrl("https://test.images.com/12341")
-                .position("관리자")
-                .email("test@test.com")
-                .build();
     }
 
     @DisplayName("회원이 지정한 워크스페이스 유저 가져오기 - 실패 / 해당 유저가 없을 경우")
@@ -378,7 +347,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", "1");
         params.add("nickname", "테스트");
-        List<WorkspaceUserQueryResponseDto> workspaceUsers = createWorkspaceUsers();
+        List<WorkspaceUserQueryResponseDto> workspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.searchWorkspaceUsers(any()))
                 .thenReturn(workspaceUsers);
 
@@ -395,12 +364,14 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.workspaceUsers[0].position", is(workspaceUsers.get(0).getPosition())))
                 .andExpect(jsonPath("$.workspaceUsers[0].workspaceAdmin", is(workspaceUsers.get(0).isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.workspaceUsers[0].workspaceId", is(workspaceUsers.get(0).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[0].phone", is(workspaceUsers.get(0).getPhone())))
                 .andExpect(jsonPath("$.workspaceUsers[1].workspaceUserId", is(workspaceUsers.get(1).getWorkspaceUserId().intValue())))
                 .andExpect(jsonPath("$.workspaceUsers[1].profileImageUrl", is(workspaceUsers.get(1).getProfileImageUrl())))
                 .andExpect(jsonPath("$.workspaceUsers[1].nickname", is(workspaceUsers.get(1).getNickname())))
                 .andExpect(jsonPath("$.workspaceUsers[1].position", is(workspaceUsers.get(1).getPosition())))
                 .andExpect(jsonPath("$.workspaceUsers[1].workspaceAdmin", is(workspaceUsers.get(1).isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.workspaceUsers[1].workspaceId", is(workspaceUsers.get(1).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[1].phone", is(workspaceUsers.get(1).getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -416,7 +387,8 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
                                 fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
-                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
+                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환"),
+                                fieldWithPath("workspaceUsers[].phone").type(JsonFieldType.STRING).description("워크스페이스 유저 휴대전화번호, 없을 경우 \"\" 반환")
                         )
                 ));
     }
@@ -440,7 +412,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_team_members_success() throws Exception {
 
         // given
-        List<WorkspaceUserQueryResponseDto> workspaceUsers = createWorkspaceUsers();
+        List<WorkspaceUserQueryResponseDto> workspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.getTeamUsers(any()))
                 .thenReturn(workspaceUsers);
 
@@ -456,12 +428,14 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.workspaceUsers[0].position", is(workspaceUsers.get(0).getPosition())))
                 .andExpect(jsonPath("$.workspaceUsers[0].workspaceAdmin", is(workspaceUsers.get(0).isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.workspaceUsers[0].workspaceId", is(workspaceUsers.get(0).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[0].phone", is(workspaceUsers.get(0).getPhone())))
                 .andExpect(jsonPath("$.workspaceUsers[1].workspaceUserId", is(workspaceUsers.get(1).getWorkspaceUserId().intValue())))
                 .andExpect(jsonPath("$.workspaceUsers[1].profileImageUrl", is(workspaceUsers.get(1).getProfileImageUrl())))
                 .andExpect(jsonPath("$.workspaceUsers[1].nickname", is(workspaceUsers.get(1).getNickname())))
                 .andExpect(jsonPath("$.workspaceUsers[1].position", is(workspaceUsers.get(1).getPosition())))
                 .andExpect(jsonPath("$.workspaceUsers[1].workspaceAdmin", is(workspaceUsers.get(1).isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.workspaceUsers[1].workspaceId", is(workspaceUsers.get(1).getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceUsers[1].phone", is(workspaceUsers.get(1).getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -476,10 +450,12 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
                                 fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
-                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
+                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환"),
+                                fieldWithPath("workspaceUsers[].phone").type(JsonFieldType.STRING).description("워크스페이스 유저 휴대전화번호, 없을 경우 \"\" 반환")
                         )
                 ));
     }
+
     @DisplayName("워크스페이스 유저 관리자 생성 - 실패 / 제약조건을 지키지 않을 경우")
     @Test
     void create_workspace_user_fail_not_valid() throws Exception {
@@ -928,7 +904,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", parameters.getWorkspaceId().toString());
 
-        List<WorkspaceUserQueryResponseDto> responseDtos = WorkspaceUserQueryResponseDtoBuilder.build();
+        List<WorkspaceUserQueryResponseDto> responseDtos = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.getNoneTeamWorkspaceUsers(any()))
                 .thenReturn(responseDtos);
 
@@ -965,7 +941,8 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("workspaceUsers[].position").type(JsonFieldType.STRING).description("찾는 워크스페이스 유저 직책, 없을 경우 \"\" 반환"),
                                 fieldWithPath("workspaceUsers[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 유저가 속한 워크스페이스 ID"),
                                 fieldWithPath("workspaceUsers[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("워크스페이스 유저의 관리자 유무"),
-                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환")
+                                fieldWithPath("workspaceUsers[].email").type(JsonFieldType.STRING).description("워크스페이스 유저 이메일, 없을 경우 \"\" 반환"),
+                                fieldWithPath("workspaceUsers[].phone").type(JsonFieldType.STRING).description("워크스페이스 유저 휴대전화번호, 없을 경우 \"\" 반환")
                         )
                 ));
     }
