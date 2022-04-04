@@ -468,4 +468,38 @@ class MeetingCommandServiceTest {
         // then
         verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId());
     }
+
+    @DisplayName("회의 삭제 - 성공 / 이미 삭제된 경우")
+    @Test
+    void delete_meeting_success_not_found_meeting() throws Exception {
+
+        // given
+        DeleteMeetingRequestDto requestDto = DeleteMeetingRequestDtoBuilder.build();
+        when(meetingQueryPort.findById(any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertAll(
+                () -> assertDoesNotThrow(() -> meetingCommandService.deleteMeeting(requestDto)),
+                () -> verify(meetingCommandPort, times(0)).deleteById(any())
+        );
+    }
+
+    @DisplayName("회의 삭제 - 성공")
+    @Test
+    void delete_meeting_success() throws Exception {
+
+        // given
+        DeleteMeetingRequestDto requestDto = DeleteMeetingRequestDtoBuilder.build();
+        when(meetingQueryPort.findById(any()))
+                .thenReturn(Optional.of(meeting));
+
+        // when
+        meetingCommandService.deleteMeeting(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(meetingCommandPort).deleteById(meeting.getId())
+        );
+    }
 }

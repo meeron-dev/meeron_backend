@@ -1,4 +1,4 @@
-= 회의 생성 API
+= 회의, 아젠다 (조회 제외) API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -87,3 +87,16 @@ include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_exce
 ==== 1303
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_not_found_meeting/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_agenda_fail_not_found_meeting/http-response.adoc[]
+
+[[delete_meeting]]
+== 회의 삭제
+=== [POST] /api/meetings/{id}/delete
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_success/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_success/request-headers.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_success/path-parameters.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_success/request-fields.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_success/http-response.adoc[]
+
+==== 1306
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_fail_not_meeting_admin/http-request.adoc[]
+include::{snippets}/meeting-command-rest-controller-test/delete_meeting_fail_not_meeting_admin/http-response.adoc[]

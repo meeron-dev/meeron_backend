@@ -22,13 +22,13 @@ class AttendeeQueryService implements AttendeeQueryUseCase {
 
     @Override
     public List<MeetingAttendeesResponseDto> getMeetingAttendees(Long meetingId) {
-        List<MeetingAttendeesQueryDto> queryDtos = attendeeQueryPort.getMeetingAttendees(meetingId);
+        List<MeetingAttendeesQueryDto> queryDtos = attendeeQueryPort.findMeetingAttendees(meetingId);
         return MeetingAttendeesResponseDto.fromQueryDtos(queryDtos);
     }
 
     @Override
     public MeetingTeamAttendeesResponseDto getMeetingTeamAttendees(MeetingTeamAttendeesRequestDto meetingTeamAttendeesRequestDto) {
-        List<Attendee> attendees = attendeeQueryPort.getWithWorkspaceUserByMeetingIdTeamId(
+        List<Attendee> attendees = attendeeQueryPort.findWithWorkspaceUserByMeetingIdTeamId(
                 meetingTeamAttendeesRequestDto.getMeetingId(),
                 meetingTeamAttendeesRequestDto.getTeamId());
         return MeetingTeamAttendeesResponseDto.fromEntities(attendees);

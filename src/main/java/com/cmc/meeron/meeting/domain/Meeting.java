@@ -5,11 +5,15 @@ import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.domain.Workspace;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@SQLDelete(sql = "UPDATE MEETING SET DELETED = true WHERE MEETING_ID=?")
+@Where(clause = "DELETED=false")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,6 +44,9 @@ public class Meeting extends BaseEntity {
 
     @Column(length = 200)
     private String place;
+
+    @Column(nullable = false, columnDefinition = "TINYINT")
+    private boolean deleted;
 
     public static Meeting create(Team operationTeam,
                                  Workspace workspace,

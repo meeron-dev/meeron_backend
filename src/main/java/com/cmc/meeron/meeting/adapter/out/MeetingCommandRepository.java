@@ -32,4 +32,9 @@ class MeetingCommandRepository implements MeetingCommandPort {
     public List<Issue> saveIssues(List<Issue> issues) {
         return issueJpaRepository.saveAll(issues);
     }
+
+    @Override
+    public void deleteById(Long meetingId) {
+        meetingJpaRepository.deleteById(meetingId);
+    }
 }

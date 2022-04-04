@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
+import com.cmc.meeron.common.exception.meeting.NotMeetingAdminException;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.*;
 
@@ -66,5 +67,11 @@ public class Attendee extends BaseEntity {
     public boolean equalsWorkspaceUserId(Long workspaceUserId) {
         return workspaceUser.getId()
                 .equals(workspaceUserId);
+    }
+
+    public void isAdminOrThrow() {
+        if (!isMeetingAdmin) {
+            throw new NotMeetingAdminException();
+        }
     }
 }

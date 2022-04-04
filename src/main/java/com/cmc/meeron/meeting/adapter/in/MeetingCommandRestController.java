@@ -1,10 +1,7 @@
 package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.security.AuthUser;
-import com.cmc.meeron.meeting.adapter.in.request.ChangeAttendStatusRequest;
-import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
-import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
-import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
+import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.meeting.adapter.in.response.CreateAgendaResponse;
 import com.cmc.meeron.meeting.adapter.in.response.CreateMeetingResponse;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
@@ -52,5 +49,12 @@ public class MeetingCommandRestController {
     public void changeAttendeeStatus(@PathVariable("workspaceUserId") Long workspaceUserId,
                                      @RequestBody @Valid ChangeAttendStatusRequest changeAttendStatusRequest) {
         meetingCommandUseCase.changeAttendStatus(changeAttendStatusRequest.toRequestDto(workspaceUserId));
+    }
+
+    @PostMapping("/meetings/{meetingId}/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMeeting(@PathVariable Long meetingId,
+                              @RequestBody DeleteMeetingRequest deleteMeetingRequest) {
+        meetingCommandUseCase.deleteMeeting(deleteMeetingRequest.toRequestDto(meetingId));
     }
 }

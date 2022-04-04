@@ -13,4 +13,6 @@ public interface MeetingCommandPort {
     Agenda saveAgenda(Agenda agenda);
 
     List<Issue> saveIssues(List<Issue> issues);
+
+    void deleteById(Long meetingId);
 }

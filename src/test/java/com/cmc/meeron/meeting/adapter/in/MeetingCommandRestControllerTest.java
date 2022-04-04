@@ -599,4 +599,50 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_ATTENDEE.getCode())));
     }
+
+    @DisplayName("회의 삭제 - 성공")
+    @Test
+    void delete_meeting_success() throws Exception {
+
+        // given
+        DeleteMeetingRequest request = DeleteMeetingRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/delete", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("지울 회의 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("attendeeWorkspaceUserId").description("회의를 삭제할 유저의 워크스페이스 유저 ID")
+                        )
+                ));
+    }
+
+    @DisplayName("회의 삭제 - 실패 / 회의 관리자가 아닌 경우")
+    @Test
+    void delete_meeting_fail_not_meeting_admin() throws Exception {
+
+        // given
+        doThrow(new NotMeetingAdminException())
+                .when(meetingCommandUseCase)
+                .deleteMeeting(any());
+        DeleteMeetingRequest request = DeleteMeetingRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/delete", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_MEETING_ADMIN.getCode())));
+    }
 }

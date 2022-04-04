@@ -1,15 +1,13 @@
 package com.cmc.meeron.meeting.application.service;
 
+import com.cmc.meeron.common.advice.attendee.CheckMeetingAdmin;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
-import com.cmc.meeron.meeting.application.port.in.request.ChangeAttendStatusRequestDto;
-import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
-import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
-import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.*;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.*;
@@ -104,5 +102,12 @@ class MeetingCommandService implements MeetingCommandUseCase {
                 .getAttendees();
         Attendee attendee = attendees.findByWorkspaceUserId(changeAttendStatusRequestDto.getWorkspaceUserId());
         attendee.changeStatus(AttendStatus.valueOf(changeAttendStatusRequestDto.getStatus()));
+    }
+
+    @CheckMeetingAdmin
+    @Override
+    public void deleteMeeting(DeleteMeetingRequestDto deleteMeetingRequestDto) {
+        meetingQueryPort.findById(deleteMeetingRequestDto.getMeetingId())
+                .ifPresent(meeting -> meetingCommandPort.deleteById(meeting.getId()));
     }
 }

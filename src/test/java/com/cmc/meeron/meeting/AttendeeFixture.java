@@ -9,7 +9,7 @@ import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_2;
 
 public class AttendeeFixture {
 
-    public static final Attendee ATTENDEE_1 = Attendee.builder()
+    public static final Attendee ADMIN_ATTENDEE = Attendee.builder()
             .id(1L)
             .workspaceUser(WORKSPACE_USER_1)
             .isMeetingAdmin(true)
@@ -17,10 +17,10 @@ public class AttendeeFixture {
             .attendStatus(AttendStatus.ATTEND)
             .build();
 
-    public static final Attendee ATTENDEE_2 = Attendee.builder()
+    public static final Attendee NOT_ADMIN_ATTENDEE = Attendee.builder()
             .id(2L)
             .workspaceUser(WORKSPACE_USER_2)
-            .isMeetingAdmin(true)
+            .isMeetingAdmin(false)
             .attendStatus(null)
             .meeting(MEETING)
             .attendStatus(AttendStatus.UNKNOWN)

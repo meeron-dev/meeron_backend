@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ class AttendeeQueryRepository implements AttendeeQueryPort {
     private final AttendeeQuerydslRepository attendeeQuerydslRepository;
 
     @Override
-    public List<Attendee> getWithWorkspaceUserByMeetingIdTeamId(Long meetingId, Long teamId) {
+    public List<Attendee> findWithWorkspaceUserByMeetingIdTeamId(Long meetingId, Long teamId) {
         return attendeeJpaRepository.findWithWorkspaceUserByMeetingIdTeamId(meetingId, teamId);
     }
 
@@ -27,7 +28,12 @@ class AttendeeQueryRepository implements AttendeeQueryPort {
     }
 
     @Override
-    public List<MeetingAttendeesQueryDto> getMeetingAttendees(Long meetingId) {
+    public List<MeetingAttendeesQueryDto> findMeetingAttendees(Long meetingId) {
         return attendeeQuerydslRepository.getMeetingAttendees(meetingId);
+    }
+
+    @Override
+    public Optional<Attendee> findByMeetingIdAndWorkspaceUserId(Long meetingId, Long workspaceUserId) {
+        return attendeeJpaRepository.findByMeetingIdAndWorkspaceUserId(meetingId, workspaceUserId);
     }
 }

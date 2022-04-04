@@ -103,6 +103,7 @@ CREATE TABLE MEETING
     `START_TIME`          TIME            NOT NULL,
     `END_TIME`            TIME            NOT NULL,
     `PLACE`               VARCHAR(200)    NULL,
+    `DELETED`             TINYINT(1)      NOT NULL,
     PRIMARY KEY (MEETING_ID)
 );
 

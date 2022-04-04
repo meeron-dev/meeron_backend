@@ -1,6 +1,6 @@
 package com.cmc.meeron.workspace.application.port.in.request;
 
-import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserIdCheckable;
+import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserAuthorityCheckable;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -11,10 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JoinTeamUsersRequestDto implements WorkspaceUserIdCheckable {
+public class JoinTeamUsersRequestDto implements WorkspaceUserAuthorityCheckable {
 
     private Long teamId;
     private Long adminWorkspaceUserId;
     @Builder.Default
     private List<Long> workspaceUserIds = new ArrayList<>();
+
+    @Override
+    public Long getWorkspaceUserId() {
+        return adminWorkspaceUserId;
+    }
 }

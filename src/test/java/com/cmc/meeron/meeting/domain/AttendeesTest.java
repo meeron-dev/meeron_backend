@@ -2,6 +2,7 @@ package com.cmc.meeron.meeting.domain;
 
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
+import com.cmc.meeron.common.exception.meeting.NotMeetingAdminException;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.cmc.meeron.meeting.AttendeeFixture.ATTENDEE_1;
+import static com.cmc.meeron.meeting.AttendeeFixture.ADMIN_ATTENDEE;
+import static com.cmc.meeron.meeting.AttendeeFixture.NOT_ADMIN_ATTENDEE;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,12 +26,14 @@ class AttendeesTest {
     private Meeting meeting;
     private List<WorkspaceUser> duplicateWorkspaceUsers;
     private Attendee attendee;
+    private Attendee notAdmin;
 
     @BeforeEach
     void setUp() {
         meeting = MEETING_ATTEND_ATTENDEES;
         duplicateWorkspaceUsers = List.of(WORKSPACE_USER_1);
-        attendee = ATTENDEE_1;
+        attendee = ADMIN_ATTENDEE;
+        notAdmin = NOT_ADMIN_ATTENDEE;
     }
 
     @DisplayName("회의 참가자 생성 - 실패 / 이미 참여중인 회원이 있는 경우")
@@ -101,5 +105,14 @@ class AttendeesTest {
 
         // then
         assertEquals(59L, attendee.getWorkspaceUser().getId());
+    }
+
+    @DisplayName("회의 관리자가 아닐 경우 예외 발생 - 성공")
+    @Test
+    void is_admin_or_throw_success() throws Exception {
+
+        // when, then
+        assertThrows(NotMeetingAdminException.class,
+                () -> notAdmin.isAdminOrThrow());
     }
 }

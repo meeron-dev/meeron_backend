@@ -1,9 +1,7 @@
 package com.cmc.meeron.meeting.integration;
 
 import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
-import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
-import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
-import com.cmc.meeron.meeting.adapter.in.request.JoinAttendeesRequest;
+import com.cmc.meeron.meeting.adapter.in.request.*;
 import com.cmc.meeron.meeting.application.port.out.MeetingMyCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingTeamCalendarQueryPort;
@@ -15,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
@@ -22,8 +21,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -174,5 +172,24 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                                                 .build()))
                                 .build()))
                 .build();
+    }
+
+    @Sql("classpath:meeting-test.sql")
+    @DisplayName("회의 삭제 - 성공")
+    @Test
+    void delete_meeting_success() throws Exception {
+
+        // given
+        DeleteMeetingRequest request = DeleteMeetingRequestBuilder.buildIntegrationSuccessCase();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/delete", 8)
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // then
+        flushAndClear();
+        assertTrue(meetingQueryPort.findById(8L).isEmpty());
     }
 }

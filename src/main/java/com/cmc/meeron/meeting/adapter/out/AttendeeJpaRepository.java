@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 interface AttendeeJpaRepository extends JpaRepository<Attendee, Long> {
 
@@ -15,4 +16,6 @@ interface AttendeeJpaRepository extends JpaRepository<Attendee, Long> {
             " and wu.team.id = :teamId")
     List<Attendee> findWithWorkspaceUserByMeetingIdTeamId(@Param("meetingId") Long meetingId,
                                                           @Param("teamId") Long teamId);
+
+    Optional<Attendee> findByMeetingIdAndWorkspaceUserId(Long meetingId, Long workspaceUserId);
 }

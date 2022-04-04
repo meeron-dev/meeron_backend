@@ -1,6 +1,6 @@
 package com.cmc.meeron.workspace.application.advisor;
 
-import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserIdCheckable;
+import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserAuthorityCheckable;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-class CheckAdminAdvisor {
+class CheckWorkspaceAdminAdvisor {
 
     private final WorkspaceUserQueryPort workspaceUserQueryPort;
 
     @Before("@annotation(com.cmc.meeron.common.advice.workspaceuser.CheckWorkspaceAdmin)")
     public void checkAdminWorkspaceUser(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        WorkspaceUserIdCheckable checkable = (WorkspaceUserIdCheckable) args[0];
-        WorkspaceUser workspaceUser = workspaceUserQueryPort.findById(checkable.getAdminWorkspaceUserId())
+        WorkspaceUserAuthorityCheckable checkable = (WorkspaceUserAuthorityCheckable) args[0];
+        WorkspaceUser workspaceUser = workspaceUserQueryPort.findById(checkable.getWorkspaceUserId())
                 .orElseThrow(WorkspaceUserNotFoundException::new);
         workspaceUser.isAdminOrThrow();
     }

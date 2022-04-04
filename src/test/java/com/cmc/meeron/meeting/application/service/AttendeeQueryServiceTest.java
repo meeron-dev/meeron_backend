@@ -17,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.cmc.meeron.meeting.AttendeeFixture.ATTENDEE_1;
-import static com.cmc.meeron.meeting.AttendeeFixture.ATTENDEE_2;
+import static com.cmc.meeron.meeting.AttendeeFixture.ADMIN_ATTENDEE;
+import static com.cmc.meeron.meeting.AttendeeFixture.NOT_ADMIN_ATTENDEE;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,10 +38,10 @@ class AttendeeQueryServiceTest {
     void get_meeting_team_attendees_success() throws Exception {
 
         // given
-        Attendee attendee1 = ATTENDEE_1;
-        Attendee attendee2 = ATTENDEE_2;
+        Attendee attendee1 = ADMIN_ATTENDEE;
+        Attendee attendee2 = NOT_ADMIN_ATTENDEE;
         List<Attendee> attendees = List.of(attendee1, attendee2);
-        when(attendeeQueryPort.getWithWorkspaceUserByMeetingIdTeamId(any(), any()))
+        when(attendeeQueryPort.findWithWorkspaceUserByMeetingIdTeamId(any(), any()))
                 .thenReturn(attendees);
         MeetingTeamAttendeesRequestDto requestDto = MeetingAttendeesRequestDtoBuilder.build();
 
@@ -50,7 +50,7 @@ class AttendeeQueryServiceTest {
 
         // then
         assertAll(
-                () -> verify(attendeeQueryPort).getWithWorkspaceUserByMeetingIdTeamId(
+                () -> verify(attendeeQueryPort).findWithWorkspaceUserByMeetingIdTeamId(
                         requestDto.getMeetingId(), requestDto.getTeamId()),
                 () -> assertEquals(1, responseDto.getUnknowns().size()),
                 () -> assertEquals(1, responseDto.getAttends().size()),
@@ -64,7 +64,7 @@ class AttendeeQueryServiceTest {
 
         // given
         List<MeetingAttendeesQueryDto> queryDtos = MeetingAttendeesQueryDtoBuilder.buildList();
-        when(attendeeQueryPort.getMeetingAttendees(any()))
+        when(attendeeQueryPort.findMeetingAttendees(any()))
                 .thenReturn(queryDtos);
 
         // when

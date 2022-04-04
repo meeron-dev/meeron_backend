@@ -5,12 +5,15 @@ import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQuer
 import com.cmc.meeron.meeting.domain.Attendee;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AttendeeQueryPort {
 
-    List<Attendee> getWithWorkspaceUserByMeetingIdTeamId(Long meetingId, Long teamId);
+    List<Attendee> findWithWorkspaceUserByMeetingIdTeamId(Long meetingId, Long teamId);
 
     List<AttendStatusCountQueryDto> countAttendStatusByMeetingIds(List<Long> meetingIds);
 
-    List<MeetingAttendeesQueryDto> getMeetingAttendees(Long meetingId);
+    List<MeetingAttendeesQueryDto> findMeetingAttendees(Long meetingId);
+
+    Optional<Attendee> findByMeetingIdAndWorkspaceUserId(Long meetingId, Long workspaceUserId);
 }

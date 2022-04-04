@@ -13,7 +13,8 @@ public enum MeetingErrorCode implements ErrorEnumCode {
     NOT_FOUND_ATTENDEE(1302, "회의 참가자를 찾을 수 없습니다."),
     NOT_FOUND_MEETING(1303, "회의를 찾을 수 없습니다."),
     OPERATION_TEAM_IS_NOT_IN_WORKSPACE(1304, "주관하는 팀이 지정한 워크스페이스에 속해있지 않습니다."),
-    NOT_ALLOW_SEARCH_TYPE(1305, "검색 유형은 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요.")
+    NOT_ALLOW_SEARCH_TYPE(1305, "검색 유형은 'WORKSPACE', 'WORKSPACE_USER', 'TEAM' 중 하나를 입력해주세요."),
+    NOT_MEETING_ADMIN(1306, "회의 관리자가 아닙니다."),
     ;
 
     private final int code;
