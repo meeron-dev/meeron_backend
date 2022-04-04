@@ -2,7 +2,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ dev, main ]
 
 jobs:
   build:
@@ -17,7 +17,6 @@ jobs:
           distribution: 'temurin'
 
       - name: Build With Gradle
-        if: steps.gradle-cache.outputs.cache-hit != 'true'
         run: ./gradlew clean build -Pjasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
 
       - name: Configure AWS Elastic Beanstalk Credentials
@@ -36,10 +35,22 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: meeron
+          ECR_REPOSITORY: meeron-dev
           IMAGE_TAG: latest
         run: |
           docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=dev -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Build, tag, and push image to Amazon ECR
+        if: github.ref_name == 'main'
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: meeron-prod
+          IMAGE_TAG: latest
+        run: |
+          docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=prod -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
@@ -66,6 +77,19 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_SECRET_KEY }}
           application_name: meeron
           environment_name: meeron-dev
+          version_label: meeron-dev-${{steps.current-time.outputs.formattedTime}}
+          region: ${{ secrets.AWS_REGION }}
+          deployment_package: deploy/deploy.zip
+          wait_for_environment_recovery: 180
+
+      - name: Deploy to Elastic Beanstalk
+        if: github.ref_name == 'main'
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_ELASTIC_BEANSTALK_SECRET_KEY }}
+          application_name: meeron
+          environment_name: meeron-prod
           version_label: meeron-dev-${{steps.current-time.outputs.formattedTime}}
           region: ${{ secrets.AWS_REGION }}
           deployment_package: deploy/deploy.zip
