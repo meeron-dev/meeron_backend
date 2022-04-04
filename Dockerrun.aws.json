@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "596572818780.dkr.ecr.ap-northeast-2.amazonaws.com/meeron:latest",
+    "Name": "",
     "Update": "true"
   },
   "Ports": [
