@@ -605,29 +605,31 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 699
+Content-Length: 720
 
 {
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "테스트 회의 1",
-    "meetingDate" : "2022/4/3",
-    "startTime" : "01:00 AM",
-    "endTime" : "02:00 AM",
+    "meetingDate" : "2022/4/4",
+    "startTime" : "03:00 PM",
+    "endTime" : "04:00 PM",
     "operationTeamId" : 1,
     "operationTeamName" : "테스트 팀 1",
-    "mainAgenda" : "1번회의 핵심 아젠다",
+    "mainAgendaId" : 0,
+    "mainAgenda" : "",
     "attends" : 3,
     "absents" : 2,
     "unknowns" : 1
   }, {
     "meetingId" : 2,
     "meetingName" : "테스트 회의 2",
-    "meetingDate" : "2022/4/3",
-    "startTime" : "08:00 PM",
-    "endTime" : "09:00 PM",
+    "meetingDate" : "2022/4/4",
+    "startTime" : "10:00 AM",
+    "endTime" : "11:00 AM",
     "operationTeamId" : 2,
     "operationTeamName" : "테스트 팀 2",
+    "mainAgendaId" : 2,
     "mainAgenda" : "2번회의 핵심 아젠다",
     "attends" : 1,
     "absents" : 2,
@@ -686,9 +688,14 @@ Content-Length: 699
 <td class="tableblock halign-left valign-top"><p class="tableblock">회의 주최 팀 명</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].mainAgendaId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 핵심 아젠다 ID</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].mainAgenda</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">회의의 핵심 아젠다</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 핵심 아젠다 명</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].attends</code></p></td>
@@ -730,18 +737,18 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-04-03T23:13:35.151117",
+  "time" : "2022-04-04T13:47:29.417102",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "workspaceId",
-    "value" : null,
-    "reason" : "워크스페이스 ID를 입력해주세요."
-  }, {
     "field" : "workspaceUserId",
     "value" : null,
     "reason" : "워크스페이스 유저 ID를 입력해주세요."
+  }, {
+    "field" : "workspaceId",
+    "value" : null,
+    "reason" : "워크스페이스 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -859,7 +866,7 @@ Content-Length: 33
 <h4 id="_get_apimeetingsday"><a class="link" href="#_get_apimeetingsday">[GET] /api/meetings/day</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F4%2F3&amp;type=workspace&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F4%2F4&amp;type=workspace&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -929,15 +936,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "12:13 AM",
-    "endTime" : "02:13 AM",
+    "startTime" : "02:47 PM",
+    "endTime" : "04:47 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:13 AM",
-    "endTime" : "05:13 AM",
+    "startTime" : "05:47 PM",
+    "endTime" : "07:47 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1350,7 +1357,7 @@ Content-Length: 33
 <h4 id="_get_apimeetingsday_2"><a class="link" href="#_get_apimeetingsday_2">[GET] /api/meetings/day</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F4%2F3&amp;type=team&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F4%2F4&amp;type=team&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1420,15 +1427,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "12:13 AM",
-    "endTime" : "02:13 AM",
+    "startTime" : "02:47 PM",
+    "endTime" : "04:47 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:13 AM",
-    "endTime" : "05:13 AM",
+    "startTime" : "05:47 PM",
+    "endTime" : "07:47 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1841,7 +1848,7 @@ Content-Length: 33
 <h4 id="_get_apimeetingsday_3"><a class="link" href="#_get_apimeetingsday_3">[GET] /api/meetings/day</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F4%2F3&amp;type=workspace_user&amp;id=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/day?date=2022%2F4%2F4&amp;type=workspace_user&amp;id=1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Host: dev.meeron.net</code></pre>
@@ -1911,15 +1918,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "12:13 AM",
-    "endTime" : "02:13 AM",
+    "startTime" : "02:47 PM",
+    "endTime" : "04:47 PM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "03:13 AM",
-    "endTime" : "05:13 AM",
+    "startTime" : "05:47 PM",
+    "endTime" : "07:47 PM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2290,9 +2297,9 @@ Content-Length: 333
   "meetingId" : 1,
   "meetingName" : "테스트회의",
   "meetingPurpose" : "테스트목적",
-  "meetingDate" : "2022/4/3",
-  "startTime" : "11:13 PM",
-  "endTime" : "01:13 AM",
+  "meetingDate" : "2022/4/4",
+  "startTime" : "01:47 PM",
+  "endTime" : "03:47 PM",
   "operationTeamId" : 1,
   "operationTeamName" : "테스트팀",
   "admins" : [ {
@@ -2392,7 +2399,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 148
 
 {
-  "time" : "2022-04-03T23:13:34.908977",
+  "time" : "2022-04-04T13:47:29.154622",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,

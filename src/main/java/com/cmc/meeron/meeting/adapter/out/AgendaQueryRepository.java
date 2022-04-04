@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.adapter.out;
 
 import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
+import com.cmc.meeron.meeting.application.port.out.response.FirstAgendaQueryDto;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Issue;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ class AgendaQueryRepository implements AgendaQueryPort {
 
     private final AgendaJpaRepository agendaJpaRepository;
     private final IssueJpaRepository issueJpaRepository;
+    private final AgendaQuerydslRepository agendaQuerydslRepository;
 
     @Override
     public long countsByMeetingId(Long meetingId) {
@@ -29,5 +31,10 @@ class AgendaQueryRepository implements AgendaQueryPort {
     @Override
     public List<Issue> findByAgendaId(Long agendaId) {
         return issueJpaRepository.findByAgendaId(agendaId);
+    }
+
+    @Override
+    public List<FirstAgendaQueryDto> findFirstAgendaByMeetingIds(List<Long> meetingIds) {
+        return agendaQuerydslRepository.findFirstAgendaByMeetingIds(meetingIds);
     }
 }

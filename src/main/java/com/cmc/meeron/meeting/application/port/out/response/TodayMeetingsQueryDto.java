@@ -19,10 +19,9 @@ public class TodayMeetingsQueryDto {
     private LocalTime endTime;
     private Long operationTeamId;
     private String operationTeamName;
-    private String agendaContent;
 
     @QueryProjection
-    public TodayMeetingsQueryDto(Long meetingId, String meetingName, String meetingPurpose, LocalDate meetingDate, LocalTime startTime, LocalTime endTime, Long operationTeamId, String operationTeamName, String agendaContent) {
+    public TodayMeetingsQueryDto(Long meetingId, String meetingName, String meetingPurpose, LocalDate meetingDate, LocalTime startTime, LocalTime endTime, Long operationTeamId, String operationTeamName) {
         this.meetingId = meetingId;
         this.meetingName = meetingName;
         this.meetingPurpose = meetingPurpose;
@@ -31,6 +30,5 @@ public class TodayMeetingsQueryDto {
         this.endTime = endTime;
         this.operationTeamId = operationTeamId;
         this.operationTeamName = operationTeamName;
-        this.agendaContent = agendaContent;
     }
 }

@@ -5,9 +5,11 @@ import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
 import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.FirstAgendaQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +26,19 @@ class MeetingQueryService implements MeetingQueryUseCase {
 
     private final MeetingQueryPort meetingQueryPort;
     private final AttendeeQueryPort attendeeQueryPort;
+    private final AgendaQueryPort agendaQueryPort;
 
     @Override
     public List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto) {
         List<TodayMeetingsQueryDto> todayMeetingsQueryDtos = meetingQueryPort
                 .findTodayMeetings(todayMeetingRequestDto.getWorkspaceId(), todayMeetingRequestDto.getWorkspaceUserId());
-        List<AttendStatusCountQueryDto> countResponseDtos = attendeeQueryPort.countAttendStatusByMeetingIds(todayMeetingsQueryDtos
+        List<Long> findMeetingIds = todayMeetingsQueryDtos
                 .stream()
                 .map(TodayMeetingsQueryDto::getMeetingId)
-                .collect(Collectors.toList()));
-        return TodayMeetingResponseDto.fromQueryDtos(todayMeetingsQueryDtos, countResponseDtos);
+                .collect(Collectors.toList());
+        List<AttendStatusCountQueryDto> countResponseDtos = attendeeQueryPort.countAttendStatusByMeetingIds(findMeetingIds);
+        List<FirstAgendaQueryDto> firstAgendas = agendaQueryPort.findFirstAgendaByMeetingIds(findMeetingIds);
+        return TodayMeetingResponseDto.fromQueryDtos(todayMeetingsQueryDtos, countResponseDtos, firstAgendas);
     }
 
     @Override

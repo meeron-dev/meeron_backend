@@ -2,6 +2,7 @@ package com.cmc.meeron.meeting.adapter.in.response;
 
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,7 +29,12 @@ public class TodayMeetingResponse {
                                 .endTime(meeting.getEndTime())
                                 .operationTeamId(meeting.getOperationTeamId())
                                 .operationTeamName(meeting.getOperationTeamName())
-                                .mainAgenda(meeting.getAgendaContent())
+                                .mainAgendaId(meeting.getAgendaId() != null
+                                        ? meeting.getAgendaId()
+                                        : 0L)
+                                .mainAgenda(StringUtils.hasText(meeting.getAgendaContent())
+                                        ? meeting.getAgendaContent()
+                                        : "")
                                 .attends(meeting.getAttends())
                                 .absents(meeting.getAbsents())
                                 .unknowns(meeting.getUnknowns())
@@ -50,6 +56,7 @@ public class TodayMeetingResponse {
         private LocalTime endTime;
         private Long operationTeamId;
         private String operationTeamName;
+        private Long mainAgendaId;
         private String mainAgenda;
         private int attends;
         private int absents;

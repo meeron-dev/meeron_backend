@@ -64,7 +64,8 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getEndTime()))))
                 .andExpect(jsonPath("$.meetings[0].operationTeamId", is(responseDto.get(0).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].operationTeamName", is(responseDto.get(0).getOperationTeamName())))
-                .andExpect(jsonPath("$.meetings[0].mainAgenda", is(responseDto.get(0).getAgendaContent())))
+                .andExpect(jsonPath("$.meetings[0].mainAgendaId", is(0)))
+                .andExpect(jsonPath("$.meetings[0].mainAgenda", emptyString()))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDto.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDto.get(1).getMeetingName())))
                 .andExpect(jsonPath("$.meetings[1].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(1).getMeetingDate()))))
@@ -73,6 +74,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[1].operationTeamId", is(responseDto.get(1).getOperationTeamId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].operationTeamName", is(responseDto.get(1).getOperationTeamName())))
                 .andExpect(jsonPath("$.meetings[1].mainAgenda", is(responseDto.get(1).getAgendaContent())))
+                .andExpect(jsonPath("$.meetings[1].mainAgendaId", is(responseDto.get(1).getAgendaId().intValue())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -89,7 +91,10 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
                                 fieldWithPath("meetings[].operationTeamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID"),
                                 fieldWithPath("meetings[].operationTeamName").type(JsonFieldType.STRING).description("회의 주최 팀 명"),
-                                fieldWithPath("meetings[].mainAgenda").type(JsonFieldType.STRING).description("회의의 핵심 아젠다"),
+                                fieldWithPath("meetings[].mainAgendaId").type(JsonFieldType.NUMBER).optional().description("회의 핵심 아젠다 ID")
+                                        .attributes(field("constraints", "아젠다가 없을 경우 0 반환")),
+                                fieldWithPath("meetings[].mainAgenda").type(JsonFieldType.STRING).optional().description("회의 핵심 아젠다 명")
+                                        .attributes(field("constraints", "아젠다가 없을 경우 \"\" 반환")),
                                 fieldWithPath("meetings[].attends").type(JsonFieldType.NUMBER).description("회의 참가자 수"),
                                 fieldWithPath("meetings[].absents").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
                                 fieldWithPath("meetings[].unknowns").type(JsonFieldType.NUMBER).description("회의 참여 응답을 하지 않은 사람의 수")

@@ -17,7 +17,6 @@ public class TodayMeetingsQueryDtoBuilder {
                         .endTime(LocalTime.now().plusHours(2))
                         .operationTeamId(1L)
                         .operationTeamName("1번팀")
-                        .agendaContent("썸네일아젠다1")
                         .build(),
                 TodayMeetingsQueryDto.builder()
                         .meetingId(2L)
@@ -28,7 +27,6 @@ public class TodayMeetingsQueryDtoBuilder {
                         .endTime(LocalTime.now().plusHours(5))
                         .operationTeamId(2L)
                         .operationTeamName("2번팀")
-                        .agendaContent("썸네일아젠다2")
                         .build());
     }
 }
