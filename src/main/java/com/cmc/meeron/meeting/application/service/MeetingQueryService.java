@@ -33,6 +33,9 @@ class MeetingQueryService implements MeetingQueryUseCase {
     public List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto) {
         List<Meeting> todayMeetings = meetingQueryPort.findTodayMeetingsWithOperationTeam(todayMeetingRequestDto.getWorkspaceId(),
                 todayMeetingRequestDto.getWorkspaceUserId());
+        if (todayMeetings.isEmpty()) {
+            return TodayMeetingResponseDto.empty();
+        }
         List<Long> meetingIds = todayMeetings.stream().map(Meeting::getId).collect(Collectors.toList());
         List<Agenda> agendas = agendaQueryPort.findByMeetingIds(meetingIds);
         List<Attendee> admins = attendeeQueryPort.findMeetingAdminsByMeetingIds(meetingIds);

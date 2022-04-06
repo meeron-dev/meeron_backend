@@ -56,6 +56,10 @@ public class TodayMeetingResponseDto {
                 .collect(Collectors.toList());
     }
 
+    public static List<TodayMeetingResponseDto> empty() {
+        return new ArrayList<>();
+    }
+
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor

@@ -23,7 +23,7 @@ class MeetingQueryIntegrationTest extends IntegrationTest {
     @Sql("classpath:meeting-test.sql")
     @DisplayName("오늘의 회의 조회 - 성공")
     @Test
-    void today_meetingst_success() throws Exception {
+    void today_meeting_success() throws Exception {
 
         // given
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -46,9 +46,24 @@ class MeetingQueryIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.meetings[1].admins", hasSize(1)))
                 .andExpect(jsonPath("$.meetings[1].attendCount.attend", is(2)))
                 .andExpect(jsonPath("$.meetings[1].attendCount.absent", is(0)))
-                .andExpect(jsonPath("$.meetings[1].attendCount.unknown", is(0)))
+                .andExpect(jsonPath("$.meetings[1].attendCount.unknown", is(0)));
+    }
 
-                ;
+    @Sql("classpath:meeting-test.sql")
+    @DisplayName("오늘의 회의 조회 - 성공 / 회의가 없을 경우도 성공")
+    @Test
+    void today_meeting_success_empty_today_meeting() throws Exception {
+
+        // given
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceId", "2");
+        params.add("workspaceUserId", "1");
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/today")
+                .params(params))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meetings", hasSize(0)));
     }
 
     @DisplayName("회의 날짜 조회 - 워크스페이스의 경우")
