@@ -1,7 +1,6 @@
 package com.cmc.meeron.meeting.application.port.out;
 
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 
@@ -10,7 +9,7 @@ import java.util.Optional;
 
 public interface MeetingQueryPort {
 
-    List<TodayMeetingsQueryDto> findTodayMeetings(Long workspaceId, Long workspaceUserId);
+    List<Meeting> findTodayMeetingsWithOperationTeam(Long workspaceId, Long workspaceUserId);
 
     Optional<Meeting> findById(Long meetingId);
 

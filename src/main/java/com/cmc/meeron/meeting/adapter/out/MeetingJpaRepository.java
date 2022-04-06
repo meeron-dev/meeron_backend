@@ -21,9 +21,9 @@ interface MeetingJpaRepository extends JpaRepository<Meeting, Long>{
             " and m.meetingTime.startDate = :todayDate" +
             " order by m.meetingTime.startDate asc"
     )
-    List<Meeting> findTodayMeetings(@Param("workspaceId") Long workspaceId,
-                                    @Param("workspaceUserId") Long workspaceUserId,
-                                    @Param("todayDate") LocalDate todayDate);
+    List<Meeting> findTodayMeetingsWithOperationTeam(@Param("workspaceId") Long workspaceId,
+                                                     @Param("workspaceUserId") Long workspaceUserId,
+                                                     @Param("todayDate") LocalDate todayDate);
 
     @Query(
             "select distinct m" +

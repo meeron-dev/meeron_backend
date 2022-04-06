@@ -36,4 +36,9 @@ class AttendeeQueryRepository implements AttendeeQueryPort {
     public Optional<Attendee> findByMeetingIdAndWorkspaceUserId(Long meetingId, Long workspaceUserId) {
         return attendeeJpaRepository.findByMeetingIdAndWorkspaceUserId(meetingId, workspaceUserId);
     }
+
+    @Override
+    public List<Attendee> findMeetingAdminsByMeetingIds(List<Long> meetingIds) {
+        return attendeeJpaRepository.findMeetingAdminsByMeetingIds(meetingIds);
+    }
 }

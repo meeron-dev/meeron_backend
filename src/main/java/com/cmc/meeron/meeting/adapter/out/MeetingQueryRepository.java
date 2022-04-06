@@ -2,12 +2,12 @@ package com.cmc.meeron.meeting.adapter.out;
 
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +20,8 @@ class MeetingQueryRepository implements MeetingQueryPort {
     private final MeetingQuerydslRepository meetingQuerydslRepository;
 
     @Override
-    public List<TodayMeetingsQueryDto> findTodayMeetings(Long workspaceId, Long workspaceUserId) {
-        return meetingQuerydslRepository.findTodayMeetingsQuery(workspaceId, workspaceUserId);
+    public List<Meeting> findTodayMeetingsWithOperationTeam(Long workspaceId, Long workspaceUserId) {
+        return meetingJpaRepository.findTodayMeetingsWithOperationTeam(workspaceId, workspaceUserId, LocalDate.now());
     }
 
     @Override

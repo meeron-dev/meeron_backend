@@ -1,6 +1,5 @@
 package com.cmc.meeron.meeting.application.port.out;
 
-import com.cmc.meeron.meeting.application.port.out.response.FirstAgendaQueryDto;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Issue;
 
@@ -15,5 +14,5 @@ public interface AgendaQueryPort {
 
     List<Issue> findByAgendaId(Long agendaId);
 
-    List<FirstAgendaQueryDto> findFirstAgendaByMeetingIds(List<Long> meetingIds);
+    List<Agenda> findByMeetingIds(List<Long> meetingIds);
 }

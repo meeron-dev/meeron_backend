@@ -9,9 +9,10 @@ import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.FirstAgendaQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.TodayMeetingsQueryDto;
+import com.cmc.meeron.meeting.domain.Agenda;
+import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.meeting.domain.Meeting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,15 +31,13 @@ class MeetingQueryService implements MeetingQueryUseCase {
 
     @Override
     public List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto) {
-        List<TodayMeetingsQueryDto> todayMeetingsQueryDtos = meetingQueryPort
-                .findTodayMeetings(todayMeetingRequestDto.getWorkspaceId(), todayMeetingRequestDto.getWorkspaceUserId());
-        List<Long> findMeetingIds = todayMeetingsQueryDtos
-                .stream()
-                .map(TodayMeetingsQueryDto::getMeetingId)
-                .collect(Collectors.toList());
-        List<AttendStatusCountQueryDto> countResponseDtos = attendeeQueryPort.countAttendStatusByMeetingIds(findMeetingIds);
-        List<FirstAgendaQueryDto> firstAgendas = agendaQueryPort.findFirstAgendaByMeetingIds(findMeetingIds);
-        return TodayMeetingResponseDto.fromQueryDtos(todayMeetingsQueryDtos, countResponseDtos, firstAgendas);
+        List<Meeting> todayMeetings = meetingQueryPort.findTodayMeetingsWithOperationTeam(todayMeetingRequestDto.getWorkspaceId(),
+                todayMeetingRequestDto.getWorkspaceUserId());
+        List<Long> meetingIds = todayMeetings.stream().map(Meeting::getId).collect(Collectors.toList());
+        List<Agenda> agendas = agendaQueryPort.findByMeetingIds(meetingIds);
+        List<Attendee> admins = attendeeQueryPort.findMeetingAdminsByMeetingIds(meetingIds);
+        List<AttendStatusCountQueryDto> countsQueryDtos = attendeeQueryPort.countAttendStatusByMeetingIds(meetingIds);
+        return TodayMeetingResponseDto.fromEntities(todayMeetings, agendas, admins, countsQueryDtos);
     }
 
     @Override

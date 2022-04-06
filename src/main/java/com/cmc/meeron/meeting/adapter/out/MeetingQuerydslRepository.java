@@ -158,21 +158,6 @@ class MeetingQuerydslRepository {
                 .fetch();
     }
 
-    public List<TodayMeetingsQueryDto> findTodayMeetingsQuery(Long workspaceId, Long workspaceUserId) {
-        LocalDate now = LocalDate.now();
-        return queryFactory.select(new QTodayMeetingsQueryDto(
-                meeting.id, meeting.meetingInfo.name, meeting.meetingInfo.purpose,
-                meeting.meetingTime.startDate, meeting.meetingTime.startTime, meeting.meetingTime.endTime,
-                team.id, team.name
-        )).from(meeting)
-                .join(meeting.team, team)
-                .join(meeting.attendees.values, attendee)
-                .where(meeting.workspace.id.eq(workspaceId),
-                        attendee.workspaceUser.id.eq(workspaceUserId),
-                        meeting.meetingTime.startDate.eq(now))
-                .fetch();
-    }
-
     public Optional<MeetingAndAdminsQueryDto> findWithTeamAndAdminsById(Long meetingId) {
         MeetingQueryDto meetingQueryDto = Optional.ofNullable(queryFactory.select(new QMeetingQueryDto(
                 meeting.id, meeting.meetingInfo.name, meeting.meetingInfo.purpose,

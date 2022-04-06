@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MeetingQueryIntegrationTest extends IntegrationTest {
 
     @Sql("classpath:meeting-test.sql")
-    @DisplayName("오늘의 회의 조회 - 성공 / 아젠다가 없어도 조회 가능")
+    @DisplayName("오늘의 회의 조회 - 성공")
     @Test
     void today_meetingst_success() throws Exception {
 
@@ -35,16 +35,20 @@ class MeetingQueryIntegrationTest extends IntegrationTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
-                .andExpect(jsonPath("$.meetings[0].attends", is(2)))
-                .andExpect(jsonPath("$.meetings[0].absents", is(1)))
-                .andExpect(jsonPath("$.meetings[0].unknowns", is(2)))
-                .andExpect(jsonPath("$.meetings[0].mainAgenda", not(emptyString())))
-                .andExpect(jsonPath("$.meetings[0].mainAgendaId", is(2)))
-                .andExpect(jsonPath("$.meetings[1].attends", is(2)))
-                .andExpect(jsonPath("$.meetings[1].absents", is(0)))
-                .andExpect(jsonPath("$.meetings[1].unknowns", is(0)))
-                .andExpect(jsonPath("$.meetings[1].mainAgenda", emptyString()))
-                .andExpect(jsonPath("$.meetings[1].mainAgendaId", is(0)));
+                .andExpect(jsonPath("$.meetings[0].meeting.meetingId", is(6)))
+                .andExpect(jsonPath("$.meetings[0].agendas", hasSize(1)))
+                .andExpect(jsonPath("$.meetings[0].admins", hasSize(2)))
+                .andExpect(jsonPath("$.meetings[0].attendCount.attend", is(2)))
+                .andExpect(jsonPath("$.meetings[0].attendCount.absent", is(1)))
+                .andExpect(jsonPath("$.meetings[0].attendCount.unknown", is(2)))
+                .andExpect(jsonPath("$.meetings[1].meeting.meetingId", is(7)))
+                .andExpect(jsonPath("$.meetings[1].agendas", hasSize(0)))
+                .andExpect(jsonPath("$.meetings[1].admins", hasSize(1)))
+                .andExpect(jsonPath("$.meetings[1].attendCount.attend", is(2)))
+                .andExpect(jsonPath("$.meetings[1].attendCount.absent", is(0)))
+                .andExpect(jsonPath("$.meetings[1].attendCount.unknown", is(0)))
+
+                ;
     }
 
     @DisplayName("회의 날짜 조회 - 워크스페이스의 경우")

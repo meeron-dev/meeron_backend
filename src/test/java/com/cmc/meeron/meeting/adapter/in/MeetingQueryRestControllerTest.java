@@ -47,34 +47,62 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", "1");
         params.add("workspaceUserId", "1");
-        List<TodayMeetingResponseDto> responseDto = TodayMeetingResponseDtoBuilder.buildList();
+        List<TodayMeetingResponseDto> responseDtos = TodayMeetingResponseDtoBuilder.buildList();
         when(meetingQueryUseCase.getTodayMeetings(any()))
-                .thenReturn(responseDto);
+                .thenReturn(responseDtos);
 
         // when, then, docs
+        TodayMeetingResponseDto responseDto = responseDtos.get(0);
+        TodayMeetingResponseDto.ImproveMeetingResponseDto meeting = responseDto.getMeetingResponseDto();
+        TodayMeetingResponseDto.ImproveTeamResponseDto team = responseDto.getTeamResponseDto();
+        List<TodayMeetingResponseDto.ImproveAgendaResponseDto> agendaResponseDtos = responseDto.getAgendaResponseDtos();
+        TodayMeetingResponseDto.ImproveAgendaResponseDto agenda1 = agendaResponseDtos.get(0);
+        TodayMeetingResponseDto.ImproveAgendaResponseDto agenda2 = agendaResponseDtos.get(1);
+        List<TodayMeetingResponseDto.ImproveWorkspaceUserResponseDto> adminResponseDtos = responseDto.getAdminResponseDto();
+        TodayMeetingResponseDto.ImproveWorkspaceUserResponseDto admin1 = adminResponseDtos.get(0);
+        TodayMeetingResponseDto.ImproveWorkspaceUserResponseDto admin2 = adminResponseDtos.get(1);
+        TodayMeetingResponseDto.ImproveAttendCountResponseDto count = responseDto.getAttendCountResponseDto();
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/today")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
                 .params(params))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meetings", hasSize(2)))
-                .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDto.get(0).getMeetingId().intValue())))
-                .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDto.get(0).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[0].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(0).getMeetingDate()))))
-                .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getStartTime()))))
-                .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(0).getEndTime()))))
-                .andExpect(jsonPath("$.meetings[0].operationTeamId", is(responseDto.get(0).getOperationTeamId().intValue())))
-                .andExpect(jsonPath("$.meetings[0].operationTeamName", is(responseDto.get(0).getOperationTeamName())))
-                .andExpect(jsonPath("$.meetings[0].mainAgendaId", is(0)))
-                .andExpect(jsonPath("$.meetings[0].mainAgenda", emptyString()))
-                .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDto.get(1).getMeetingId().intValue())))
-                .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDto.get(1).getMeetingName())))
-                .andExpect(jsonPath("$.meetings[1].meetingDate", is(LocalDateTimeUtil.convertDate(responseDto.get(1).getMeetingDate()))))
-                .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDto.get(1).getStartTime()))))
-                .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDto.get(1).getEndTime()))))
-                .andExpect(jsonPath("$.meetings[1].operationTeamId", is(responseDto.get(1).getOperationTeamId().intValue())))
-                .andExpect(jsonPath("$.meetings[1].operationTeamName", is(responseDto.get(1).getOperationTeamName())))
-                .andExpect(jsonPath("$.meetings[1].mainAgenda", is(responseDto.get(1).getAgendaContent())))
-                .andExpect(jsonPath("$.meetings[1].mainAgendaId", is(responseDto.get(1).getAgendaId().intValue())))
+                .andExpect(jsonPath("$.meetings", hasSize(1)))
+                .andExpect(jsonPath("$.meetings[0].meeting.meetingId", is(meeting.getMeetingId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].meeting.startDate", is(LocalDateTimeUtil.convertDate(meeting.getStartDate()))))
+                .andExpect(jsonPath("$.meetings[0].meeting.startTime", is(LocalDateTimeUtil.convertTime(meeting.getStartTime()))))
+                .andExpect(jsonPath("$.meetings[0].meeting.endTime", is(LocalDateTimeUtil.convertTime(meeting.getEndTime()))))
+                .andExpect(jsonPath("$.meetings[0].meeting.meetingName", is(meeting.getName())))
+                .andExpect(jsonPath("$.meetings[0].meeting.purpose", is(meeting.getPurpose())))
+                .andExpect(jsonPath("$.meetings[0].meeting.place", is(meeting.getPlace())))
+                .andExpect(jsonPath("$.meetings[0].team.teamId", is(team.getTeamId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].team.teamName", is(team.getTeamName())))
+                .andExpect(jsonPath("$.meetings[0].agendas", hasSize(2)))
+                .andExpect(jsonPath("$.meetings[0].agendas[0].agendaId", is(agenda1.getAgendaId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].agendas[0].agendaOrder", is(agenda1.getAgendaOrder())))
+                .andExpect(jsonPath("$.meetings[0].agendas[0].agendaName", is(agenda1.getAgendaName())))
+                .andExpect(jsonPath("$.meetings[0].agendas[0].agendaResult", is(agenda1.getAgendaResult())))
+                .andExpect(jsonPath("$.meetings[0].agendas[1].agendaId", is(agenda2.getAgendaId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].agendas[1].agendaOrder", is(agenda2.getAgendaOrder())))
+                .andExpect(jsonPath("$.meetings[0].agendas[1].agendaName", is(agenda2.getAgendaName())))
+                .andExpect(jsonPath("$.meetings[0].agendas[1].agendaResult", is(agenda2.getAgendaResult())))
+                .andExpect(jsonPath("$.meetings[0].admins", hasSize(2)))
+                .andExpect(jsonPath("$.meetings[0].admins[0].workspaceUserId", is(admin1.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].workspaceAdmin", is(admin1.isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].nickname", is(admin1.getNickname())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].position", is(admin1.getPosition())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].profileImageUrl", is(admin1.getProfileImageUrl())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].email", is(admin1.getEmail())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].phone", is(admin1.getPhone())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].workspaceUserId", is(admin2.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].workspaceAdmin", is(admin2.isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].nickname", is(admin2.getNickname())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].position", is(admin2.getPosition())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].profileImageUrl", is(admin2.getProfileImageUrl())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].email", is(admin2.getEmail())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].phone", is(admin2.getPhone())))
+                .andExpect(jsonPath("$.meetings[0].attendCount.attend", is(count.getAttend())))
+                .andExpect(jsonPath("$.meetings[0].attendCount.absent", is(count.getAbsent())))
+                .andExpect(jsonPath("$.meetings[0].attendCount.unknown", is(count.getUnknown())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -84,18 +112,29 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 parameterWithName("workspaceUserId").description("워크스페이스 유저 ID")
                         ),
                         responseFields(
-                                fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
-                                fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
-                                fieldWithPath("meetings[].meetingDate").type(JsonFieldType.STRING).description("회의 진행 날짜"),
-                                fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
-                                fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].operationTeamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID"),
-                                fieldWithPath("meetings[].operationTeamName").type(JsonFieldType.STRING).description("회의 주최 팀 명"),
-                                fieldWithPath("meetings[].mainAgendaId").type(JsonFieldType.NUMBER).description("회의 핵심 아젠다 ID / 없을 경우 0 반환"),
-                                fieldWithPath("meetings[].mainAgenda").type(JsonFieldType.STRING).description("회의 핵심 아젠다 명 / 없을 경우 \"\" 반환"),
-                                fieldWithPath("meetings[].attends").type(JsonFieldType.NUMBER).description("회의 참가자 수"),
-                                fieldWithPath("meetings[].absents").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
-                                fieldWithPath("meetings[].unknowns").type(JsonFieldType.NUMBER).description("회의 참여 응답을 하지 않은 사람의 수")
+                                fieldWithPath("meetings[].meeting.meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
+                                fieldWithPath("meetings[].meeting.meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].meeting.startDate").type(JsonFieldType.STRING).description("회의 진행 날짜"),
+                                fieldWithPath("meetings[].meeting.startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
+                                fieldWithPath("meetings[].meeting.endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
+                                fieldWithPath("meetings[].meeting.purpose").type(JsonFieldType.STRING).description("회의 성격"),
+                                fieldWithPath("meetings[].meeting.place").type(JsonFieldType.STRING).description("회의 장소"),
+                                fieldWithPath("meetings[].team.teamId").type(JsonFieldType.NUMBER).description("회의 주최 팀 ID"),
+                                fieldWithPath("meetings[].team.teamName").type(JsonFieldType.STRING).description("회의 주최 팀 명"),
+                                fieldWithPath("meetings[].agendas[].agendaId").type(JsonFieldType.NUMBER).description("아젠다 ID"),
+                                fieldWithPath("meetings[].agendas[].agendaName").type(JsonFieldType.STRING).description("아젠다 명"),
+                                fieldWithPath("meetings[].agendas[].agendaOrder").type(JsonFieldType.NUMBER).description("아젠다 순서"),
+                                fieldWithPath("meetings[].agendas[].agendaResult").type(JsonFieldType.STRING).description("아젠다 결과"),
+                                fieldWithPath("meetings[].admins[].workspaceUserId").type(JsonFieldType.NUMBER).description("회의 관리자의 워크스페이스 유저 ID"),
+                                fieldWithPath("meetings[].admins[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("회의 관리자의 워크스페이스 관리 여부"),
+                                fieldWithPath("meetings[].admins[].nickname").type(JsonFieldType.STRING).description("회의 관리자의 닉네임"),
+                                fieldWithPath("meetings[].admins[].position").type(JsonFieldType.STRING).description("회의 관리자의 직책"),
+                                fieldWithPath("meetings[].admins[].profileImageUrl").type(JsonFieldType.STRING).description("회의 관리자의 프로필 이미지 URL"),
+                                fieldWithPath("meetings[].admins[].email").type(JsonFieldType.STRING).description("회의 관리자의 메일"),
+                                fieldWithPath("meetings[].admins[].phone").type(JsonFieldType.STRING).description("회의 관리자의 휴대전화번호"),
+                                fieldWithPath("meetings[].attendCount.attend").type(JsonFieldType.NUMBER).description("회의 참가자 수"),
+                                fieldWithPath("meetings[].attendCount.absent").type(JsonFieldType.NUMBER).description("회의 불참자 수"),
+                                fieldWithPath("meetings[].attendCount.unknown").type(JsonFieldType.NUMBER).description("회의 참여 응답을 하지 않은 사람의 수")
                         )
                 ));
     }
