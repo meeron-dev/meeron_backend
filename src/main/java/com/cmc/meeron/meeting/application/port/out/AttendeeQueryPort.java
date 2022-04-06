@@ -17,5 +17,5 @@ public interface AttendeeQueryPort {
 
     Optional<Attendee> findByMeetingIdAndWorkspaceUserId(Long meetingId, Long workspaceUserId);
 
-    List<Attendee> findMeetingAdminsByMeetingIds(List<Long> meetingIds);
+    List<Attendee> findMeetingAdminsWithWorkspaceUserByMeetingIds(List<Long> meetingIds);
 }

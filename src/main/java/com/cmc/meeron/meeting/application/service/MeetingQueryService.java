@@ -38,7 +38,7 @@ class MeetingQueryService implements MeetingQueryUseCase {
         }
         List<Long> meetingIds = todayMeetings.stream().map(Meeting::getId).collect(Collectors.toList());
         List<Agenda> agendas = agendaQueryPort.findByMeetingIds(meetingIds);
-        List<Attendee> admins = attendeeQueryPort.findMeetingAdminsByMeetingIds(meetingIds);
+        List<Attendee> admins = attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingIds(meetingIds);
         List<AttendStatusCountQueryDto> countsQueryDtos = attendeeQueryPort.countAttendStatusByMeetingIds(meetingIds);
         return TodayMeetingResponseDto.fromEntities(todayMeetings, agendas, admins, countsQueryDtos);
     }

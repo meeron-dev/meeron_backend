@@ -22,8 +22,7 @@ public class MeetingQueryRestController {
     @GetMapping("/today")
     @ResponseStatus(HttpStatus.OK)
     public TodayMeetingResponse todayMeetings(@Valid TodayMeetingRequest todayMeetingRequest) {
-        List<TodayMeetingResponseDto> todayMeetings = meetingQueryUseCase
-                .getTodayMeetings(todayMeetingRequest.toRequestDto());
+        List<TodayMeetingResponseDto> todayMeetings = meetingQueryUseCase.getTodayMeetings(todayMeetingRequest.toRequestDto());
         return TodayMeetingResponse.fromResponseDtos(todayMeetings);
     }
 

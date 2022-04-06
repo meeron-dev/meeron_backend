@@ -111,6 +111,7 @@ public class TodayMeetingResponseDto {
     public static class ImproveWorkspaceUserResponseDto {
 
         private Long workspaceUserId;
+        private Long workspaceId;
         private boolean isWorkspaceAdmin;
         private String nickname;
         private String position;
@@ -128,6 +129,7 @@ public class TodayMeetingResponseDto {
             WorkspaceUser workspaceUser = admin.getWorkspaceUser();
             return ImproveWorkspaceUserResponseDto.builder()
                     .workspaceUserId(workspaceUser.getId())
+                    .workspaceId(workspaceUser.getWorkspace().getId())
                     .isWorkspaceAdmin(workspaceUser.isAdmin())
                     .nickname(workspaceUser.getWorkspaceUserInfo().getNickname())
                     .position(workspaceUser.getWorkspaceUserInfo().getPosition())

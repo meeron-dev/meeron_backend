@@ -87,13 +87,16 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings[0].agendas[1].agendaResult", is(agenda2.getAgendaResult())))
                 .andExpect(jsonPath("$.meetings[0].admins", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].admins[0].workspaceUserId", is(admin1.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].workspaceId", is(admin1.getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].admins[0].workspaceAdmin", is(admin1.isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.meetings[0].admins[0].nickname", is(admin1.getNickname())))
                 .andExpect(jsonPath("$.meetings[0].admins[0].position", is(admin1.getPosition())))
                 .andExpect(jsonPath("$.meetings[0].admins[0].profileImageUrl", is(admin1.getProfileImageUrl())))
                 .andExpect(jsonPath("$.meetings[0].admins[0].email", is(admin1.getEmail())))
                 .andExpect(jsonPath("$.meetings[0].admins[0].phone", is(admin1.getPhone())))
+                .andExpect(jsonPath("$.meetings[0].admins[0].phone", is(admin1.getPhone())))
                 .andExpect(jsonPath("$.meetings[0].admins[1].workspaceUserId", is(admin2.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.meetings[0].admins[1].workspaceId", is(admin2.getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].admins[1].workspaceAdmin", is(admin2.isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.meetings[0].admins[1].nickname", is(admin2.getNickname())))
                 .andExpect(jsonPath("$.meetings[0].admins[1].position", is(admin2.getPosition())))
@@ -126,6 +129,7 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("meetings[].agendas[].agendaOrder").type(JsonFieldType.NUMBER).description("아젠다 순서"),
                                 fieldWithPath("meetings[].agendas[].agendaResult").type(JsonFieldType.STRING).description("아젠다 결과"),
                                 fieldWithPath("meetings[].admins[].workspaceUserId").type(JsonFieldType.NUMBER).description("회의 관리자의 워크스페이스 유저 ID"),
+                                fieldWithPath("meetings[].admins[].workspaceId").type(JsonFieldType.NUMBER).description("회의 관리자의 워크스페이스 ID"),
                                 fieldWithPath("meetings[].admins[].workspaceAdmin").type(JsonFieldType.BOOLEAN).description("회의 관리자의 워크스페이스 관리 여부"),
                                 fieldWithPath("meetings[].admins[].nickname").type(JsonFieldType.STRING).description("회의 관리자의 닉네임"),
                                 fieldWithPath("meetings[].admins[].position").type(JsonFieldType.STRING).description("회의 관리자의 직책"),

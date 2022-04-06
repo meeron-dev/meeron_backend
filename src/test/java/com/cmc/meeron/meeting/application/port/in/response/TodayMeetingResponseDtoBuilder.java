@@ -40,6 +40,7 @@ public class TodayMeetingResponseDtoBuilder {
                         .adminResponseDto(List.of(
                                 TodayMeetingResponseDto.ImproveWorkspaceUserResponseDto.builder()
                                         .workspaceUserId(1L)
+                                        .workspaceId(1L)
                                         .isWorkspaceAdmin(true)
                                         .nickname("1번유저")
                                         .position("개발자")
@@ -49,6 +50,7 @@ public class TodayMeetingResponseDtoBuilder {
                                         .build(),
                                 TodayMeetingResponseDto.ImproveWorkspaceUserResponseDto.builder()
                                         .workspaceUserId(2L)
+                                        .workspaceId(1L)
                                         .isWorkspaceAdmin(false)
                                         .nickname("2번유저")
                                         .position("개발자")

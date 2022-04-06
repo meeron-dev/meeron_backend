@@ -605,15 +605,15 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 1289
+Content-Length: 1339
 
 {
   "meetings" : [ {
     "meeting" : {
       "meetingId" : 1,
       "startDate" : "2022/4/6",
-      "startTime" : "05:13 PM",
-      "endTime" : "06:13 PM",
+      "startTime" : "06:47 PM",
+      "endTime" : "07:47 PM",
       "meetingName" : "테스트 회의1",
       "purpose" : "테스트 회의성격1",
       "place" : "테스트 장소"
@@ -635,6 +635,7 @@ Content-Length: 1289
     } ],
     "admins" : [ {
       "workspaceUserId" : 1,
+      "workspaceId" : 1,
       "nickname" : "1번유저",
       "position" : "개발자",
       "profileImageUrl" : "https://test.com/123123",
@@ -643,6 +644,7 @@ Content-Length: 1289
       "workspaceAdmin" : true
     }, {
       "workspaceUserId" : 2,
+      "workspaceId" : 1,
       "nickname" : "2번유저",
       "position" : "개발자",
       "profileImageUrl" : "https://test.com/1243123",
@@ -744,6 +746,11 @@ Content-Length: 1289
 <td class="tableblock halign-left valign-top"><p class="tableblock">회의 관리자의 워크스페이스 유저 ID</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].admins[].workspaceId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">회의 관리자의 워크스페이스 ID</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetings[].admins[].workspaceAdmin</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Boolean</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">회의 관리자의 워크스페이스 관리 여부</p></td>
@@ -813,7 +820,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 400
 
 {
-  "time" : "2022-04-06T17:13:29.235874",
+  "time" : "2022-04-06T18:47:02.471367",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1012,15 +1019,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "06:13 PM",
-    "endTime" : "08:13 PM",
+    "startTime" : "07:47 PM",
+    "endTime" : "09:47 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "09:13 PM",
-    "endTime" : "11:13 PM",
+    "startTime" : "10:47 PM",
+    "endTime" : "12:47 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1503,15 +1510,15 @@ Content-Length: 367
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "06:13 PM",
-    "endTime" : "08:13 PM",
+    "startTime" : "07:47 PM",
+    "endTime" : "09:47 PM",
     "workspaceId" : 0,
     "workspaceName" : ""
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "09:13 PM",
-    "endTime" : "11:13 PM",
+    "startTime" : "10:47 PM",
+    "endTime" : "12:47 AM",
     "workspaceId" : 0,
     "workspaceName" : ""
   } ]
@@ -1994,15 +2001,15 @@ Content-Length: 423
   "meetings" : [ {
     "meetingId" : 1,
     "meetingName" : "첫번째회의",
-    "startTime" : "06:13 PM",
-    "endTime" : "08:13 PM",
+    "startTime" : "07:47 PM",
+    "endTime" : "09:47 PM",
     "workspaceId" : 1,
     "workspaceName" : "첫번째 워크스페이스"
   }, {
     "meetingId" : 2,
     "meetingName" : "두번째회의",
-    "startTime" : "09:13 PM",
-    "endTime" : "11:13 PM",
+    "startTime" : "10:47 PM",
+    "endTime" : "12:47 AM",
     "workspaceId" : 2,
     "workspaceName" : "두번째 워크스페이스"
   } ]
@@ -2374,8 +2381,8 @@ Content-Length: 333
   "meetingName" : "테스트회의",
   "meetingPurpose" : "테스트목적",
   "meetingDate" : "2022/4/6",
-  "startTime" : "05:13 PM",
-  "endTime" : "07:13 PM",
+  "startTime" : "06:47 PM",
+  "endTime" : "08:47 PM",
   "operationTeamId" : 1,
   "operationTeamName" : "테스트팀",
   "admins" : [ {
@@ -2475,7 +2482,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 148
 
 {
-  "time" : "2022-04-06T17:13:28.940604",
+  "time" : "2022-04-06T18:47:02.174331",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,
