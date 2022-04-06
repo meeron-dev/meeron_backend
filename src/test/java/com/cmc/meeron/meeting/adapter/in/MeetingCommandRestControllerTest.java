@@ -534,7 +534,7 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                         ),
                         requestFields(
                                 fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
-                                fieldWithPath("status").type(JsonFieldType.STRING).description("변경할 상태").attributes(field("constraints", "'attend', 'accident', 'absent' 중 하나를 입력해야 함"))
+                                fieldWithPath("status").type(JsonFieldType.STRING).description("변경할 상태").attributes(field("constraints", "'attend', 'absent' 중 하나를 입력해야 함"))
                         )
                 ));
     }

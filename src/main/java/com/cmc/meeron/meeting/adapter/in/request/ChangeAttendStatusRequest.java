@@ -16,7 +16,9 @@ public class ChangeAttendStatusRequest {
     @NotNull(message = "회의 ID를 입력해주세요.")
     private Long meetingId;
 
-    @EnumValid(enumClass = AttendStatusType.class, message = "지원하지 않는 참여 상태입니다. 'attend', 'accident', 'absent' 중 하나를 입력해주세요.")
+    @EnumValid(enumClass = AttendStatusType.class,
+            ignoreCase = true,
+            message = "지원하지 않는 참여 상태입니다. 'attend', 'absent' 중 하나를 입력해주세요.")
     private String status;
 
     public ChangeAttendStatusRequestDto toRequestDto(Long workspaceUserId) {

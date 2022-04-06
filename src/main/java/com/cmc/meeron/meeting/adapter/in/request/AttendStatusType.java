@@ -8,7 +8,6 @@ import lombok.Getter;
 public enum AttendStatusType {
 
     ATTEND("ATTEND"),
-    ACCIDENT("ACCIDENT"),
     ABSENT("ABSENT"),
     ;
 
