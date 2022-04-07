@@ -14,10 +14,7 @@ import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
 import com.cmc.meeron.workspace.adapter.in.request.*;
 import com.cmc.meeron.workspace.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDtoBuilder;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDtoBuilder;
+import com.cmc.meeron.workspace.application.port.in.response.*;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +40,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -154,6 +152,55 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저의 유저 정보 가져오기 - 실패 / 존재하지 않는 워크스페이스 유저일 경우")
+    @Test
+    void get_user_fail_not_found() throws Exception {
+
+        // given
+        when(workspaceUserQueryUseCase.getUser(any()))
+                .thenThrow(new WorkspaceUserNotFoundException());
+
+        // when, then ,docs
+        mockMvc.perform(get("/api/workspace-users/{workspaceUserId}/user", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저의 유저 정보 가져오기 - 성공")
+    @Test
+    void get_user_success() throws Exception {
+
+        // given
+        UserResponseDto responseDto = UserResponseDtoBuilder.build();
+        when(workspaceUserQueryUseCase.getUser(any()))
+                .thenReturn(responseDto);
+
+        // when, then ,docs
+        mockMvc.perform(get("/api/workspace-users/{workspaceUserId}/user", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", is(responseDto.getUserId().intValue())))
+                .andExpect(jsonPath("$.loginEmail", is(responseDto.getLoginEmail())))
+                .andExpect(jsonPath("$.name", is(responseDto.getName())))
+                .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("workspaceUserId").description("워크스페이스 유저 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저ID"),
+                                fieldWithPath("loginEmail").type(JsonFieldType.STRING).description("유저의 로그인 이메일"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 성함"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("유저 프로필 url")
+                        )
+                ));
     }
 
     @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 제약조건을 지키지 않을 경우")

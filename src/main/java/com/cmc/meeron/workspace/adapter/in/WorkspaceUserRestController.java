@@ -5,8 +5,9 @@ import com.cmc.meeron.workspace.adapter.in.request.*;
 import com.cmc.meeron.workspace.adapter.in.response.*;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceUserCommandUseCase;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceUserQueryUseCase;
-import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.UserResponseDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserCommandResponseDto;
+import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +46,13 @@ public class WorkspaceUserRestController {
     public WorkspaceUserResponse getMyWorkspaceUser(@PathVariable Long workspaceUserId) {
         WorkspaceUserQueryResponseDto myWorkspaceUser = workspaceUserQueryUseCase.getMyWorkspaceUser(workspaceUserId);
         return WorkspaceUserResponse.fromResponseDto(myWorkspaceUser);
+    }
+
+    @GetMapping("/workspace-users/{workspaceUserId}/user")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse getUser(@PathVariable Long workspaceUserId) {
+        UserResponseDto userResponseDto = workspaceUserQueryUseCase.getUser(workspaceUserId);
+        return UserResponse.fromResponseDto(userResponseDto);
     }
 
     @PutMapping(value = "/workspace-users/{workspaceUserId}", consumes = {

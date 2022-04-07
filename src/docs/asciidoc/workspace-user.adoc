@@ -28,6 +28,19 @@ include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_su
 include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-request.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-response.adoc[]
 
+[[workspace_users_user]]
+== '워크스페이스 유저' 의 유저(회원 정보) 조회
+=== [GET] /api/workspace-users/{id}/user
+include::{snippets}/workspace-user-rest-controller-test/get_user_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_user_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_user_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_user_success/http-response.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_user_success/response-fields.adoc[]
+
+==== 1701
+include::{snippets}/workspace-user-rest-controller-test/get_user_fail_not_found/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/get_user_fail_not_found/http-response.adoc[]
+
 [[search_workspace_users]]
 == 워크스페이스 내 유저 닉네임 검색
 === [GET] /api/workspace-users

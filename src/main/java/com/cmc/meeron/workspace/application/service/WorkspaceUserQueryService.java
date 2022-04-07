@@ -2,7 +2,9 @@ package com.cmc.meeron.workspace.application.service;
 
 import com.cmc.meeron.common.exception.workspace.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
+import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.workspace.application.port.in.request.FindWorkspaceUserRequestDto;
+import com.cmc.meeron.workspace.application.port.in.response.UserResponseDto;
 import com.cmc.meeron.workspace.application.port.in.response.WorkspaceUserQueryResponseDto;
 import com.cmc.meeron.workspace.application.port.in.WorkspaceUserQueryUseCase;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
@@ -60,5 +62,13 @@ class WorkspaceUserQueryService implements WorkspaceUserQueryUseCase {
     public List<WorkspaceUserQueryResponseDto> getNoneTeamWorkspaceUsers(Long workspaceId) {
         List<WorkspaceUser> workspaceUsers = workspaceUserQueryPort.findByWorkspaceIdAndTeamIsNull(workspaceId);
         return WorkspaceUserQueryResponseDto.fromEntities(workspaceUsers);
+    }
+
+    @Override
+    public UserResponseDto getUser(Long workspaceUserId) {
+        User user = workspaceUserQueryPort.findWithUserById(workspaceUserId)
+                .orElseThrow(WorkspaceUserNotFoundException::new)
+                .getUser();
+        return UserResponseDto.fromEntity(user);
     }
 }

@@ -506,12 +506,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 250
+Content-Length: 251
 Host: dev.meeron.net
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/9",
+  "meetingDate" : "2022/4/10",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -685,26 +685,14 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 1083
+Content-Length: 1082
 
 {
-  "time" : "2022-04-06T22:01:44.847276",
+  "time" : "2022-04-07T21:49:04.04597",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "meetingDate",
-    "value" : null,
-    "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
-  }, {
-    "field" : "startTime",
-    "value" : null,
-    "reason" : "회의 시작 시간을 'hh:mm a' 형식으로 입력해주세요."
-  }, {
-    "field" : "meetingName",
-    "value" : null,
-    "reason" : "회의명을 30자 이하로 입력해주세요."
-  }, {
     "field" : "operationTeamId",
     "value" : null,
     "reason" : "담당 팀 ID를 입력해주세요."
@@ -713,6 +701,14 @@ Content-Length: 1083
     "value" : null,
     "reason" : "회의 성격을 1자 이상 10자 이하로 입력해주세요."
   }, {
+    "field" : "meetingName",
+    "value" : null,
+    "reason" : "회의명을 30자 이하로 입력해주세요."
+  }, {
+    "field" : "startTime",
+    "value" : null,
+    "reason" : "회의 시작 시간을 'hh:mm a' 형식으로 입력해주세요."
+  }, {
     "field" : "workspaceId",
     "value" : null,
     "reason" : "회의를 생성할 워크스페이스 ID를 입력해주세요."
@@ -720,6 +716,10 @@ Content-Length: 1083
     "field" : "endTime",
     "value" : null,
     "reason" : "회의 마감 시간을 'hh:mm a' 형식으로 입력해주세요."
+  }, {
+    "field" : "meetingDate",
+    "value" : null,
+    "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -732,12 +732,12 @@ Content-Length: 1083
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 250
+Content-Length: 251
 Host: dev.meeron.net
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/9",
+  "meetingDate" : "2022/4/10",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -761,7 +761,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 192
 
 {
-  "time" : "2022-04-06T22:01:45.227683",
+  "time" : "2022-04-07T21:49:04.277743",
   "status" : 400,
   "message" : "주관하는 팀이 지정한 워크스페이스에 속해있지 않습니다.",
   "code" : 1304,
@@ -777,12 +777,12 @@ Content-Length: 192
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 250
+Content-Length: 251
 Host: dev.meeron.net
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/9",
+  "meetingDate" : "2022/4/10",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -806,7 +806,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-04-06T22:01:44.912303",
+  "time" : "2022-04-07T21:49:04.081087",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
   "code" : 1402,
@@ -822,12 +822,12 @@ Content-Length: 144
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 250
+Content-Length: 251
 Host: dev.meeron.net
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/9",
+  "meetingDate" : "2022/4/10",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -848,10 +848,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 158
+Content-Length: 159
 
 {
-  "time" : "2022-04-06T22:01:44.66778",
+  "time" : "2022-04-07T21:49:03.936723",
   "status" : 400,
   "message" : "워크스페이스를 찾지 못했습니다.",
   "code" : 1600,
@@ -867,12 +867,12 @@ Content-Length: 158
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 250
+Content-Length: 251
 Host: dev.meeron.net
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/9",
+  "meetingDate" : "2022/4/10",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -896,7 +896,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-04-06T22:01:45.151548",
+  "time" : "2022-04-07T21:49:04.229615",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
@@ -912,12 +912,12 @@ Content-Length: 167
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Content-Length: 250
+Content-Length: 251
 Host: dev.meeron.net
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/9",
+  "meetingDate" : "2022/4/10",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -941,7 +941,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 180
 
 {
-  "time" : "2022-04-06T22:01:45.106441",
+  "time" : "2022-04-07T21:49:04.196814",
   "status" : 400,
   "message" : "워크스페이스 내에 속하지 않은 유저가 있습니다.",
   "code" : 1703,
@@ -1074,7 +1074,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 320
 
 {
-  "time" : "2022-04-06T22:01:45.174967",
+  "time" : "2022-04-07T21:49:04.243379",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1116,7 +1116,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 157
 
 {
-  "time" : "2022-04-06T22:01:44.627485",
+  "time" : "2022-04-07T21:49:03.903396",
   "status" : 400,
   "message" : "이미 참여중인 유저가 있습니다.",
   "code" : 1301,
@@ -1154,7 +1154,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 148
 
 {
-  "time" : "2022-04-06T22:01:44.871167",
+  "time" : "2022-04-07T21:49:04.059504",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,
@@ -1192,7 +1192,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 159
 
 {
-  "time" : "2022-04-06T22:01:44.607856",
+  "time" : "2022-04-07T21:49:03.886956",
   "status" : 400,
   "message" : "워크스페이스를 찾지 못했습니다.",
   "code" : 1600,
@@ -1230,7 +1230,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 180
 
 {
-  "time" : "2022-04-06T22:01:44.828301",
+  "time" : "2022-04-07T21:49:04.032992",
   "status" : 400,
   "message" : "워크스페이스 내에 속하지 않은 유저가 있습니다.",
   "code" : 1703,
@@ -1416,7 +1416,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 573
 
 {
-  "time" : "2022-04-06T22:01:45.018672",
+  "time" : "2022-04-07T21:49:04.143483",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -1491,13 +1491,13 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 804
 
 {
-  "time" : "2022-04-06T22:01:45.038431",
+  "time" : "2022-04-07T21:49:04.157806",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
     "field" : "agendas",
-    "value" : "[com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@5bc0d14a, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@358fe93b, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@5a8424af, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@2f667f80, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@72f1a1a7, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@38fd58f3]",
+    "value" : "[com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@2700252f, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@514332a5, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@1da450f3, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@409e8809, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@6691e468, com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest$AgendaRequest@2e0f3405]",
     "reason" : "아젠다는 최소 1개 최대 5개 까지 생성 가능합니다."
   } ]
 }</code></pre>
@@ -1536,10 +1536,10 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 147
+Content-Length: 148
 
 {
-  "time" : "2022-04-06T22:01:44.56428",
+  "time" : "2022-04-07T21:49:03.860404",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,
@@ -1672,7 +1672,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-04-06T22:01:44.958133",
+  "time" : "2022-04-07T21:49:04.110213",
   "status" : 400,
   "message" : "회의 관리자가 아닙니다.",
   "code" : 1306,

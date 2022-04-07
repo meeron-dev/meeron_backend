@@ -8,10 +8,10 @@
 | 환경 | Host
 
 | Dev
-| dev.meeron.net
+| dev.meeron.click
 
 | Production
-| prod.meeron.net
+| prod.meeron.click
 |===
 
 [[overview-http-status-codes]]
