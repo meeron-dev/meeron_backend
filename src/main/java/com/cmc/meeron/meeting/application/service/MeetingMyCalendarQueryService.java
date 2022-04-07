@@ -46,7 +46,7 @@ class MeetingMyCalendarQueryService implements MeetingCalendarQueryUseCase {
     @Override
     public List<DayMeetingResponseDto> getDayMeetings(Long userId, LocalDate localDate) {
         List<Meeting> meetings = meetingMyCalendarQueryPort.findMyDayMeetings(getMyWorkspaceUserIds(userId), localDate);
-        return DayMeetingResponseDto.fromMyMeetingEntities(meetings);
+        return DayMeetingResponseDto.fromEntitiesMeetingWithWorkspace(meetings);
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQue
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
-import com.cmc.meeron.workspace.domain.Workspace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,10 +21,8 @@ import java.time.LocalTime;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,7 +58,7 @@ class MeetingTeamCalendarQueryServiceTest {
     void get_day_meetings_success() throws Exception {
 
         // given
-        List<Meeting> meetings = createDayMeetingsContainsWorkspace();
+        List<Meeting> meetings = createDayMeetings();
         when(meetingTeamCalendarQueryPort.findTeamDayMeetings(any(), any()))
                 .thenReturn(meetings);
         Long teamId = 1L;
@@ -70,15 +67,17 @@ class MeetingTeamCalendarQueryServiceTest {
         List<DayMeetingResponseDto> responseDtos = meetingTeamCalendarQueryService.getDayMeetings(teamId, LocalDate.now());
 
         // then
+        DayMeetingResponseDto one = responseDtos.get(0);
+        DayMeetingResponseDto two = responseDtos.get(1);
         assertAll(
-                () -> assertEquals(responseDtos.stream().map(DayMeetingResponseDto::getMeetingId).collect(Collectors.toList()),
-                        meetings.stream().map(Meeting::getId).collect(Collectors.toList())),
-                () -> assertEquals(responseDtos.stream().map(DayMeetingResponseDto::getWorkspaceId).collect(Collectors.toList()),
-                        List.of(0L, 0L))
+                () -> assertNull(one.getWorkspaceId()),
+                () -> assertNull(two.getWorkspaceId()),
+                () -> assertEquals(meetings.get(0).getId(), one.getMeetingId()),
+                () -> assertEquals(meetings.get(1).getId(), two.getMeetingId())
         );
     }
 
-    private List<Meeting> createDayMeetingsContainsWorkspace() {
+    private List<Meeting> createDayMeetings() {
         LocalTime now = LocalTime.now();
         return List.of(
                 Meeting.builder()
@@ -88,7 +87,6 @@ class MeetingTeamCalendarQueryServiceTest {
                                 .startTime(now)
                                 .endTime(now.plusHours(2))
                                 .build())
-                        .workspace(Workspace.builder().id(3L).name("테스트워크스페이스3").build())
                         .build(),
                 Meeting.builder()
                         .id(2L)
@@ -97,7 +95,6 @@ class MeetingTeamCalendarQueryServiceTest {
                                 .startTime(now.plusHours(2))
                                 .endTime(now.plusHours(4))
                                 .build())
-                        .workspace(Workspace.builder().id(4L).name("테스트워크스페이스4").build())
                         .build()
         );
     }

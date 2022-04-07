@@ -28,13 +28,10 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.cmc.meeron.user.UserFixture.USER;
-import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -94,10 +91,13 @@ class MeetingWorkspaceCalendarQueryServiceTest {
             List<DayMeetingResponseDto> responseDtos = meetingWorkspaceCalendarQueryService.getDayMeetings(1L, now);
 
             // then
+            DayMeetingResponseDto one = responseDtos.get(0);
+            DayMeetingResponseDto two = responseDtos.get(1);
             assertAll(
-                    () -> verify(meetingWorkspaceCalendarQueryPort).findWorkspaceDayMeetings(WORKSPACE_USER_1.getId(), now),
-                    () -> assertEquals(responseDtos.stream().map(DayMeetingResponseDto::getWorkspaceId).collect(Collectors.toList()),
-                            List.of(0L, 0L))
+                    () -> assertNull(one.getWorkspaceId()),
+                    () -> assertNull(two.getWorkspaceId()),
+                    () -> assertEquals(meetings.get(0).getId(), one.getMeetingId()),
+                    () -> assertEquals(meetings.get(1).getId(), two.getMeetingId())
             );
         }
     }
@@ -112,7 +112,6 @@ class MeetingWorkspaceCalendarQueryServiceTest {
                                 .startTime(now)
                                 .endTime(now.plusHours(2))
                                 .build())
-                        .workspace(WORKSPACE_1)
                         .build(),
                 Meeting.builder()
                         .id(2L)
@@ -121,7 +120,6 @@ class MeetingWorkspaceCalendarQueryServiceTest {
                                 .startTime(now.plusHours(2))
                                 .endTime(now.plusHours(4))
                                 .build())
-                        .workspace(WORKSPACE_1)
                         .build()
         );
     }

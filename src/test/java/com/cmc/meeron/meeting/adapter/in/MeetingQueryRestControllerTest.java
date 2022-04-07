@@ -20,6 +20,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
@@ -374,16 +375,24 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[0].startDate", is(LocalDateTimeUtil.convertDate(responseDtos.get(0).getStartDate()))))
                 .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[0].purpose", is(responseDtos.get(0).getPurpose())))
+                .andExpect(jsonPath("$.meetings[0].place", is(responseDtos.get(0).getPlace())))
                 .andExpect(jsonPath("$.meetings[0].workspaceId", is(0)))
                 .andExpect(jsonPath("$.meetings[0].workspaceName", emptyString()))
+                .andExpect(jsonPath("$.meetings[0].workspaceLogoUrl", emptyString()))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[1].startDate", is(LocalDateTimeUtil.convertDate(responseDtos.get(1).getStartDate()))))
                 .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[1].purpose", is(responseDtos.get(1).getPurpose())))
+                .andExpect(jsonPath("$.meetings[1].place", is(responseDtos.get(1).getPlace())))
                 .andExpect(jsonPath("$.meetings[1].workspaceId", is(0)))
                 .andExpect(jsonPath("$.meetings[1].workspaceName", emptyString()))
+                .andExpect(jsonPath("$.meetings[1].workspaceLogoUrl", emptyString()))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -396,10 +405,14 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
                                 fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].startDate").type(JsonFieldType.STRING).description("회의 날짜"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 0으로 표기"),
-                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 \"\" 로 표기")
+                                fieldWithPath("meetings[].purpose").type(JsonFieldType.STRING).description("회의 성격"),
+                                fieldWithPath("meetings[].place").type(JsonFieldType.STRING).description("회의 장소"),
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스나 팀 조회 시 0으로 표기"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스나 팀 조회 시 \"\" 로 표기"),
+                                fieldWithPath("meetings[].workspaceLogoUrl").type(JsonFieldType.STRING).description("워크스페이스 로고 URL / 워크스페이스나 팀 조회 시 \"\" 로 표기")
                         )
                 ));
     }
@@ -412,23 +425,30 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
     }
 
     private List<DayMeetingResponseDto> getDayMeetingsWorkspaceAndTeam() {
-        LocalTime now = LocalTime.now();
         return List.of(
                 DayMeetingResponseDto.builder()
                         .meetingId(1L)
-                        .meetingName("첫번째회의")
-                        .startTime(now.plusHours(1))
-                        .endTime((now.plusHours(3)))
+                        .startDate(LocalDate.now())
+                        .startTime(LocalTime.now())
+                        .endTime(LocalTime.now().plusHours(2))
+                        .meetingName("테스트회의1")
+                        .purpose("테스트회의성격1")
+                        .place("테스트장소1")
                         .workspaceId(0L)
                         .workspaceName("")
+                        .workspaceLogoUrl("")
                         .build(),
                 DayMeetingResponseDto.builder()
                         .meetingId(2L)
-                        .meetingName("두번째회의")
-                        .startTime(now.plusHours(4))
-                        .endTime(now.plusHours(6))
+                        .startDate(LocalDate.now())
+                        .startTime(LocalTime.now())
+                        .endTime(LocalTime.now().plusHours(2))
+                        .meetingName("테스트회의2")
+                        .purpose("테스트회의성격2")
+                        .place("테스트장소2")
                         .workspaceId(0L)
                         .workspaceName("")
+                        .workspaceLogoUrl("")
                         .build()
         );
     }
@@ -453,16 +473,24 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[0].startDate", is(LocalDateTimeUtil.convertDate(responseDtos.get(0).getStartDate()))))
                 .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[0].purpose", is(responseDtos.get(0).getPurpose())))
+                .andExpect(jsonPath("$.meetings[0].place", is(responseDtos.get(0).getPlace())))
                 .andExpect(jsonPath("$.meetings[0].workspaceId", is(responseDtos.get(0).getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].workspaceName", is(responseDtos.get(0).getWorkspaceName())))
+                .andExpect(jsonPath("$.meetings[0].workspaceLogoUrl", is(responseDtos.get(0).getWorkspaceLogoUrl())))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[1].startDate", is(LocalDateTimeUtil.convertDate(responseDtos.get(1).getStartDate()))))
                 .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[1].purpose", is(responseDtos.get(1).getPurpose())))
+                .andExpect(jsonPath("$.meetings[1].place", is(responseDtos.get(1).getPlace())))
                 .andExpect(jsonPath("$.meetings[1].workspaceId", is(responseDtos.get(1).getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].workspaceName", is(responseDtos.get(1).getWorkspaceName())))
+                .andExpect(jsonPath("$.meetings[1].workspaceLogoUrl", is(responseDtos.get(1).getWorkspaceLogoUrl())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -475,10 +503,14 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
                                 fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].startDate").type(JsonFieldType.STRING).description("회의 날짜"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
-                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스, 팀 조회 시 0으로 표기"),
-                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스, 팀 조회 시 \"\" 로 표기")
+                                fieldWithPath("meetings[].purpose").type(JsonFieldType.STRING).description("회의 성격"),
+                                fieldWithPath("meetings[].place").type(JsonFieldType.STRING).description("회의 장소"),
+                                fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스나 팀 조회 시 0으로 표기"),
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스나 팀 조회 시 \"\" 로 표기"),
+                                fieldWithPath("meetings[].workspaceLogoUrl").type(JsonFieldType.STRING).description("워크스페이스 로고 URL / 워크스페이스나 팀 조회 시 \"\" 로 표기")
                         )
                 ));
     }
@@ -491,23 +523,30 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
     }
 
     private List<DayMeetingResponseDto> getDayMeetingsWorkspaceUser() {
-        LocalTime now = LocalTime.now();
         return List.of(
                 DayMeetingResponseDto.builder()
                         .meetingId(1L)
-                        .meetingName("첫번째회의")
-                        .startTime(now.plusHours(1))
-                        .endTime((now.plusHours(3)))
+                        .startDate(LocalDate.now())
+                        .startTime(LocalTime.now())
+                        .endTime(LocalTime.now().plusHours(2))
+                        .meetingName("테스트회의1")
+                        .purpose("테스트회의성격1")
+                        .place("테스트장소1")
                         .workspaceId(1L)
                         .workspaceName("첫번째 워크스페이스")
+                        .workspaceLogoUrl("")
                         .build(),
                 DayMeetingResponseDto.builder()
                         .meetingId(2L)
-                        .meetingName("두번째회의")
-                        .startTime(now.plusHours(4))
-                        .endTime((now.plusHours(6)))
-                        .workspaceId(2L)
-                        .workspaceName("두번째 워크스페이스")
+                        .startDate(LocalDate.now())
+                        .startTime(LocalTime.now())
+                        .endTime(LocalTime.now().plusHours(2))
+                        .meetingName("테스트회의2")
+                        .purpose("테스트회의성격2")
+                        .place("테스트장소2")
+                        .workspaceId(1L)
+                        .workspaceName("첫번째 워크스페이스")
+                        .workspaceLogoUrl("")
                         .build()
         );
     }
@@ -532,16 +571,24 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.meetings", hasSize(2)))
                 .andExpect(jsonPath("$.meetings[0].meetingId", is(responseDtos.get(0).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[0].meetingName", is(responseDtos.get(0).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[0].startDate", is(LocalDateTimeUtil.convertDate(responseDtos.get(0).getStartDate()))))
                 .andExpect(jsonPath("$.meetings[0].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[0].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(0).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[0].purpose", is(responseDtos.get(0).getPurpose())))
+                .andExpect(jsonPath("$.meetings[0].place", is(responseDtos.get(0).getPlace())))
                 .andExpect(jsonPath("$.meetings[0].workspaceId", is(0)))
                 .andExpect(jsonPath("$.meetings[0].workspaceName", emptyString()))
+                .andExpect(jsonPath("$.meetings[0].workspaceLogoUrl", emptyString()))
                 .andExpect(jsonPath("$.meetings[1].meetingId", is(responseDtos.get(1).getMeetingId().intValue())))
                 .andExpect(jsonPath("$.meetings[1].meetingName", is(responseDtos.get(1).getMeetingName())))
+                .andExpect(jsonPath("$.meetings[1].startDate", is(LocalDateTimeUtil.convertDate(responseDtos.get(1).getStartDate()))))
                 .andExpect(jsonPath("$.meetings[1].startTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getStartTime()))))
                 .andExpect(jsonPath("$.meetings[1].endTime", is(LocalDateTimeUtil.convertTime(responseDtos.get(1).getEndTime()))))
+                .andExpect(jsonPath("$.meetings[1].purpose", is(responseDtos.get(1).getPurpose())))
+                .andExpect(jsonPath("$.meetings[1].place", is(responseDtos.get(1).getPlace())))
                 .andExpect(jsonPath("$.meetings[1].workspaceId", is(0)))
                 .andExpect(jsonPath("$.meetings[1].workspaceName", emptyString()))
+                .andExpect(jsonPath("$.meetings[1].workspaceLogoUrl", emptyString()))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -554,10 +601,14 @@ class MeetingQueryRestControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("meetings[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
                                 fieldWithPath("meetings[].meetingName").type(JsonFieldType.STRING).description("회의 명"),
+                                fieldWithPath("meetings[].startDate").type(JsonFieldType.STRING).description("회의 날짜"),
                                 fieldWithPath("meetings[].startTime").type(JsonFieldType.STRING).description("회의 시작 시간"),
                                 fieldWithPath("meetings[].endTime").type(JsonFieldType.STRING).description("회의 종료 시간"),
+                                fieldWithPath("meetings[].purpose").type(JsonFieldType.STRING).description("회의 성격"),
+                                fieldWithPath("meetings[].place").type(JsonFieldType.STRING).description("회의 장소"),
                                 fieldWithPath("meetings[].workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID / 워크스페이스나 팀 조회 시 0으로 표기"),
-                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스나 팀 조회 시 \"\" 로 표기")
+                                fieldWithPath("meetings[].workspaceName").type(JsonFieldType.STRING).description("워크스페이스 명 / 워크스페이스나 팀 조회 시 \"\" 로 표기"),
+                                fieldWithPath("meetings[].workspaceLogoUrl").type(JsonFieldType.STRING).description("워크스페이스 로고 URL / 워크스페이스나 팀 조회 시 \"\" 로 표기")
                         )
                 ));
     }

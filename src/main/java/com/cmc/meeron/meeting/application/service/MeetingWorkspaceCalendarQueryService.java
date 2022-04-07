@@ -52,7 +52,7 @@ class MeetingWorkspaceCalendarQueryService implements MeetingCalendarQueryUseCas
                 getMyWorkspaceUserId(SecurityUtil.getUserId(), workspaceId),
                 localDate
         );
-        return DayMeetingResponseDto.fromEntities(meetings);
+        return DayMeetingResponseDto.fromEntitiesOnlyMeeting(meetings);
     }
 
     @Override
