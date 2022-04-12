@@ -1,9 +1,9 @@
 package com.cmc.meeron.meeting;
 
-import com.cmc.meeron.meeting.domain.Attendee;
-import com.cmc.meeron.meeting.domain.Attendees;
-import com.cmc.meeron.meeting.domain.Meeting;
+import com.cmc.meeron.meeting.domain.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -18,12 +18,34 @@ public class MeetingFixture {
             .id(3L)
             .workspace(WORKSPACE_1)
             .team(TEAM_1)
+            .meetingTime(MeetingTime.builder()
+                    .startDate(LocalDate.now())
+                    .startTime(LocalTime.now())
+                    .endTime(LocalTime.now().plusHours(2))
+                    .build())
+            .meetingInfo(MeetingInfo.builder()
+                    .purpose("테스트성격1")
+                    .name("테스트회의명1")
+                    .build())
+            .place("테스트장소1")
+            .deleted(false)
             .build();
 
     public static final Meeting MEETING_ATTEND_ATTENDEES = Meeting.builder()
             .id(4L)
             .workspace(WORKSPACE_1)
             .team(TEAM_1)
+            .meetingTime(MeetingTime.builder()
+                    .startDate(LocalDate.now())
+                    .startTime(LocalTime.now())
+                    .endTime(LocalTime.now().plusHours(2))
+                    .build())
+            .meetingInfo(MeetingInfo.builder()
+                    .purpose("테스트성격2")
+                    .name("테스트회의명2")
+                    .build())
+            .place("테스트장소1")
+            .deleted(false)
             .attendees(Attendees.builder()
                     .values(new ArrayList<>(Arrays.asList(
                             Attendee.builder().workspaceUser(WORKSPACE_USER_1).build(),

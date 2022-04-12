@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cmc.meeron.meeting.AgendaFileFixture.AGENDA_FILE_1;
-import static com.cmc.meeron.meeting.AgendaFixture.AGENDA;
+import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
 import static com.cmc.meeron.meeting.IssueFixture.ISSUE_1;
 import static com.cmc.meeron.meeting.IssueFixture.ISSUE_2;
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,7 +100,7 @@ class AgendaQueryServiceTest {
         // given
         FindAgendaIssuesFilesRequestDto requestDto = FindAgendaIssuesFilesRequestDtoBuilder.build();
         when(agendaQueryPort.findByMeetingIdAndAgendaOrder(any(), anyInt()))
-                .thenReturn(Optional.of(AGENDA));
+                .thenReturn(Optional.of(AGENDA1));
         when(agendaQueryPort.findByAgendaId(any()))
                 .thenReturn(List.of(ISSUE_1, ISSUE_2));
         when(agendaFileQueryPort.findByAgendaId(any()))
@@ -112,8 +112,8 @@ class AgendaQueryServiceTest {
         // then
         assertAll(
                 () -> verify(agendaQueryPort).findByMeetingIdAndAgendaOrder(requestDto.getMeetingId(), requestDto.getAgendaOrder()),
-                () -> verify(agendaQueryPort).findByAgendaId(AGENDA.getId()),
-                () -> verify(agendaFileQueryPort).findByAgendaId(AGENDA.getId()),
+                () -> verify(agendaQueryPort).findByAgendaId(AGENDA1.getId()),
+                () -> verify(agendaFileQueryPort).findByAgendaId(AGENDA1.getId()),
                 () -> assertEquals(2, responseDto.getIssues().size()),
                 () -> assertEquals(1, responseDto.getFiles().size())
         );

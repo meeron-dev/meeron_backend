@@ -1,9 +1,14 @@
 package com.cmc.meeron.meeting.application.service;
 
+import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
+import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountResponseDtoBuilder;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDtoBuilder;
 import org.junit.jupiter.api.DisplayName;
@@ -13,12 +18,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
+import static com.cmc.meeron.meeting.AgendaFixture.AGENDA2;
+import static com.cmc.meeron.meeting.AttendeeFixture.ADMIN_ATTENDEE;
+import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MeetingQueryServiceTest {
@@ -32,47 +42,55 @@ class MeetingQueryServiceTest {
     @InjectMocks
     MeetingQueryService meetingQueryService;
 
-    @DisplayName("오늘 예정된 회의 가져오기 - 성공")
+    @DisplayName("오늘 예정된 회의 가져오기 - 성공 / 오늘의 회의가 없을 경우")
+    @Test
+    void today_expected_meeting_success_empty_today_meetings() throws Exception {
+
+        // given
+        TodayMeetingRequestDto requestDto = TodayMeetingRequestDtoBuilder.build();
+        when(meetingQueryPort.findTodayMeetingsWithOperationTeam(any(), any()))
+                .thenReturn(Collections.emptyList());
+
+        // when, then
+        List<TodayMeetingResponseDto> responseDtos = meetingQueryService.getTodayMeetings(requestDto);
+
+        // then
+        assertAll(
+                () -> assertTrue(responseDtos.isEmpty()),
+                () -> verify(meetingQueryPort).findTodayMeetingsWithOperationTeam(requestDto.getWorkspaceId(), requestDto.getWorkspaceUserId()),
+                () -> verify(agendaQueryPort, times(0)).findByMeetingIds(any()),
+                () -> verify(attendeeQueryPort, times(0)).findMeetingAdminsWithWorkspaceUserByMeetingIds(any()),
+                () -> verify(attendeeQueryPort, times(0)).countAttendStatusByMeetingIds(any())
+        );
+    }
+
+    @DisplayName("오늘 예정된 회의 가져오기 - 성공 / 오늘의 회의가 있을 경우")
     @Test
     void today_expected_meeting_success() throws Exception {
-        // TODO: 2022/04/06 kobeomseok95 impl
+
         // given
-//        TodayMeetingRequestDto request = TodayMeetingRequestDtoBuilder.build();
-//        List<TodayMeetingsQueryDto> responseDtos = TodayMeetingsQueryDtoBuilder.buildList();
-//        when(meetingQueryPort.findTodayMeetingWithTeamAgendas(any(), any()))
-//                .thenReturn(responseDtos);
-//        List<AttendStatusCountQueryDto> countResponseDtos = AttendStatusCountResponseDtoBuilder.buildList();
-//        when(attendeeQueryPort.countAttendStatusByMeetingIds(any()))
-//                .thenReturn(countResponseDtos);
-//        List<FirstAgendaQueryDto> firstAgendaQueryDtos = FirstAgendaQueryDtoBuilder.buildList();
-//        when(agendaQueryPort.findFirstAgendaByMeetingIds(any()))
-//                .thenReturn(firstAgendaQueryDtos);
-//
-//        // when
-//        List<TodayMeetingResponseDto> result = meetingQueryService.getTodayMeetings(request);
-//
-//        // then
-//        TodayMeetingResponseDto one = result.stream().filter(res -> res.getMeetingId().equals(1L)).findFirst().orElseThrow();
-//        TodayMeetingResponseDto two = result.stream().filter(res -> res.getMeetingId().equals(2L)).findFirst().orElseThrow();
-//        assertAll(
-//                () -> verify(meetingQueryPort).findTodayMeetingWithTeamAgendas(request.getWorkspaceId(), request.getWorkspaceUserId()),
-//                () -> verify(attendeeQueryPort).countAttendStatusByMeetingIds(responseDtos
-//                        .stream()
-//                        .map(TodayMeetingsQueryDto::getMeetingId)
-//                        .collect(Collectors.toList())),
-//                () -> verify(agendaQueryPort).findFirstAgendaByMeetingIds(responseDtos
-//                        .stream()
-//                        .map(TodayMeetingsQueryDto::getMeetingId)
-//                        .collect(Collectors.toList())),
-//                () -> assertEquals(responseDtos.size(), result.size()),
-//                () -> assertNull(one.getAgendaContent()),
-//                () -> assertEquals(firstAgendaQueryDtos.get(0).getAgendaContents(), two.getAgendaContent()),
-//                () -> assertEquals(3, one.getAttends()),
-//                () -> assertEquals(2, one.getUnknowns()),
-//                () -> assertEquals(5, one.getAbsents()),
-//                () -> assertEquals(1, two.getAttends()),
-//                () -> assertEquals(1, two.getUnknowns())
-//        );
+        TodayMeetingRequestDto requestDto = TodayMeetingRequestDtoBuilder.build();
+        when(meetingQueryPort.findTodayMeetingsWithOperationTeam(any(), any())).thenReturn(List.of(MEETING));
+        when(agendaQueryPort.findByMeetingIds(any())).thenReturn(List.of(AGENDA1, AGENDA2));
+        when(attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingIds(any())).thenReturn(List.of(ADMIN_ATTENDEE));
+        List<AttendStatusCountQueryDto> attendStatusCountQueryDtos = AttendStatusCountResponseDtoBuilder.buildList();
+        when(attendeeQueryPort.countAttendStatusByMeetingIds(any())).thenReturn(attendStatusCountQueryDtos);
+
+        // when
+        List<TodayMeetingResponseDto> responseDtos = meetingQueryService.getTodayMeetings(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(meetingQueryPort).findTodayMeetingsWithOperationTeam(requestDto.getWorkspaceId(), requestDto.getWorkspaceUserId()),
+                () -> verify(agendaQueryPort).findByMeetingIds(List.of(MEETING.getId())),
+                () -> verify(attendeeQueryPort).findMeetingAdminsWithWorkspaceUserByMeetingIds(List.of(MEETING.getId())),
+                () -> verify(attendeeQueryPort).countAttendStatusByMeetingIds(List.of(MEETING.getId())),
+                () -> assertThat(responseDtos).usingRecursiveComparison()
+                        .isEqualTo(TodayMeetingResponseDto.fromEntities(List.of(MEETING),
+                                List.of(AGENDA1, AGENDA2),
+                                List.of(ADMIN_ATTENDEE),
+                                attendStatusCountQueryDtos))
+        );
     }
 
     @DisplayName("회의 상세 조회 - 성공")

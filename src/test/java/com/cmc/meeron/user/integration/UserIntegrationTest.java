@@ -73,7 +73,7 @@ public class UserIntegrationTest extends IntegrationTest {
     }
 
     @Sql("classpath:user-test.sql")
-    @WithMockJwt(id = 12L, email = "test12@test.com")
+    @WithMockJwt(id = 15L, email = "test15@test.com")
     @DisplayName("유저가 성함을 입력했는지 검증 - 성공 / 입력했을 경우")
     @Test
     void check_named_user_success_named() throws Exception {
@@ -95,5 +95,17 @@ public class UserIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.named", is(false)));
+    }
+
+    @Sql("classpath:user-test.sql")
+    @WithMockJwt(id = 16L, email = "test16@test.com")
+    @DisplayName("회원 탈퇴 - 성공")
+    @Test
+    void withdrawal_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/quit")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }

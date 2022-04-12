@@ -315,4 +315,32 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
         List<WorkspaceUser> workspaceUsers = workspaceUserQueryPort.findByTeamId(3L);
         assertEquals(3, workspaceUsers.size());
     }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("워크스페이스 유저 정보 수정 - 성공")
+    @Test
+    void modify_workspace_user_success() throws Exception {
+
+        // given
+        ModifyWorkspaceUserRequest request = ModifyWorkspaceUserRequestBuilder.build();
+        MockMultipartFile profile = FILE;
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/workspace-users/{workspaceUserId}", 13)
+                .file(profile)
+                .file(createJsonFile(request))
+                .with(req -> {
+                    req.setMethod("PUT");
+                    return req;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.workspaceUserId", is(13)))
+                .andExpect(jsonPath("$.workspaceAdmin", is(false)))
+                .andExpect(jsonPath("$.nickname", is(request.getNickname())))
+                .andExpect(jsonPath("$.position", is(request.getPosition())))
+                .andExpect(jsonPath("$.profileImageUrl", notNullValue()))
+                .andExpect(jsonPath("$.email", is(request.getEmail())))
+                .andExpect(jsonPath("$.phone", is(request.getPhone())));
+    }
 }
