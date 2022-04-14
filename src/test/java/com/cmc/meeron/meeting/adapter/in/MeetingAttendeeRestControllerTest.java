@@ -2,8 +2,8 @@ package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingAttendeesResponseDtoBuilder;
-import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesResponseDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesResponseDto;
+import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesResponseDtoBuilder;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.google.common.net.HttpHeaders;
@@ -16,20 +16,21 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import java.util.List;
 
 import static com.cmc.meeron.config.RestDocsConfig.field;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
-class AttendeeRestControllerTest extends RestDocsTestSupport {
+class MeetingAttendeeRestControllerTest extends RestDocsTestSupport {
 
     @DisplayName("회의 상세 조회시 참가자 조회 - 성공")
     @Test

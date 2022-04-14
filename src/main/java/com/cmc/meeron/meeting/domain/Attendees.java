@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.domain;
 
+import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;

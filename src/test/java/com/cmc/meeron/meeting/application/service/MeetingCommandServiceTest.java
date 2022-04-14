@@ -1,25 +1,26 @@
 package com.cmc.meeron.meeting.application.service;
 
-import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
-import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.common.security.AuthUser;
-import com.cmc.meeron.meeting.application.port.in.request.*;
+import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.DeleteMeetingRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.DeleteMeetingRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Agenda;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
+import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
+import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,8 +38,6 @@ import java.util.Optional;
 import static com.cmc.meeron.auth.AuthUserFixture.AUTH_USER;
 import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
-import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.*;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_2;
 import static org.junit.jupiter.api.Assertions.*;
@@ -319,154 +318,6 @@ class MeetingCommandServiceTest {
                         .saveIssues(anyList()),
                 () -> assertEquals(responseDtos.size(), requestDto.getAgendaRequestDtos().size())
         );
-    }
-
-    @DisplayName("회의 참가자 추가 - 성공")
-    @Test
-    void join_attendees_success() throws Exception {
-
-        // given
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findById(any()))
-                .thenReturn(Optional.of(WORKSPACE_1));
-        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
-                .thenReturn(List.of(WORKSPACE_USER_3, WORKSPACE_USER_4));
-
-        // when
-        meetingCommandService.joinAttendees(requestDto);
-
-        // then
-        assertAll(
-                () -> verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId()),
-                () -> verify(workspaceQueryPort).findById(meeting.getWorkspace().getId()),
-                () -> verify(workspaceUserQueryPort).findAllWorkspaceUsersByIds(requestDto.getWorkspaceUserIds()),
-                () -> assertEquals(requestDto.getWorkspaceUserIds().size(), meeting.getAttendees().size())
-        );
-    }
-
-    private JoinAttendeesRequestDto createJoinAttendeesRequestDto() {
-        return JoinAttendeesRequestDto.builder()
-                .meetingId(1L)
-                .workspaceUserIds(List.of(1L, 2L))
-                .build();
-    }
-
-    @DisplayName("회의 참가자 추가 - 실패 / 회의가 존재하지 않을 경우")
-    @Test
-    void join_attendees_fail_not_found_meeting() throws Exception {
-
-        // given
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.empty());
-
-        // when, then
-        assertThrows(
-                MeetingNotFoundException.class,
-                () -> meetingCommandService.joinAttendees(requestDto)
-        );
-    }
-
-    @DisplayName("회의 참가자 추가 - 실패 / 워크스페이스가 존재하지 않을 경우")
-    @Test
-    void join_attendees_fail_not_found_workspace() throws Exception {
-
-        // given
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findById(any()))
-                .thenReturn(Optional.empty());
-
-        // when, then
-        assertThrows(
-                WorkspaceNotFoundException.class,
-                () -> meetingCommandService.joinAttendees(requestDto)
-        );
-    }
-
-    @DisplayName("회의 참가자 추가 - 실패 / 이미 참여한 참가자인 경우")
-    @Test
-    void join_attendees_fail_not_duplicate_attendees() throws Exception {
-
-        // given
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
-        when(workspaceQueryPort.findById(any()))
-                .thenReturn(Optional.of(meeting.getWorkspace()));
-        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
-                .thenReturn(List.of(WORKSPACE_USER_1));
-
-        // when, then
-        assertThrows(AttendeeDuplicateException.class,
-                () -> meetingCommandService.joinAttendees(requestDto));
-    }
-
-    @DisplayName("회의 참가자 추가 - 실패 / 회의 참가자 워크스페이스가 회의 워크스페이스와 다른 경우")
-    @Test
-    void join_attendees_fail_attendees_in_another_workspace() throws Exception {
-
-        // given
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(meeting));
-        when(workspaceQueryPort.findById(any()))
-                .thenReturn(Optional.of(meeting.getWorkspace()));
-        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
-                .thenReturn(List.of(WORKSPACE_USER_2));
-        JoinAttendeesRequestDto requestDto = createJoinAttendeesRequestDto();
-
-        // when, then
-        assertThrows(
-                WorkspaceUsersNotInEqualWorkspaceException.class,
-                () -> meetingCommandService.joinAttendees(requestDto)
-        );
-    }
-
-    @DisplayName("회의 참가자 상태 변경 - 실패 / 회의를 찾을 수 없을 경우")
-    @Test
-    void change_attend_status_fail_not_found_meeting() throws Exception {
-
-        // given
-        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.empty());
-
-        // when, then
-        assertThrows(MeetingNotFoundException.class,
-                () -> meetingCommandService.changeAttendStatus(requestDto));
-    }
-
-    @DisplayName("회의 참가자 상태 변경 - 실패 / 존재하지 않는 참가자인 경우")
-    @Test
-    void change_attend_status_fail_not_attendee() throws Exception {
-
-        // given
-        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.buildFailRequest();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
-
-        // when, then
-        assertThrows(AttendeeNotFoundException.class,
-                () -> meetingCommandService.changeAttendStatus(requestDto));
-    }
-
-    @DisplayName("회의 참가자 상태 변경 - 성공")
-    @Test
-    void change_attend_status_success() throws Exception {
-
-        // given
-        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
-                .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
-
-        // when
-        meetingCommandService.changeAttendStatus(requestDto);
-
-        // then
-        verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId());
     }
 
     @DisplayName("회의 삭제 - 성공 / 이미 삭제된 경우")

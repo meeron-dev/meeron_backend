@@ -1,7 +1,9 @@
 package com.cmc.meeron.meeting.integration;
 
-import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
-import com.cmc.meeron.meeting.adapter.in.request.*;
+import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
+import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
+import com.cmc.meeron.meeting.adapter.in.request.DeleteMeetingRequest;
+import com.cmc.meeron.meeting.adapter.in.request.DeleteMeetingRequestBuilder;
 import com.cmc.meeron.meeting.application.port.out.MeetingMyCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingTeamCalendarQueryPort;
@@ -20,9 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
@@ -74,69 +74,6 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                 .build();
     }
 
-    @DisplayName("회의 참여자 추가 - 실패 / 이미 참여중인 유저가 있는 경우")
-    @Test
-    void join_attendees_fail_duplicate_attendees() throws Exception {
-
-        // given
-        Meeting meeting = findTestMeeting(4L);
-        JoinAttendeesRequest request = createJoinAttendeesRequest();
-
-        // when, then
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", meeting.getId().intValue())
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code", is(MeetingErrorCode.ATTENDEE_DUPLICATE.getCode())));
-    }
-
-    @DisplayName("회의 참여자 추가 - 성공 / 존재하지 않는 워크스페이스 유저를 참여시키는 경우")
-    @Test
-    void join_attendees_fail_not_found_workspace_user() throws Exception {
-
-        // given
-        Meeting meeting = findTestMeeting(4L);
-        JoinAttendeesRequest request = JoinAttendeesRequest.builder()
-                .workspaceUserIds(List.of(14768L, 14769L))
-                .build();
-
-        // when, then
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", meeting.getId().intValue())
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-    }
-
-    @DisplayName("회의 참여자 추가 - 성공")
-    @Test
-    void join_attendees_success() throws Exception {
-
-        // given
-        Meeting meeting = findTestMeeting(5L);
-        JoinAttendeesRequest request = createJoinAttendeesRequest();
-
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/meetings/{meetingId}/attendees", meeting.getId().intValue())
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-
-        // then
-        flushAndClear();
-        Meeting afterJoinAttendeesMeeting = findTestMeeting(5L);
-        assertEquals(3, afterJoinAttendeesMeeting.getAttendees().size());
-    }
-
-    private Meeting findTestMeeting(Long meetingId) {
-        return meetingQueryPort.findById(meetingId).orElseThrow();
-    }
-
-    private JoinAttendeesRequest createJoinAttendeesRequest() {
-        return JoinAttendeesRequest.builder()
-                .workspaceUserIds(List.of(3L, 4L))
-                .build();
-    }
-
     @DisplayName("회의 아젠다 생성 - 성공")
     @Test
     void create_agenda_success() throws Exception {
@@ -150,6 +87,10 @@ public class MeetingCommandIntegrationTest extends IntegrationTest {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
+    }
+
+    private Meeting findTestMeeting(Long meetingId) {
+        return meetingQueryPort.findById(meetingId).orElseThrow();
     }
 
     private CreateAgendaRequest createCreateAgendaRequest() {

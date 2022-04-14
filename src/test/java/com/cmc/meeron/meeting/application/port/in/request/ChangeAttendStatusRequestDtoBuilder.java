@@ -1,5 +1,7 @@
 package com.cmc.meeron.meeting.application.port.in.request;
 
+import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
+
 public class ChangeAttendStatusRequestDtoBuilder {
 
     public static ChangeAttendStatusRequestDto buildFailRequest() {

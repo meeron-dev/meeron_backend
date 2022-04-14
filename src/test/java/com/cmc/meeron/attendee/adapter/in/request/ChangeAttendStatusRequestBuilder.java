@@ -1,4 +1,4 @@
-package com.cmc.meeron.meeting.adapter.in.request;
+package com.cmc.meeron.attendee.adapter.in.request;
 
 public class ChangeAttendStatusRequestBuilder {
 

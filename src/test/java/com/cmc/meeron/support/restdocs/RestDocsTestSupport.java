@@ -1,6 +1,8 @@
 package com.cmc.meeron.support.restdocs;
 
 import com.cmc.meeron.HealthRestController;
+import com.cmc.meeron.attendee.adapter.in.AttendeeRestController;
+import com.cmc.meeron.attendee.application.port.in.AttendeeCommandUseCase;
 import com.cmc.meeron.auth.adapter.in.AuthRestController;
 import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.common.exception.GlobalExceptionHandler;
@@ -61,8 +63,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         TeamRestController.class,
         FileRestController.class,
         WorkspaceUserRestController.class,
-        AttendeeRestController.class,
+        MeetingAttendeeRestController.class,
         AgendaRestController.class,
+        AttendeeRestController.class,
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import({
@@ -86,6 +89,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected WorkspaceUserCommandUseCase workspaceUserCommandUseCase;
     @MockBean protected AttendeeQueryUseCase attendeeQueryUseCase;
     @MockBean protected AgendaQueryUseCase agendaQueryUseCase;
+    @MockBean protected AttendeeCommandUseCase attendeeCommandUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;
@@ -98,7 +102,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
                 .apply(MockMvcRestDocumentation.documentationConfiguration(restDocumentationContextProvider)
                         .uris()
                         .withScheme("https")
-                        .withHost("dev.meeron.net")
+                        .withHost("dev.meeron.click")
                         .withPort(443))
                 .apply(springSecurity())
                 .alwaysDo(print())

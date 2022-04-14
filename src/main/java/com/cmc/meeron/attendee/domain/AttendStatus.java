@@ -1,4 +1,4 @@
-package com.cmc.meeron.meeting.domain;
+package com.cmc.meeron.attendee.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

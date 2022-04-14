@@ -2,8 +2,8 @@ package com.cmc.meeron.meeting.application.port.in.response;
 
 import com.cmc.meeron.common.type.SortableByNickname;
 import com.cmc.meeron.common.util.NicknameOrderByKoreanEnglishNumberSpecial;
-import com.cmc.meeron.meeting.domain.AttendStatus;
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.AttendStatus;
+import com.cmc.meeron.attendee.domain.Attendee;
 import lombok.*;
 
 import java.util.ArrayList;

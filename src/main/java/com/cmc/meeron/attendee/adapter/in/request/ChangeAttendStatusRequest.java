@@ -1,7 +1,7 @@
-package com.cmc.meeron.meeting.adapter.in.request;
+package com.cmc.meeron.attendee.adapter.in.request;
 
 import com.cmc.meeron.common.validator.EnumValid;
-import com.cmc.meeron.meeting.application.port.in.request.ChangeAttendStatusRequestDto;
+import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;

@@ -3,7 +3,7 @@ package com.cmc.meeron.meeting.adapter.out;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQueryDto;
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

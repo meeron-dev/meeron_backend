@@ -11,7 +11,7 @@ import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
 import com.cmc.meeron.meeting.domain.Agenda;
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.meeting.domain.Meeting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

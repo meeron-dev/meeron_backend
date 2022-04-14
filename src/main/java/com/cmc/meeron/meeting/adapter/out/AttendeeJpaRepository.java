@@ -1,6 +1,6 @@
 package com.cmc.meeron.meeting.adapter.out;
 
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.Attendee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

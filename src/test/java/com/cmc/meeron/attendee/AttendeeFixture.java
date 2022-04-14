@@ -1,7 +1,7 @@
-package com.cmc.meeron.meeting;
+package com.cmc.meeron.attendee;
 
-import com.cmc.meeron.meeting.domain.AttendStatus;
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.AttendStatus;
+import com.cmc.meeron.attendee.domain.Attendee;
 
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;

@@ -1,7 +1,8 @@
-package com.cmc.meeron.meeting.domain;
+package com.cmc.meeron.attendee.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
 import com.cmc.meeron.common.exception.meeting.NotMeetingAdminException;
+import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import lombok.*;
 

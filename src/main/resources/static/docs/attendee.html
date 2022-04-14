@@ -446,13 +446,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#join-attendees">만들어진 회의에 참가자 추가하기</a>
+<ul class="sectlevel2">
+<li><a href="#_post_apimeetingsidattendees">[POST] /api/meetings/{id}/attendees</a>
+<ul class="sectlevel3">
+<li><a href="#_1001">1001</a></li>
+<li><a href="#_1301">1301</a></li>
+<li><a href="#_1303">1303</a></li>
+<li><a href="#_1703">1703</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#change_attendee_status">참가자 상태 변경</a>
 <ul class="sectlevel2">
 <li><a href="#_patch_apiattendeesid">[PATCH] /api/attendees/{id}</a>
 <ul class="sectlevel3">
-<li><a href="#_1001">1001</a></li>
+<li><a href="#_1001_2">1001</a></li>
 <li><a href="#_1302">1302</a></li>
-<li><a href="#_1303">1303</a></li>
+<li><a href="#_1303_2">1303</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +484,257 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
+<h2 id="join-attendees"><a class="link" href="#join-attendees">만들어진 회의에 참가자 추가하기</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_post_apimeetingsidattendees"><a class="link" href="#_post_apimeetingsidattendees">[POST] /api/meetings/{id}/attendees</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 35
+Host: dev.meeron.click
+
+{
+  "workspaceUserIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Authorization</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT Access Token</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. /api/meetings/{meetingId}/attendees</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>meetingId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">참가자를 참여시킬 회의 ID</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">필드명</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">타입</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">필수여부</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">제약조건</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">설명</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workspaceUserIds[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Array</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">반드시 1개 이상 줄 것</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">참여할 워크스페이스 유저의 ID들</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 201 Created
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 30
+Host: dev.meeron.click
+
+{
+  "workspaceUserIds" : [ ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 320
+
+{
+  "time" : "2022-04-15T00:49:58.383688",
+  "status" : 400,
+  "message" : "입력 조건에 대한 예외입니다.",
+  "code" : 1001,
+  "errors" : [ {
+    "field" : "workspaceUserIds",
+    "value" : "[]",
+    "reason" : "참가자의 워크스페이스 유저 ID는 반드시 하나 이상이어야 합니다."
+  } ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1301"><a class="link" href="#_1301">1301</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 35
+Host: dev.meeron.click
+
+{
+  "workspaceUserIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 157
+
+{
+  "time" : "2022-04-15T00:49:58.192429",
+  "status" : 400,
+  "message" : "이미 참여중인 유저가 있습니다.",
+  "code" : 1301,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1303"><a class="link" href="#_1303">1303</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 35
+Host: dev.meeron.click
+
+{
+  "workspaceUserIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 148
+
+{
+  "time" : "2022-04-15T00:49:58.264362",
+  "status" : 400,
+  "message" : "회의를 찾을 수 없습니다.",
+  "code" : 1303,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1703"><a class="link" href="#_1703">1703</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /api/meetings/1/attendees HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer TestAccessToken
+Content-Length: 35
+Host: dev.meeron.click
+
+{
+  "workspaceUserIds" : [ 1, 2 ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: SAMEORIGIN
+Content-Length: 180
+
+{
+  "time" : "2022-04-15T00:49:58.242052",
+  "status" : 400,
+  "message" : "워크스페이스 내에 속하지 않은 유저가 있습니다.",
+  "code" : 1703,
+  "errors" : [ ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="change_attendee_status"><a class="link" href="#change_attendee_status">참가자 상태 변경</a></h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -482,7 +745,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Content-Length: 44
-Host: dev.meeron.net
+Host: dev.meeron.click
 
 {
   "meetingId" : 1,
@@ -509,7 +772,7 @@ Host: dev.meeron.net
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. /api/attendees/{workspaceUserId}</caption>
+<caption class="title">Table 2. /api/attendees/{workspaceUserId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -572,14 +835,14 @@ X-Frame-Options: SAMEORIGIN</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_1001"><a class="link" href="#_1001">1001</a></h4>
+<h4 id="_1001_2"><a class="link" href="#_1001_2">1001</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/attendees/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Content-Length: 45
-Host: dev.meeron.net
+Host: dev.meeron.click
 
 {
   "meetingId" : null,
@@ -601,7 +864,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 424
 
 {
-  "time" : "2022-04-13T19:11:47.395529",
+  "time" : "2022-04-15T00:49:58.405346",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
@@ -626,7 +889,7 @@ Content-Length: 424
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Content-Length: 44
-Host: dev.meeron.net
+Host: dev.meeron.click
 
 {
   "meetingId" : 1,
@@ -648,7 +911,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 158
 
 {
-  "time" : "2022-04-13T19:11:47.263316",
+  "time" : "2022-04-15T00:49:58.317533",
   "status" : 400,
   "message" : "회의 참가자를 찾을 수 없습니다.",
   "code" : 1302,
@@ -658,14 +921,14 @@ Content-Length: 158
 </div>
 </div>
 <div class="sect3">
-<h4 id="_1303"><a class="link" href="#_1303">1303</a></h4>
+<h4 id="_1303_2"><a class="link" href="#_1303_2">1303</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PATCH /api/attendees/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
 Content-Length: 44
-Host: dev.meeron.net
+Host: dev.meeron.click
 
 {
   "meetingId" : 1,
@@ -687,7 +950,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 148
 
 {
-  "time" : "2022-04-13T19:11:47.129578",
+  "time" : "2022-04-15T00:49:58.221914",
   "status" : 400,
   "message" : "회의를 찾을 수 없습니다.",
   "code" : 1303,
@@ -709,7 +972,7 @@ Content-Length: 148
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/1/attendees/teams HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Host: dev.meeron.net</code></pre>
+Host: dev.meeron.click</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -731,7 +994,7 @@ Host: dev.meeron.net</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. /api/meetings/{meetingId}/attendees/teams</caption>
+<caption class="title">Table 3. /api/meetings/{meetingId}/attendees/teams</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -833,7 +1096,7 @@ Content-Length: 236
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /api/meetings/1/attendees/teams/1 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer TestAccessToken
-Host: dev.meeron.net</code></pre>
+Host: dev.meeron.click</code></pre>
 </div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -855,7 +1118,7 @@ Host: dev.meeron.net</code></pre>
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. /api/meetings/{meetingId}/attendees/teams/{teamId}</caption>
+<caption class="title">Table 4. /api/meetings/{meetingId}/attendees/teams/{teamId}</caption>
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
@@ -1005,7 +1268,7 @@ Content-Length: 697
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-04-01 20:56:18 +0900
+Last updated 2022-04-15 00:49:13 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

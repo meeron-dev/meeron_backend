@@ -15,10 +15,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/meetings/{meetingId}")
-public class AttendeeRestController {
+public class MeetingAttendeeRestController {
 
     private final AttendeeQueryUseCase attendeeQueryUseCase;
 
+    // FIXME: 2022/04/14 kobeomseok95 /api/meetings/:id/attendees/count ?
     @GetMapping("/attendees/teams")
     @ResponseStatus(HttpStatus.OK)
     public MeetingAttendeesResponse getMeetingAttendees(@PathVariable Long meetingId) {
@@ -26,6 +27,7 @@ public class AttendeeRestController {
         return MeetingAttendeesResponse.fromResponseDtos(responseDtos);
     }
 
+    // FIXME: 2022/04/14 kobeomseok95 /api/meetings/:id/teams/:id/attendees ?
     @GetMapping("/attendees/teams/{teamId}")
     @ResponseStatus(HttpStatus.OK)
     public MeetingTeamAttendeesResponse getMeetingTeamAttendees(@PathVariable Long meetingId,

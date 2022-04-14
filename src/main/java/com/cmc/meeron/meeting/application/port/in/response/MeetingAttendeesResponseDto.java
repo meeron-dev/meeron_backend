@@ -1,7 +1,7 @@
 package com.cmc.meeron.meeting.application.port.in.response;
 
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQueryDto;
-import com.cmc.meeron.meeting.domain.AttendStatus;
+import com.cmc.meeron.attendee.domain.AttendStatus;
 import lombok.*;
 
 import java.util.ArrayList;

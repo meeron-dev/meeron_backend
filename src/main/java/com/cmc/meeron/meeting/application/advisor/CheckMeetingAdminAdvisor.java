@@ -3,7 +3,7 @@ package com.cmc.meeron.meeting.application.advisor;
 import com.cmc.meeron.common.advice.attendee.AttendeeAuthorityCheckable;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

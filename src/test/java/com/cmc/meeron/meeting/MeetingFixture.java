@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting;
 
+import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.meeting.domain.*;
 
 import java.time.LocalDate;

@@ -7,7 +7,7 @@ import com.cmc.meeron.meeting.application.port.in.response.MeetingTeamAttendeesR
 import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAttendeesQueryDtoBuilder;
-import com.cmc.meeron.meeting.domain.Attendee;
+import com.cmc.meeron.attendee.domain.Attendee;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static com.cmc.meeron.meeting.AttendeeFixture.ADMIN_ATTENDEE;
-import static com.cmc.meeron.meeting.AttendeeFixture.NOT_ADMIN_ATTENDEE;
+import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
+import static com.cmc.meeron.attendee.AttendeeFixture.NOT_ADMIN_ATTENDEE;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

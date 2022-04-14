@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
 import static com.cmc.meeron.meeting.AgendaFixture.AGENDA2;
-import static com.cmc.meeron.meeting.AttendeeFixture.ADMIN_ATTENDEE;
+import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;

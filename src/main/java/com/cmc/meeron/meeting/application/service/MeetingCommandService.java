@@ -3,14 +3,19 @@ package com.cmc.meeron.meeting.application.service;
 import com.cmc.meeron.common.advice.attendee.CheckMeetingAdmin;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
-import com.cmc.meeron.meeting.application.port.in.request.*;
+import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
+import com.cmc.meeron.meeting.application.port.in.request.DeleteMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
-import com.cmc.meeron.meeting.domain.*;
+import com.cmc.meeron.meeting.domain.Agenda;
+import com.cmc.meeron.meeting.domain.Meeting;
+import com.cmc.meeron.meeting.domain.MeetingInfo;
+import com.cmc.meeron.meeting.domain.MeetingTime;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
@@ -71,17 +76,6 @@ class MeetingCommandService implements MeetingCommandUseCase {
     }
 
     @Override
-    public void joinAttendees(JoinAttendeesRequestDto joinAttendeesRequestDto) {
-        Meeting meeting = meetingQueryPort.findWithAttendeesById(joinAttendeesRequestDto.getMeetingId())
-                .orElseThrow(MeetingNotFoundException::new);
-        Workspace workspace = workspaceQueryPort.findById(meeting.getWorkspace().getId())
-                .orElseThrow(WorkspaceNotFoundException::new);
-        List<WorkspaceUser> attendees = workspaceUserQueryPort.findAllWorkspaceUsersByIds(joinAttendeesRequestDto.getWorkspaceUserIds());
-        validWorkspaceAndWorkspaceUsers(workspace, attendees);
-        meeting.addAttendees(attendees);
-    }
-
-    @Override
     public List<Long> createAgendas(CreateAgendaRequestDto createAgendaRequestDto) {
         Meeting meeting = meetingQueryPort.findById(createAgendaRequestDto.getMeetingId())
                 .orElseThrow(MeetingNotFoundException::new);
@@ -93,15 +87,6 @@ class MeetingCommandService implements MeetingCommandUseCase {
                     return agenda.getId();
                 })
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void changeAttendStatus(ChangeAttendStatusRequestDto changeAttendStatusRequestDto) {
-        Attendees attendees = meetingQueryPort.findWithAttendeesById(changeAttendStatusRequestDto.getMeetingId())
-                .orElseThrow(MeetingNotFoundException::new)
-                .getAttendees();
-        Attendee attendee = attendees.findByWorkspaceUserId(changeAttendStatusRequestDto.getWorkspaceUserId());
-        attendee.changeStatus(AttendStatus.valueOf(changeAttendStatusRequestDto.getStatus()));
     }
 
     @CheckMeetingAdmin

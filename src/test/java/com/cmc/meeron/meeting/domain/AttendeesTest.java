@@ -1,5 +1,7 @@
 package com.cmc.meeron.meeting.domain;
 
+import com.cmc.meeron.attendee.domain.AttendStatus;
+import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotMeetingAdminException;
@@ -14,8 +16,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.cmc.meeron.meeting.AttendeeFixture.ADMIN_ATTENDEE;
-import static com.cmc.meeron.meeting.AttendeeFixture.NOT_ADMIN_ATTENDEE;
+import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
+import static com.cmc.meeron.attendee.AttendeeFixture.NOT_ADMIN_ATTENDEE;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
 import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
 import static org.junit.jupiter.api.Assertions.assertEquals;

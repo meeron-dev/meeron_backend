@@ -39,35 +39,6 @@ include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-request.adoc[]
 include::{snippets}/meeting-command-rest-controller-test/create_meeting_fail_not_equal_workspace/http-response.adoc[]
 
-[[join-attendees]]
-== 만들어진 회의에 참가자 추가하기
-=== [POST] /api/meetings/{id}/attendees
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/request-headers.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/path-parameters.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/request-fields.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_success/http-response.adoc[]
-
-==== 1001
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_empty_workspace_user_ids/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_empty_workspace_user_ids/http-response.adoc[]
-
-==== 1301
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_duplicate_attendees/http-response.adoc[]
-
-==== 1303
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_meeting/http-response.adoc[]
-
-==== 1600
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_found_workspace/http-response.adoc[]
-
-==== 1703
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-request.adoc[]
-include::{snippets}/meeting-command-rest-controller-test/join_attendees_fail_not_equal_attendees_workspace/http-response.adoc[]
-
 [[create-agenda]]
 == 아젠다 생성
 === [POST] /api/meetings/{id}/agendas

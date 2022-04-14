@@ -1,6 +1,6 @@
-package com.cmc.meeron.meeting.adapter.in.request;
+package com.cmc.meeron.attendee.adapter.in.request;
 
-import com.cmc.meeron.meeting.application.port.in.request.JoinAttendeesRequestDto;
+import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDto;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;

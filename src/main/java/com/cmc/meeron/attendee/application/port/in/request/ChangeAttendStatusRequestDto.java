@@ -1,4 +1,4 @@
-package com.cmc.meeron.meeting.application.port.in.request;
+package com.cmc.meeron.attendee.application.port.in.request;
 
 import lombok.*;
 

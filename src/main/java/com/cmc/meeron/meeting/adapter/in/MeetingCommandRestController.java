@@ -28,13 +28,6 @@ public class MeetingCommandRestController {
         return CreateMeetingResponse.of(createdTeamId);
     }
 
-    @PostMapping(value = "/meetings/{meetingId}/attendees")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void joinAttendees(@PathVariable Long meetingId,
-                              @RequestBody @Valid JoinAttendeesRequest joinAttendeesRequest) {
-        meetingCommandUseCase.joinAttendees(joinAttendeesRequest.toRequestDto(meetingId));
-    }
-
     @PostMapping("/meetings/{meetingId}/agendas")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateAgendaResponse createAgendas(@PathVariable Long meetingId,
@@ -42,13 +35,6 @@ public class MeetingCommandRestController {
         List<Long> responseDtos =
                 meetingCommandUseCase.createAgendas(createAgendaRequest.toRequestDtoAndSortByAgendaOrder(meetingId));
         return CreateAgendaResponse.of(responseDtos);
-    }
-
-    @PatchMapping("/attendees/{workspaceUserId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void changeAttendeeStatus(@PathVariable("workspaceUserId") Long workspaceUserId,
-                                     @RequestBody @Valid ChangeAttendStatusRequest changeAttendStatusRequest) {
-        meetingCommandUseCase.changeAttendStatus(changeAttendStatusRequest.toRequestDto(workspaceUserId));
     }
 
     @PostMapping("/meetings/{meetingId}/delete")
