@@ -2,10 +2,11 @@ package com.cmc.meeron.file.application.service;
 
 import com.cmc.meeron.common.exception.file.FileExtensionNotFoundException;
 import com.cmc.meeron.file.application.port.out.AgendaFileCommandPort;
+import com.cmc.meeron.file.application.port.out.FileToAgendaQueryPort;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import com.cmc.meeron.file.domain.AgendaFile;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
-import com.cmc.meeron.meeting.domain.Agenda;
+import com.cmc.meeron.topic.agenda.domain.Agenda;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.cmc.meeron.file.FileFixture.FILE;
-import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
+import static com.cmc.meeron.topic.agenda.AgendaFixture.AGENDA1;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -31,6 +32,7 @@ class FileServiceTest {
     @Mock StoragePort storagePort;
     @Mock AgendaFileCommandPort agendaFileCommandPort;
     @Mock MeetingQueryPort meetingQueryPort;
+    @Mock FileToAgendaQueryPort fileToAgendaQueryPort;
     @InjectMocks FileService fileService;
 
     private Agenda agenda;
@@ -47,7 +49,7 @@ class FileServiceTest {
     void create_agenda_files_fail_not_found_file_extension() throws Exception {
 
         // given
-        when(meetingQueryPort.findAgendaById(any()))
+        when(fileToAgendaQueryPort.findById(any()))
                 .thenReturn(Optional.of(agenda));
         MockMultipartFile notExtensionFile = new MockMultipartFile("1", "1".getBytes());
 
@@ -63,7 +65,7 @@ class FileServiceTest {
     void create_agenda_files_fail_upload() throws Exception {
 
         // given
-        when(meetingQueryPort.findAgendaById(any()))
+        when(fileToAgendaQueryPort.findById(any()))
                 .thenReturn(Optional.of(agenda));
         doThrow(new FileExtensionNotFoundException())
                 .when(storagePort)
@@ -83,7 +85,7 @@ class FileServiceTest {
         // given
         when(storagePort.getUrl(any()))
                 .thenReturn("테스트파일");
-        when(meetingQueryPort.findAgendaById(any()))
+        when(fileToAgendaQueryPort.findById(any()))
                 .thenReturn(Optional.of(agenda));
 
         // when
@@ -92,7 +94,7 @@ class FileServiceTest {
         // then
         assertAll(
                 () -> verify(storagePort, times(2)).upload(any(), any(), any()),
-                () -> verify(meetingQueryPort).findAgendaById(any()),
+                () -> verify(fileToAgendaQueryPort).findById(any()),
                 () -> verify(agendaFileCommandPort, times(2)).save(any(AgendaFile.class))
         );
     }

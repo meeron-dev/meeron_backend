@@ -1,7 +1,7 @@
 package com.cmc.meeron.file.domain;
 
 import com.cmc.meeron.common.domain.BaseEntity;
-import com.cmc.meeron.meeting.domain.Agenda;
+import com.cmc.meeron.topic.agenda.domain.Agenda;
 import lombok.*;
 
 import javax.persistence.*;

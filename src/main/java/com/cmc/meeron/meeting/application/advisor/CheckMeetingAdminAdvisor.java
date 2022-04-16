@@ -2,7 +2,7 @@ package com.cmc.meeron.meeting.application.advisor;
 
 import com.cmc.meeron.common.advice.attendee.AttendeeAuthorityCheckable;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
-import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
+import com.cmc.meeron.meeting.application.port.out.MeetingToAttendeeQueryPort;
 import com.cmc.meeron.attendee.domain.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class CheckMeetingAdminAdvisor {
 
-    private final AttendeeQueryPort attendeeQueryPort;
+    private final MeetingToAttendeeQueryPort attendeeQueryPort;
 
     @Before("@annotation(com.cmc.meeron.common.advice.attendee.CheckMeetingAdmin)")
     public void checkAdminWorkspaceUser(JoinPoint joinPoint) {

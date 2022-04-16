@@ -68,6 +68,11 @@ class AttendeesTest {
     @MethodSource("changeAttendStatusArguments")
     void change_attend_status(AttendStatus attendStatus) throws Exception {
 
+        // given
+        Attendee attendee = Attendee.builder()
+                .attendStatus(AttendStatus.UNKNOWN)
+                .build();
+
         // when
         attendee.changeStatus(attendStatus);
 

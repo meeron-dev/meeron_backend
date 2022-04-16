@@ -7,10 +7,10 @@ import com.cmc.meeron.common.exception.file.FileUploadException;
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.file.application.port.out.AgendaFileCommandPort;
+import com.cmc.meeron.file.application.port.out.FileToAgendaQueryPort;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import com.cmc.meeron.file.domain.AgendaFile;
-import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
-import com.cmc.meeron.meeting.domain.Agenda;
+import com.cmc.meeron.topic.agenda.domain.Agenda;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +30,11 @@ class FileService implements FileManager {
 
     private final StoragePort storagePort;
     private final AgendaFileCommandPort agendaFileCommandPort;
-    private final MeetingQueryPort meetingQueryPort;
+    private final FileToAgendaQueryPort fileAgendaQueryPort;
 
     @Override
     public void saveAgendaFiles(Long agendaId, List<MultipartFile> files) {
-        Agenda agenda = meetingQueryPort.findAgendaById(agendaId)
+        Agenda agenda = fileAgendaQueryPort.findById(agendaId)
                 .orElseThrow(AgendaNotFoundException::new);
         files.forEach(file -> {
             String originFileName = file.getOriginalFilename();

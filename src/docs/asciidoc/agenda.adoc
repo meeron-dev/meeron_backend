@@ -6,6 +6,26 @@
 :toclevels: 4
 :sectlinks:
 
+[[create-agenda]]
+== 아젠다 생성
+=== [POST] /api/meetings/{id}/agendas
+include::{snippets}/agenda-rest-controller-test/create_agenda_success/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_success/request-headers.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_success/path-parameters.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_success/request-fields.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_success/http-response.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_success/response-fields.adoc[]
+
+==== 1001
+include::{snippets}/agenda-rest-controller-test/create_agenda_fail_exceeded_agenda_name_over_48/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_fail_exceeded_agenda_name_over_48/http-response.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_fail_exceeded_agenda_over_5/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_fail_exceeded_agenda_over_5/http-response.adoc[]
+
+==== 1303
+include::{snippets}/agenda-rest-controller-test/create_agenda_fail_not_found_meeting/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/create_agenda_fail_not_found_meeting/http-response.adoc[]
+
 [[meetings_agenda_count]]
 == 회의의 아젠다 수 및 확인 수, 첨부파일 수 조회
 === [GET] /api/meetings/{id}/agendas/count

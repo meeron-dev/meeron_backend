@@ -1,6 +1,6 @@
 package com.cmc.meeron.attendee.application.service;
 
-import com.cmc.meeron.attendee.application.port.in.JoinAttendeesRequestDtoBuilder;
+import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDtoBuilder;
 import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDto;
 import com.cmc.meeron.attendee.domain.Attendee;

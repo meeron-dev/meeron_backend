@@ -1,7 +1,7 @@
 package com.cmc.meeron.meeting.application.port.in.response;
 
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
-import com.cmc.meeron.meeting.domain.Agenda;
+import com.cmc.meeron.topic.agenda.domain.Agenda;
 import com.cmc.meeron.attendee.domain.AttendStatus;
 import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.meeting.domain.Meeting;

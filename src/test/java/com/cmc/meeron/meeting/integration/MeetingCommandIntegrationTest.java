@@ -1,6 +1,6 @@
 package com.cmc.meeron.meeting.integration;
 
-import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
+import com.cmc.meeron.topic.agenda.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.DeleteMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.DeleteMeetingRequestBuilder;

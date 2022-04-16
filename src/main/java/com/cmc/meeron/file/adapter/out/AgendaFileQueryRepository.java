@@ -1,6 +1,6 @@
 package com.cmc.meeron.file.adapter.out;
 
-import com.cmc.meeron.file.application.port.out.AgendaFileQueryPort;
+import com.cmc.meeron.topic.agenda.application.port.out.AgendaToAgendaFileQueryPort;
 import com.cmc.meeron.file.domain.AgendaFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-class AgendaFileQueryRepository implements AgendaFileQueryPort {
+class AgendaFileQueryRepository implements AgendaToAgendaFileQueryPort {
 
     private final AgendaFileJpaRepository agendaFileJpaRepository;
 

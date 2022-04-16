@@ -1,18 +1,18 @@
 package com.cmc.meeron.meeting.application.service;
 
+import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
 import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
-import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
+import com.cmc.meeron.meeting.application.port.out.MeetingToAttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
-import com.cmc.meeron.meeting.domain.Agenda;
-import com.cmc.meeron.attendee.domain.Attendee;
+import com.cmc.meeron.meeting.application.port.out.MeetingToAgendaQueryPort;
 import com.cmc.meeron.meeting.domain.Meeting;
+import com.cmc.meeron.topic.agenda.domain.Agenda;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +26,8 @@ import java.util.stream.Collectors;
 class MeetingQueryService implements MeetingQueryUseCase {
 
     private final MeetingQueryPort meetingQueryPort;
-    private final AttendeeQueryPort attendeeQueryPort;
-    private final AgendaQueryPort agendaQueryPort;
+    private final MeetingToAttendeeQueryPort meetingToAttendeeQueryPort;
+    private final MeetingToAgendaQueryPort meetingToAgendaQueryPort;
 
     @Override
     public List<TodayMeetingResponseDto> getTodayMeetings(TodayMeetingRequestDto todayMeetingRequestDto) {
@@ -37,9 +37,9 @@ class MeetingQueryService implements MeetingQueryUseCase {
             return TodayMeetingResponseDto.empty();
         }
         List<Long> meetingIds = todayMeetings.stream().map(Meeting::getId).collect(Collectors.toList());
-        List<Agenda> agendas = agendaQueryPort.findByMeetingIds(meetingIds);
-        List<Attendee> admins = attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingIds(meetingIds);
-        List<AttendStatusCountQueryDto> countsQueryDtos = attendeeQueryPort.countAttendStatusByMeetingIds(meetingIds);
+        List<Agenda> agendas = meetingToAgendaQueryPort.findByMeetingIds(meetingIds);
+        List<Attendee> admins = meetingToAttendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingIds(meetingIds);
+        List<AttendStatusCountQueryDto> countsQueryDtos = meetingToAttendeeQueryPort.countAttendStatusByMeetingIds(meetingIds);
         return TodayMeetingResponseDto.fromEntities(todayMeetings, agendas, admins, countsQueryDtos);
     }
 

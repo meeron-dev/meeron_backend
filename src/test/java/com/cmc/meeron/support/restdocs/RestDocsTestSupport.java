@@ -3,6 +3,7 @@ package com.cmc.meeron.support.restdocs;
 import com.cmc.meeron.HealthRestController;
 import com.cmc.meeron.attendee.adapter.in.AttendeeRestController;
 import com.cmc.meeron.attendee.application.port.in.AttendeeCommandUseCase;
+import com.cmc.meeron.attendee.application.port.in.AttendeeQueryUseCase;
 import com.cmc.meeron.auth.adapter.in.AuthRestController;
 import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.common.exception.GlobalExceptionHandler;
@@ -10,15 +11,18 @@ import com.cmc.meeron.config.JacksonTimeFormatConfig;
 import com.cmc.meeron.config.RestDocsConfig;
 import com.cmc.meeron.file.adapter.in.FileRestController;
 import com.cmc.meeron.file.application.port.in.FileManager;
-import com.cmc.meeron.meeting.adapter.in.*;
-import com.cmc.meeron.meeting.application.port.in.AgendaQueryUseCase;
-import com.cmc.meeron.meeting.application.port.in.AttendeeQueryUseCase;
+import com.cmc.meeron.meeting.adapter.in.MeetingCalendarQueryUseCaseFactory;
+import com.cmc.meeron.meeting.adapter.in.MeetingCommandRestController;
+import com.cmc.meeron.meeting.adapter.in.MeetingQueryRestController;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.MeetingQueryUseCase;
 import com.cmc.meeron.support.security.SecuritySupport;
 import com.cmc.meeron.team.adapter.in.TeamRestController;
 import com.cmc.meeron.team.application.port.in.TeamCommandUseCase;
 import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
+import com.cmc.meeron.topic.agenda.adapter.in.AgendaRestController;
+import com.cmc.meeron.topic.agenda.application.port.in.AgendaCommandUseCase;
+import com.cmc.meeron.topic.agenda.application.port.in.AgendaQueryUseCase;
 import com.cmc.meeron.user.adapter.in.UserRestController;
 import com.cmc.meeron.user.application.port.in.UserCommandUseCase;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
@@ -63,7 +67,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         TeamRestController.class,
         FileRestController.class,
         WorkspaceUserRestController.class,
-        MeetingAttendeeRestController.class,
         AgendaRestController.class,
         AttendeeRestController.class,
 })
@@ -89,6 +92,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected WorkspaceUserCommandUseCase workspaceUserCommandUseCase;
     @MockBean protected AttendeeQueryUseCase attendeeQueryUseCase;
     @MockBean protected AgendaQueryUseCase agendaQueryUseCase;
+    @MockBean protected AgendaCommandUseCase agendaCommandUseCase;
     @MockBean protected AttendeeCommandUseCase attendeeCommandUseCase;
 
     @Autowired protected ObjectMapper objectMapper;

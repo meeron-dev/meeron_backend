@@ -1,6 +1,7 @@
 package com.cmc.meeron.meeting.adapter.in.request;
 
-import com.cmc.meeron.meeting.application.port.in.request.CreateAgendaRequestDto;
+import com.cmc.meeron.topic.agenda.application.port.in.request.CreateAgendaRequestDto;
+import com.cmc.meeron.topic.agenda.adapter.in.request.CreateAgendaRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

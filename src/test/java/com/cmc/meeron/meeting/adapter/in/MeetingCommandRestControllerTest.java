@@ -2,13 +2,11 @@ package com.cmc.meeron.meeting.adapter.in;
 
 import com.cmc.meeron.common.exception.ClientErrorCode;
 import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
-import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.meeting.NotMeetingAdminException;
 import com.cmc.meeron.common.exception.meeting.NotWorkspacesTeamException;
 import com.cmc.meeron.common.exception.team.TeamErrorCode;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.common.exception.workspace.*;
-import com.cmc.meeron.meeting.adapter.in.request.CreateAgendaRequest;
 import com.cmc.meeron.meeting.adapter.in.request.CreateMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.DeleteMeetingRequest;
 import com.cmc.meeron.meeting.adapter.in.request.DeleteMeetingRequestBuilder;
@@ -226,162 +224,6 @@ class MeetingCommandRestControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("생성된 회의 ID")
-                        )
-                ));
-    }
-
-    @DisplayName("아젠다 생성 - 실패 / 아젠다 명이 48자 이상 넘어갈 경우")
-    @Test
-    void create_agenda_fail_exceeded_agenda_name_over_48() throws Exception {
-
-        // given
-        CreateAgendaRequest request = CreateAgendaRequest.builder()
-                .agendas(List.of(
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(1)
-                                .name("해당 아젠다 명은 48자가 넘어갑니다. 해당 아젠다 명은 48자가 넘어갑니다. 해당 아젠다 명은 48자가 넘어갑니다. 해당 아젠다 명은 48자가 넘어갑니다. 해당 아젠다 명은 48자가 넘어갑니다. 해당 아젠다 명은 48자가 넘어갑니다.")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build())).build();
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/agendas", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
-    }
-
-    @DisplayName("아젠다 생성 - 실패 / 아젠다가 5개 초과일 경우")
-    @Test
-    void create_agenda_fail_exceeded_agenda_over_5() throws Exception {
-
-        // given
-        CreateAgendaRequest request = CreateAgendaRequest.builder()
-                .agendas(List.of(
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(1)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build(),
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(2)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build(),
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(3)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build(),
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(4)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build(),
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(5)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build(),
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(6)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build()
-                        )).build();
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/agendas", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())));
-    }
-
-    @DisplayName("아젠다 생성 - 실패 / 회의가 존재하지 않을 경우")
-    @Test
-    void create_agenda_fail_not_found_meeting() throws Exception {
-
-        // given
-        CreateAgendaRequest request = createCreateAgendasRequest();
-        when(meetingCommandUseCase.createAgendas(any()))
-                .thenThrow(new MeetingNotFoundException());
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/agendas", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_MEETING.getCode())));
-    }
-
-    private CreateAgendaRequest createCreateAgendasRequest() {
-        return CreateAgendaRequest.builder()
-                .agendas(List.of(
-                        CreateAgendaRequest.AgendaRequest.builder()
-                                .order(1)
-                                .name("테스트 아젠다")
-                                .issues(List.of(CreateAgendaRequest.IssueRequest.builder()
-                                        .issue("테스트이슈")
-                                        .build()))
-                                .build()
-                ))
-                .build();
-    }
-
-    @DisplayName("아젠다 생성 - 성공")
-    @Test
-    void create_agenda_success() throws Exception {
-
-        // given
-        CreateAgendaRequest request = createCreateAgendasRequest();
-        List<Long> createdAgendaIds = List.of(3L);
-        when(meetingCommandUseCase.createAgendas(any()))
-                .thenReturn(createdAgendaIds);
-
-        // when, then, docs
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/api/meetings/{meetingId}/agendas", "1")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.createdAgendaIds[0]", is(createdAgendaIds.get(0).intValue())))
-                .andDo(restDocumentationResultHandler.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
-                        ),
-                        pathParameters(
-                                parameterWithName("meetingId").description("아젠다를 생성할 회의 ID")
-                        ),
-                        requestFields(
-                                fieldWithPath("agendas[].order").type(JsonFieldType.NUMBER).description("아젠다 순서"),
-                                fieldWithPath("agendas[].name").type(JsonFieldType.STRING).description("아젠다 제목").attributes(field("constraints", "아젠다 제목은 48자 이내여야 함")),
-                                fieldWithPath("agendas[].issues[].issue").type(JsonFieldType.STRING).description("생성할 아젠다의 이슈")
-                        ),
-                        responseFields(
-                                fieldWithPath("createdAgendaIds[]").type(JsonFieldType.ARRAY).description("생성된 아젠다 ID들")
                         )
                 ));
     }

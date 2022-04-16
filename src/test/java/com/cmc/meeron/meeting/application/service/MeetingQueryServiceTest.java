@@ -4,13 +4,10 @@ import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDto
 import com.cmc.meeron.meeting.application.port.in.request.TodayMeetingRequestDtoBuilder;
 import com.cmc.meeron.meeting.application.port.in.response.MeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.TodayMeetingResponseDto;
-import com.cmc.meeron.meeting.application.port.out.AgendaQueryPort;
-import com.cmc.meeron.meeting.application.port.out.AttendeeQueryPort;
+import com.cmc.meeron.meeting.application.port.out.MeetingToAttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
-import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountResponseDtoBuilder;
-import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
-import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDtoBuilder;
+import com.cmc.meeron.meeting.application.port.out.MeetingToAgendaQueryPort;
+import com.cmc.meeron.meeting.application.port.out.response.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static com.cmc.meeron.meeting.AgendaFixture.AGENDA1;
-import static com.cmc.meeron.meeting.AgendaFixture.AGENDA2;
+import static com.cmc.meeron.topic.agenda.AgendaFixture.AGENDA1;
+import static com.cmc.meeron.topic.agenda.AgendaFixture.AGENDA2;
 import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,9 +33,9 @@ class MeetingQueryServiceTest {
     @Mock
     MeetingQueryPort meetingQueryPort;
     @Mock
-    AttendeeQueryPort attendeeQueryPort;
+    MeetingToAttendeeQueryPort meetingToAttendeeQueryPort;
     @Mock
-    AgendaQueryPort agendaQueryPort;
+    MeetingToAgendaQueryPort meetingToAgendaQueryPort;
     @InjectMocks
     MeetingQueryService meetingQueryService;
 
@@ -58,9 +55,9 @@ class MeetingQueryServiceTest {
         assertAll(
                 () -> assertTrue(responseDtos.isEmpty()),
                 () -> verify(meetingQueryPort).findTodayMeetingsWithOperationTeam(requestDto.getWorkspaceId(), requestDto.getWorkspaceUserId()),
-                () -> verify(agendaQueryPort, times(0)).findByMeetingIds(any()),
-                () -> verify(attendeeQueryPort, times(0)).findMeetingAdminsWithWorkspaceUserByMeetingIds(any()),
-                () -> verify(attendeeQueryPort, times(0)).countAttendStatusByMeetingIds(any())
+                () -> verify(meetingToAgendaQueryPort, times(0)).findByMeetingIds(any()),
+                () -> verify(meetingToAttendeeQueryPort, times(0)).findMeetingAdminsWithWorkspaceUserByMeetingIds(any()),
+                () -> verify(meetingToAttendeeQueryPort, times(0)).countAttendStatusByMeetingIds(any())
         );
     }
 
@@ -71,10 +68,10 @@ class MeetingQueryServiceTest {
         // given
         TodayMeetingRequestDto requestDto = TodayMeetingRequestDtoBuilder.build();
         when(meetingQueryPort.findTodayMeetingsWithOperationTeam(any(), any())).thenReturn(List.of(MEETING));
-        when(agendaQueryPort.findByMeetingIds(any())).thenReturn(List.of(AGENDA1, AGENDA2));
-        when(attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingIds(any())).thenReturn(List.of(ADMIN_ATTENDEE));
+        when(meetingToAgendaQueryPort.findByMeetingIds(any())).thenReturn(List.of(AGENDA1, AGENDA2));
+        when(meetingToAttendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingIds(any())).thenReturn(List.of(ADMIN_ATTENDEE));
         List<AttendStatusCountQueryDto> attendStatusCountQueryDtos = AttendStatusCountResponseDtoBuilder.buildList();
-        when(attendeeQueryPort.countAttendStatusByMeetingIds(any())).thenReturn(attendStatusCountQueryDtos);
+        when(meetingToAttendeeQueryPort.countAttendStatusByMeetingIds(any())).thenReturn(attendStatusCountQueryDtos);
 
         // when
         List<TodayMeetingResponseDto> responseDtos = meetingQueryService.getTodayMeetings(requestDto);
@@ -82,9 +79,9 @@ class MeetingQueryServiceTest {
         // then
         assertAll(
                 () -> verify(meetingQueryPort).findTodayMeetingsWithOperationTeam(requestDto.getWorkspaceId(), requestDto.getWorkspaceUserId()),
-                () -> verify(agendaQueryPort).findByMeetingIds(List.of(MEETING.getId())),
-                () -> verify(attendeeQueryPort).findMeetingAdminsWithWorkspaceUserByMeetingIds(List.of(MEETING.getId())),
-                () -> verify(attendeeQueryPort).countAttendStatusByMeetingIds(List.of(MEETING.getId())),
+                () -> verify(meetingToAgendaQueryPort).findByMeetingIds(List.of(MEETING.getId())),
+                () -> verify(meetingToAttendeeQueryPort).findMeetingAdminsWithWorkspaceUserByMeetingIds(List.of(MEETING.getId())),
+                () -> verify(meetingToAttendeeQueryPort).countAttendStatusByMeetingIds(List.of(MEETING.getId())),
                 () -> assertThat(responseDtos).usingRecursiveComparison()
                         .isEqualTo(TodayMeetingResponseDto.fromEntities(List.of(MEETING),
                                 List.of(AGENDA1, AGENDA2),

@@ -14,11 +14,11 @@ include::overview.adoc[]
 == 회의 조회 API
 * link:query-meeting.html[Query-Meeting API, window=_blank]
 
-== 아젠다 조회 API
-* link:agenda.html[Agenda API, window=_blank]
-
-== 회의, 아젠다 API (조회 제외)
+== 회의 생성, 삭제 API
 * link:create-meeting-agenda.html[Meeting / Agenda API, window=_blank]
+
+== 아젠다 API
+* link:agenda.html[Agenda API, window=_blank]
 
 == 아젠다 파일 생성 API
 * link:agenda-file.html[Agenda-File API, window=_blank]
