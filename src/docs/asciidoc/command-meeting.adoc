@@ -1,4 +1,4 @@
-= 회의, 아젠다 (조회 제외) API
+= 회의 생성, 삭제 API
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs

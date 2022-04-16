@@ -15,7 +15,7 @@ include::overview.adoc[]
 * link:query-meeting.html[Query-Meeting API, window=_blank]
 
 == 회의 생성, 삭제 API
-* link:create-meeting-agenda.html[Meeting / Agenda API, window=_blank]
+* link:command-meeting.html[Command-Meeting, window=_blank]
 
 == 아젠다 API
 * link:agenda.html[Agenda API, window=_blank]
