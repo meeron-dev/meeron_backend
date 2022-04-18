@@ -1,6 +1,6 @@
 package com.cmc.meeron.user.application.port.in.request;
 
-import com.cmc.meeron.workspace.application.port.in.request.FindWorkspaceUserRequestDto;
+import com.cmc.meeron.workspaceuser.application.port.in.request.FindWorkspaceUserRequestDto;
 
 public class FindWorkspaceUserRequestDtoBuilder {
 

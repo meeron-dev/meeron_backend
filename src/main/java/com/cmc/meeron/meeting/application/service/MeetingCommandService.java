@@ -8,17 +8,13 @@ import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.MeetingCommandUseCase;
 import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.DeleteMeetingRequestDto;
-import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
-import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.application.port.out.*;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
-import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +29,9 @@ class MeetingCommandService implements MeetingCommandUseCase {
 
     private final MeetingQueryPort meetingQueryPort;
     private final MeetingCommandPort meetingCommandPort;
-
-    private final TeamQueryPort teamQueryPort;
-    private final WorkspaceQueryPort workspaceQueryPort;
-    private final WorkspaceUserQueryPort workspaceUserQueryPort;
+    private final MeetingToTeamQueryPort teamQueryPort;
+    private final MeetingToWorkspaceQueryPort workspaceQueryPort;
+    private final MeetingToWorkspaceUserQueryPort workspaceUserQueryPort;
 
     @Override
     public Long createMeeting(CreateMeetingRequestDto createMeetingRequestDto, AuthUser authUser) {

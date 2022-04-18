@@ -6,11 +6,11 @@ import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
 import com.cmc.meeron.team.application.port.in.request.*;
 import com.cmc.meeron.team.application.port.out.TeamCommandPort;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
+import com.cmc.meeron.team.application.port.out.TeamToWorkspaceQueryPort;
+import com.cmc.meeron.team.application.port.out.TeamToWorkspaceUserQueryPort;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,30 +25,32 @@ import java.util.Optional;
 import static com.cmc.meeron.team.TeamFixture.DELETE_TEST_TEAM;
 import static com.cmc.meeron.team.TeamFixture.TEAM_1;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_ADMIN;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_WITH_TEAM;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_ADMIN;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TeamCommandServiceTest {
 
-    @Mock TeamCommandPort teamCommandPort;
-    @Mock WorkspaceQueryPort workspaceQueryPort;
-    @Mock TeamQueryPort teamQueryPort;
-    @Mock WorkspaceUserQueryPort workspaceUserQueryPort;
-    @InjectMocks TeamCommandService teamCommandService;
+    @Mock
+    TeamCommandPort teamCommandPort;
+    @Mock
+    TeamQueryPort teamQueryPort;
+    @Mock
+    TeamToWorkspaceQueryPort teamToWorkspaceQueryPort;
+    @Mock
+    TeamToWorkspaceUserQueryPort teamToWorkspaceUserQueryPort;
+    @InjectMocks
+    TeamCommandService teamCommandService;
 
     private Workspace workspace;
     private Team team;
-    private WorkspaceUser workspaceUser1;
     private WorkspaceUser workspaceUser2;
 
     @BeforeEach
     void setUp() {
         workspace = WORKSPACE_1;
         team = TEAM_1;
-        workspaceUser1 = WORKSPACE_USER_WITH_TEAM;
         workspaceUser2 = WORKSPACE_USER_ADMIN;
     }
 
@@ -58,7 +60,7 @@ class TeamCommandServiceTest {
 
         // given
         CreateTeamRequestDto requestDto = createCreateTeamRequestDto();
-        when(workspaceQueryPort.findById(any()))
+        when(teamToWorkspaceQueryPort.findById(any()))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -72,7 +74,7 @@ class TeamCommandServiceTest {
 
         // given
         CreateTeamRequestDto requestDto = createCreateTeamRequestDto();
-        when(workspaceQueryPort.findById(any()))
+        when(teamToWorkspaceQueryPort.findById(any()))
                 .thenReturn(Optional.of(workspace));
         when(teamQueryPort.countByWorkspaceId(any()))
                 .thenReturn(5L);
@@ -88,7 +90,7 @@ class TeamCommandServiceTest {
 
         // given
         CreateTeamRequestDto requestDto = createCreateTeamRequestDto();
-        when(workspaceQueryPort.findById(requestDto.getWorkspaceId()))
+        when(teamToWorkspaceQueryPort.findById(requestDto.getWorkspaceId()))
                 .thenReturn(Optional.of(workspace));
         when(teamQueryPort.countByWorkspaceId(any()))
                 .thenReturn(4L);
@@ -100,7 +102,7 @@ class TeamCommandServiceTest {
 
         // then
         assertAll(
-                () -> verify(workspaceQueryPort).findById(requestDto.getWorkspaceId()),
+                () -> verify(teamToWorkspaceQueryPort).findById(requestDto.getWorkspaceId()),
                 () -> verify(teamQueryPort).countByWorkspaceId(requestDto.getWorkspaceId()),
                 () -> verify(teamCommandPort).save(any(Team.class)),
                 () -> assertEquals(team.getId(), teamId)
@@ -122,7 +124,7 @@ class TeamCommandServiceTest {
         DeleteTeamRequestDto requestDto = DeleteTeamRequestDtoBuilder.build();
         when(teamQueryPort.findById(any()))
                 .thenReturn(Optional.of(DELETE_TEST_TEAM));
-        when(workspaceUserQueryPort.findByTeamId(any()))
+        when(teamToWorkspaceUserQueryPort.findByTeamId(any()))
                 .thenReturn(List.of(workspaceUser2));
 
         // when

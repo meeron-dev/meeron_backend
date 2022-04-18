@@ -7,7 +7,7 @@ import com.cmc.meeron.common.exception.file.FileUploadException;
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
 import com.cmc.meeron.file.application.port.out.AgendaFileCommandPort;
-import com.cmc.meeron.file.application.port.out.FileToAgendaQueryPort;
+import com.cmc.meeron.file.application.port.out.AgendaFileToAgendaQueryPort;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import com.cmc.meeron.file.domain.AgendaFile;
 import com.cmc.meeron.topic.agenda.domain.Agenda;
@@ -30,7 +30,7 @@ class FileService implements FileManager {
 
     private final StoragePort storagePort;
     private final AgendaFileCommandPort agendaFileCommandPort;
-    private final FileToAgendaQueryPort fileAgendaQueryPort;
+    private final AgendaFileToAgendaQueryPort fileAgendaQueryPort;
 
     @Override
     public void saveAgendaFiles(Long agendaId, List<MultipartFile> files) {

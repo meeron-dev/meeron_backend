@@ -1,7 +1,7 @@
 package com.cmc.meeron.attendee.application.service;
 
+import com.cmc.meeron.attendee.application.port.out.AttendeeToWorkspaceUserQueryPort;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_2;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_2;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 class JoinMeetingValidatorTest {
 
     @Mock
-    WorkspaceUserQueryPort workspaceUserQueryPort;
+    AttendeeToWorkspaceUserQueryPort attendeeToWorkspaceUserQueryPort;
     @InjectMocks
     JoinMeetingValidator joinMeetingValidator;
 
@@ -31,7 +31,7 @@ class JoinMeetingValidatorTest {
     void workspace_users_in_equal_workspace_success() throws Exception {
 
         // given
-        when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
+        when(attendeeToWorkspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
                 .thenReturn(List.of(WORKSPACE_USER_1, WORKSPACE_USER_2));
 
         // when, then

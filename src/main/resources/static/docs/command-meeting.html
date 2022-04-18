@@ -488,7 +488,7 @@ Host: dev.meeron.click
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/19",
+  "meetingDate" : "2022/4/21",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -662,21 +662,33 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: SAMEORIGIN
-Content-Length: 1081
+Content-Length: 1083
 
 {
-  "time" : "2022-04-16T20:51:29.8622",
+  "time" : "2022-04-18T21:48:39.642537",
   "status" : 400,
   "message" : "입력 조건에 대한 예외입니다.",
   "code" : 1001,
   "errors" : [ {
-    "field" : "meetingDate",
+    "field" : "workspaceId",
     "value" : null,
-    "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
+    "reason" : "회의를 생성할 워크스페이스 ID를 입력해주세요."
+  }, {
+    "field" : "operationTeamId",
+    "value" : null,
+    "reason" : "담당 팀 ID를 입력해주세요."
   }, {
     "field" : "meetingPurpose",
     "value" : null,
     "reason" : "회의 성격을 1자 이상 10자 이하로 입력해주세요."
+  }, {
+    "field" : "meetingDate",
+    "value" : null,
+    "reason" : "회의 시작 날짜를 'yyyy/M/d' 형식으로 입력해주세요."
+  }, {
+    "field" : "meetingName",
+    "value" : null,
+    "reason" : "회의명을 30자 이하로 입력해주세요."
   }, {
     "field" : "endTime",
     "value" : null,
@@ -685,18 +697,6 @@ Content-Length: 1081
     "field" : "startTime",
     "value" : null,
     "reason" : "회의 시작 시간을 'hh:mm a' 형식으로 입력해주세요."
-  }, {
-    "field" : "meetingName",
-    "value" : null,
-    "reason" : "회의명을 30자 이하로 입력해주세요."
-  }, {
-    "field" : "workspaceId",
-    "value" : null,
-    "reason" : "회의를 생성할 워크스페이스 ID를 입력해주세요."
-  }, {
-    "field" : "operationTeamId",
-    "value" : null,
-    "reason" : "담당 팀 ID를 입력해주세요."
   } ]
 }</code></pre>
 </div>
@@ -714,7 +714,7 @@ Host: dev.meeron.click
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/19",
+  "meetingDate" : "2022/4/21",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -738,7 +738,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 192
 
 {
-  "time" : "2022-04-16T20:51:29.961048",
+  "time" : "2022-04-18T21:48:39.768518",
   "status" : 400,
   "message" : "주관하는 팀이 지정한 워크스페이스에 속해있지 않습니다.",
   "code" : 1304,
@@ -759,7 +759,7 @@ Host: dev.meeron.click
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/19",
+  "meetingDate" : "2022/4/21",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -783,7 +783,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 144
 
 {
-  "time" : "2022-04-16T20:51:29.876564",
+  "time" : "2022-04-18T21:48:39.665738",
   "status" : 400,
   "message" : "팀을 찾지 못했습니다.",
   "code" : 1402,
@@ -804,7 +804,7 @@ Host: dev.meeron.click
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/19",
+  "meetingDate" : "2022/4/21",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -828,7 +828,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 159
 
 {
-  "time" : "2022-04-16T20:51:29.812697",
+  "time" : "2022-04-18T21:48:39.586353",
   "status" : 400,
   "message" : "워크스페이스를 찾지 못했습니다.",
   "code" : 1600,
@@ -849,7 +849,7 @@ Host: dev.meeron.click
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/19",
+  "meetingDate" : "2022/4/21",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -873,7 +873,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 167
 
 {
-  "time" : "2022-04-16T20:51:29.948553",
+  "time" : "2022-04-18T21:48:39.745646",
   "status" : 400,
   "message" : "워크스페이스 유저를 찾을 수 없습니다.",
   "code" : 1701,
@@ -894,7 +894,7 @@ Host: dev.meeron.click
 
 {
   "workspaceId" : 1,
-  "meetingDate" : "2022/4/19",
+  "meetingDate" : "2022/4/21",
   "startTime" : "10:00 AM",
   "endTime" : "11:00 AM",
   "meetingName" : "테스트 회의",
@@ -918,7 +918,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 180
 
 {
-  "time" : "2022-04-16T20:51:29.930332",
+  "time" : "2022-04-18T21:48:39.729742",
   "status" : 400,
   "message" : "워크스페이스 내에 속하지 않은 유저가 있습니다.",
   "code" : 1703,
@@ -1051,7 +1051,7 @@ X-Frame-Options: SAMEORIGIN
 Content-Length: 147
 
 {
-  "time" : "2022-04-16T20:51:29.895326",
+  "time" : "2022-04-18T21:48:39.682721",
   "status" : 400,
   "message" : "회의 관리자가 아닙니다.",
   "code" : 1306,
@@ -1067,7 +1067,7 @@ Content-Length: 147
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-04-16 20:50:22 +0900
+Last updated 2022-04-16 21:06:50 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

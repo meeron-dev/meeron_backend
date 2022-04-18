@@ -1,5 +1,6 @@
 package com.cmc.meeron.team.adapter.out;
 
+import com.cmc.meeron.meeting.application.port.out.MeetingToTeamQueryPort;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.application.port.out.response.WorkspaceTeamsQueryResponseDto;
 import com.cmc.meeron.team.domain.Team;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-class TeamQueryRepository implements TeamQueryPort {
+class TeamQueryRepository implements TeamQueryPort, MeetingToTeamQueryPort {
 
     private final TeamQuerydslRepository teamQuerydslRepository;
     private final TeamJpaRepository teamJpaRepository;

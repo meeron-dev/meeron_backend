@@ -1,5 +1,6 @@
 package com.cmc.meeron.user.adapter.out;
 
+import com.cmc.meeron.auth.application.port.out.AuthToUserQueryPort;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,8 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-class UserQueryRepository implements UserQueryPort {
+class UserQueryRepository implements UserQueryPort,
+        AuthToUserQueryPort {
 
     private final UserJpaRepository userJpaRepository;
 

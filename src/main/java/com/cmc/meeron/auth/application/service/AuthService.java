@@ -3,6 +3,8 @@ package com.cmc.meeron.auth.application.service;
 import com.cmc.meeron.auth.application.port.in.AuthUseCase;
 import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
+import com.cmc.meeron.auth.application.port.out.AuthToUserCommandPort;
+import com.cmc.meeron.auth.application.port.out.AuthToUserQueryPort;
 import com.cmc.meeron.auth.application.port.out.TokenCommandPort;
 import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
 import com.cmc.meeron.auth.domain.LogoutAccessToken;
@@ -11,8 +13,6 @@ import com.cmc.meeron.auth.domain.RefreshToken;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.security.JwtProvider;
-import com.cmc.meeron.user.application.port.out.UserCommandPort;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,15 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class AuthService implements AuthUseCase {
 
-    private final UserQueryPort userQueryPort;
-    private final UserCommandPort userCommandPort;
+    private final AuthToUserQueryPort authToUserQueryPort;
+    private final AuthToUserCommandPort authToUserCommandPort;
     private final JwtProvider jwtProvider;
     private final TokenQueryPort tokenQueryPort;
     private final TokenCommandPort tokenCommandPort;
 
     @Override
     public TokenResponseDto login(LoginRequestDto loginRequestDto) {
-        User user = userQueryPort.findByEmail(loginRequestDto.getEmail())
+        User user = authToUserQueryPort.findByEmail(loginRequestDto.getEmail())
                 .orElseGet(() -> saveAndGetUser(loginRequestDto));
         AuthUser authUser = AuthUser.of(user);
         String accessToken = jwtProvider.createAccessToken(authUser);
@@ -40,7 +40,7 @@ class AuthService implements AuthUseCase {
     }
 
     private User saveAndGetUser(LoginRequestDto loginRequestDto) {
-        return userCommandPort.save(User.of(
+        return authToUserCommandPort.save(User.of(
                 loginRequestDto.getEmail(),
                 loginRequestDto.getProvider(),
                 loginRequestDto.getProfileImageUrl()));

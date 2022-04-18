@@ -2,14 +2,16 @@ package com.cmc.meeron.auth.application.service;
 
 import com.cmc.meeron.auth.application.port.in.request.LoginRequestDto;
 import com.cmc.meeron.auth.application.port.in.response.TokenResponseDto;
+import com.cmc.meeron.auth.application.port.out.AuthToUserCommandPort;
+import com.cmc.meeron.auth.application.port.out.AuthToUserQueryPort;
 import com.cmc.meeron.auth.application.port.out.TokenCommandPort;
 import com.cmc.meeron.auth.application.port.out.TokenQueryPort;
-import com.cmc.meeron.auth.domain.*;
+import com.cmc.meeron.auth.domain.LogoutAccessToken;
+import com.cmc.meeron.auth.domain.LogoutRefreshToken;
+import com.cmc.meeron.auth.domain.RefreshToken;
 import com.cmc.meeron.common.exception.auth.RefreshTokenNotExistException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.common.security.JwtProvider;
-import com.cmc.meeron.user.application.port.out.UserCommandPort;
-import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.Role;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.user.domain.UserProvider;
@@ -34,12 +36,18 @@ class AuthServiceTest {
     private final String RENEWAL_ACCESS_TOKEN = "refreshedTestAccessToken";
     private final String RENEWAL_REFRESH_TOKEN = "refreshedTestRefreshToken";
 
-    @Mock UserQueryPort userQueryPort;
-    @Mock JwtProvider jwtProvider;
-    @Mock TokenQueryPort tokenQueryPort;
-    @Mock TokenCommandPort tokenCommandPort;
-    @Mock UserCommandPort userCommandPort;
-    @InjectMocks AuthService authService;
+    @Mock
+    AuthToUserQueryPort authToUserQueryPort;
+    @Mock
+    AuthToUserCommandPort authToUserCommandPort;
+    @Mock
+    JwtProvider jwtProvider;
+    @Mock
+    TokenQueryPort tokenQueryPort;
+    @Mock
+    TokenCommandPort tokenCommandPort;
+    @InjectMocks
+    AuthService authService;
 
     @DisplayName("로그인 - 성공 / 회원가입이 되지 않은 유저일 경우")
     @Test
@@ -47,8 +55,8 @@ class AuthServiceTest {
 
         // given
         LoginRequestDto kakaoLoginRequest = mockKakaoLoginRequest();
-        when(userQueryPort.findByEmail(kakaoLoginRequest.getEmail())
-                .orElseGet(() -> userCommandPort.save(any())))
+        when(authToUserQueryPort.findByEmail(kakaoLoginRequest.getEmail())
+                .orElseGet(() -> authToUserCommandPort.save(any())))
                 .thenReturn(mockUser());
         mockJwtProvider();
 
@@ -57,7 +65,7 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(userCommandPort).save(any(User.class)),
+                () -> verify(authToUserCommandPort).save(any(User.class)),
                 () -> verify(tokenCommandPort).saveRefreshToken(any(RefreshToken.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
@@ -96,7 +104,7 @@ class AuthServiceTest {
         // given
         LoginRequestDto kakaoLoginRequest = mockKakaoLoginRequest();
         User mockUser = mockUser();
-        when(userQueryPort.findByEmail(kakaoLoginRequest.getEmail()))
+        when(authToUserQueryPort.findByEmail(kakaoLoginRequest.getEmail()))
                 .thenReturn(Optional.of(mockUser));
         mockJwtProvider();
 
@@ -105,8 +113,8 @@ class AuthServiceTest {
 
         // then
         assertAll(
-                () -> verify(userQueryPort).findByEmail(kakaoLoginRequest.getEmail()),
-                () -> verify(userCommandPort, times(0)).save(any(User.class)),
+                () -> verify(authToUserQueryPort).findByEmail(kakaoLoginRequest.getEmail()),
+                () -> verify(authToUserCommandPort, times(0)).save(any(User.class)),
                 () -> verify(jwtProvider).createAccessToken(any(AuthUser.class)),
                 () -> verify(jwtProvider).createRefreshToken(any(AuthUser.class))
         );

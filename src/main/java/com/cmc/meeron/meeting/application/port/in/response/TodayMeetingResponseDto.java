@@ -6,7 +6,7 @@ import com.cmc.meeron.attendee.domain.AttendStatus;
 import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -18,7 +18,7 @@ import static com.cmc.meeron.attendee.domain.QAttendee.attendee;
 import static com.cmc.meeron.meeting.domain.QMeeting.meeting;
 import static com.cmc.meeron.team.domain.QTeam.team;
 import static com.cmc.meeron.workspace.domain.QWorkspace.workspace;
-import static com.cmc.meeron.workspace.domain.QWorkspaceUser.workspaceUser;
+import static com.cmc.meeron.workspaceuser.domain.QWorkspaceUser.workspaceUser;
 
 @Repository
 @RequiredArgsConstructor

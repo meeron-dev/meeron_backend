@@ -1,6 +1,6 @@
 package com.cmc.meeron.topic.agenda.adapter.out;
 
-import com.cmc.meeron.file.application.port.out.FileToAgendaQueryPort;
+import com.cmc.meeron.file.application.port.out.AgendaFileToAgendaQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingToAgendaQueryPort;
 import com.cmc.meeron.topic.agenda.application.port.out.AgendaCommandPort;
 import com.cmc.meeron.topic.agenda.application.port.out.AgendaQueryPort;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 class AgendaRepository implements AgendaQueryPort,
-        FileToAgendaQueryPort,
+        AgendaFileToAgendaQueryPort,
         MeetingToAgendaQueryPort,
         AgendaCommandPort {
 

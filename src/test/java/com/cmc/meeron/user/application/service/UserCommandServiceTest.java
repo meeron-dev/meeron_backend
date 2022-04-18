@@ -3,11 +3,11 @@ package com.cmc.meeron.user.application.service;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
+import com.cmc.meeron.user.application.port.out.UserToWorkspaceUserQueryPort;
 import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
-import com.cmc.meeron.workspace.domain.WorkspaceUserInfo;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUserInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class UserCommandServiceTest {
     @Mock
     UserQueryPort userQueryPort;
     @Mock
-    WorkspaceUserQueryPort workspaceUserQueryPort;
+    UserToWorkspaceUserQueryPort userToWorkspaceUserQueryPort;
     @InjectMocks
     UserCommandService userCommandService;
 
@@ -89,7 +89,7 @@ class UserCommandServiceTest {
         // then
         assertAll(
                 () -> verify(userQueryPort).findById(authUser.getUserId()),
-                () -> verify(workspaceUserQueryPort, times(0)).findWithWorkspaceByUserId(authUser.getUserId())
+                () -> verify(userToWorkspaceUserQueryPort, times(0)).findWithWorkspaceByUserId(authUser.getUserId())
         );
     }
 
@@ -104,10 +104,10 @@ class UserCommandServiceTest {
         when(userQueryPort.findById(any()))
                 .thenReturn(Optional.of(user));
         List<WorkspaceUser> workspaceUsers = setUpQuitWorkspaceUsersWithWorkspace();
-        when(workspaceUserQueryPort.findWithWorkspaceByUserId(any()))
+        when(userToWorkspaceUserQueryPort.findWithWorkspaceByUserId(any()))
                 .thenReturn(workspaceUsers);
         List<WorkspaceUser> workspaceUsersInDeletedWorkspace = setUpWorkspaceUserInDeletedWorkspace();
-        when(workspaceUserQueryPort.findByWorkspaceId(any()))
+        when(userToWorkspaceUserQueryPort.findByWorkspaceId(any()))
                 .thenReturn(workspaceUsersInDeletedWorkspace);
 
         // when
@@ -117,8 +117,8 @@ class UserCommandServiceTest {
         Workspace expectedDeleteWorkspace = workspaceUsers.get(0).getWorkspace();
         WorkspaceUser expectedQuitWorkspaceUser = workspaceUsersInDeletedWorkspace.get(0);
         assertAll(
-                () -> verify(workspaceUserQueryPort).findWithWorkspaceByUserId(authUser.getUserId()),
-                () -> verify(workspaceUserQueryPort).findByWorkspaceId(expectedDeleteWorkspace.getId()),
+                () -> verify(userToWorkspaceUserQueryPort).findWithWorkspaceByUserId(authUser.getUserId()),
+                () -> verify(userToWorkspaceUserQueryPort).findByWorkspaceId(expectedDeleteWorkspace.getId()),
                 () -> assertTrue(user.isDeleted()),
                 () -> assertNotEquals(email, user.getEmail()),
                 () -> assertTrue(expectedDeleteWorkspace.isDeleted()),

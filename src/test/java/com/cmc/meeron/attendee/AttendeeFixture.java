@@ -4,8 +4,8 @@ import com.cmc.meeron.attendee.domain.AttendStatus;
 import com.cmc.meeron.attendee.domain.Attendee;
 
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_2;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_2;
 
 public class AttendeeFixture {
 

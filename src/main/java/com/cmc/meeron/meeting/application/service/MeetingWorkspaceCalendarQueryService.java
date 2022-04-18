@@ -6,11 +6,11 @@ import com.cmc.meeron.meeting.application.port.in.MeetingCalendarQueryUseCase;
 import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.MonthMeetingsCountResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.YearMeetingsCountResponseDto;
+import com.cmc.meeron.meeting.application.port.out.MeetingToWorkspaceUserQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingWorkspaceCalendarQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.domain.Meeting;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 class MeetingWorkspaceCalendarQueryService implements MeetingCalendarQueryUseCase {
 
-    private final WorkspaceUserQueryPort workspaceUserQueryPort;
+    private final MeetingToWorkspaceUserQueryPort meetingToWorkspaceUserQueryPort;
     private final MeetingWorkspaceCalendarQueryPort meetingWorkspaceCalendarQueryPort;
 
     @Override
@@ -41,7 +41,7 @@ class MeetingWorkspaceCalendarQueryService implements MeetingCalendarQueryUseCas
     }
 
     private Long getMyWorkspaceUserId(Long userId, Long workspaceId) {
-        return workspaceUserQueryPort.findByUserWorkspaceId(userId, workspaceId)
+        return meetingToWorkspaceUserQueryPort.findByUserWorkspaceId(userId, workspaceId)
                 .orElseThrow(WorkspaceNotFoundException::new)
                 .getId();
     }

@@ -4,15 +4,13 @@ import com.cmc.meeron.meeting.application.port.in.response.DayMeetingResponseDto
 import com.cmc.meeron.meeting.application.port.in.response.MonthMeetingsCountResponseDto;
 import com.cmc.meeron.meeting.application.port.in.response.YearMeetingsCountResponseDto;
 import com.cmc.meeron.meeting.application.port.out.MeetingMyCalendarQueryPort;
+import com.cmc.meeron.meeting.application.port.out.MeetingToWorkspaceUserQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MonthMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.YearMeetingsCountQueryDto;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.meeting.domain.MeetingInfo;
 import com.cmc.meeron.meeting.domain.MeetingTime;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
 import com.cmc.meeron.workspace.domain.Workspace;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +25,7 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.WORKSPACE_USER_1;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_1;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,17 +35,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class MeetingMyCalendarQueryServiceTest {
 
-    @Mock MeetingMyCalendarQueryPort meetingMyCalendarQueryPort;
-    @Mock WorkspaceUserQueryPort workspaceUserQueryPort;
-    @InjectMocks MeetingMyCalendarQueryService meetingMyCalendarQueryService;
-
-    private final String TYPE = "WORKSPACE_USER";
-    private WorkspaceUser workspaceUser;
-
-    @BeforeEach
-    void setUp() {
-        workspaceUser = WORKSPACE_USER_1;
-    }
+    @Mock
+    MeetingMyCalendarQueryPort meetingMyCalendarQueryPort;
+    @Mock
+    MeetingToWorkspaceUserQueryPort meetingToWorkspaceUserQueryPort;
+    @InjectMocks
+    MeetingMyCalendarQueryService meetingMyCalendarQueryService;
 
     @DisplayName("'나의 미론' 회의 날짜 조회 - 성공")
     @Test
@@ -68,7 +61,7 @@ class MeetingMyCalendarQueryServiceTest {
     }
 
     private void findMyWorkspaceUsersStub() {
-        when(workspaceUserQueryPort.findMyWorkspaceUsers(any())).thenReturn(List.of(WORKSPACE_USER_1));
+        when(meetingToWorkspaceUserQueryPort.findMyWorkspaceUsers(any())).thenReturn(List.of(WORKSPACE_USER_1));
     }
 
     @DisplayName("'나의 미론' 지정한 날짜의 회의 조회 - 성공")

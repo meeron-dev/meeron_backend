@@ -9,15 +9,11 @@ import com.cmc.meeron.common.security.AuthUser;
 import com.cmc.meeron.meeting.application.port.in.request.CreateMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.DeleteMeetingRequestDto;
 import com.cmc.meeron.meeting.application.port.in.request.DeleteMeetingRequestDtoBuilder;
-import com.cmc.meeron.meeting.application.port.out.MeetingCommandPort;
-import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
+import com.cmc.meeron.meeting.application.port.out.*;
 import com.cmc.meeron.meeting.domain.Meeting;
-import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
-import com.cmc.meeron.workspace.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspace.domain.Workspace;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,11 +40,11 @@ import static org.mockito.Mockito.*;
 class MeetingCommandServiceTest {
 
     @Mock
-    TeamQueryPort teamQueryPort;
+    MeetingToTeamQueryPort teamQueryPort;
     @Mock
-    WorkspaceQueryPort workspaceQueryPort;
+    MeetingToWorkspaceQueryPort workspaceQueryPort;
     @Mock
-    WorkspaceUserQueryPort workspaceUserQueryPort;
+    MeetingToWorkspaceUserQueryPort workspaceUserQueryPort;
     @Mock
     MeetingCommandPort meetingCommandPort;
     @Mock

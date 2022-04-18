@@ -10,6 +10,4 @@ public interface WorkspaceQueryPort {
     List<Workspace> findMyWorkspaces(Long userId);
 
     Optional<Workspace> findById(Long workspaceId);
-
-    List<Workspace> findByWorkspaceUserIds(List<Long> workspaceUserIds);
 }

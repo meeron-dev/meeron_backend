@@ -1,5 +1,6 @@
 package com.cmc.meeron.meeting.adapter.out;
 
+import com.cmc.meeron.attendee.application.port.out.AttendeeToMeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.MeetingAndAdminsQueryDto;
 import com.cmc.meeron.meeting.domain.Meeting;
@@ -13,7 +14,9 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-class MeetingQueryRepository implements MeetingQueryPort, AgendaToMeetingQueryPort {
+class MeetingQueryRepository implements MeetingQueryPort,
+        AgendaToMeetingQueryPort,
+        AttendeeToMeetingQueryPort {
 
     private final MeetingJpaRepository meetingJpaRepository;
     private final MeetingQuerydslRepository meetingQuerydslRepository;

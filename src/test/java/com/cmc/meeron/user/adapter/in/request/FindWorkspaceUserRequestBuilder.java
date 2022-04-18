@@ -1,6 +1,6 @@
 package com.cmc.meeron.user.adapter.in.request;
 
-import com.cmc.meeron.workspace.adapter.in.request.FindWorkspaceUserRequest;
+import com.cmc.meeron.workspaceuser.adapter.in.request.FindWorkspaceUserRequest;
 
 public class FindWorkspaceUserRequestBuilder {
 

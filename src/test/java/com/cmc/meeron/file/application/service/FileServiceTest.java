@@ -2,7 +2,7 @@ package com.cmc.meeron.file.application.service;
 
 import com.cmc.meeron.common.exception.file.FileExtensionNotFoundException;
 import com.cmc.meeron.file.application.port.out.AgendaFileCommandPort;
-import com.cmc.meeron.file.application.port.out.FileToAgendaQueryPort;
+import com.cmc.meeron.file.application.port.out.AgendaFileToAgendaQueryPort;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import com.cmc.meeron.file.domain.AgendaFile;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
@@ -32,7 +32,8 @@ class FileServiceTest {
     @Mock StoragePort storagePort;
     @Mock AgendaFileCommandPort agendaFileCommandPort;
     @Mock MeetingQueryPort meetingQueryPort;
-    @Mock FileToAgendaQueryPort fileToAgendaQueryPort;
+    @Mock
+    AgendaFileToAgendaQueryPort agendaFileToAgendaQueryPort;
     @InjectMocks FileService fileService;
 
     private Agenda agenda;
@@ -49,7 +50,7 @@ class FileServiceTest {
     void create_agenda_files_fail_not_found_file_extension() throws Exception {
 
         // given
-        when(fileToAgendaQueryPort.findById(any()))
+        when(agendaFileToAgendaQueryPort.findById(any()))
                 .thenReturn(Optional.of(agenda));
         MockMultipartFile notExtensionFile = new MockMultipartFile("1", "1".getBytes());
 
@@ -65,7 +66,7 @@ class FileServiceTest {
     void create_agenda_files_fail_upload() throws Exception {
 
         // given
-        when(fileToAgendaQueryPort.findById(any()))
+        when(agendaFileToAgendaQueryPort.findById(any()))
                 .thenReturn(Optional.of(agenda));
         doThrow(new FileExtensionNotFoundException())
                 .when(storagePort)
@@ -85,7 +86,7 @@ class FileServiceTest {
         // given
         when(storagePort.getUrl(any()))
                 .thenReturn("테스트파일");
-        when(fileToAgendaQueryPort.findById(any()))
+        when(agendaFileToAgendaQueryPort.findById(any()))
                 .thenReturn(Optional.of(agenda));
 
         // when
@@ -94,7 +95,7 @@ class FileServiceTest {
         // then
         assertAll(
                 () -> verify(storagePort, times(2)).upload(any(), any(), any()),
-                () -> verify(fileToAgendaQueryPort).findById(any()),
+                () -> verify(agendaFileToAgendaQueryPort).findById(any()),
                 () -> verify(agendaFileCommandPort, times(2)).save(any(AgendaFile.class))
         );
     }

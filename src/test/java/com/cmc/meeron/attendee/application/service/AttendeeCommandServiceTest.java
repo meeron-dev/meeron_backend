@@ -1,18 +1,18 @@
 package com.cmc.meeron.attendee.application.service;
 
-import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDtoBuilder;
 import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDto;
+import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDtoBuilder;
+import com.cmc.meeron.attendee.application.port.out.AttendeeToMeetingQueryPort;
 import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspaceException;
 import com.cmc.meeron.meeting.application.port.in.request.ChangeAttendStatusRequestDtoBuilder;
-import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Attendees;
 import com.cmc.meeron.meeting.domain.Meeting;
-import com.cmc.meeron.workspace.domain.WorkspaceUser;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +30,8 @@ import java.util.stream.Collectors;
 
 import static com.cmc.meeron.meeting.MeetingFixture.MEETING_ATTEND_ATTENDEES;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
-import static com.cmc.meeron.workspace.WorkspaceUserFixture.*;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_3;
+import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.WORKSPACE_USER_4;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -40,7 +41,7 @@ import static org.mockito.Mockito.when;
 class AttendeeCommandServiceTest {
 
     @Mock
-    MeetingQueryPort meetingQueryPort;
+    AttendeeToMeetingQueryPort attendeeToMeetingQueryPort;
     @Mock
     JoinMeetingValidator joinMeetingValidator;
     @InjectMocks
@@ -73,7 +74,7 @@ class AttendeeCommandServiceTest {
 
         // given
         JoinAttendeesRequestDto requestDto = JoinAttendeesRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(meetingWithAttendee));
         when(joinMeetingValidator.workspaceUsersInEqualWorkspace(any(), any()))
                 .thenReturn(List.of(WORKSPACE_USER_3, WORKSPACE_USER_4));
@@ -83,7 +84,7 @@ class AttendeeCommandServiceTest {
 
         // then
         assertAll(
-                () -> verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId()),
+                () -> verify(attendeeToMeetingQueryPort).findWithAttendeesById(requestDto.getMeetingId()),
                 () -> verify(joinMeetingValidator).workspaceUsersInEqualWorkspace(requestDto.getWorkspaceUserIds(),
                         meetingWithAttendee.getWorkspace()),
                 () -> assertEquals(requestDto.getWorkspaceUserIds().size() + 1, meetingWithAttendee.getAttendees().size())
@@ -96,7 +97,7 @@ class AttendeeCommandServiceTest {
 
         // given
         JoinAttendeesRequestDto requestDto = JoinAttendeesRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -112,7 +113,7 @@ class AttendeeCommandServiceTest {
 
         // given
         JoinAttendeesRequestDto requestDto = JoinAttendeesRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(meetingWithAttendee));
         when(joinMeetingValidator.workspaceUsersInEqualWorkspace(any(), any()))
                 .thenReturn(meetingWithAttendee.getAttendees()
@@ -132,7 +133,7 @@ class AttendeeCommandServiceTest {
 
         // given
         JoinAttendeesRequestDto requestDto = JoinAttendeesRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(meetingWithAttendee));
         when(joinMeetingValidator.workspaceUsersInEqualWorkspace(any(), any()))
                 .thenThrow(new WorkspaceUsersNotInEqualWorkspaceException());
@@ -150,7 +151,7 @@ class AttendeeCommandServiceTest {
 
         // given
         ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.empty());
 
         // when, then
@@ -164,7 +165,7 @@ class AttendeeCommandServiceTest {
 
         // given
         ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.buildFailRequest();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
 
         // when, then
@@ -178,13 +179,13 @@ class AttendeeCommandServiceTest {
 
         // given
         ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
-        when(meetingQueryPort.findWithAttendeesById(any()))
+        when(attendeeToMeetingQueryPort.findWithAttendeesById(any()))
                 .thenReturn(Optional.of(MEETING_ATTEND_ATTENDEES));
 
         // when
         attendeeCommandService.changeAttendStatus(requestDto);
 
         // then
-        verify(meetingQueryPort).findWithAttendeesById(requestDto.getMeetingId());
+        verify(attendeeToMeetingQueryPort).findWithAttendeesById(requestDto.getMeetingId());
     }
 }
