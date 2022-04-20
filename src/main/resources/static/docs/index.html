@@ -452,17 +452,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#overview-http-status-codes">HTTP 상태 코드</a></li>
 </ul>
 </li>
-<li><a href="#change">변경사항</a></li>
-<li><a href="#_인증_api">인증 API</a></li>
-<li><a href="#_회의_조회_api">회의 조회 API</a></li>
-<li><a href="#_회의_생성_삭제_api">회의 생성, 삭제 API</a></li>
-<li><a href="#_아젠다_api">아젠다 API</a></li>
-<li><a href="#_아젠다_파일_생성_api">아젠다 파일 생성 API</a></li>
-<li><a href="#_유저_api">유저 API</a></li>
-<li><a href="#_워크스페이스_유저_api">워크스페이스 유저 API</a></li>
-<li><a href="#_워크스페이스_api">워크스페이스 API</a></li>
-<li><a href="#_팀_api">팀 API</a></li>
-<li><a href="#_회의_참가자_api">회의 참가자 API</a></li>
+<li><a href="#change">API 변경사항</a>
+<ul class="sectlevel2">
+<li><a href="#_agenda">Agenda</a></li>
+<li><a href="#_agenda_file">Agenda-File</a></li>
+<li><a href="#_attendee">Attendee [*]</a></li>
+<li><a href="#_auth">Auth</a></li>
+<li><a href="#_meeting">Meeting</a></li>
+<li><a href="#_team">Team</a></li>
+<li><a href="#_user">User</a></li>
+<li><a href="#_workspace">Workspace</a></li>
+<li><a href="#_workspace_user">Workspace-User</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -551,145 +553,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="change"><a class="link" href="#change">변경사항</a></h2>
+<h2 id="change"><a class="link" href="#change">API 변경사항</a></h2>
 <div class="sectionbody">
 <div class="exampleblock">
 <div class="content">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="agenda.html#meetings_agenda_count" target="_blank" rel="noopener">[GET] /api/meetings/{id}/agendas/count</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>true / false</code> 가 아닌 해당 회의의 아젠다 수를 반환하도록 변경했습니다.</p>
-</li>
-<li>
-<p>이유는 해당 회의의 아젠다 갯수를 알아야 [GET] /api/meetings/{id}/agendas/{agenda-order} 호출이 가능합니다.</p>
-</li>
-<li>
-<p>아젠다 수가 0개면 해당 버튼을 비활성화 되도록 해주세요.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_인증_api"><a class="link" href="#_인증_api">인증 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="auth.html" target="_blank" rel="noopener">Auth API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_회의_조회_api"><a class="link" href="#_회의_조회_api">회의 조회 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="query-meeting.html" target="_blank" rel="noopener">Query-Meeting API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_회의_생성_삭제_api"><a class="link" href="#_회의_생성_삭제_api">회의 생성, 삭제 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="command-meeting.html" target="_blank" rel="noopener">Command-Meeting</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_아젠다_api"><a class="link" href="#_아젠다_api">아젠다 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="agenda.html" target="_blank" rel="noopener">Agenda API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_아젠다_파일_생성_api"><a class="link" href="#_아젠다_파일_생성_api">아젠다 파일 생성 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="agenda-file.html" target="_blank" rel="noopener">Agenda-File API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_유저_api"><a class="link" href="#_유저_api">유저 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="user.html" target="_blank" rel="noopener">User API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_워크스페이스_유저_api"><a class="link" href="#_워크스페이스_유저_api">워크스페이스 유저 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="workspace-user.html" target="_blank" rel="noopener">Workspace-User API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_워크스페이스_api"><a class="link" href="#_워크스페이스_api">워크스페이스 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="workspace.html" target="_blank" rel="noopener">Workspace API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_팀_api"><a class="link" href="#_팀_api">팀 API</a></h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="team.html" target="_blank" rel="noopener">Team API</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_회의_참가자_api"><a class="link" href="#_회의_참가자_api">회의 참가자 API</a></h2>
-<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -699,11 +566,106 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_agenda"><a class="link" href="#_agenda">Agenda</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="agenda.html" target="_blank" rel="noopener">Agenda API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_agenda_file"><a class="link" href="#_agenda_file">Agenda-File</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="agenda-file.html" target="_blank" rel="noopener">Agenda-File API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_attendee"><a class="link" href="#_attendee">Attendee [*]</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="attendee.html" target="_blank" rel="noopener">Attendee API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_auth"><a class="link" href="#_auth">Auth</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="auth.html" target="_blank" rel="noopener">Auth API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_meeting"><a class="link" href="#_meeting">Meeting</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="command-meeting.html" target="_blank" rel="noopener">Meeting 생성 / 수정 / 삭제 API</a></p>
+</li>
+<li>
+<p><a href="query-meeting.html" target="_blank" rel="noopener">Meeting 조회 API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_team"><a class="link" href="#_team">Team</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="team.html" target="_blank" rel="noopener">Team API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user"><a class="link" href="#_user">User</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="user.html" target="_blank" rel="noopener">User API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workspace"><a class="link" href="#_workspace">Workspace</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="workspace.html" target="_blank" rel="noopener">Workspace API</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_workspace_user"><a class="link" href="#_workspace_user">Workspace-User</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="workspace-user.html" target="_blank" rel="noopener">Workspace-User API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-04-16 21:06:50 +0900
+Last updated 2022-04-20 20:46:01 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

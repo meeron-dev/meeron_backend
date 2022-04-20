@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Builder
-public class MeetingAttendeesQueryDto {
+public class MeetingAttendeesCountsByTeamQueryDto {
 
     private Long teamId;
     private String teamName;
@@ -16,7 +16,7 @@ public class MeetingAttendeesQueryDto {
     private int count;
 
     @QueryProjection
-    public MeetingAttendeesQueryDto(Long teamId, String teamName, String attendStatus, int count) {
+    public MeetingAttendeesCountsByTeamQueryDto(Long teamId, String teamName, String attendStatus, int count) {
         this.teamId = teamId;
         this.teamName = teamName;
         this.attendStatus = attendStatus;

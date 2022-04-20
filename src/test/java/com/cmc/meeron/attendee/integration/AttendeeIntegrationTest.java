@@ -5,15 +5,18 @@ import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
 import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.meeting.domain.Meeting;
 import com.cmc.meeron.support.IntegrationTest;
+import com.cmc.meeron.support.TestImproved;
 import com.cmc.meeron.support.security.WithMockJwt;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,6 +27,70 @@ class AttendeeIntegrationTest extends IntegrationTest {
 
     @Autowired
     MeetingQueryPort meetingQueryPort;
+
+    @Deprecated
+    @DisplayName("회의 참가자 조회 - 성공")
+    @Test
+    void get_meeting_attendees() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/attendees/teams", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attendees", hasSize(3)))
+                .andExpect(jsonPath("$.attendees[0].teamId", is(1)))
+                .andExpect(jsonPath("$.attendees[0].attends", is(1)))
+                .andExpect(jsonPath("$.attendees[1].teamId", is(2)))
+                .andExpect(jsonPath("$.attendees[1].attends", is(1)))
+                .andExpect(jsonPath("$.attendees[2].teamId", is(3)))
+                .andExpect(jsonPath("$.attendees[2].attends", is(3)));
+    }
+
+    @TestImproved(originMethod = "get_meeting_attendees")
+    @DisplayName("회의 참가자 조회 - 성공")
+    @Test
+    void get_meeting_attendees_counts_by_team_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/attendees/counts", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attendeesCountByTeam", hasSize(3)))
+                .andExpect(jsonPath("$.attendeesCountByTeam[0].team.teamId", is(1)))
+                .andExpect(jsonPath("$.attendeesCountByTeam[0].count.attend", is(1)))
+                .andExpect(jsonPath("$.attendeesCountByTeam[1].team.teamId", is(2)))
+                .andExpect(jsonPath("$.attendeesCountByTeam[1].count.attend", is(1)))
+                .andExpect(jsonPath("$.attendeesCountByTeam[2].team.teamId", is(3)))
+                .andExpect(jsonPath("$.attendeesCountByTeam[2].count.attend", is(3)));
+    }
+
+    @Deprecated
+    @DisplayName("회의 참가자 팀별 상세 조회 - 성공")
+    @Test
+    void get_meeting_teams_attendees() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/attendees/teams/{teamId}", 1, 3)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attends", hasSize(3)))
+                .andExpect(jsonPath("$.absents", hasSize(0)))
+                .andExpect(jsonPath("$.unknowns", hasSize(0)));
+    }
+
+    @TestImproved(originMethod = "get_meeting_teams_attendees")
+    @DisplayName("회의 참가자 팀별 상세 조회 - 성공")
+    @Test
+    void get_meeting_team_attendees_v2() throws Exception {
+
+        // given, when, then, docs
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/teams/{teamId}/attendees", 1, 3)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attends", hasSize(3)))
+                .andExpect(jsonPath("$.absents", hasSize(0)))
+                .andExpect(jsonPath("$.unknowns", hasSize(0)));
+    }
 
     @DisplayName("회의 참여자 추가 - 실패 / 이미 참여중인 유저가 있는 경우")
     @Test
@@ -86,5 +153,17 @@ class AttendeeIntegrationTest extends IntegrationTest {
         return JoinAttendeesRequest.builder()
                 .workspaceUserIds(List.of(3L, 4L))
                 .build();
+    }
+
+    @Sql("classpath:attendee-test.sql")
+    @DisplayName("회의 참가자 상태 변경 - 성공")
+    @Test
+    void change_attendee_status_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/attendees/{attendeeId}/{status}",
+                1, "absent")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }

@@ -1,0 +1,2 @@
+insert into attendee(attendee_id, meeting_id, workspace_user_id, attend_status, created_date, last_modified_date, is_meeting_admin)
+values(18, 1, 1, 'UNKNOWN', current_timestamp, current_timestamp, 0);

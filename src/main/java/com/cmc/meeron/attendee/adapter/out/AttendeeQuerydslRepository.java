@@ -1,7 +1,7 @@
 package com.cmc.meeron.attendee.adapter.out;
 
-import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesQueryDto;
-import com.cmc.meeron.attendee.application.port.out.response.QMeetingAttendeesQueryDto;
+import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
+import com.cmc.meeron.attendee.application.port.out.response.QMeetingAttendeesCountsByTeamQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
 import com.cmc.meeron.meeting.application.port.out.response.QAttendStatusCountQueryDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -34,8 +34,8 @@ class AttendeeQuerydslRepository {
                 .fetch();
     }
 
-    public List<MeetingAttendeesQueryDto> getMeetingAttendees(Long meetingId) {
-        return queryFactory.select(new QMeetingAttendeesQueryDto(
+    public List<MeetingAttendeesCountsByTeamQueryDto> getMeetingAttendees(Long meetingId) {
+        return queryFactory.select(new QMeetingAttendeesCountsByTeamQueryDto(
                 team.id, team.name,
                 attendee.attendStatus.stringValue(), attendee.attendStatus.stringValue().count().intValue()
         )).from(attendee)

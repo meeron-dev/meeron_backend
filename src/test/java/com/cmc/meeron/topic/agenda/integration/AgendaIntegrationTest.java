@@ -1,4 +1,4 @@
-package com.cmc.meeron.meeting.integration;
+package com.cmc.meeron.topic.agenda.integration;
 
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
