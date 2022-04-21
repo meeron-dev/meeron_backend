@@ -13,4 +13,6 @@ public interface TeamQueryPort {
     Optional<Team> findById(Long teamId);
 
     long countByWorkspaceId(Long workspaceId);
+
+    Optional<Team> findByMeetingId(Long meetingId);
 }

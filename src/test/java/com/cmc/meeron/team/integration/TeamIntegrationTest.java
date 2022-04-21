@@ -19,6 +19,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.stream.Stream;
 
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -152,5 +153,17 @@ public class TeamIntegrationTest extends IntegrationTest {
         // then
         Team team = teamQueryPort.findById(6L).orElseThrow();
         assertEquals(request.getTeamName(), team.getName());
+    }
+
+    @DisplayName("회의를 주관하는 팀 조회 - 성공")
+    @Test
+    void get_meeting_host_team_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/host-team", "3")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teamId", is(2)))
+                .andExpect(jsonPath("$.teamName", is("기획팀")));
     }
 }

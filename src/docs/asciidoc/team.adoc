@@ -56,3 +56,16 @@ include::{snippets}/team-rest-controller-test/modify_team_name_success/http-resp
 ==== 1001
 include::{snippets}/team-rest-controller-test/modify_team_name_fail_not_valid/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/modify_team_name_fail_not_valid/http-response.adoc[]
+
+[[Host-Team]]
+== 회의를 주관하는 팀 조회
+=== [GET] /api/meetings/{id}/host-team
+include::{snippets}/team-rest-controller-test/get_host_team_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/get_host_team_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/get_host_team_success/path-parameters.adoc[]
+include::{snippets}/team-rest-controller-test/get_host_team_success/http-response.adoc[]
+include::{snippets}/team-rest-controller-test/get_host_team_success/response-fields.adoc[]
+
+==== 1402
+include::{snippets}/team-rest-controller-test/get_host_team_fail_not_found/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/get_host_team_fail_not_found/http-response.adoc[]

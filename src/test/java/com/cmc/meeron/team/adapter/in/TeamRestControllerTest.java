@@ -3,9 +3,12 @@ package com.cmc.meeron.team.adapter.in;
 import com.cmc.meeron.common.exception.ClientErrorCode;
 import com.cmc.meeron.common.exception.team.TeamCountsConditionException;
 import com.cmc.meeron.common.exception.team.TeamErrorCode;
+import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.team.adapter.in.request.*;
+import com.cmc.meeron.team.application.port.in.response.TeamResponseDto;
+import com.cmc.meeron.team.application.port.in.response.TeamResponseDtoBuilder;
 import com.cmc.meeron.team.application.port.in.response.WorkspaceTeamsResponseDto;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +31,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WithMockJwt
 class TeamRestControllerTest extends RestDocsTestSupport {
@@ -55,6 +57,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.teams[0].teamName", is(workspaceTeamsResponseDtos.get(0).getTeamName())))
                 .andExpect(jsonPath("$.teams[1].teamId", is(workspaceTeamsResponseDtos.get(1).getTeamId().intValue())))
                 .andExpect(jsonPath("$.teams[1].teamName", is(workspaceTeamsResponseDtos.get(1).getTeamName())))
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -91,6 +94,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -120,6 +124,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(TeamErrorCode.WORKSPACE_IN_TEAM_COUNT_OVER.getCode())));
     }
@@ -145,6 +150,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andExpect(jsonPath("$.errors", hasSize(3)))
                 .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
@@ -163,6 +169,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
                 .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
@@ -181,6 +188,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -208,6 +216,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andExpect(jsonPath("$.errors", hasSize(3)))
                 .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
@@ -226,6 +235,7 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
+                .andExpect(handler().handlerType(TeamRestController.class))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
@@ -236,6 +246,57 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                         requestFields(
                                 fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)"),
                                 fieldWithPath("teamName").type(JsonFieldType.STRING).description("변경할 팀명")
+                        )
+                ));
+    }
+
+    @DisplayName("회의를 주관하는 팀 조회 - 실패 / 팀이 없을 경우")
+    @Test
+    void get_host_team_fail_not_found() throws Exception {
+
+        // given
+        when(teamQueryUseCase.getMeetingHostTeam(any()))
+                .thenThrow(new TeamNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/host-team",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(handler().handlerType(TeamRestController.class))
+                .andExpect(jsonPath("$.code", is(TeamErrorCode.NOT_FOUND_TEAM.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("회의를 주관하는 팀 조회 -성공")
+    @Test
+    void get_host_team_success() throws Exception {
+
+        // given
+        TeamResponseDto responseDto = TeamResponseDtoBuilder.build();
+        when(teamQueryUseCase.getMeetingHostTeam(any()))
+                .thenReturn(responseDto);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/host-team",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(TeamRestController.class))
+                .andExpect(jsonPath("$.teamId", is(responseDto.getTeamId().intValue())))
+                .andExpect(jsonPath("$.teamName", is(responseDto.getTeamName())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("회의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("회의를 주관하는 팀 ID"),
+                                fieldWithPath("teamName").type(JsonFieldType.STRING).description("회의를 주관하는 팀 명")
                         )
                 ));
     }
