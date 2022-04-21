@@ -89,3 +89,12 @@ include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_suc
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/response-fields.adoc[]
+
+[[meeting_admins]]
+== 회의 관리자 조회
+=== [GET] /api/meetings/{id}/admins
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/response-fields.adoc[]

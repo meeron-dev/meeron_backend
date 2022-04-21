@@ -24,7 +24,7 @@ include::overview.adoc[]
 * link:command-meeting.html[Meeting 생성 / 수정 / 삭제 API, window=_blank]
 * link:query-meeting.html[Meeting 조회 API, window=_blank]
 
-=== Team
+=== Team [*]
 * link:team.html[Team API, window=_blank]
 
 === User
