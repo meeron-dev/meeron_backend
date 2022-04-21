@@ -73,6 +73,13 @@ task copyDocument(type: Copy) {
     into file("src/main/resources/static/docs")
 }
 
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}") {
+        into 'static/docs'
+    }
+}
+
 build() {
-    dependsOn 'copyDocument'
+    dependsOn bootJar
 }

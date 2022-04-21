@@ -38,3 +38,6 @@ out/
 
 ### generated ###
 /src/main/generated/**
+
+### Rest Docs HTML File ###
+/src/main/resources/static/docs/**
