@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -165,5 +164,16 @@ class AttendeeIntegrationTest extends IntegrationTest {
                 1, "absent")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("회의 관리자 조회 - 성공")
+    @Test
+    void get_meeting_admins_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/admins", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.admins", hasSize(2)));
     }
 }
