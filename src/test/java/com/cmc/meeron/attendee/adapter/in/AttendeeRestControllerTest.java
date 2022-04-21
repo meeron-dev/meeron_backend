@@ -531,4 +531,70 @@ class AttendeeRestControllerTest extends RestDocsTestSupport {
                         )
                 ));
     }
+
+    @DisplayName("회의 관리자 조회 - 성공")
+    @Test
+    void get_meeting_admins_success() throws Exception {
+
+        // given
+        List<AttendeeResponseDto> responseDtos = AttendeeResponseDtoBuilder.buildListAdmins();
+        when(attendeeQueryUseCase.getMeetingAdmins(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        AttendeeResponseDto one = responseDtos.get(0);
+        AttendeeResponseDto two = responseDtos.get(1);
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/admins",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.admins[0].attendeeId", is(one.getAttendeeId().intValue())))
+                .andExpect(jsonPath("$.admins[0].meetingId", is(one.getMeetingId().intValue())))
+                .andExpect(jsonPath("$.admins[0].attendStatus", is(one.getAttendStatus())))
+                .andExpect(jsonPath("$.admins[0].meetingAdmin", is(one.isMeetingAdmin())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.workspaceUserId", is(one.getAttendeeWorkspaceUserResponseDto().getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.workspaceId", is(one.getAttendeeWorkspaceUserResponseDto().getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.workspaceAdmin", is(one.getAttendeeWorkspaceUserResponseDto().isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.nickname", is(one.getAttendeeWorkspaceUserResponseDto().getNickname())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.position", is(one.getAttendeeWorkspaceUserResponseDto().getPosition())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.profileImageUrl", is(one.getAttendeeWorkspaceUserResponseDto().getProfileImageUrl())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.email", is(one.getAttendeeWorkspaceUserResponseDto().getEmail())))
+                .andExpect(jsonPath("$.admins[0].workspaceUser.phone", is(one.getAttendeeWorkspaceUserResponseDto().getPhone())))
+                .andExpect(jsonPath("$.admins[1].attendeeId", is(two.getAttendeeId().intValue())))
+                .andExpect(jsonPath("$.admins[1].meetingId", is(two.getMeetingId().intValue())))
+                .andExpect(jsonPath("$.admins[1].attendStatus", is(two.getAttendStatus())))
+                .andExpect(jsonPath("$.admins[1].meetingAdmin", is(two.isMeetingAdmin())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.workspaceUserId", is(two.getAttendeeWorkspaceUserResponseDto().getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.workspaceId", is(two.getAttendeeWorkspaceUserResponseDto().getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.workspaceAdmin", is(two.getAttendeeWorkspaceUserResponseDto().isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.nickname", is(two.getAttendeeWorkspaceUserResponseDto().getNickname())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.position", is(two.getAttendeeWorkspaceUserResponseDto().getPosition())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.profileImageUrl", is(two.getAttendeeWorkspaceUserResponseDto().getProfileImageUrl())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.email", is(two.getAttendeeWorkspaceUserResponseDto().getEmail())))
+                .andExpect(jsonPath("$.admins[1].workspaceUser.phone", is(two.getAttendeeWorkspaceUserResponseDto().getPhone())))
+                .andExpect(handler().handlerType(AttendeeRestController.class))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("회의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("admins[].attendeeId").type(JsonFieldType.NUMBER).description("회의 관리자의 회의 참여 ID"),
+                                fieldWithPath("admins[].meetingId").type(JsonFieldType.NUMBER).description("회의 ID"),
+                                fieldWithPath("admins[].attendStatus").type(JsonFieldType.STRING).description("회의 참가 상태 ('ATTEND', 'ABSENT', 'UNKNOWN') 존재"),
+                                fieldWithPath("admins[].meetingAdmin").type(JsonFieldType.BOOLEAN).description("회의 참여자의 관리자 여부"),
+                                fieldWithPath("admins[].workspaceUser.workspaceUserId").type(JsonFieldType.NUMBER).description("회의 관리자의 워크스페이스 유저 ID"),
+                                fieldWithPath("admins[].workspaceUser.workspaceId").type(JsonFieldType.NUMBER).description("회의 관리자의 워크스페이스 ID"),
+                                fieldWithPath("admins[].workspaceUser.workspaceAdmin").type(JsonFieldType.BOOLEAN).description("회의 관리자의 워크스페이스 관리자 여부"),
+                                fieldWithPath("admins[].workspaceUser.nickname").type(JsonFieldType.STRING).description("회의 관리자의 닉네임"),
+                                fieldWithPath("admins[].workspaceUser.position").type(JsonFieldType.STRING).description("회의 관리자의 직책"),
+                                fieldWithPath("admins[].workspaceUser.profileImageUrl").type(JsonFieldType.STRING).description("회의 관리자의 프로필 이미지 URL"),
+                                fieldWithPath("admins[].workspaceUser.email").type(JsonFieldType.STRING).description("회의 관리자의 이메일 주소"),
+                                fieldWithPath("admins[].workspaceUser.phone").type(JsonFieldType.STRING).description("회의 관리자의 휴대전화번호")
+                        )
+                ));
+    }
 }

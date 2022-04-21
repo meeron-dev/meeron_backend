@@ -49,14 +49,14 @@ public class MeetingTeamAttendeesResponseDtoV2 {
     }
 
     private void addUnknowns(Attendee attendee) {
-        this.unknowns.add(AttendeeResponseDto.fromEntity(attendee));
+        this.unknowns.add(AttendeeResponseDto.from(attendee));
     }
 
     private void addAttends(Attendee attendee) {
-        this.attends.add(AttendeeResponseDto.fromEntity(attendee));
+        this.attends.add(AttendeeResponseDto.from(attendee));
     }
 
     private void addAbsents(Attendee attendee) {
-        this.absents.add(AttendeeResponseDto.fromEntity(attendee));
+        this.absents.add(AttendeeResponseDto.from(attendee));
     }
 }

@@ -3,18 +3,12 @@ package com.cmc.meeron.attendee.adapter.in;
 import com.cmc.meeron.attendee.adapter.in.request.AttendStatusType;
 import com.cmc.meeron.attendee.adapter.in.request.ChangeAttendStatusRequest;
 import com.cmc.meeron.attendee.adapter.in.request.JoinAttendeesRequest;
-import com.cmc.meeron.attendee.adapter.in.response.MeetingAttendeesCountsByTeamResponse;
-import com.cmc.meeron.attendee.adapter.in.response.MeetingAttendeesResponse;
-import com.cmc.meeron.attendee.adapter.in.response.MeetingTeamAttendeesResponse;
-import com.cmc.meeron.attendee.adapter.in.response.MeetingTeamAttendeesResponseV2;
+import com.cmc.meeron.attendee.adapter.in.response.*;
 import com.cmc.meeron.attendee.application.port.in.AttendeeCommandUseCase;
 import com.cmc.meeron.attendee.application.port.in.AttendeeQueryUseCase;
 import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesCountsByTeamResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDtoV2;
+import com.cmc.meeron.attendee.application.port.in.response.*;
 import com.cmc.meeron.common.meta.Improved;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -89,5 +83,12 @@ public class AttendeeRestController {
         MeetingTeamAttendeesResponseDtoV2 responseDto = attendeeQueryUseCase
                 .getMeetingTeamAttendeesV2(MeetingTeamAttendeesRequestDto.of(meetingId, teamId));
         return MeetingTeamAttendeesResponseV2.from(responseDto);
+    }
+
+    @GetMapping("/meetings/{meetingId}/admins")
+    @ResponseStatus(HttpStatus.OK)
+    public AttendeeResponses getMeetingAdmins(@PathVariable Long meetingId) {
+        List<AttendeeResponseDto> responseDtos = attendeeQueryUseCase.getMeetingAdmins(meetingId);
+        return AttendeeResponses.from(responseDtos);
     }
 }

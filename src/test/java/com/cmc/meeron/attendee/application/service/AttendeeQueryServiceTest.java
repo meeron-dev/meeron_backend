@@ -2,10 +2,7 @@ package com.cmc.meeron.attendee.application.service;
 
 import com.cmc.meeron.attendee.application.port.in.request.MeetingAttendeesRequestDtoBuilder;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesCountsByTeamResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDtoV2;
+import com.cmc.meeron.attendee.application.port.in.response.*;
 import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
 import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDtoBuilder;
@@ -23,8 +20,7 @@ import java.util.List;
 import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
 import static com.cmc.meeron.attendee.AttendeeFixture.NOT_ADMIN_ATTENDEE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -133,6 +129,28 @@ class AttendeeQueryServiceTest {
                 () -> assertEquals(1, responseDto.getUnknowns().size()),
                 () -> assertEquals(1, responseDto.getAttends().size()),
                 () -> assertEquals(0, responseDto.getAbsents().size())
+        );
+    }
+
+    @DisplayName("회의 관리자 조회 - 성공")
+    @Test
+    void get_meeting_admins_success() throws Exception {
+
+        // given
+        List<Attendee> attendees = List.of(ADMIN_ATTENDEE);
+        when(attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingId(any()))
+                .thenReturn(attendees);
+
+        // when
+        List<AttendeeResponseDto> responseDtos = attendeeQueryService.getMeetingAdmins(1L);
+
+        // then
+        assertAll(
+                () -> verify(attendeeQueryPort).findMeetingAdminsWithWorkspaceUserByMeetingId(1L),
+                () -> assertThat(responseDtos).isNotEmpty(),
+                () -> assertThat(responseDtos)
+                        .usingRecursiveComparison()
+                        .isEqualTo(AttendeeResponseDto.from(attendees))
         );
     }
 }

@@ -2,10 +2,7 @@ package com.cmc.meeron.attendee.application.service;
 
 import com.cmc.meeron.attendee.application.port.in.AttendeeQueryUseCase;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesCountsByTeamResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDtoV2;
+import com.cmc.meeron.attendee.application.port.in.response.*;
 import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
@@ -51,5 +48,11 @@ class AttendeeQueryService implements AttendeeQueryUseCase {
                 meetingTeamAttendeesRequestDto.getMeetingId(),
                 meetingTeamAttendeesRequestDto.getTeamId());
         return MeetingTeamAttendeesResponseDtoV2.fromEntities(attendees);
+    }
+
+    @Override
+    public List<AttendeeResponseDto> getMeetingAdmins(Long meetingId) {
+        List<Attendee> admins = attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingId(meetingId);
+        return AttendeeResponseDto.from(admins);
     }
 }

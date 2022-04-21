@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +22,7 @@ public class AttendeeResponseDto implements SortableByNickname {
     private boolean meetingAdmin;
     private AttendeeWorkspaceUserResponseDto attendeeWorkspaceUserResponseDto;
 
-    public static AttendeeResponseDto fromEntity(Attendee attendee) {
+    public static AttendeeResponseDto from(Attendee attendee) {
         return AttendeeResponseDto.builder()
                 .attendeeId(attendee.getId())
                 .meetingId(attendee.getMeeting().getId())
@@ -28,6 +31,12 @@ public class AttendeeResponseDto implements SortableByNickname {
                 .attendeeWorkspaceUserResponseDto(AttendeeWorkspaceUserResponseDto
                         .fromEntity(attendee.getWorkspaceUser()))
                 .build();
+    }
+
+    public static List<AttendeeResponseDto> from(List<Attendee> attendees) {
+        return attendees.stream()
+                .map(AttendeeResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     @Override
