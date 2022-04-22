@@ -1,11 +1,9 @@
 package com.cmc.meeron.team.application.service;
 
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.team.application.port.in.response.TeamResponseDto;
-import com.cmc.meeron.team.application.port.in.response.WorkspaceTeamsResponseDto;
 import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
+import com.cmc.meeron.team.application.port.in.response.TeamResponseDto;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
-import com.cmc.meeron.team.application.port.out.response.WorkspaceTeamsQueryResponseDto;
 import com.cmc.meeron.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,10 +19,9 @@ class TeamQueryService implements TeamQueryUseCase {
     private final TeamQueryPort teamQueryPort;
 
     @Override
-    public List<WorkspaceTeamsResponseDto> getWorkspaceTeams(Long workspaceId) {
-        List<WorkspaceTeamsQueryResponseDto> workspaceTeamsQueryResponseDtos = teamQueryPort
-                .findByWorkspaceId(workspaceId);
-        return WorkspaceTeamsResponseDto.fromQueryResponseDtos(workspaceTeamsQueryResponseDtos);
+    public List<TeamResponseDto> getWorkspaceTeams(Long workspaceId) {
+        List<Team> teams = teamQueryPort.findByWorkspaceId(workspaceId);
+        return TeamResponseDto.from(teams);
     }
 
     @Override

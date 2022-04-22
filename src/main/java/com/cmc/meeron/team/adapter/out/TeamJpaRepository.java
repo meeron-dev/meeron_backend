@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 interface TeamJpaRepository extends JpaRepository<Team, Long> {
@@ -13,4 +14,6 @@ interface TeamJpaRepository extends JpaRepository<Team, Long> {
 
     @Query("select t from Team t join Meeting m on t.id = m.team.id where m.id = :meetingId")
     Optional<Team> findByMeetingId(@Param("meetingId") Long meetingId);
+
+    List<Team> findByWorkspaceId(Long workspaceId);
 }

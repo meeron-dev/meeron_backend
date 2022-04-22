@@ -1,6 +1,7 @@
 package com.cmc.meeron.team.integration;
 
 import com.cmc.meeron.support.IntegrationTest;
+import com.cmc.meeron.support.TestImproved;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.team.adapter.in.request.*;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
@@ -30,6 +31,7 @@ public class TeamIntegrationTest extends IntegrationTest {
 
     @Autowired TeamQueryPort teamQueryPort;
 
+    @Deprecated
     @DisplayName("워크스페이스 내 팀 조회 - 성공")
     @ParameterizedTest
     @MethodSource("workspaceTeamsParameters")
@@ -41,6 +43,18 @@ public class TeamIntegrationTest extends IntegrationTest {
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.teams", hasSize(expectedValue)));
+    }
+
+    @TestImproved(originMethod = "get_workspace_teams_success")
+    @DisplayName("워크스페이스 내 팀 조회 - 성공")
+    @Test
+    void get_workspace_teams_success_v2() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/workspaces/{workspaceId}/teams", "1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teams", hasSize(3)));
     }
 
     private static Stream<Arguments> workspaceTeamsParameters() {

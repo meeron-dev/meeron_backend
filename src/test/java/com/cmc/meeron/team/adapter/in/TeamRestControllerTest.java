@@ -4,12 +4,12 @@ import com.cmc.meeron.common.exception.ClientErrorCode;
 import com.cmc.meeron.common.exception.team.TeamCountsConditionException;
 import com.cmc.meeron.common.exception.team.TeamErrorCode;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
+import com.cmc.meeron.support.TestImproved;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.team.adapter.in.request.*;
 import com.cmc.meeron.team.application.port.in.response.TeamResponseDto;
 import com.cmc.meeron.team.application.port.in.response.TeamResponseDtoBuilder;
-import com.cmc.meeron.team.application.port.in.response.WorkspaceTeamsResponseDto;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,27 +36,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockJwt
 class TeamRestControllerTest extends RestDocsTestSupport {
 
+    @Deprecated
     @DisplayName("워크스페이스 내 팀 조회 - 성공")
     @Test
     void get_workspace_teams_success() throws Exception {
 
         // given
-        List<WorkspaceTeamsResponseDto> workspaceTeamsResponseDtos = createWorkspaceTeamsResponseDtos();
+        List<TeamResponseDto> responseDtos = TeamResponseDtoBuilder.buildList();
         when(teamQueryUseCase.getWorkspaceTeams(any()))
-                .thenReturn(workspaceTeamsResponseDtos);
+                .thenReturn(responseDtos);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", "1");
 
         // when, then, docs
+        TeamResponseDto one = responseDtos.get(0);
+        TeamResponseDto two = responseDtos.get(1);
         mockMvc.perform(RestDocumentationRequestBuilders.get("/api/teams")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
                 .params(params))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.teams", hasSize(2)))
-                .andExpect(jsonPath("$.teams[0].teamId", is(workspaceTeamsResponseDtos.get(0).getTeamId().intValue())))
-                .andExpect(jsonPath("$.teams[0].teamName", is(workspaceTeamsResponseDtos.get(0).getTeamName())))
-                .andExpect(jsonPath("$.teams[1].teamId", is(workspaceTeamsResponseDtos.get(1).getTeamId().intValue())))
-                .andExpect(jsonPath("$.teams[1].teamName", is(workspaceTeamsResponseDtos.get(1).getTeamName())))
+                .andExpect(jsonPath("$.teams[0].teamId", is(one.getTeamId().intValue())))
+                .andExpect(jsonPath("$.teams[0].teamName", is(one.getTeamName())))
+                .andExpect(jsonPath("$.teams[1].teamId", is(two.getTeamId().intValue())))
+                .andExpect(jsonPath("$.teams[1].teamName", is(two.getTeamName())))
                 .andExpect(handler().handlerType(TeamRestController.class))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
@@ -72,11 +75,40 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
-    private List<WorkspaceTeamsResponseDto> createWorkspaceTeamsResponseDtos() {
-        return List.of(
-                WorkspaceTeamsResponseDto.builder().teamId(1L).teamName("첫번째 팀").build(),
-                WorkspaceTeamsResponseDto.builder().teamId(2L).teamName("두번째 팀").build()
-        );
+    @TestImproved(originMethod = "get_workspace_teams_success")
+    @DisplayName("워크스페이스 내 팀 조회 - 성공")
+    @Test
+    void get_workspace_teams_success_v2() throws Exception {
+
+        // given
+        List<TeamResponseDto> responseDtos = TeamResponseDtoBuilder.buildList();
+        when(teamQueryUseCase.getWorkspaceTeams(any()))
+                .thenReturn(responseDtos);
+
+        // when, then, docs
+        TeamResponseDto one = responseDtos.get(0);
+        TeamResponseDto two = responseDtos.get(1);
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/workspaces/{workspaceId}/teams", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.teams", hasSize(2)))
+                .andExpect(jsonPath("$.teams[0].teamId", is(one.getTeamId().intValue())))
+                .andExpect(jsonPath("$.teams[0].teamName", is(one.getTeamName())))
+                .andExpect(jsonPath("$.teams[1].teamId", is(two.getTeamId().intValue())))
+                .andExpect(jsonPath("$.teams[1].teamName", is(two.getTeamName())))
+                .andExpect(handler().handlerType(TeamRestController.class))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("workspaceId").description("워크스페이스 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("teams[].teamId").type(JsonFieldType.NUMBER).description("워크스페이스 내의 팀 ID"),
+                                fieldWithPath("teams[].teamName").type(JsonFieldType.STRING).description("워크스페이스 내의 팀 명")
+                        )
+                ));
     }
 
     @DisplayName("팀 생성 - 성공")

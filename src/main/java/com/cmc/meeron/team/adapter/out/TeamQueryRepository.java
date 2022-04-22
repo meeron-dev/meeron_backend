@@ -2,7 +2,6 @@ package com.cmc.meeron.team.adapter.out;
 
 import com.cmc.meeron.meeting.application.port.out.MeetingToTeamQueryPort;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
-import com.cmc.meeron.team.application.port.out.response.WorkspaceTeamsQueryResponseDto;
 import com.cmc.meeron.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,12 +13,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 class TeamQueryRepository implements TeamQueryPort, MeetingToTeamQueryPort {
 
-    private final TeamQuerydslRepository teamQuerydslRepository;
     private final TeamJpaRepository teamJpaRepository;
 
     @Override
-    public List<WorkspaceTeamsQueryResponseDto> findByWorkspaceId(Long workspaceId) {
-        return teamQuerydslRepository.findTeamsByWorkspaceId(workspaceId);
+    public List<Team> findByWorkspaceId(Long workspaceId) {
+        return teamJpaRepository.findByWorkspaceId(workspaceId);
     }
 
     @Override
