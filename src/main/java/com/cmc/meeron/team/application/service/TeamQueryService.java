@@ -1,9 +1,12 @@
 package com.cmc.meeron.team.application.service;
 
+import com.cmc.meeron.common.exception.team.TeamNotFoundException;
+import com.cmc.meeron.team.application.port.in.response.TeamResponseDto;
 import com.cmc.meeron.team.application.port.in.response.WorkspaceTeamsResponseDto;
 import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.application.port.out.response.WorkspaceTeamsQueryResponseDto;
+import com.cmc.meeron.team.domain.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,5 +25,12 @@ class TeamQueryService implements TeamQueryUseCase {
         List<WorkspaceTeamsQueryResponseDto> workspaceTeamsQueryResponseDtos = teamQueryPort
                 .findByWorkspaceId(workspaceId);
         return WorkspaceTeamsResponseDto.fromQueryResponseDtos(workspaceTeamsQueryResponseDtos);
+    }
+
+    @Override
+    public TeamResponseDto getMeetingHostTeam(Long meetingId) {
+        Team team = teamQueryPort.findByMeetingId(meetingId)
+                .orElseThrow(TeamNotFoundException::new);
+        return TeamResponseDto.from(team);
     }
 }

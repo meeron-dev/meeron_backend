@@ -33,12 +33,18 @@ include::{snippets}/attendee-rest-controller-test/join_attendees_fail_not_equal_
 
 [[change_attendee_status]]
 == 참가자 상태 변경
-=== [PATCH] /api/attendees/{id}
+=== [BEFORE] [PATCH] /api/attendees/{id}
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/request-fields.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/http-response.adoc[]
+
+=== [AFTER] [PATCH] /api/attendees/{id}/{status}
+include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/http-response.adoc[]
 
 ==== 1001
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_fail_not_valid/http-request.adoc[]
@@ -54,18 +60,41 @@ include::{snippets}/attendee-rest-controller-test/change_attendee_status_fail_no
 
 [[get_meeting_attendees]]
 == 팀별 회의 참여자 수 조회
-=== [GET] /api/meetings/{id}/attendees/teams
+=== [BEFORE] [GET] /api/meetings/{id}/attendees/teams
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/response-fields.adoc[]
 
+=== [AFTER] [GET] /api/meetings/{id}/attendees/counts
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/response-fields.adoc[]
+
 [[get_meeting_team_attendees]]
 == 팀에 속한 회의 참여자 조회
-=== [GET] /api/meetings/{id}/attendees/teams/{id}
+=== [BEFORE] [GET] /api/meetings/{id}/attendees/teams/{id}
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/response-fields.adoc[]
+
+=== [AFTER] [GET] /api/meetings/{id}/teams/{id}/attendees
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/response-fields.adoc[]
+
+[[meeting_admins]]
+== 회의 관리자 조회
+=== [GET] /api/meetings/{id}/admins
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/response-fields.adoc[]

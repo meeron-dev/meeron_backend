@@ -3,7 +3,9 @@ package com.cmc.meeron.attendee.application.service;
 import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.JoinAttendeesRequestDtoBuilder;
+import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.attendee.application.port.out.AttendeeToMeetingQueryPort;
+import com.cmc.meeron.attendee.domain.AttendStatus;
 import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.common.exception.meeting.AttendeeDuplicateException;
 import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
@@ -12,6 +14,7 @@ import com.cmc.meeron.common.exception.workspace.WorkspaceUsersNotInEqualWorkspa
 import com.cmc.meeron.meeting.application.port.in.request.ChangeAttendStatusRequestDtoBuilder;
 import com.cmc.meeron.meeting.domain.Attendees;
 import com.cmc.meeron.meeting.domain.Meeting;
+import com.cmc.meeron.support.TestImproved;
 import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,10 +47,13 @@ class AttendeeCommandServiceTest {
     AttendeeToMeetingQueryPort attendeeToMeetingQueryPort;
     @Mock
     JoinMeetingValidator joinMeetingValidator;
+    @Mock
+    AttendeeQueryPort attendeeQueryPort;
     @InjectMocks
     AttendeeCommandService attendeeCommandService;
 
     private Meeting meetingWithAttendee;
+    private Attendee changeStatusAttendee;
 
     @BeforeEach
     void setUp() {
@@ -60,6 +66,10 @@ class AttendeeCommandServiceTest {
                                         .build())
                                 .build())))
                         .build())
+                .build();
+        changeStatusAttendee = Attendee.builder()
+                .id(1L)
+                .attendStatus(AttendStatus.ATTEND)
                 .build();
     }
 
@@ -145,6 +155,7 @@ class AttendeeCommandServiceTest {
         );
     }
 
+    @Deprecated
     @DisplayName("회의 참가자 상태 변경 - 실패 / 회의를 찾을 수 없을 경우")
     @Test
     void change_attend_status_fail_not_found_meeting() throws Exception {
@@ -159,6 +170,7 @@ class AttendeeCommandServiceTest {
                 () -> attendeeCommandService.changeAttendStatus(requestDto));
     }
 
+    @Deprecated
     @DisplayName("회의 참가자 상태 변경 - 실패 / 존재하지 않는 참가자인 경우")
     @Test
     void change_attend_status_fail_not_attendee() throws Exception {
@@ -173,6 +185,22 @@ class AttendeeCommandServiceTest {
                 () -> attendeeCommandService.changeAttendStatus(requestDto));
     }
 
+    @TestImproved(originMethod = "change_attend_status_fail_not_attendee")
+    @DisplayName("회의 참가자 상태 변경 - 실패 / 존재하지 않는 참가자인 경우 V2")
+    @Test
+    void change_attend_status_fail_not_attendee_v2() throws Exception {
+
+        // given
+        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
+        when(attendeeQueryPort.findById(any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(AttendeeNotFoundException.class,
+                () -> attendeeCommandService.changeAttendStatusV2(requestDto));
+    }
+
+    @Deprecated
     @DisplayName("회의 참가자 상태 변경 - 성공")
     @Test
     void change_attend_status_success() throws Exception {
@@ -187,5 +215,25 @@ class AttendeeCommandServiceTest {
 
         // then
         verify(attendeeToMeetingQueryPort).findWithAttendeesById(requestDto.getMeetingId());
+    }
+
+    @TestImproved(originMethod = "change_attend_status_success")
+    @DisplayName("회의 참가자 상태 변경 - 성공 V2")
+    @Test
+    void change_attend_status_success_v2() throws Exception {
+
+        // given
+        ChangeAttendStatusRequestDto requestDto = ChangeAttendStatusRequestDtoBuilder.build();
+        when(attendeeQueryPort.findById(any()))
+                .thenReturn(Optional.of(changeStatusAttendee));
+
+        // when
+        attendeeCommandService.changeAttendStatusV2(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(attendeeQueryPort).findById(requestDto.getAttendeeId()),
+                () -> assertEquals(changeStatusAttendee.getAttendStatus(), AttendStatus.valueOf(requestDto.getStatus()))
+        );
     }
 }

@@ -1,13 +1,13 @@
 package com.cmc.meeron.attendee.application.service;
 
-import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.in.response.MeetingTeamAttendeesResponseDto;
-import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
-import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesQueryDto;
-import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingAttendeesRequestDtoBuilder;
-import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesQueryDtoBuilder;
+import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
+import com.cmc.meeron.attendee.application.port.in.response.*;
+import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
+import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
+import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDtoBuilder;
+import com.cmc.meeron.attendee.domain.Attendee;
+import com.cmc.meeron.support.TestImproved;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +19,8 @@ import java.util.List;
 
 import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
 import static com.cmc.meeron.attendee.AttendeeFixture.NOT_ADMIN_ATTENDEE;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,6 +34,54 @@ class AttendeeQueryServiceTest {
     AttendeeQueryService attendeeQueryService;
 
     @DisplayName("회의 참가자 조회 - 성공")
+    @Test
+    void get_meeting_attendees_success() throws Exception {
+
+        // given
+        List<MeetingAttendeesCountsByTeamQueryDto> queryDtos = MeetingAttendeesCountsByTeamQueryDtoBuilder.buildList();
+        when(attendeeQueryPort.countsMeetingAttendeesByTeam(any()))
+                .thenReturn(queryDtos);
+
+        // when
+        List<MeetingAttendeesResponseDto> responseDtos = attendeeQueryService.getMeetingAttendees(1L);
+
+        // then
+        MeetingAttendeesResponseDto one = responseDtos.get(0);
+        MeetingAttendeesResponseDto two = responseDtos.get(1);
+        MeetingAttendeesResponseDto three = responseDtos.get(2);
+        assertAll(
+                () -> assertEquals(1, one.getAttends()),
+                () -> assertEquals(2, one.getUnknowns()),
+                () -> assertEquals(3, two.getUnknowns()),
+                () -> assertEquals(1, two.getAbsents()),
+                () -> assertEquals(3, three.getAttends())
+        );
+    }
+
+    @TestImproved(originMethod = "get_meeting_attendees_success")
+    @DisplayName("Improved 회의 참가자 조회 - 성공")
+    @Test
+    void get_meeting_attendees_counts_by_team_success() throws Exception {
+
+        // given
+        List<MeetingAttendeesCountsByTeamQueryDto> meetingAttendeesCountsByTeamQueryDtos =
+                MeetingAttendeesCountsByTeamQueryDtoBuilder.buildList();
+        when(attendeeQueryPort.countsMeetingAttendeesByTeam(any()))
+                .thenReturn(meetingAttendeesCountsByTeamQueryDtos);
+
+        // when
+        List<MeetingAttendeesCountsByTeamResponseDto> responseDto = attendeeQueryService.getMeetingAttendeesCountsByTeam(1L);
+
+        // then
+        assertAll(
+                () -> verify(attendeeQueryPort).countsMeetingAttendeesByTeam(1L),
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(MeetingAttendeesCountsByTeamResponseDto.fromQueryDtos(meetingAttendeesCountsByTeamQueryDtos))
+        );
+    }
+
+    @DisplayName("회의에 참여하는 팀의 참가자 조회 - 성공")
     @Test
     void get_meeting_team_attendees_success() throws Exception {
 
@@ -58,28 +106,51 @@ class AttendeeQueryServiceTest {
         );
     }
 
-    @DisplayName("회의 참가자 조회 - 성공")
+    @TestImproved(originMethod = "get_meeting_team_attendees_success")
+    @DisplayName("Improved 회의 참가자 팀원들 조회 - 성공")
     @Test
-    void get_meeting_attendees_success() throws Exception {
+    void get_meeting_team_attendees_success_v2() throws Exception {
 
         // given
-        List<MeetingAttendeesQueryDto> queryDtos = MeetingAttendeesQueryDtoBuilder.buildList();
-        when(attendeeQueryPort.findMeetingAttendees(any()))
-                .thenReturn(queryDtos);
+        Attendee attendee1 = ADMIN_ATTENDEE;
+        Attendee attendee2 = NOT_ADMIN_ATTENDEE;
+        List<Attendee> attendees = List.of(attendee1, attendee2);
+        when(attendeeQueryPort.findWithWorkspaceUserByMeetingIdTeamId(any(), any()))
+                .thenReturn(attendees);
+        MeetingTeamAttendeesRequestDto requestDto = MeetingAttendeesRequestDtoBuilder.build();
 
         // when
-        List<MeetingAttendeesResponseDto> responseDtos = attendeeQueryService.getMeetingAttendees(1L);
+        MeetingTeamAttendeesResponseDtoV2 responseDto = attendeeQueryService.getMeetingTeamAttendeesV2(requestDto);
 
         // then
-        MeetingAttendeesResponseDto one = responseDtos.get(0);
-        MeetingAttendeesResponseDto two = responseDtos.get(1);
-        MeetingAttendeesResponseDto three = responseDtos.get(2);
         assertAll(
-                () -> assertEquals(1, one.getAttends()),
-                () -> assertEquals(2, one.getUnknowns()),
-                () -> assertEquals(3, two.getUnknowns()),
-                () -> assertEquals(1, two.getAbsents()),
-                () -> assertEquals(3, three.getAttends())
+                () -> verify(attendeeQueryPort).findWithWorkspaceUserByMeetingIdTeamId(
+                        requestDto.getMeetingId(), requestDto.getTeamId()),
+                () -> assertEquals(1, responseDto.getUnknowns().size()),
+                () -> assertEquals(1, responseDto.getAttends().size()),
+                () -> assertEquals(0, responseDto.getAbsents().size())
+        );
+    }
+
+    @DisplayName("회의 관리자 조회 - 성공")
+    @Test
+    void get_meeting_admins_success() throws Exception {
+
+        // given
+        List<Attendee> attendees = List.of(ADMIN_ATTENDEE);
+        when(attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingId(any()))
+                .thenReturn(attendees);
+
+        // when
+        List<AttendeeResponseDto> responseDtos = attendeeQueryService.getMeetingAdmins(1L);
+
+        // then
+        assertAll(
+                () -> verify(attendeeQueryPort).findMeetingAdminsWithWorkspaceUserByMeetingId(1L),
+                () -> assertThat(responseDtos).isNotEmpty(),
+                () -> assertThat(responseDtos)
+                        .usingRecursiveComparison()
+                        .isEqualTo(AttendeeResponseDto.from(attendees))
         );
     }
 }

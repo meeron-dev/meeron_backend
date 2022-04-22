@@ -3,7 +3,7 @@ package com.cmc.meeron.attendee.adapter.out;
 import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.MeetingToAttendeeQueryPort;
 import com.cmc.meeron.meeting.application.port.out.response.AttendStatusCountQueryDto;
-import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesQueryDto;
+import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
 import com.cmc.meeron.attendee.domain.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,12 +24,17 @@ class AttendeeRepository implements AttendeeQueryPort, MeetingToAttendeeQueryPor
     }
 
     @Override
+    public Optional<Attendee> findById(Long attendeeId) {
+        return attendeeJpaRepository.findById(attendeeId);
+    }
+
+    @Override
     public List<AttendStatusCountQueryDto> countAttendStatusByMeetingIds(List<Long> meetingIds) {
         return attendeeQuerydslRepository.countAttendStatusByMeetingIds(meetingIds);
     }
 
     @Override
-    public List<MeetingAttendeesQueryDto> findMeetingAttendees(Long meetingId) {
+    public List<MeetingAttendeesCountsByTeamQueryDto> countsMeetingAttendeesByTeam(Long meetingId) {
         return attendeeQuerydslRepository.getMeetingAttendees(meetingId);
     }
 
@@ -41,5 +46,10 @@ class AttendeeRepository implements AttendeeQueryPort, MeetingToAttendeeQueryPor
     @Override
     public List<Attendee> findMeetingAdminsWithWorkspaceUserByMeetingIds(List<Long> meetingIds) {
         return attendeeJpaRepository.findMeetingAdminsByMeetingIds(meetingIds);
+    }
+
+    @Override
+    public List<Attendee> findMeetingAdminsWithWorkspaceUserByMeetingId(Long meetingId) {
+        return attendeeJpaRepository.findMeetingAdminsWithWorkspaceUserByMeetingId(meetingId);
     }
 }

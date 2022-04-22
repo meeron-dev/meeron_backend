@@ -8,32 +8,30 @@
 
 include::overview.adoc[]
 
-== 인증 API
-* link:auth.html[Auth API, window=_blank]
-
-== 회의 조회 API
-* link:query-meeting.html[Query-Meeting API, window=_blank]
-
-== 회의 생성, 삭제 API
-* link:command-meeting.html[Command-Meeting, window=_blank]
-
-== 아젠다 API
+=== Agenda
 * link:agenda.html[Agenda API, window=_blank]
 
-== 아젠다 파일 생성 API
+=== Agenda-File
 * link:agenda-file.html[Agenda-File API, window=_blank]
 
-== 유저 API
-* link:user.html[User API, window=_blank]
+=== Attendee [*]
+* link:attendee.html[Attendee API, window=_blank]
 
-== 워크스페이스 유저 API
-* link:workspace-user.html[Workspace-User API, window=_blank]
+=== Auth
+* link:auth.html[Auth API, window=_blank]
 
-== 워크스페이스 API
-* link:workspace.html[Workspace API, window=_blank]
+=== Meeting
+* link:command-meeting.html[Meeting 생성 / 수정 / 삭제 API, window=_blank]
+* link:query-meeting.html[Meeting 조회 API, window=_blank]
 
-== 팀 API
+=== Team [*]
 * link:team.html[Team API, window=_blank]
 
-== 회의 참가자 API
-* link:attendee.html[Attendee API, window=_blank]
+=== User
+* link:user.html[User API, window=_blank]
+
+=== Workspace
+* link:workspace.html[Workspace API, window=_blank]
+
+=== Workspace-User
+* link:workspace-user.html[Workspace-User API, window=_blank]

@@ -1,13 +1,18 @@
 package com.cmc.meeron.attendee.application.port.out;
 
+import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
 import com.cmc.meeron.attendee.domain.Attendee;
-import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesQueryDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AttendeeQueryPort {
 
-    List<MeetingAttendeesQueryDto> findMeetingAttendees(Long meetingId);
+    List<MeetingAttendeesCountsByTeamQueryDto> countsMeetingAttendeesByTeam(Long meetingId);
 
     List<Attendee> findWithWorkspaceUserByMeetingIdTeamId(Long meetingId, Long teamId);
+
+    Optional<Attendee> findById(Long attendeeId);
+
+    List<Attendee> findMeetingAdminsWithWorkspaceUserByMeetingId(Long meetingId);
 }

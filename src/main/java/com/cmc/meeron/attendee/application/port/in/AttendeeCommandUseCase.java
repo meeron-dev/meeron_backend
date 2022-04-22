@@ -8,4 +8,6 @@ public interface AttendeeCommandUseCase {
     void joinAttendees(JoinAttendeesRequestDto toRequestDto);
 
     void changeAttendStatus(ChangeAttendStatusRequestDto toRequestDto);
+
+    void changeAttendStatusV2(ChangeAttendStatusRequestDto changeAttendStatusRequestDto);
 }

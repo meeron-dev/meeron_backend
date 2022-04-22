@@ -1,6 +1,6 @@
 package com.cmc.meeron.attendee.application.port.in.response;
 
-import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesQueryDto;
+import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
 import com.cmc.meeron.attendee.domain.AttendStatus;
 import lombok.*;
 
@@ -22,16 +22,16 @@ public class MeetingAttendeesResponseDto {
     private int absents;
     private int unknowns;
 
-    public static List<MeetingAttendeesResponseDto> fromQueryDtos(List<MeetingAttendeesQueryDto> queryDtos) {
+    public static List<MeetingAttendeesResponseDto> fromQueryDtos(List<MeetingAttendeesCountsByTeamQueryDto> queryDtos) {
         List<MeetingAttendeesResponseDto> responseDtos = new ArrayList<>();
         queryDtos.stream()
-                .collect(Collectors.groupingBy(MeetingAttendeesQueryDto::getTeamId))
+                .collect(Collectors.groupingBy(MeetingAttendeesCountsByTeamQueryDto::getTeamId))
                 .forEach((key, value) ->
                         responseDtos.add(MeetingAttendeesResponseDto.fromGroupByTeamIdList(value)));
         return responseDtos;
     }
 
-    private static MeetingAttendeesResponseDto fromGroupByTeamIdList(List<MeetingAttendeesQueryDto> groupByTeamIdDtos) {
+    private static MeetingAttendeesResponseDto fromGroupByTeamIdList(List<MeetingAttendeesCountsByTeamQueryDto> groupByTeamIdDtos) {
         AtomicInteger attend = new AtomicInteger();
         AtomicInteger absent = new AtomicInteger();
         AtomicInteger unknowns = new AtomicInteger();

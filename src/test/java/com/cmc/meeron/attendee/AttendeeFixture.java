@@ -15,6 +15,7 @@ public class AttendeeFixture {
             .isMeetingAdmin(true)
             .meeting(MEETING)
             .attendStatus(AttendStatus.ATTEND)
+            .workspaceUser(WORKSPACE_USER_1)
             .build();
 
     public static final Attendee NOT_ADMIN_ATTENDEE = Attendee.builder()
@@ -24,5 +25,6 @@ public class AttendeeFixture {
             .attendStatus(null)
             .meeting(MEETING)
             .attendStatus(AttendStatus.UNKNOWN)
+            .workspaceUser(WORKSPACE_USER_2)
             .build();
 }
