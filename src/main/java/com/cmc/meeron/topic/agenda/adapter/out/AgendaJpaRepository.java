@@ -27,4 +27,6 @@ interface AgendaJpaRepository extends JpaRepository<Agenda, Long> {
             " order by a.id"
     )
     List<Agenda> findByMeetingIds(@Param("meetingIds") List<Long> meetingIds);
+
+    List<Agenda> findByMeetingId(Long meetingId);
 }

@@ -47,9 +47,3 @@
 | `500 Internal Server Error`
 | 서버 에러
 |===
-
-[[change]]
-== API 변경사항
-====
-* link:attendee.html[Attendee API, window=_blank]
-====

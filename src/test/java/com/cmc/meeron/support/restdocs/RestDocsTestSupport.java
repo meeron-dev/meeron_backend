@@ -23,6 +23,8 @@ import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.topic.agenda.adapter.in.AgendaRestController;
 import com.cmc.meeron.topic.agenda.application.port.in.AgendaCommandUseCase;
 import com.cmc.meeron.topic.agenda.application.port.in.AgendaQueryUseCase;
+import com.cmc.meeron.topic.issue.adapter.in.IssueRestController;
+import com.cmc.meeron.topic.issue.application.port.in.IssueQueryUseCase;
 import com.cmc.meeron.user.adapter.in.UserRestController;
 import com.cmc.meeron.user.application.port.in.UserCommandUseCase;
 import com.cmc.meeron.user.application.port.in.UserQueryUseCase;
@@ -69,6 +71,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
         WorkspaceUserRestController.class,
         AgendaRestController.class,
         AttendeeRestController.class,
+        IssueRestController.class,
 })
 @ExtendWith(RestDocumentationExtension.class)
 @Import({
@@ -94,6 +97,7 @@ public abstract class RestDocsTestSupport extends SecuritySupport {
     @MockBean protected AgendaQueryUseCase agendaQueryUseCase;
     @MockBean protected AgendaCommandUseCase agendaCommandUseCase;
     @MockBean protected AttendeeCommandUseCase attendeeCommandUseCase;
+    @MockBean protected IssueQueryUseCase issueQueryUseCase;
 
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected RestDocumentationResultHandler restDocumentationResultHandler;

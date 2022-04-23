@@ -47,3 +47,21 @@ include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_success/r
 ==== 1300
 include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_fail_not_found_agenda/http-request.adoc[]
 include::{snippets}/agenda-rest-controller-test/get_agenda_file_issues_fail_not_found_agenda/http-response.adoc[]
+
+[[get_meeting_agendas]]
+== 회의의 아젠다들 조회
+=== [GET] /api/meetings/{id}/agendas
+include::{snippets}/agenda-rest-controller-test/get_meeting_agendas_success/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_meeting_agendas_success/request-headers.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_meeting_agendas_success/path-parameters.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_meeting_agendas_success/http-response.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_meeting_agendas_success/response-fields.adoc[]
+
+[[get_agenda]]
+== 회의 상세 조회
+=== [GET] /api/agendas/{id}
+include::{snippets}/agenda-rest-controller-test/get_agenda_success/http-request.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_success/request-headers.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_success/path-parameters.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_success/http-response.adoc[]
+include::{snippets}/agenda-rest-controller-test/get_agenda_success/response-fields.adoc[]

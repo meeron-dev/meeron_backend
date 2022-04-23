@@ -31,6 +31,11 @@ class AgendaRepository implements AgendaQueryPort,
     }
 
     @Override
+    public List<Agenda> findByMeetingId(Long meetingId) {
+        return agendaJpaRepository.findByMeetingId(meetingId);
+    }
+
+    @Override
     public List<Agenda> findByMeetingIds(List<Long> meetingIds) {
         return agendaJpaRepository.findByMeetingIds(meetingIds);
     }

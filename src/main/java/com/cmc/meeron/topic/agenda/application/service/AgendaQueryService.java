@@ -6,8 +6,9 @@ import com.cmc.meeron.topic.agenda.application.port.in.AgendaQueryUseCase;
 import com.cmc.meeron.topic.agenda.application.port.in.request.FindAgendaIssuesFilesRequestDto;
 import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaCountResponseDto;
 import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaIssuesFilesResponseDto;
-import com.cmc.meeron.topic.agenda.application.port.out.AgendaToAgendaFileQueryPort;
+import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaResponseDto;
 import com.cmc.meeron.topic.agenda.application.port.out.AgendaQueryPort;
+import com.cmc.meeron.topic.agenda.application.port.out.AgendaToAgendaFileQueryPort;
 import com.cmc.meeron.topic.agenda.application.port.out.AgendaToIssueQueryPort;
 import com.cmc.meeron.topic.agenda.domain.Agenda;
 import com.cmc.meeron.topic.issue.domain.Issue;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -35,6 +37,7 @@ class AgendaQueryService implements AgendaQueryUseCase {
         return AgendaCountResponseDto.found(agendaCount, fileCount);
     }
 
+    @Deprecated
     @Override
     public AgendaIssuesFilesResponseDto getAgendaIssuesFiles(FindAgendaIssuesFilesRequestDto findAgendaIssuesFilesRequestDto) {
         Agenda agenda = agendaQueryPort.findByMeetingIdAndAgendaOrder(findAgendaIssuesFilesRequestDto.getMeetingId(),
@@ -43,5 +46,20 @@ class AgendaQueryService implements AgendaQueryUseCase {
         List<Issue> issues = agendaToIssueQueryPort.findByAgendaId(agenda.getId());
         List<AgendaFile> files = agendaToAgendaFileQueryPort.findByAgendaId(agenda.getId());
         return AgendaIssuesFilesResponseDto.fromEntities(agenda, issues, files);
+    }
+
+    @Override
+    public List<AgendaResponseDto> getMeetingAgendas(Long meetingId) {
+        List<Agenda> agendas = agendaQueryPort.findByMeetingId(meetingId);
+        List<AgendaResponseDto> responseDtos = AgendaResponseDto.from(agendas);
+        responseDtos.sort(Comparator.comparingInt(AgendaResponseDto::getAgendaOrder));
+        return responseDtos;
+    }
+
+    @Override
+    public AgendaResponseDto getAgenda(Long agendaId) {
+        Agenda agenda = agendaQueryPort.findById(agendaId)
+                .orElseThrow(AgendaNotFoundException::new);
+        return AgendaResponseDto.from(agenda);
     }
 }
