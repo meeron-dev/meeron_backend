@@ -48,3 +48,16 @@ include::{snippets}/user-rest-controller-test/check_named_user_fail_not_found_us
 include::{snippets}/user-rest-controller-test/quit_success/http-request.adoc[]
 include::{snippets}/user-rest-controller-test/quit_success/request-headers.adoc[]
 include::{snippets}/user-rest-controller-test/quit_success/http-response.adoc[]
+
+[[workspace_users_user]]
+== 워크스페이스 유저의 유저 조회
+=== [GET] /api/workspace-users/{id}/user
+include::{snippets}/user-rest-controller-test/get_user_success/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/get_user_success/request-headers.adoc[]
+include::{snippets}/user-rest-controller-test/get_user_success/path-parameters.adoc[]
+include::{snippets}/user-rest-controller-test/get_user_success/http-response.adoc[]
+include::{snippets}/user-rest-controller-test/get_user_success/response-fields.adoc[]
+
+==== 1500
+include::{snippets}/user-rest-controller-test/get_user_fail_not_found/http-request.adoc[]
+include::{snippets}/user-rest-controller-test/get_user_fail_not_found/http-response.adoc[]

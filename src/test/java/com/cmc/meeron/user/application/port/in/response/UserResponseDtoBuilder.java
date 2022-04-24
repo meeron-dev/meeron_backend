@@ -1,6 +1,4 @@
-package com.cmc.meeron.workspaceuser.application.port.in.response;
-
-import com.cmc.meeron.workspaceuser.application.port.in.response.UserResponseDto;
+package com.cmc.meeron.user.application.port.in.response;
 
 public class UserResponseDtoBuilder {
 

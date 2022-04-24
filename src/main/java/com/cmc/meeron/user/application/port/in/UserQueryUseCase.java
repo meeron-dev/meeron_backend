@@ -1,11 +1,13 @@
 package com.cmc.meeron.user.application.port.in;
 
 import com.cmc.meeron.common.security.AuthUser;
-import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
+import com.cmc.meeron.user.application.port.in.response.UserResponseDto;
 
 public interface UserQueryUseCase {
 
-    MeResponseDto getMe(AuthUser authUser);
+    UserResponseDto getMe(AuthUser authUser);
 
     boolean checkNamedUser(Long userId);
+
+    UserResponseDto getUserByWorkspaceUserId(Long workspaceUserId);
 }

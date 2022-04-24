@@ -4,9 +4,9 @@ import java.util.List;
 
 public class WorkspaceUserQueryResponseDtoBuilder {
 
-    public static List<WorkspaceUserQueryResponseDto> buildList() {
+    public static List<WorkspaceUserResponseDto> buildList() {
         return List.of(
-                WorkspaceUserQueryResponseDto.builder()
+                WorkspaceUserResponseDto.builder()
                         .workspaceUserId(1L)
                         .workspaceId(1L)
                         .isWorkspaceAdmin(false)
@@ -16,7 +16,7 @@ public class WorkspaceUserQueryResponseDtoBuilder {
                         .email("")
                         .phone("010-1234-1234")
                         .build(),
-                WorkspaceUserQueryResponseDto.builder()
+                WorkspaceUserResponseDto.builder()
                         .workspaceUserId(2L)
                         .workspaceId(1L)
                         .isWorkspaceAdmin(false)

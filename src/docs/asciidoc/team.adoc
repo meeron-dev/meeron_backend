@@ -69,3 +69,55 @@ include::{snippets}/team-rest-controller-test/get_host_team_success/response-fie
 ==== 1402
 include::{snippets}/team-rest-controller-test/get_host_team_fail_not_found/http-request.adoc[]
 include::{snippets}/team-rest-controller-test/get_host_team_fail_not_found/http-response.adoc[]
+
+[[join_team_workspace_users]]
+== 팀원 추가
+=== [BEFORE] [PATCH] /api/teams/{id}/workspace-users
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/http-response.adoc[]
+
+=== [AFTER] [PATCH] /api/teams/{id}/join
+include::{snippets}/team-rest-controller-test/join_team_members_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/join_team_members_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/join_team_members_success/path-parameters.adoc[]
+include::{snippets}/team-rest-controller-test/join_team_members_success/request-fields.adoc[]
+include::{snippets}/team-rest-controller-test/join_team_members_success/http-response.adoc[]
+
+==== 1001
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_valid/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_valid/http-response.adoc[]
+
+==== 1402
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_found_team/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_found_team/http-response.adoc[]
+
+==== 1704
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_invalid_find_workspace_users_count/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_invalid_find_workspace_users_count/http-response.adoc[]
+
+[[kick_out_team_workspace_users]]
+== 팀에서 추방
+=== [BEFORE] [PATCH] /api/workspace-users/{id}/team
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/request-headers.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/path-parameters.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/request-fields.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/http-response.adoc[]
+
+=== [AFTER] [PATCH] /api/teams/{id}/eject
+include::{snippets}/team-rest-controller-test/eject_team_member_success/http-request.adoc[]
+include::{snippets}/team-rest-controller-test/eject_team_member_success/request-headers.adoc[]
+include::{snippets}/team-rest-controller-test/eject_team_member_success/path-parameters.adoc[]
+include::{snippets}/team-rest-controller-test/eject_team_member_success/request-fields.adoc[]
+include::{snippets}/team-rest-controller-test/eject_team_member_success/http-response.adoc[]
+
+==== 1001
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_invalid/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_invalid/http-response.adoc[]
+
+==== 1701
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_not_found_workspace_user/http-request.adoc[]
+include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_not_found_workspace_user/http-response.adoc[]

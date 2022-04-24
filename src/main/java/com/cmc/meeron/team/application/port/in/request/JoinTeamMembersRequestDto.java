@@ -1,4 +1,4 @@
-package com.cmc.meeron.workspaceuser.application.port.in.request;
+package com.cmc.meeron.team.application.port.in.request;
 
 import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserAuthorityCheckable;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JoinTeamUsersRequestDto implements WorkspaceUserAuthorityCheckable {
+public class JoinTeamMembersRequestDto implements WorkspaceUserAuthorityCheckable {
 
     private Long teamId;
     private Long adminWorkspaceUserId;

@@ -2,22 +2,26 @@ package com.cmc.meeron.workspaceuser.application.service;
 
 import com.cmc.meeron.common.exception.team.PreviousBelongToTeamException;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
-import com.cmc.meeron.common.exception.workspace.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.user.UserNotFoundException;
+import com.cmc.meeron.common.exception.workspace.NicknameDuplicateException;
 import com.cmc.meeron.common.exception.workspace.NotAllFoundWorkspaceUsersException;
-import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.WorkspaceNotFoundException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
+import com.cmc.meeron.team.application.port.in.request.JoinTeamMembersRequestDto;
+import com.cmc.meeron.team.application.port.in.request.JoinTeamMembersRequestDtoBuilder;
+import com.cmc.meeron.team.application.port.in.request.EjectTeamMemberRequestDto;
+import com.cmc.meeron.team.application.port.in.request.EjectTeamMemberRequestDtoBuilder;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
 import com.cmc.meeron.user.application.port.out.UserQueryPort;
 import com.cmc.meeron.user.domain.User;
-import com.cmc.meeron.workspaceuser.application.port.in.request.*;
-import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserCommandResponseDto;
 import com.cmc.meeron.workspace.application.port.out.WorkspaceQueryPort;
+import com.cmc.meeron.workspace.domain.Workspace;
+import com.cmc.meeron.workspaceuser.application.port.in.request.*;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDto;
 import com.cmc.meeron.workspaceuser.application.port.out.WorkspaceUserCommandPort;
 import com.cmc.meeron.workspaceuser.application.port.out.WorkspaceUserQueryPort;
-import com.cmc.meeron.workspace.domain.Workspace;
 import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import com.cmc.meeron.workspaceuser.domain.WorkspaceUserInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +40,7 @@ import static com.cmc.meeron.team.TeamFixture.TEAM_1;
 import static com.cmc.meeron.user.UserFixture.USER;
 import static com.cmc.meeron.workspace.WorkspaceFixture.WORKSPACE_1;
 import static com.cmc.meeron.workspaceuser.WorkspaceUserFixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -136,7 +141,7 @@ class WorkspaceUserCommandServiceTest {
                 .thenReturn(FILE.getOriginalFilename());
 
         // when
-        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandService.createWorkspaceUser(requestDto);
+        WorkspaceUserResponseDto responseDto = workspaceUserCommandService.createWorkspaceUser(requestDto);
 
         // then
         assertAll(
@@ -144,7 +149,10 @@ class WorkspaceUserCommandServiceTest {
                 () -> verify(userQueryPort).findById(requestDto.getUserId()),
                 () -> verify(workspaceQueryPort).findById(requestDto.getWorkspaceId()),
                 () -> verify(fileManager).saveProfileImage(any()),
-                () -> verify(workspaceUserCommandPort).saveWorkspaceUser(any(WorkspaceUser.class))
+                () -> verify(workspaceUserCommandPort).saveWorkspaceUser(any(WorkspaceUser.class)),
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(WorkspaceUserResponseDto.from(workspaceUser))
         );
     }
 
@@ -222,7 +230,7 @@ class WorkspaceUserCommandServiceTest {
                 .thenReturn(false);
 
         // when
-        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandService.modifyWorkspaceUser(requestDto);
+        WorkspaceUserResponseDto responseDto = workspaceUserCommandService.modifyWorkspaceUser(requestDto);
 
         // then
         assertAll(
@@ -230,11 +238,9 @@ class WorkspaceUserCommandServiceTest {
                 () -> verify(workspaceUserQueryPort).existsByNicknameInWorkspace(workspaceUser.getWorkspace().getId(),
                         requestDto.getNickname()),
                 () -> verify(fileManager).saveProfileImage(any()),
-                () -> assertEquals(requestDto.getNickname(), responseDto.getNickname()),
-                () -> assertEquals(requestDto.getEmail(), responseDto.getContactMail()),
-                () -> assertEquals(requestDto.getPhone(), responseDto.getPhone()),
-                () -> assertEquals(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl(),
-                        responseDto.getProfileImageUrl())
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(WorkspaceUserResponseDto.from(workspaceUser))
         );
     }
 
@@ -251,7 +257,7 @@ class WorkspaceUserCommandServiceTest {
                 .thenReturn(false);
 
         // when
-        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandService.modifyWorkspaceUser(requestDto);
+        WorkspaceUserResponseDto responseDto = workspaceUserCommandService.modifyWorkspaceUser(requestDto);
 
         // then
         assertAll(
@@ -259,11 +265,9 @@ class WorkspaceUserCommandServiceTest {
                 () -> verify(workspaceUserQueryPort).existsByNicknameInWorkspace(workspaceUser.getWorkspace().getId(),
                         requestDto.getNickname()),
                 () -> verify(fileManager, times(0)).saveProfileImage(any()),
-                () -> assertEquals(requestDto.getNickname(), responseDto.getNickname()),
-                () -> assertEquals(requestDto.getEmail(), responseDto.getContactMail()),
-                () -> assertEquals(requestDto.getPhone(), responseDto.getPhone()),
-                () -> assertEquals(workspaceUser.getWorkspaceUserInfo().getProfileImageUrl(),
-                        responseDto.getProfileImageUrl())
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(WorkspaceUserResponseDto.from(workspaceUser))
         );
     }
 
@@ -276,7 +280,7 @@ class WorkspaceUserCommandServiceTest {
         saveWorkspaceUserProcess();
 
         // when
-        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandService.createWorkspaceUser(requestDto);
+        WorkspaceUserResponseDto responseDto = workspaceUserCommandService.createWorkspaceUser(requestDto);
 
         // then
         assertAll(
@@ -284,7 +288,10 @@ class WorkspaceUserCommandServiceTest {
                 () -> verify(userQueryPort).findById(requestDto.getUserId()),
                 () -> verify(workspaceQueryPort).findById(requestDto.getWorkspaceId()),
                 () -> verify(fileManager, times(0)).saveProfileImage(any()),
-                () -> verify(workspaceUserCommandPort).saveWorkspaceUser(any(WorkspaceUser.class))
+                () -> verify(workspaceUserCommandPort).saveWorkspaceUser(any(WorkspaceUser.class)),
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(WorkspaceUserResponseDto.from(workspaceUser))
         );
     }
 
@@ -305,7 +312,7 @@ class WorkspaceUserCommandServiceTest {
     void join_team_users_fail_not_found_team() throws Exception {
 
         // given
-        JoinTeamUsersRequestDto requestDto = JoinTeamUsersRequestDtoBuilder.build();
+        JoinTeamMembersRequestDto requestDto = JoinTeamMembersRequestDtoBuilder.build();
         when(teamQueryPort.findById(any()))
                 .thenReturn(Optional.empty());
 
@@ -319,7 +326,7 @@ class WorkspaceUserCommandServiceTest {
     void join_team_users_fail_previous_belong_to_team() throws Exception {
 
         // given
-        JoinTeamUsersRequestDto requestDto = JoinTeamUsersRequestDtoBuilder.build();
+        JoinTeamMembersRequestDto requestDto = JoinTeamMembersRequestDtoBuilder.build();
         when(teamQueryPort.findById(any()))
                 .thenReturn(Optional.of(team));
         when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
@@ -335,7 +342,7 @@ class WorkspaceUserCommandServiceTest {
     void join_team_users_fail_get_workspace_users() throws Exception {
 
         // given
-        JoinTeamUsersRequestDto requestDto = JoinTeamUsersRequestDtoBuilder.build();
+        JoinTeamMembersRequestDto requestDto = JoinTeamMembersRequestDtoBuilder.build();
         when(teamQueryPort.findById(any()))
                 .thenReturn(Optional.of(team));
         when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
@@ -351,7 +358,7 @@ class WorkspaceUserCommandServiceTest {
     void join_team_users_success() throws Exception {
 
         // given
-        JoinTeamUsersRequestDto requestDto = JoinTeamUsersRequestDtoBuilder.build();
+        JoinTeamMembersRequestDto requestDto = JoinTeamMembersRequestDtoBuilder.build();
         when(teamQueryPort.findById(any()))
                 .thenReturn(Optional.of(team));
         when(workspaceUserQueryPort.findAllWorkspaceUsersByIds(any()))
@@ -374,7 +381,7 @@ class WorkspaceUserCommandServiceTest {
     void exit_team_user_fail_not_found_workspace_user() throws Exception {
 
         // given
-        KickOutTeamUserRequestDto requestDto = KickOutTeamUserRequestDtoBuilder.build();
+        EjectTeamMemberRequestDto requestDto = EjectTeamMemberRequestDtoBuilder.build();
         when(workspaceUserQueryPort.findById(any()))
                 .thenReturn(Optional.empty());
 
@@ -388,7 +395,7 @@ class WorkspaceUserCommandServiceTest {
     void exit_team_user_success() throws Exception {
 
         // given
-        KickOutTeamUserRequestDto requestDto = KickOutTeamUserRequestDtoBuilder.build();
+        EjectTeamMemberRequestDto requestDto = EjectTeamMemberRequestDtoBuilder.build();
         when(workspaceUserQueryPort.findById(any()))
                 .thenReturn(Optional.of(workspaceUserBelongToTeam));
 
@@ -397,7 +404,7 @@ class WorkspaceUserCommandServiceTest {
 
         // then
         assertAll(
-                () -> verify(workspaceUserQueryPort).findById(requestDto.getKickOutWorkspaceUserId()),
+                () -> verify(workspaceUserQueryPort).findById(requestDto.getEjectWorkspaceUserId()),
                 () -> assertNull(workspaceUserBelongToTeam.getTeam())
         );
     }

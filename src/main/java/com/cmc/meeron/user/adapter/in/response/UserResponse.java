@@ -1,6 +1,6 @@
-package com.cmc.meeron.workspaceuser.adapter.in.response;
+package com.cmc.meeron.user.adapter.in.response;
 
-import com.cmc.meeron.workspaceuser.application.port.in.response.UserResponseDto;
+import com.cmc.meeron.user.application.port.in.response.UserResponseDto;
 import lombok.*;
 
 @Getter
@@ -15,7 +15,7 @@ public class UserResponse {
     private String name;
     private String profileImageUrl;
 
-    public static UserResponse fromResponseDto(UserResponseDto userResponseDto) {
+    public static UserResponse from(UserResponseDto userResponseDto) {
         return UserResponse.builder()
                 .userId(userResponseDto.getUserId())
                 .loginEmail(userResponseDto.getLoginEmail())

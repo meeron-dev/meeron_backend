@@ -4,11 +4,10 @@ import com.cmc.meeron.common.exception.workspace.WorkspaceUserErrorCode;
 import com.cmc.meeron.support.IntegrationTest;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
-import com.cmc.meeron.workspaceuser.adapter.in.response.WorkspaceUserResponse;
 import com.cmc.meeron.workspaceuser.adapter.in.request.*;
+import com.cmc.meeron.workspaceuser.adapter.in.response.WorkspaceUserResponse;
 import com.cmc.meeron.workspaceuser.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
 import com.cmc.meeron.workspaceuser.application.port.out.WorkspaceUserQueryPort;
-import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,12 +22,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import static com.cmc.meeron.file.FileFixture.FILE;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -242,78 +239,6 @@ class WorkspaceUserIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.workspaceUsers", hasSize(4)));
-    }
-
-    @Sql("classpath:workspace-user-test.sql")
-    @DisplayName("팀원 추가 - 성공")
-    @Test
-    void join_team_users_success() throws Exception {
-
-        // given
-        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.buildIntegrationSuccessCase();
-
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "3")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        // then
-        flushAndClear();
-        List<WorkspaceUser> noneTeamUsers = workspaceUserQueryPort.findByWorkspaceIdAndTeamIsNull(1L);
-        assertEquals(2, noneTeamUsers.size());
-        List<WorkspaceUser> devTeamUsers = workspaceUserQueryPort.findByTeamId(3L);
-        assertEquals(6, devTeamUsers.size());
-    }
-
-    @Sql("classpath:workspace-user-test.sql")
-    @DisplayName("팀원 추가 - 실패 / 관리자가 아닌 경우")
-    @Test
-    void join_team_users_fail_not_admin() throws Exception {
-
-        // given
-        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
-
-        // when, then
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "3")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Sql("classpath:workspace-user-test.sql")
-    @DisplayName("팀원 추방 - 실패 / 관리자가 아닌 경우")
-    @Test
-    void kick_out_team_user_fail_not_admin() throws Exception {
-
-        // given
-        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.build();
-
-        // when, then
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "8")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Sql("classpath:workspace-user-test.sql")
-    @DisplayName("팀원 추방 - 성공")
-    @Test
-    void kick_out_team_success() throws Exception {
-
-        // given
-        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.buildIntegrationSuccessCase();
-
-        // when
-        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "14")
-                .content(objectMapper.writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        // then
-        flushAndClear();
-        List<WorkspaceUser> workspaceUsers = workspaceUserQueryPort.findByTeamId(3L);
-        assertEquals(3, workspaceUsers.size());
     }
 
     @Sql("classpath:workspace-user-test.sql")
