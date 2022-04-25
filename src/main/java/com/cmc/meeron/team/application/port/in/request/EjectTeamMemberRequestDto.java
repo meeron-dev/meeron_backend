@@ -1,4 +1,4 @@
-package com.cmc.meeron.workspaceuser.application.port.in.request;
+package com.cmc.meeron.team.application.port.in.request;
 
 import com.cmc.meeron.common.advice.workspaceuser.WorkspaceUserAuthorityCheckable;
 import lombok.*;
@@ -8,9 +8,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class KickOutTeamUserRequestDto implements WorkspaceUserAuthorityCheckable {
+public class EjectTeamMemberRequestDto implements WorkspaceUserAuthorityCheckable {
 
-    private Long kickOutWorkspaceUserId;
+    private Long ejectWorkspaceUserId;
     private Long adminWorkspaceUserId;
 
     @Override

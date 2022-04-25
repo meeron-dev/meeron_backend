@@ -1,6 +1,6 @@
 package com.cmc.meeron.workspaceuser.adapter.in.response;
 
-import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDto;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -12,16 +12,16 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkspaceUsersResponse {
+public class WorkspaceUserResponses {
 
     @Builder.Default
     private List<WorkspaceUserResponse> workspaceUsers = new ArrayList<>();
 
-    public static WorkspaceUsersResponse fromWorkspaceUsers(List<WorkspaceUserQueryResponseDto> myWorkspaceUsers) {
-        return WorkspaceUsersResponse.builder()
+    public static WorkspaceUserResponses fromWorkspaceUsers(List<WorkspaceUserResponseDto> myWorkspaceUsers) {
+        return WorkspaceUserResponses.builder()
                 .workspaceUsers(myWorkspaceUsers
                         .stream()
-                        .map(WorkspaceUserResponse::fromResponseDto)
+                        .map(WorkspaceUserResponse::from)
                         .collect(Collectors.toList()))
                 .build();
     }

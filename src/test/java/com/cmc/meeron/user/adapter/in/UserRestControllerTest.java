@@ -6,7 +6,8 @@ import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.user.adapter.in.request.SetNameRequest;
-import com.cmc.meeron.user.application.port.in.response.MeResponseDto;
+import com.cmc.meeron.user.application.port.in.response.UserResponseDto;
+import com.cmc.meeron.user.application.port.in.response.UserResponseDtoBuilder;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,9 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WithMockJwt
 class UserRestControllerTest extends RestDocsTestSupport {
@@ -41,7 +43,7 @@ class UserRestControllerTest extends RestDocsTestSupport {
     void get_me_success() throws Exception {
 
         // given
-        MeResponseDto me = createMeResponseDto();
+        UserResponseDto me = UserResponseDtoBuilder.build();
         when(userQueryUseCase.getMe(any()))
                 .thenReturn(me);
 
@@ -64,15 +66,6 @@ class UserRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 URL")
                         )
                 ));
-    }
-
-    private MeResponseDto createMeResponseDto() {
-        return MeResponseDto.builder()
-                .userId(1L)
-                .loginEmail("test@gmail.com")
-                .name("테스트")
-                .profileImageUrl("https://test.images.com/12341234")
-                .build();
     }
 
     @DisplayName("유저의 성함 등록 - 성공")
@@ -206,6 +199,56 @@ class UserRestControllerTest extends RestDocsTestSupport {
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        )
+                ));
+    }
+
+    @DisplayName("워크스페이스 유저의 유저 정보 가져오기 - 실패 / 존재하지 않는 워크스페이스 유저일 경우")
+    @Test
+    void get_user_fail_not_found() throws Exception {
+
+        // given
+        when(userQueryUseCase.getUserByWorkspaceUserId(any()))
+                .thenThrow(new UserNotFoundException());
+
+        // when, then ,docs
+        mockMvc.perform(get("/api/workspace-users/{workspaceUserId}/user", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(UserErrorCode.NOT_FOUND_USER.getCode())));
+    }
+
+    @DisplayName("워크스페이스 유저의 유저 정보 가져오기 - 성공")
+    @Test
+    void get_user_success() throws Exception {
+
+        // given
+        UserResponseDto responseDto = UserResponseDtoBuilder.build();
+        when(userQueryUseCase.getUserByWorkspaceUserId(any()))
+                .thenReturn(responseDto);
+
+        // when, then ,docs
+        mockMvc.perform(get("/api/workspace-users/{workspaceUserId}/user", 1L)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", is(responseDto.getUserId().intValue())))
+                .andExpect(jsonPath("$.loginEmail", is(responseDto.getLoginEmail())))
+                .andExpect(jsonPath("$.name", is(responseDto.getName())))
+                .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
+                .andExpect(handler().handlerType(UserRestController.class))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("workspaceUserId").description("워크스페이스 유저 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저ID"),
+                                fieldWithPath("loginEmail").type(JsonFieldType.STRING).description("유저의 로그인 이메일"),
+                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 성함"),
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("유저 프로필 url")
                         )
                 ));
     }

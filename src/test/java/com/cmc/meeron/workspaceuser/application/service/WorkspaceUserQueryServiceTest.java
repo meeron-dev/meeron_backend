@@ -5,7 +5,7 @@ import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.user.application.port.in.request.FindWorkspaceUserRequestDtoBuilder;
 import com.cmc.meeron.user.domain.User;
 import com.cmc.meeron.workspaceuser.application.port.in.request.FindWorkspaceUserRequestDto;
-import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDto;
 import com.cmc.meeron.workspaceuser.application.port.out.WorkspaceUserQueryPort;
 import com.cmc.meeron.workspaceuser.application.port.out.response.WorkspaceUserQuerydslResponseDto;
 import com.cmc.meeron.workspace.domain.Workspace;
@@ -58,7 +58,7 @@ class WorkspaceUserQueryServiceTest {
                 .thenReturn(workspaceUsers);
 
         // when
-        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = workspaceUserQueryService.getMyWorkspaceUsers(user.getId());
+        List<WorkspaceUserResponseDto> myWorkspaceUsers = workspaceUserQueryService.getMyWorkspaceUsers(user.getId());
 
         // then
         assertAll(
@@ -106,7 +106,7 @@ class WorkspaceUserQueryServiceTest {
                 .thenReturn(Optional.of(workspaceUser));
 
         // when
-        WorkspaceUserQueryResponseDto myWorkspaceUser = workspaceUserQueryService.getMyWorkspaceUser(workspaceUser.getId());
+        WorkspaceUserResponseDto myWorkspaceUser = workspaceUserQueryService.getMyWorkspaceUser(workspaceUser.getId());
 
         // then
         assertAll(
@@ -154,7 +154,7 @@ class WorkspaceUserQueryServiceTest {
                 .thenReturn(workspaceUserQuerydslResponseDtos);
 
         // when
-        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQueryService.searchWorkspaceUsers(requestDto);
+        List<WorkspaceUserResponseDto> responseDtos = workspaceUserQueryService.searchWorkspaceUsers(requestDto);
 
         // then
         assertAll(
@@ -194,7 +194,7 @@ class WorkspaceUserQueryServiceTest {
                 .thenReturn(workspaceUserQuerydslResponseDtos);
 
         // when
-        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQueryService.getTeamUsers(1L);
+        List<WorkspaceUserResponseDto> responseDtos = workspaceUserQueryService.getTeamUsers(1L);
 
         // then
         assertAll(
@@ -242,7 +242,7 @@ class WorkspaceUserQueryServiceTest {
                 .thenReturn(List.of(noneTeamWorkspaceUser1, noneTeamWorkspaceUser2));
 
         // when
-        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQueryService.getNoneTeamWorkspaceUsers(1L);
+        List<WorkspaceUserResponseDto> responseDtos = workspaceUserQueryService.getNoneTeamWorkspaceUsers(1L);
 
         // then
         assertAll(

@@ -4,10 +4,12 @@ import com.cmc.meeron.common.meta.Improved;
 import com.cmc.meeron.team.adapter.in.request.CreateTeamRequest;
 import com.cmc.meeron.team.adapter.in.request.DeleteTeamRequest;
 import com.cmc.meeron.team.adapter.in.request.ModifyTeamNameRequest;
+import com.cmc.meeron.team.adapter.in.request.*;
 import com.cmc.meeron.team.adapter.in.response.CreatedTeamResponse;
 import com.cmc.meeron.team.adapter.in.response.TeamResponse;
 import com.cmc.meeron.team.adapter.in.response.TeamResponses;
 import com.cmc.meeron.team.application.port.in.TeamCommandUseCase;
+import com.cmc.meeron.team.application.port.in.TeamMemberManageUseCase;
 import com.cmc.meeron.team.application.port.in.TeamQueryUseCase;
 import com.cmc.meeron.team.application.port.in.response.TeamResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class TeamRestController {
 
     private final TeamQueryUseCase teamQueryUseCase;
     private final TeamCommandUseCase teamCommandUseCase;
+    private final TeamMemberManageUseCase teamMemberManageUseCase;
 
     @Deprecated
     @GetMapping("/teams")
@@ -66,5 +69,19 @@ public class TeamRestController {
     public TeamResponse getMeetingHostTeam(@PathVariable Long meetingId) {
         TeamResponseDto responseDto = teamQueryUseCase.getMeetingHostTeam(meetingId);
         return TeamResponse.from(responseDto);
+    }
+
+    @PatchMapping("/teams/{teamId}/join")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void joinTeamMembers(@PathVariable Long teamId,
+                                @RequestBody @Valid JoinTeamMembersRequest joinTeamMembersRequest) {
+        teamMemberManageUseCase.joinTeamMembers(joinTeamMembersRequest.toRequestDto(teamId));
+    }
+
+    @PatchMapping("/teams/{teamId}/eject")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ejectTeamMember(@PathVariable Long teamId,
+                                @RequestBody @Valid EjectTeamMemberRequestV2 ejectTeamMemberRequestV2) {
+        teamMemberManageUseCase.ejectTeamMember(ejectTeamMemberRequestV2.toRequestDto());
     }
 }

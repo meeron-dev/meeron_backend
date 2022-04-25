@@ -1,18 +1,20 @@
 package com.cmc.meeron.workspaceuser.application.port.in;
 
 import com.cmc.meeron.workspaceuser.application.port.in.request.CreateWorkspaceUserRequestDto;
-import com.cmc.meeron.workspaceuser.application.port.in.request.JoinTeamUsersRequestDto;
-import com.cmc.meeron.workspaceuser.application.port.in.request.KickOutTeamUserRequestDto;
+import com.cmc.meeron.team.application.port.in.request.JoinTeamMembersRequestDto;
+import com.cmc.meeron.team.application.port.in.request.EjectTeamMemberRequestDto;
 import com.cmc.meeron.workspaceuser.application.port.in.request.ModifyWorkspaceUserRequestDto;
-import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserCommandResponseDto;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDto;
 
 public interface WorkspaceUserCommandUseCase {
 
-    WorkspaceUserCommandResponseDto createWorkspaceUser(CreateWorkspaceUserRequestDto createWorkspaceUserRequestDto);
+    WorkspaceUserResponseDto createWorkspaceUser(CreateWorkspaceUserRequestDto createWorkspaceUserRequestDto);
 
-    WorkspaceUserCommandResponseDto modifyWorkspaceUser(ModifyWorkspaceUserRequestDto modifyWorkspaceUserRequestDto);
+    WorkspaceUserResponseDto modifyWorkspaceUser(ModifyWorkspaceUserRequestDto modifyWorkspaceUserRequestDto);
 
-    void joinTeamUsers(JoinTeamUsersRequestDto joinTeamUsersRequestDto);
+    @Deprecated
+    void joinTeamUsers(JoinTeamMembersRequestDto joinTeamMembersRequestDto);
 
-    void kickOutTeamUser(KickOutTeamUserRequestDto kickOutTeamUserRequestDto);
+    @Deprecated
+    void kickOutTeamUser(EjectTeamMemberRequestDto ejectTeamMemberRequestDto);
 }

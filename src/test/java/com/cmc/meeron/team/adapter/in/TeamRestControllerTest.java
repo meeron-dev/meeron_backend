@@ -5,6 +5,9 @@ import com.cmc.meeron.common.exception.team.TeamCountsConditionException;
 import com.cmc.meeron.common.exception.team.TeamErrorCode;
 import com.cmc.meeron.common.exception.team.TeamNotFoundException;
 import com.cmc.meeron.support.TestImproved;
+import com.cmc.meeron.common.exception.workspace.NotAllFoundWorkspaceUsersException;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserErrorCode;
+import com.cmc.meeron.common.exception.workspace.WorkspaceUserNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.team.adapter.in.request.*;
@@ -25,8 +28,8 @@ import java.util.List;
 import static com.cmc.meeron.config.RestDocsConfig.field;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -329,6 +332,156 @@ class TeamRestControllerTest extends RestDocsTestSupport {
                         responseFields(
                                 fieldWithPath("teamId").type(JsonFieldType.NUMBER).description("회의를 주관하는 팀 ID"),
                                 fieldWithPath("teamName").type(JsonFieldType.STRING).description("회의를 주관하는 팀 명")
+                        )
+                ));
+    }
+
+    @DisplayName("팀원 추가 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void join_team_members_fail_not_valid() throws Exception {
+
+        // given
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.buildNotValid();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/join", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+
+    @DisplayName("팀원 추가 - 실패 / 팀이 존재하지 않는 경우")
+    @Test
+    void join_team_members_fail_not_found_team() throws Exception {
+
+        // given
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
+        doThrow(new TeamNotFoundException())
+                .when(teamMemberManageUseCase)
+                .joinTeamMembers(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/join", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(TeamErrorCode.NOT_FOUND_TEAM.getCode())));
+    }
+
+    @DisplayName("팀원 추가 - 실패 / 팀에 가입시킬 유저 수가 맞지 않는 경우")
+    @Test
+    void join_team_members_fail_invalid_find_workspace_users_count() throws Exception {
+
+        // given
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
+        doThrow(new NotAllFoundWorkspaceUsersException())
+                .when(teamMemberManageUseCase)
+                .joinTeamMembers(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/join", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_ALL_FOUND.getCode())));
+    }
+
+    @DisplayName("팀원 추가 - 성공")
+    @Test
+    void join_team_members_success() throws Exception {
+
+        // given
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/join", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("teamId").description("팀원을 추가할 팀 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)"),
+                                fieldWithPath("joinTeamWorkspaceUserIds").type(JsonFieldType.ARRAY).description("팀에 소속 시킬 워크스페이스 유저 ID").attributes(field("constraints", "하나 이상의 ID를 리스트로 줄 것."))
+                        )
+                ));
+    }
+
+    @DisplayName("팀에서 추방 - 실패 / 제약조건을 지키지 않을 경우")
+    @Test
+    void eject_team_member_fail_invalid() throws Exception {
+
+        // given
+        EjectTeamMemberRequestV2 request = EjectTeamMemberRequestBuilder.buildInvalidV2();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/eject", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(ClientErrorCode.BIND_EXCEPTION.getCode())))
+                .andExpect(jsonPath("$.errors", hasSize(2)));
+    }
+
+    @DisplayName("팀에서 추방 - 실패 / 유저를 찾지 못한 경우")
+    @Test
+    void eject_team_member_fail_not_found_workspace_user() throws Exception {
+
+        // given
+        EjectTeamMemberRequestV2 request = EjectTeamMemberRequestBuilder.buildV2();
+        doThrow(new WorkspaceUserNotFoundException())
+                .when(teamMemberManageUseCase)
+                .ejectTeamMember(any());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/eject", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
+    }
+
+    @DisplayName("팀에서 추방 / 성공")
+    @Test
+    void eject_team_member_success() throws Exception {
+
+        // given
+        EjectTeamMemberRequestV2 request = EjectTeamMemberRequestBuilder.buildV2();
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/eject", "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("teamId").description("팀원을 추방시킬 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("adminWorkspaceUserId").type(JsonFieldType.NUMBER).description("요청자 워크스페이스 ID (권한 체크용)"),
+                                fieldWithPath("ejectWorkspaceUserId").type(JsonFieldType.NUMBER).description("추방시킬 워크스페이스 유저 ID")
                         )
                 ));
     }

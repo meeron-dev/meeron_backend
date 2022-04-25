@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class WorkspaceUserQueryResponseDto implements SortableByNickname {
+public class WorkspaceUserResponseDto implements SortableByNickname {
 
     private Long workspaceUserId;
     private Long workspaceId;
@@ -25,20 +25,20 @@ public class WorkspaceUserQueryResponseDto implements SortableByNickname {
     private String email;
     private String phone;
 
-    public static List<WorkspaceUserQueryResponseDto> fromEntities(List<WorkspaceUser> myWorkspaceUsers) {
-        List<WorkspaceUserQueryResponseDto> responseDtos = myWorkspaceUsers.stream()
-                .map(WorkspaceUserQueryResponseDto::fromEntity)
+    public static List<WorkspaceUserResponseDto> fromEntities(List<WorkspaceUser> myWorkspaceUsers) {
+        List<WorkspaceUserResponseDto> responseDtos = myWorkspaceUsers.stream()
+                .map(WorkspaceUserResponseDto::from)
                 .collect(Collectors.toList());
         return sortByNickname(responseDtos);
     }
 
-    private static List<WorkspaceUserQueryResponseDto> sortByNickname(List<WorkspaceUserQueryResponseDto> responseDto) {
+    private static List<WorkspaceUserResponseDto> sortByNickname(List<WorkspaceUserResponseDto> responseDto) {
         responseDto.sort(NicknameOrderByKoreanEnglishNumberSpecial.getComparator());
         return responseDto;
     }
 
-    public static WorkspaceUserQueryResponseDto fromEntity(WorkspaceUser workspaceUser) {
-        return WorkspaceUserQueryResponseDto.builder()
+    public static WorkspaceUserResponseDto from(WorkspaceUser workspaceUser) {
+        return WorkspaceUserResponseDto.builder()
                 .workspaceUserId(workspaceUser.getId())
                 .workspaceId(workspaceUser.getWorkspace().getId())
                 .isWorkspaceAdmin(workspaceUser.getWorkspaceUserInfo().isWorkspaceAdmin())
@@ -50,15 +50,15 @@ public class WorkspaceUserQueryResponseDto implements SortableByNickname {
                 .build();
     }
 
-    public static List<WorkspaceUserQueryResponseDto> fromQueryResponseDtos(List<WorkspaceUserQuerydslResponseDto> workspaceUserQuerydslResponseDtos) {
-        List<WorkspaceUserQueryResponseDto> responseDtos = workspaceUserQuerydslResponseDtos.stream()
-                .map(WorkspaceUserQueryResponseDto::fromQueryResponseDto)
+    public static List<WorkspaceUserResponseDto> from(List<WorkspaceUserQuerydslResponseDto> workspaceUserQuerydslResponseDtos) {
+        List<WorkspaceUserResponseDto> responseDtos = workspaceUserQuerydslResponseDtos.stream()
+                .map(WorkspaceUserResponseDto::from)
                 .collect(Collectors.toList());
         return sortByNickname(responseDtos);
     }
 
-    private static WorkspaceUserQueryResponseDto fromQueryResponseDto(WorkspaceUserQuerydslResponseDto workspaceUserQuerydslResponseDto) {
-        return WorkspaceUserQueryResponseDto.builder()
+    private static WorkspaceUserResponseDto from(WorkspaceUserQuerydslResponseDto workspaceUserQuerydslResponseDto) {
+        return WorkspaceUserResponseDto.builder()
                 .workspaceUserId(workspaceUserQuerydslResponseDto.getWorkspaceUserId())
                 .workspaceId(workspaceUserQuerydslResponseDto.getWorkspaceId())
                 .isWorkspaceAdmin(workspaceUserQuerydslResponseDto.isWorkspaceAdmin())

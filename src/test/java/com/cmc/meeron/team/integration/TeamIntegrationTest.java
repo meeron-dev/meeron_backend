@@ -6,6 +6,8 @@ import com.cmc.meeron.support.security.WithMockJwt;
 import com.cmc.meeron.team.adapter.in.request.*;
 import com.cmc.meeron.team.application.port.out.TeamQueryPort;
 import com.cmc.meeron.team.domain.Team;
+import com.cmc.meeron.workspaceuser.application.port.out.WorkspaceUserQueryPort;
+import com.cmc.meeron.workspaceuser.domain.WorkspaceUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,10 +20,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
 import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TeamIntegrationTest extends IntegrationTest {
 
     @Autowired TeamQueryPort teamQueryPort;
+    @Autowired WorkspaceUserQueryPort workspaceUserQueryPort;
 
     @Deprecated
     @DisplayName("워크스페이스 내 팀 조회 - 성공")
@@ -179,5 +183,76 @@ public class TeamIntegrationTest extends IntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.teamId", is(2)))
                 .andExpect(jsonPath("$.teamName", is("기획팀")));
+    }
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추가 - 성공")
+    @Test
+    void join_team_users_success() throws Exception {
+
+        // given
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.buildIntegrationSuccessCase();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/join", "3")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // then
+        flushAndClear();
+        List<WorkspaceUser> noneTeamUsers = workspaceUserQueryPort.findByWorkspaceIdAndTeamIsNull(1L);
+        assertEquals(2, noneTeamUsers.size());
+        List<WorkspaceUser> devTeamUsers = workspaceUserQueryPort.findByTeamId(3L);
+        assertEquals(6, devTeamUsers.size());
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추가 - 실패 / 관리자가 아닌 경우")
+    @Test
+    void join_team_users_fail_not_admin() throws Exception {
+
+        // given
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/join", "3")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추방 - 실패 / 관리자가 아닌 경우")
+    @Test
+    void kick_out_team_user_fail_not_admin() throws Exception {
+
+        // given
+        EjectTeamMemberRequestV2 request = EjectTeamMemberRequestBuilder.buildV2InvalidIntegrationTest();
+
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/teams/{teamId}/eject", "3")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Sql("classpath:workspace-user-test.sql")
+    @DisplayName("팀원 추방 - 성공")
+    @Test
+    void kick_out_team_success() throws Exception {
+
+        // given
+        EjectTeamMemberRequestV2 request = EjectTeamMemberRequestBuilder.buildV2SuccessIntegrationTest();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "14")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        // then
+        flushAndClear();
+        List<WorkspaceUser> workspaceUsers = workspaceUserQueryPort.findByTeamId(3L);
+        assertEquals(3, workspaceUsers.size());
     }
 }
