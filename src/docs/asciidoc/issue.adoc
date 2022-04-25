@@ -1,0 +1,16 @@
+= 이슈 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[get_agenda_issues]]
+== 아젠다의 이슈 조회
+=== [GET] /api/agendas/{id}/issues
+include::{snippets}/issue-rest-controller-test/get_agenda_issues_success/http-request.adoc[]
+include::{snippets}/issue-rest-controller-test/get_agenda_issues_success/request-headers.adoc[]
+include::{snippets}/issue-rest-controller-test/get_agenda_issues_success/path-parameters.adoc[]
+include::{snippets}/issue-rest-controller-test/get_agenda_issues_success/http-response.adoc[]
+include::{snippets}/issue-rest-controller-test/get_agenda_issues_success/response-fields.adoc[]

@@ -6,7 +6,9 @@ import com.cmc.meeron.common.exception.file.FileExtensionNotFoundException;
 import com.cmc.meeron.common.exception.file.FileUploadException;
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.file.application.port.in.FileManager;
+import com.cmc.meeron.file.application.port.in.response.AgendaFileResponseDto;
 import com.cmc.meeron.file.application.port.out.AgendaFileCommandPort;
+import com.cmc.meeron.file.application.port.out.AgendaFileQueryPort;
 import com.cmc.meeron.file.application.port.out.AgendaFileToAgendaQueryPort;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import com.cmc.meeron.file.domain.AgendaFile;
@@ -31,6 +33,7 @@ class FileService implements FileManager {
     private final StoragePort storagePort;
     private final AgendaFileCommandPort agendaFileCommandPort;
     private final AgendaFileToAgendaQueryPort fileAgendaQueryPort;
+    private final AgendaFileQueryPort agendaFileQueryPort;
 
     @Override
     public void saveAgendaFiles(Long agendaId, List<MultipartFile> files) {
@@ -80,5 +83,11 @@ class FileService implements FileManager {
         String renameFileName = getRenameFileName(file);
         uploadToFileStorage(file, renameFileName);
         return storagePort.getUrl(renameFileName);
+    }
+
+    @Override
+    public List<AgendaFileResponseDto> getAgendaFiles(Long agendaId) {
+        List<AgendaFile> agendaFiles = agendaFileQueryPort.findByAgendaId(agendaId);
+        return AgendaFileResponseDto.from(agendaFiles);
     }
 }

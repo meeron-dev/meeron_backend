@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,5 +44,30 @@ class AgendaIntegrationTest extends IntegrationTest {
                 .andExpect(jsonPath("$.files[0].fileId", is(1)))
                 .andExpect(jsonPath("$.files[0].fileName", is("테스트사진.jpg")))
                 .andExpect(jsonPath("$.files[0].fileUrl", is("test-url.com")));
+    }
+
+    @DisplayName("회의 아젠다 조회 - 성공")
+    @Test
+    void get_meeting_agendas_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/agendas", "5")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.agendas", hasSize(1)));
+    }
+
+    @DisplayName("아젠다 조회 - 성공")
+    @Test
+    void get_agenda_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/agendas/{agendaId}", "1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.agendaId", is(1)))
+                .andExpect(jsonPath("$.agendaName", is("테스트아젠다1")))
+                .andExpect(jsonPath("$.agendaResult", nullValue()))
+                .andExpect(jsonPath("$.agendaOrder", is(1)));
     }
 }

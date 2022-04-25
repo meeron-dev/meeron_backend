@@ -1,16 +1,14 @@
 package com.cmc.meeron.topic.agenda.adapter.in;
 
 import com.cmc.meeron.common.exception.ClientErrorCode;
-import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.common.exception.meeting.MeetingErrorCode;
 import com.cmc.meeron.common.exception.meeting.MeetingNotFoundException;
-import com.cmc.meeron.topic.agenda.adapter.in.request.CreateAgendaRequest;
-import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaCountResponseDto;
-import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaCountResponseDtoBuilder;
-import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaIssuesFilesResponseDto;
-import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaIssuesFilesResponseDtoBuilder;
+import com.cmc.meeron.common.exception.topic.agenda.AgendaErrorCode;
+import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.topic.agenda.adapter.in.request.CreateAgendaRequest;
+import com.cmc.meeron.topic.agenda.application.port.in.response.*;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,6 +67,7 @@ class AgendaRestControllerTest extends RestDocsTestSupport {
                 ));
     }
 
+    @Deprecated
     @DisplayName("회의의 아젠다 조회 - 실패 / 아젠다가 없을 경우")
     @Test
     void get_agenda_file_issues_fail_not_found_agenda() throws Exception {
@@ -87,6 +86,7 @@ class AgendaRestControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
     }
 
+    @Deprecated
     @DisplayName("회의의 아젠다 조회 - 성공")
     @Test
     void get_agenda_file_issues_success() throws Exception {
@@ -131,6 +131,103 @@ class AgendaRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("files[].fileId").type(JsonFieldType.NUMBER).description("아젠다 파일 ID"),
                                 fieldWithPath("files[].fileName").type(JsonFieldType.STRING).description("아젠다 파일 원본명"),
                                 fieldWithPath("files[].fileUrl").type(JsonFieldType.STRING).description("아젠다 저장 파일 URL")
+                        )
+                ));
+    }
+
+    @DisplayName("회의 아젠다 조회 - 성공")
+    @Test
+    void get_meeting_agendas_success() throws Exception {
+
+        // given
+        List<AgendaResponseDto> responseDtos = AgendaResponseDtoBuilder.buildList();
+        when(agendaQueryUseCase.getMeetingAgendas(any()))
+                .thenReturn(responseDtos);
+
+        // when, when, docs
+        AgendaResponseDto one = responseDtos.get(0);
+        AgendaResponseDto two = responseDtos.get(1);
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/agendas",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.agendas", hasSize(2)))
+                .andExpect(jsonPath("$.agendas[0].agendaId", is(one.getAgendaId().intValue())))
+                .andExpect(jsonPath("$.agendas[0].agendaName", is(one.getAgendaName())))
+                .andExpect(jsonPath("$.agendas[0].agendaOrder", is(one.getAgendaOrder())))
+                .andExpect(jsonPath("$.agendas[0].agendaResult", is(one.getAgendaResult())))
+                .andExpect(jsonPath("$.agendas[1].agendaId", is(two.getAgendaId().intValue())))
+                .andExpect(jsonPath("$.agendas[1].agendaName", is(two.getAgendaName())))
+                .andExpect(jsonPath("$.agendas[1].agendaOrder", is(two.getAgendaOrder())))
+                .andExpect(jsonPath("$.agendas[1].agendaResult", is(two.getAgendaResult())))
+                .andExpect(handler().handlerType(AgendaRestController.class))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("아젠다를 찾을 회의 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("agendas[].agendaId").type(JsonFieldType.NUMBER).description("아젠다 ID"),
+                                fieldWithPath("agendas[].agendaName").type(JsonFieldType.STRING).description("아젠다 제목"),
+                                fieldWithPath("agendas[].agendaOrder").type(JsonFieldType.NUMBER).description("아젠다 순서(정렬되어 있음)"),
+                                fieldWithPath("agendas[].agendaResult").type(JsonFieldType.STRING).description("아젠다 결과")
+                        )
+                ));
+    }
+
+    @DisplayName("아젠다 상세 조회 - 실패 / 존재하지 않을 경우")
+    @Test
+    void get_agenda_fail_not_found() throws Exception {
+
+        // given
+        when(agendaQueryUseCase.getAgenda(any()))
+                .thenThrow(new com.cmc.meeron.common.exception.topic.agenda.AgendaNotFoundException());
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/agendas/{agendaId}",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", is(AgendaErrorCode.NOT_FOUND.getCode())))
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())));
+    }
+
+    @DisplayName("아젠다 상세 조회 - 성공")
+    @Test
+    void get_agenda_success() throws Exception {
+
+        // given
+        AgendaResponseDto responseDto = AgendaResponseDtoBuilder.build();
+        when(agendaQueryUseCase.getAgenda(any()))
+                .thenReturn(responseDto);
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/agendas/{agendaId}",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.agendaId", is(responseDto.getAgendaId().intValue())))
+                .andExpect(jsonPath("$.agendaName", is(responseDto.getAgendaName())))
+                .andExpect(jsonPath("$.agendaOrder", is(responseDto.getAgendaOrder())))
+                .andExpect(jsonPath("$.agendaResult", is(responseDto.getAgendaResult())))
+                .andExpect(handler().handlerType(AgendaRestController.class))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("agendaId").description("아젠다 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("agendaId").type(JsonFieldType.NUMBER).description("아젠다 ID"),
+                                fieldWithPath("agendaName").type(JsonFieldType.STRING).description("아젠다 제목"),
+                                fieldWithPath("agendaOrder").type(JsonFieldType.NUMBER).description("아젠다 순서(정렬되어 있음)"),
+                                fieldWithPath("agendaResult").type(JsonFieldType.STRING).description("아젠다 결과")
                         )
                 ));
     }
