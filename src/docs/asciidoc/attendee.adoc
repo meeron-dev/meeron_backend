@@ -6,7 +6,7 @@
 :toclevels: 4
 :sectlinks:
 
-[[join-attendees]]
+[[join_attendees]]
 == 만들어진 회의에 참가자 추가하기
 === [POST] /api/meetings/{id}/attendees
 include::{snippets}/attendee-rest-controller-test/join_attendees_success/http-request.adoc[]
@@ -33,14 +33,14 @@ include::{snippets}/attendee-rest-controller-test/join_attendees_fail_not_equal_
 
 [[change_attendee_status]]
 == 참가자 상태 변경
-=== [BEFORE] [PATCH] /api/attendees/{id}
+=== [Before] [PATCH] /api/attendees/{id}
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/request-fields.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/http-response.adoc[]
 
-=== [AFTER] [PATCH] /api/attendees/{id}/{status}
+=== [After] [PATCH] /api/attendees/{id}/{status}
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/path-parameters.adoc[]
