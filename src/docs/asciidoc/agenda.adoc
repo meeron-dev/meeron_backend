@@ -38,7 +38,7 @@ include::{snippets}/agenda-rest-controller-test/get_agenda_counts_success/respon
 [[meetings_agenda_issues_files]]
 == 회의 상세(아젠다, 이슈, 파일) 조회
 === Deprecated
-사유 : 해당 API를 사용하면 아젠다, 이슈, 파일들을 한 번에 볼 수 있지만 다음과 같은 단점을 발견했습니다.
+해당 API를 사용하면 아젠다, 이슈, 파일들을 한 번에 볼 수 있지만 다음과 같은 단점을 발견했습니다.
 
 * 아젠다에 대한 정보만을 반환하지 않고, 이슈와 파일 한꺼번에 있기에 너무 하나의 API에 몰려있습니다.
 * ``Agenda`` 도 고유한 ID가 있으나, 순서로 찾게되면 클라이언트 입장에서 너무 헷갈려 보입니다.

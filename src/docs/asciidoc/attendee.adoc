@@ -33,14 +33,23 @@ include::{snippets}/attendee-rest-controller-test/join_attendees_fail_not_equal_
 
 [[change_attendee_status]]
 == 참가자 상태 변경
-=== [Before] [PATCH] /api/attendees/{id}
+=== [PATCH] /api/attendees/{id}
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/request-fields.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success/http-response.adoc[]
 
-=== [After] [PATCH] /api/attendees/{id}/{status}
+=== Changed
+기존 API는 가독성이 떨어져 좀 더 명확하게 변경했습니다.
+
+참가자 상태 변경 시, 내가 참여하는 회의 참가자 정보가 필요한데 이는
+
+* link:attendee.html#my_attendee[[GET\] /api/meetings/{id}/attendees/me, window=_blank]
+
+를 호출하면 됩니다.
+
+=== * [PATCH] /api/attendees/{id}/{status}
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/change_attendee_status_success_v2/path-parameters.adoc[]
@@ -60,14 +69,21 @@ include::{snippets}/attendee-rest-controller-test/change_attendee_status_fail_no
 
 [[get_meeting_attendees]]
 == 팀별 회의 참여자 수 조회
-=== [BEFORE] [GET] /api/meetings/{id}/attendees/teams
+=== [GET] /api/meetings/{id}/attendees/teams
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success/response-fields.adoc[]
 
-=== [AFTER] [GET] /api/meetings/{id}/attendees/counts
+=== Changed
+기존 API는 가독성이 떨어져 좀 더 명확하게 변경했습니다.
+
+팀별 카운트를 API에 명확하게 표현하기 위해 `/api/meetings/{id}/attendees/counts` 로 명명했습니다.
+
+Response 구조도, `Team` 정보와 `count` 정보를 분리했습니다.
+
+=== * [GET] /api/meetings/{id}/attendees/counts
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_v2/path-parameters.adoc[]
@@ -76,14 +92,21 @@ include::{snippets}/attendee-rest-controller-test/get_meeting_attendees_success_
 
 [[get_meeting_team_attendees]]
 == 팀에 속한 회의 참여자 조회
-=== [BEFORE] [GET] /api/meetings/{id}/attendees/teams/{id}
+=== [GET] /api/meetings/{id}/attendees/teams/{id}
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success/response-fields.adoc[]
 
-=== [AFTER] [GET] /api/meetings/{id}/teams/{id}/attendees
+=== Changed
+기존 API는 가독성이 떨어져 좀 더 명확하게 변경했습니다.
+
+'회의를 참여하는 팀의 참가자' 를 명확하게 표현하기 위해 `/api/meetings/{id}/teams/{id}/attendees` 로 명명했습니다.
+
+Response 구조도 `Attendee` 정보에 맞춰 반환하도록 변경했습니다.
+
+=== * [GET] /api/meetings/{id}/teams/{id}/attendees
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/http-request.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/request-headers.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_team_attendees_success_v2/path-parameters.adoc[]
