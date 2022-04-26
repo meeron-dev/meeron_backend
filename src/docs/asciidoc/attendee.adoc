@@ -98,3 +98,17 @@ include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/req
 include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/path-parameters.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/http-response.adoc[]
 include::{snippets}/attendee-rest-controller-test/get_meeting_admins_success/response-fields.adoc[]
+
+[[my_attendee]]
+== 내 회의 참가자 정보 조회
+=== [GET] /api/meetings/{id}/attendees/me
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_success/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_success/request-headers.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_success/request-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_success/path-parameters.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_success/http-response.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_success/response-fields.adoc[]
+
+==== 1302
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_fail_not_found/http-request.adoc[]
+include::{snippets}/attendee-rest-controller-test/get_my_attendee_fail_not_found/http-response.adoc[]

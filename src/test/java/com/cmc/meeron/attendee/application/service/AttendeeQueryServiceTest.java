@@ -1,12 +1,15 @@
 package com.cmc.meeron.attendee.application.service;
 
+import com.cmc.meeron.attendee.application.port.in.request.MeetingAttendeeRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingAttendeesRequestDtoBuilder;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
+import com.cmc.meeron.attendee.application.port.in.request.MyMeetingAttendeeRequestDtoBuilder;
 import com.cmc.meeron.attendee.application.port.in.response.*;
 import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
 import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
 import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDtoBuilder;
 import com.cmc.meeron.attendee.domain.Attendee;
+import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.support.TestImproved;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.cmc.meeron.attendee.AttendeeFixture.ADMIN_ATTENDEE;
 import static com.cmc.meeron.attendee.AttendeeFixture.NOT_ADMIN_ATTENDEE;
@@ -151,6 +155,42 @@ class AttendeeQueryServiceTest {
                 () -> assertThat(responseDtos)
                         .usingRecursiveComparison()
                         .isEqualTo(AttendeeResponseDto.from(attendees))
+        );
+    }
+
+    @DisplayName("내가 참여한 회의의 참가자 정보 조회 - 실패 / 존재하지 않을 경우")
+    @Test
+    void get_meeting_attendee_fail_not_found() throws Exception {
+
+        // given
+        MeetingAttendeeRequestDto requestDto = MyMeetingAttendeeRequestDtoBuilder.build();
+        when(attendeeQueryPort.findWithWorkspaceUserByMeetingIdWorkspaceUserId(any(), any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(AttendeeNotFoundException.class,
+                () -> attendeeQueryService.getMeetingAttendee(requestDto));
+    }
+
+    @DisplayName("내가 참여한 회의의 참가자 정보 조회 - 성공")
+    @Test
+    void get_meeting_attendee_success() throws Exception {
+
+        // given
+        MeetingAttendeeRequestDto requestDto = MyMeetingAttendeeRequestDtoBuilder.build();
+        when(attendeeQueryPort.findWithWorkspaceUserByMeetingIdWorkspaceUserId(any(), any()))
+                .thenReturn(Optional.of(NOT_ADMIN_ATTENDEE));
+
+        // when
+        AttendeeResponseDto responseDto = attendeeQueryService.getMeetingAttendee(requestDto);
+
+        // then
+        assertAll(
+                () -> verify(attendeeQueryPort).findWithWorkspaceUserByMeetingIdWorkspaceUserId(requestDto.getMeetingId()
+                        , requestDto.getWorkspaceUserId()),
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(AttendeeResponseDto.from(NOT_ADMIN_ATTENDEE))
         );
     }
 }
