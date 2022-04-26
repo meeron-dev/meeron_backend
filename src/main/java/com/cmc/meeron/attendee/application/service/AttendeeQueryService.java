@@ -2,10 +2,12 @@ package com.cmc.meeron.attendee.application.service;
 
 import com.cmc.meeron.attendee.application.port.in.AttendeeQueryUseCase;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
+import com.cmc.meeron.attendee.application.port.in.request.MeetingAttendeeRequestDto;
 import com.cmc.meeron.attendee.application.port.in.response.*;
 import com.cmc.meeron.attendee.application.port.out.AttendeeQueryPort;
-import com.cmc.meeron.attendee.domain.Attendee;
 import com.cmc.meeron.attendee.application.port.out.response.MeetingAttendeesCountsByTeamQueryDto;
+import com.cmc.meeron.attendee.domain.Attendee;
+import com.cmc.meeron.common.exception.meeting.AttendeeNotFoundException;
 import com.cmc.meeron.common.meta.Improved;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -54,5 +56,13 @@ class AttendeeQueryService implements AttendeeQueryUseCase {
     public List<AttendeeResponseDto> getMeetingAdmins(Long meetingId) {
         List<Attendee> admins = attendeeQueryPort.findMeetingAdminsWithWorkspaceUserByMeetingId(meetingId);
         return AttendeeResponseDto.from(admins);
+    }
+
+    @Override
+    public AttendeeResponseDto getMeetingAttendee(MeetingAttendeeRequestDto meetingAttendeeRequestDto) {
+        Attendee attendee = attendeeQueryPort.findWithWorkspaceUserByMeetingIdWorkspaceUserId(meetingAttendeeRequestDto.getMeetingId(),
+                meetingAttendeeRequestDto.getWorkspaceUserId())
+                .orElseThrow(AttendeeNotFoundException::new);
+        return AttendeeResponseDto.from(attendee);
     }
 }

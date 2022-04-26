@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -175,5 +177,31 @@ class AttendeeIntegrationTest extends IntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.admins", hasSize(2)));
+    }
+
+    @DisplayName("내가 참여한 회의의 참가자 정보 조회 - 성공")
+    @Test
+    void get_my_attendee_success() throws Exception {
+
+        // given, when, then
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceUserId", "1");
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/meetings/{meetingId}/attendees/me",
+                "1")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.attendeeId", is(1)))
+                .andExpect(jsonPath("$.meetingId", is(1)))
+                .andExpect(jsonPath("$.attendStatus", is("ATTEND")))
+                .andExpect(jsonPath("$.meetingAdmin", is(false)))
+                .andExpect(jsonPath("$.workspaceUser.workspaceUserId", is(1)))
+                .andExpect(jsonPath("$.workspaceUser.workspaceId", is(1)))
+                .andExpect(jsonPath("$.workspaceUser.workspaceAdmin", is(false)))
+                .andExpect(jsonPath("$.workspaceUser.nickname", is("무무")))
+                .andExpect(jsonPath("$.workspaceUser.position", is("Server / PM")))
+                .andExpect(jsonPath("$.workspaceUser.profileImageUrl", emptyString()))
+                .andExpect(jsonPath("$.workspaceUser.email", nullValue()))
+                .andExpect(jsonPath("$.workspaceUser.phone", nullValue()));
     }
 }

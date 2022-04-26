@@ -37,4 +37,14 @@ interface AttendeeJpaRepository extends JpaRepository<Attendee, Long> {
             " and a.isMeetingAdmin = true"
     )
     List<Attendee> findMeetingAdminsWithWorkspaceUserByMeetingId(@Param("meetingId") Long meetingId);
+
+    @Query(
+            "select a" +
+            " from Attendee a" +
+            " join fetch a.workspaceUser wu" +
+            " where a.meeting.id = :meetingId" +
+            " and wu.id = :workspaceUserId"
+    )
+    Optional<Attendee> findWithWorkspaceUserByMeetingIdWorkspaceUserId(@Param("meetingId") Long meetingId,
+                                                                       @Param("workspaceUserId") Long workspaceUserId);
 }
