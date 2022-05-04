@@ -23,6 +23,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -35,8 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WithMockJwt
@@ -594,6 +595,85 @@ class AttendeeRestControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("admins[].workspaceUser.profileImageUrl").type(JsonFieldType.STRING).description("회의 관리자의 프로필 이미지 URL"),
                                 fieldWithPath("admins[].workspaceUser.email").type(JsonFieldType.STRING).description("회의 관리자의 이메일 주소"),
                                 fieldWithPath("admins[].workspaceUser.phone").type(JsonFieldType.STRING).description("회의 관리자의 휴대전화번호")
+                        )
+                ));
+    }
+
+    @DisplayName("내가 참여한 회의의 참가자 정보 조회 - 실패 / 존재하지 않을 경우")
+    @Test
+    void get_my_attendee_fail_not_found() throws Exception {
+
+        // given
+        when(attendeeQueryUseCase.getMeetingAttendee(any()))
+                .thenThrow(new AttendeeNotFoundException());
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceUserId", "1");
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/attendees/me",
+                "1")
+                .params(params)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
+                .andExpect(jsonPath("$.code", is(MeetingErrorCode.NOT_FOUND_ATTENDEE.getCode())));
+    }
+
+    @DisplayName("내가 참여한 회의의 참가자 정보 조회 - 성공")
+    @Test
+    void get_my_attendee_success() throws Exception {
+
+        // given
+        AttendeeResponseDto responseDto = AttendeeResponseDtoBuilder.build();
+        when(attendeeQueryUseCase.getMeetingAttendee(any()))
+                .thenReturn(responseDto);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("workspaceUserId", "1");
+
+        // when, then, docs
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/api/meetings/{meetingId}/attendees/me",
+                "1")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer TestAccessToken")
+                .params(params)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(AttendeeRestController.class))
+                .andExpect(jsonPath("$.attendeeId", is(responseDto.getAttendeeId().intValue())))
+                .andExpect(jsonPath("$.meetingId", is(responseDto.getMeetingId().intValue())))
+                .andExpect(jsonPath("$.attendStatus", is(responseDto.getAttendStatus())))
+                .andExpect(jsonPath("$.meetingAdmin", is(responseDto.isMeetingAdmin())))
+                .andExpect(jsonPath("$.workspaceUser.workspaceUserId", is(responseDto.getAttendeeWorkspaceUserResponseDto().getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceUser.workspaceId", is(responseDto.getAttendeeWorkspaceUserResponseDto().getWorkspaceId().intValue())))
+                .andExpect(jsonPath("$.workspaceUser.workspaceAdmin", is(responseDto.getAttendeeWorkspaceUserResponseDto().isWorkspaceAdmin())))
+                .andExpect(jsonPath("$.workspaceUser.nickname", is(responseDto.getAttendeeWorkspaceUserResponseDto().getNickname())))
+                .andExpect(jsonPath("$.workspaceUser.position", is(responseDto.getAttendeeWorkspaceUserResponseDto().getPosition())))
+                .andExpect(jsonPath("$.workspaceUser.profileImageUrl", is(responseDto.getAttendeeWorkspaceUserResponseDto().getProfileImageUrl())))
+                .andExpect(jsonPath("$.workspaceUser.email", is(responseDto.getAttendeeWorkspaceUserResponseDto().getEmail())))
+                .andExpect(jsonPath("$.workspaceUser.phone", is(responseDto.getAttendeeWorkspaceUserResponseDto().getPhone())))
+                .andDo(restDocumentationResultHandler.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
+                        ),
+                        pathParameters(
+                                parameterWithName("meetingId").description("회의 ID")
+                        ),
+                        requestParameters(
+                                parameterWithName("workspaceUserId").optional().description("내 워크스페이스 유저 ID 추후 삭제 예정이어서 optional 처리")
+                        ),
+                        responseFields(
+                                fieldWithPath("attendeeId").type(JsonFieldType.NUMBER).description("내 회의 참여 ID"),
+                                fieldWithPath("meetingId").type(JsonFieldType.NUMBER).description("내가 참여하는 회의 ID"),
+                                fieldWithPath("attendStatus").type(JsonFieldType.STRING).description("내 회의 참가 상태 ('ATTEND', 'ABSENT', 'UNKNOWN') 존재"),
+                                fieldWithPath("meetingAdmin").type(JsonFieldType.BOOLEAN).description("나의 회의 관리자 여부"),
+                                fieldWithPath("workspaceUser.workspaceUserId").type(JsonFieldType.NUMBER).description("나의 워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceUser.workspaceId").type(JsonFieldType.NUMBER).description("나의 워크스페이스 ID"),
+                                fieldWithPath("workspaceUser.workspaceAdmin").type(JsonFieldType.BOOLEAN).description("나의 워크스페이스 관리자 여부"),
+                                fieldWithPath("workspaceUser.nickname").type(JsonFieldType.STRING).description("내 닉네임"),
+                                fieldWithPath("workspaceUser.position").type(JsonFieldType.STRING).description("내 직책"),
+                                fieldWithPath("workspaceUser.profileImageUrl").type(JsonFieldType.STRING).description("내 프로필 이미지 URL"),
+                                fieldWithPath("workspaceUser.email").type(JsonFieldType.STRING).description("내 이메일 주소"),
+                                fieldWithPath("workspaceUser.phone").type(JsonFieldType.STRING).description("내 휴대전화번호")
                         )
                 ));
     }

@@ -11,10 +11,16 @@ import com.cmc.meeron.common.exception.user.UserNotFoundException;
 import com.cmc.meeron.common.exception.workspace.*;
 import com.cmc.meeron.support.restdocs.RestDocsTestSupport;
 import com.cmc.meeron.support.security.WithMockJwt;
+import com.cmc.meeron.team.adapter.in.request.JoinTeamMembersRequest;
+import com.cmc.meeron.team.adapter.in.request.JoinTeamMembersRequestBuilder;
+import com.cmc.meeron.team.adapter.in.request.EjectTeamMemberRequestBuilder;
+import com.cmc.meeron.team.adapter.in.request.EjectTeamMemberRequest;
 import com.cmc.meeron.user.adapter.in.request.FindWorkspaceUserRequestBuilder;
 import com.cmc.meeron.workspaceuser.adapter.in.request.*;
 import com.cmc.meeron.workspaceuser.application.port.in.request.FindNoneTeamWorkspaceUsersParametersBuilder;
-import com.cmc.meeron.workspaceuser.application.port.in.response.*;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserQueryResponseDtoBuilder;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDto;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDtoBuilder;
 import com.google.common.net.HttpHeaders;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +46,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,7 +59,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_my_workspace_users_success() throws Exception {
 
         // given
-        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
+        List<WorkspaceUserResponseDto> myWorkspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.getMyWorkspaceUsers(any()))
                 .thenReturn(myWorkspaceUsers);
 
@@ -104,7 +109,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_my_workspace_user_success() throws Exception {
 
         // given
-        WorkspaceUserQueryResponseDto myWorkspaceUser = WorkspaceUserQueryResponseDtoBuilder.buildList().get(0);
+        WorkspaceUserResponseDto myWorkspaceUser = WorkspaceUserQueryResponseDtoBuilder.buildList().get(0);
         when(workspaceUserQueryUseCase.getMyWorkspaceUser(any()))
                 .thenReturn(myWorkspaceUser);
 
@@ -152,55 +157,6 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
                 .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
-    }
-
-    @DisplayName("워크스페이스 유저의 유저 정보 가져오기 - 실패 / 존재하지 않는 워크스페이스 유저일 경우")
-    @Test
-    void get_user_fail_not_found() throws Exception {
-
-        // given
-        when(workspaceUserQueryUseCase.getUser(any()))
-                .thenThrow(new WorkspaceUserNotFoundException());
-
-        // when, then ,docs
-        mockMvc.perform(get("/api/workspace-users/{workspaceUserId}/user", 1L)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status", is(HttpStatus.BAD_REQUEST.value())))
-                .andExpect(jsonPath("$.code", is(WorkspaceUserErrorCode.NOT_FOUND.getCode())));
-    }
-
-    @DisplayName("워크스페이스 유저의 유저 정보 가져오기 - 성공")
-    @Test
-    void get_user_success() throws Exception {
-
-        // given
-        UserResponseDto responseDto = UserResponseDtoBuilder.build();
-        when(workspaceUserQueryUseCase.getUser(any()))
-                .thenReturn(responseDto);
-
-        // when, then ,docs
-        mockMvc.perform(get("/api/workspace-users/{workspaceUserId}/user", 1L)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId", is(responseDto.getUserId().intValue())))
-                .andExpect(jsonPath("$.loginEmail", is(responseDto.getLoginEmail())))
-                .andExpect(jsonPath("$.name", is(responseDto.getName())))
-                .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
-                .andDo(restDocumentationResultHandler.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("JWT Access Token").attributes(field("constraints", "JWT Access Token With Bearer"))
-                        ),
-                        pathParameters(
-                                parameterWithName("workspaceUserId").description("워크스페이스 유저 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저ID"),
-                                fieldWithPath("loginEmail").type(JsonFieldType.STRING).description("유저의 로그인 이메일"),
-                                fieldWithPath("name").type(JsonFieldType.STRING).description("유저 성함"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("유저 프로필 url")
-                        )
-                ));
     }
 
     @DisplayName("워크스페이스 유저 프로필 수정 - 실패 / 제약조건을 지키지 않을 경우")
@@ -332,7 +288,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void modify_workspace_user_success() throws Exception {
 
         // given
-        WorkspaceUserCommandResponseDto responseDto = WorkspaceUserCommandResponseDtoBuilder.build();
+        WorkspaceUserResponseDto responseDto = WorkspaceUserResponseDtoBuilder.build();
         when(workspaceUserCommandUseCase.modifyWorkspaceUser(any()))
                 .thenReturn(responseDto);
         MockMultipartFile file = FILE;
@@ -351,11 +307,12 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer testAccessToken"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.workspaceUserId", is(responseDto.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceId", is(responseDto.getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.workspaceAdmin", is(responseDto.isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.nickname", is(responseDto.getNickname())))
                 .andExpect(jsonPath("$.position", is(responseDto.getPosition())))
                 .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
-                .andExpect(jsonPath("$.email", is(responseDto.getContactMail())))
+                .andExpect(jsonPath("$.email", is(responseDto.getEmail())))
                 .andExpect(jsonPath("$.phone", is(responseDto.getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
@@ -376,12 +333,13 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("workspaceUserId").type(JsonFieldType.NUMBER).description("수정된 워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 닉네임"),
                                 fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("수정된 워크스페이스 유저의 관리자 여부"),
                                 fieldWithPath("position").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 직책"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\""),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저의 연락용 메일, 없을 경우 \"\""),
-                                fieldWithPath("phone").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저의 연락용 휴대전화번호, 없을 경우 \"\"")
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저의 연락용 메일"),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("수정된 워크스페이스 유저의 연락용 휴대전화번호")
                         )
                 ));
     }
@@ -394,7 +352,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", "1");
         params.add("nickname", "테스트");
-        List<WorkspaceUserQueryResponseDto> workspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
+        List<WorkspaceUserResponseDto> workspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.searchWorkspaceUsers(any()))
                 .thenReturn(workspaceUsers);
 
@@ -459,7 +417,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void get_team_members_success() throws Exception {
 
         // given
-        List<WorkspaceUserQueryResponseDto> workspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
+        List<WorkspaceUserResponseDto> workspaceUsers = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.getTeamUsers(any()))
                 .thenReturn(workspaceUsers);
 
@@ -604,7 +562,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         // given
         CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
         MockMultipartFile profile = FILE;
-        WorkspaceUserCommandResponseDto responseDto = createWorkspaceUserAdminResponseDto();
+        WorkspaceUserResponseDto responseDto = WorkspaceUserResponseDtoBuilder.build();
         when(workspaceUserCommandUseCase.createWorkspaceUser(any()))
                 .thenReturn(responseDto);
 
@@ -617,11 +575,12 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.workspaceUserId", is(responseDto.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceId", is(responseDto.getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.nickname", is(responseDto.getNickname())))
                 .andExpect(jsonPath("$.workspaceAdmin", is(responseDto.isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.position", is(responseDto.getPosition())))
                 .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
-                .andExpect(jsonPath("$.email", is(responseDto.getContactMail())))
+                .andExpect(jsonPath("$.email", is(responseDto.getEmail())))
                 .andExpect(jsonPath("$.phone", is(responseDto.getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
@@ -640,26 +599,15 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("workspaceUserId").type(JsonFieldType.NUMBER).description("생성된 워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 닉네임"),
                                 fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("생성된 워크스페이스 유저의 관리자 여부"),
                                 fieldWithPath("position").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 직책"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\""),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 메일, 없을 경우 \"\""),
-                                fieldWithPath("phone").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 휴대전화번호, 없을 경우 \"\"")
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 메일"),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 휴대전화번호")
                         )
                 ));
-    }
-
-    private WorkspaceUserCommandResponseDto createWorkspaceUserAdminResponseDto() {
-        return WorkspaceUserCommandResponseDto.builder()
-                .workspaceUserId(1L)
-                .nickname("테스트닉네임")
-                .workspaceAdmin(true)
-                .position("개발자")
-                .profileImageUrl("")
-                .contactMail("")
-                .phone("")
-                .build();
     }
 
     @DisplayName("워크스페이스 일반 유저 생성 - 성공")
@@ -669,7 +617,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         // given
         CreateWorkspaceUserRequest request = createCreateWorkspaceUserRequest();
         MockMultipartFile profile = FILE;
-        WorkspaceUserCommandResponseDto responseDto = createWorkspaceUserResponseDto();
+        WorkspaceUserResponseDto responseDto = WorkspaceUserResponseDtoBuilder.build();
         when(workspaceUserCommandUseCase.createWorkspaceUser(any()))
                 .thenReturn(responseDto);
 
@@ -682,11 +630,12 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.workspaceUserId", is(responseDto.getWorkspaceUserId().intValue())))
+                .andExpect(jsonPath("$.workspaceId", is(responseDto.getWorkspaceId().intValue())))
                 .andExpect(jsonPath("$.nickname", is(responseDto.getNickname())))
                 .andExpect(jsonPath("$.workspaceAdmin", is(responseDto.isWorkspaceAdmin())))
                 .andExpect(jsonPath("$.position", is(responseDto.getPosition())))
                 .andExpect(jsonPath("$.profileImageUrl", is(responseDto.getProfileImageUrl())))
-                .andExpect(jsonPath("$.email", is(responseDto.getContactMail())))
+                .andExpect(jsonPath("$.email", is(responseDto.getEmail())))
                 .andExpect(jsonPath("$.phone", is(responseDto.getPhone())))
                 .andDo(restDocumentationResultHandler.document(
                         requestHeaders(
@@ -705,26 +654,15 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
                         ),
                         responseFields(
                                 fieldWithPath("workspaceUserId").type(JsonFieldType.NUMBER).description("생성된 워크스페이스 유저 ID"),
+                                fieldWithPath("workspaceId").type(JsonFieldType.NUMBER).description("워크스페이스 ID"),
                                 fieldWithPath("nickname").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 닉네임"),
                                 fieldWithPath("workspaceAdmin").type(JsonFieldType.BOOLEAN).description("생성된 워크스페이스 유저의 관리자 여부"),
                                 fieldWithPath("position").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 직책"),
-                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 프로필 이미지 URL, 없을 경우 \"\""),
-                                fieldWithPath("email").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 메일, 없을 경우 \"\""),
-                                fieldWithPath("phone").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 휴대전화번호, 없을 경우 \"\"")
+                                fieldWithPath("profileImageUrl").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저 프로필 이미지 URL"),
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 메일"),
+                                fieldWithPath("phone").type(JsonFieldType.STRING).description("생성된 워크스페이스 유저의 연락용 휴대전화번호")
                         )
                 ));
-    }
-
-    private WorkspaceUserCommandResponseDto createWorkspaceUserResponseDto() {
-        return WorkspaceUserCommandResponseDto.builder()
-                .workspaceUserId(1L)
-                .nickname("테스트닉네임")
-                .workspaceAdmin(false)
-                .position("개발자")
-                .profileImageUrl("")
-                .contactMail("")
-                .phone("")
-                .build();
     }
 
     @DisplayName("닉네임 중복 체크 - 성공")
@@ -784,7 +722,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void join_team_users_fail_not_valid() throws Exception {
 
         // given
-        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.buildNotValid();
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.buildNotValid();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "1")
@@ -802,7 +740,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void join_team_users_fail_not_found_team() throws Exception {
 
         // given
-        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
         doThrow(new TeamNotFoundException())
                 .when(workspaceUserCommandUseCase)
                 .joinTeamUsers(any());
@@ -822,7 +760,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void join_team_users_fail_invalid_find_workspace_users_count() throws Exception {
 
         // given
-        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
         doThrow(new NotAllFoundWorkspaceUsersException())
                 .when(workspaceUserCommandUseCase)
                 .joinTeamUsers(any());
@@ -842,7 +780,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void join_team_users_success() throws Exception {
         
         // given
-        JoinTeamUsersRequest request = JoinTeamUsersRequestBuilder.build();
+        JoinTeamMembersRequest request = JoinTeamMembersRequestBuilder.build();
         
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/teams/{teamId}/workspace-users", "1")
@@ -869,7 +807,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void kick_out_team_user_fail_invalid() throws Exception {
 
         // given
-        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.buildInvalid();
+        EjectTeamMemberRequest request = EjectTeamMemberRequestBuilder.buildInvalid();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "1")
@@ -887,7 +825,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void kick_out_team_user_fail_not_found_workspace_user() throws Exception {
 
         // given
-        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.build();
+        EjectTeamMemberRequest request = EjectTeamMemberRequestBuilder.build();
         doThrow(new WorkspaceUserNotFoundException())
                 .when(workspaceUserCommandUseCase)
                 .kickOutTeamUser(any());
@@ -907,7 +845,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
     void kick_out_team_user_success() throws Exception {
 
         // given
-        KickOutTeamUserRequest request = KickOutTeamUserRequestBuilder.build();
+        EjectTeamMemberRequest request = EjectTeamMemberRequestBuilder.build();
 
         // when, then, docs
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/workspace-users/{workspaceUserId}/team", "1")
@@ -951,7 +889,7 @@ class WorkspaceUserRestControllerTest extends RestDocsTestSupport {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("workspaceId", parameters.getWorkspaceId().toString());
 
-        List<WorkspaceUserQueryResponseDto> responseDtos = WorkspaceUserQueryResponseDtoBuilder.buildList();
+        List<WorkspaceUserResponseDto> responseDtos = WorkspaceUserQueryResponseDtoBuilder.buildList();
         when(workspaceUserQueryUseCase.getNoneTeamWorkspaceUsers(any()))
                 .thenReturn(responseDtos);
 

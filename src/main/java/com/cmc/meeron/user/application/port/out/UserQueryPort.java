@@ -9,4 +9,6 @@ public interface UserQueryPort {
     Optional<User> findByEmail(String email);
 
     Optional<User> findById(Long userId);
+
+    Optional<User> findByWorkspaceUserId(Long workspaceUserId);
 }

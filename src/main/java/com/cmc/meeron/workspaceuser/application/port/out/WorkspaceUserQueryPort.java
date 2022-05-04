@@ -25,6 +25,4 @@ public interface WorkspaceUserQueryPort {
     List<WorkspaceUser> findByWorkspaceIdAndTeamIsNull(Long workspaceId);
 
     List<WorkspaceUser> findByWorkspaceId(Long workspaceId);
-
-    Optional<WorkspaceUser> findWithUserById(Long workspaceUserId);
 }

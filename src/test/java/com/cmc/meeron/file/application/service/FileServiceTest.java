@@ -1,11 +1,12 @@
 package com.cmc.meeron.file.application.service;
 
 import com.cmc.meeron.common.exception.file.FileExtensionNotFoundException;
+import com.cmc.meeron.file.application.port.in.response.AgendaFileResponseDto;
 import com.cmc.meeron.file.application.port.out.AgendaFileCommandPort;
+import com.cmc.meeron.file.application.port.out.AgendaFileQueryPort;
 import com.cmc.meeron.file.application.port.out.AgendaFileToAgendaQueryPort;
 import com.cmc.meeron.file.application.port.out.StoragePort;
 import com.cmc.meeron.file.domain.AgendaFile;
-import com.cmc.meeron.meeting.application.port.out.MeetingQueryPort;
 import com.cmc.meeron.topic.agenda.domain.Agenda;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Optional;
 
+import static com.cmc.meeron.file.AgendaFileFixture.AGENDA_FILE_1;
 import static com.cmc.meeron.file.FileFixture.FILE;
 import static com.cmc.meeron.topic.agenda.AgendaFixture.AGENDA1;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -29,9 +32,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class FileServiceTest {
 
-    @Mock StoragePort storagePort;
-    @Mock AgendaFileCommandPort agendaFileCommandPort;
-    @Mock MeetingQueryPort meetingQueryPort;
+    @Mock
+    StoragePort storagePort;
+    @Mock
+    AgendaFileCommandPort agendaFileCommandPort;
+    @Mock
+    AgendaFileQueryPort agendaFileQueryPort;
     @Mock
     AgendaFileToAgendaQueryPort agendaFileToAgendaQueryPort;
     @InjectMocks FileService fileService;
@@ -114,6 +120,27 @@ class FileServiceTest {
         assertAll(
                 () -> verify(storagePort).upload(any(), any(), any()),
                 () -> verify(storagePort).getUrl(any())
+        );
+    }
+
+    @DisplayName("아젠다의 파일들 조회 - 성공")
+    @Test
+    void get_agenda_files_success() throws Exception {
+
+        // given
+        List<AgendaFile> agendaFiles = List.of(AGENDA_FILE_1);
+        when(agendaFileQueryPort.findByAgendaId(any()))
+                .thenReturn(agendaFiles);
+
+        // when
+        List<AgendaFileResponseDto> responseDtos = fileService.getAgendaFiles(1L);
+
+        // then
+        assertAll(
+                () -> verify(agendaFileQueryPort).findByAgendaId(1L),
+                () -> assertThat(responseDtos)
+                        .usingRecursiveComparison()
+                        .isEqualTo(AgendaFileResponseDto.from(agendaFiles))
         );
     }
 }

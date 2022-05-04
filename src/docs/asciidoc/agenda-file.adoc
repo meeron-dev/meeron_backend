@@ -22,3 +22,12 @@ include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_empty
 ==== 1300
 include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_found_agenda/http-request.adoc[]
 include::{snippets}/file-rest-controller-test/create_agenda_files_fail_not_found_agenda/http-response.adoc[]
+
+[[get_agenda_files]]
+== 아젠다의 파일들 조회
+=== [GET] /api/agendas/{id}/files
+include::{snippets}/file-rest-controller-test/get_agenda_files_success/http-request.adoc[]
+include::{snippets}/file-rest-controller-test/get_agenda_files_success/request-headers.adoc[]
+include::{snippets}/file-rest-controller-test/get_agenda_files_success/path-parameters.adoc[]
+include::{snippets}/file-rest-controller-test/get_agenda_files_success/http-response.adoc[]
+include::{snippets}/file-rest-controller-test/get_agenda_files_success/response-fields.adoc[]

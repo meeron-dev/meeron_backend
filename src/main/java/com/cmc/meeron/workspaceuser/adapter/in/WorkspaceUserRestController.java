@@ -1,13 +1,16 @@
 package com.cmc.meeron.workspaceuser.adapter.in;
 
 import com.cmc.meeron.common.security.AuthUser;
+import com.cmc.meeron.team.adapter.in.request.JoinTeamMembersRequest;
+import com.cmc.meeron.team.adapter.in.request.EjectTeamMemberRequest;
 import com.cmc.meeron.workspaceuser.adapter.in.request.*;
-import com.cmc.meeron.workspaceuser.adapter.in.response.*;
+import com.cmc.meeron.workspaceuser.adapter.in.response.CheckDuplicateNicknameResponse;
+import com.cmc.meeron.workspaceuser.adapter.in.response.MyWorkspaceUsersResponse;
+import com.cmc.meeron.workspaceuser.adapter.in.response.WorkspaceUserResponse;
+import com.cmc.meeron.workspaceuser.adapter.in.response.WorkspaceUserResponses;
 import com.cmc.meeron.workspaceuser.application.port.in.WorkspaceUserCommandUseCase;
 import com.cmc.meeron.workspaceuser.application.port.in.WorkspaceUserQueryUseCase;
-import com.cmc.meeron.workspaceuser.application.port.in.response.UserResponseDto;
-import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserCommandResponseDto;
-import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserQueryResponseDto;
+import com.cmc.meeron.workspaceuser.application.port.in.response.WorkspaceUserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,30 +32,23 @@ public class WorkspaceUserRestController {
     @GetMapping("/users/{userId}/workspace-users")
     @ResponseStatus(HttpStatus.OK)
     public MyWorkspaceUsersResponse getMyWorkspaceUsers(@PathVariable Long userId) {
-        List<WorkspaceUserQueryResponseDto> myWorkspaceUsers = workspaceUserQueryUseCase.getMyWorkspaceUsers(userId);
+        List<WorkspaceUserResponseDto> myWorkspaceUsers = workspaceUserQueryUseCase.getMyWorkspaceUsers(userId);
         return MyWorkspaceUsersResponse.fromWorkspaceUsers(myWorkspaceUsers);
     }
 
     @GetMapping("/workspace-users")
     @ResponseStatus(HttpStatus.OK)
-    public WorkspaceUsersResponse searchWorkspaceUsers(@Valid FindWorkspaceUserRequest findWorkspaceUserRequest) {
-        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos =
+    public WorkspaceUserResponses searchWorkspaceUsers(@Valid FindWorkspaceUserRequest findWorkspaceUserRequest) {
+        List<WorkspaceUserResponseDto> workspaceUserResponseDtos =
                 workspaceUserQueryUseCase.searchWorkspaceUsers(findWorkspaceUserRequest.toRequestDto());
-        return WorkspaceUsersResponse.fromWorkspaceUsers(workspaceUserQueryResponseDtos);
+        return WorkspaceUserResponses.fromWorkspaceUsers(workspaceUserResponseDtos);
     }
 
     @GetMapping("/workspace-users/{workspaceUserId}")
     @ResponseStatus(HttpStatus.OK)
     public WorkspaceUserResponse getMyWorkspaceUser(@PathVariable Long workspaceUserId) {
-        WorkspaceUserQueryResponseDto myWorkspaceUser = workspaceUserQueryUseCase.getMyWorkspaceUser(workspaceUserId);
-        return WorkspaceUserResponse.fromResponseDto(myWorkspaceUser);
-    }
-
-    @GetMapping("/workspace-users/{workspaceUserId}/user")
-    @ResponseStatus(HttpStatus.OK)
-    public UserResponse getUser(@PathVariable Long workspaceUserId) {
-        UserResponseDto userResponseDto = workspaceUserQueryUseCase.getUser(workspaceUserId);
-        return UserResponse.fromResponseDto(userResponseDto);
+        WorkspaceUserResponseDto myWorkspaceUser = workspaceUserQueryUseCase.getMyWorkspaceUser(workspaceUserId);
+        return WorkspaceUserResponse.from(myWorkspaceUser);
     }
 
     @PutMapping(value = "/workspace-users/{workspaceUserId}", consumes = {
@@ -60,42 +56,43 @@ public class WorkspaceUserRestController {
             MediaType.MULTIPART_FORM_DATA_VALUE
     })
     @ResponseStatus(HttpStatus.OK)
-    public CreateAndModifyWorkspaceUserResponse modifyWorkspaceUser(@PathVariable Long workspaceUserId,
-                                                                    @RequestPart("request") @Valid ModifyWorkspaceUserRequest modifyWorkspaceUserRequest,
-                                                                    @RequestPart(value = "files", required = false) MultipartFile file) {
-        WorkspaceUserCommandResponseDto responseDto = workspaceUserCommandUseCase
+    public WorkspaceUserResponse modifyWorkspaceUser(@PathVariable Long workspaceUserId,
+                                                     @RequestPart("request") @Valid ModifyWorkspaceUserRequest modifyWorkspaceUserRequest,
+                                                     @RequestPart(value = "files", required = false) MultipartFile file) {
+        WorkspaceUserResponseDto responseDto = workspaceUserCommandUseCase
                 .modifyWorkspaceUser(modifyWorkspaceUserRequest.toRequestDto(workspaceUserId, file));
-        return CreateAndModifyWorkspaceUserResponse.fromResponseDto(responseDto);
+        return WorkspaceUserResponse.from(responseDto);
     }
 
     @GetMapping("/teams/{teamId}/workspace-users")
     @ResponseStatus(HttpStatus.OK)
-    public WorkspaceUsersResponse getTeamUsers(@PathVariable Long teamId) {
-        List<WorkspaceUserQueryResponseDto> workspaceUserQueryResponseDtos = workspaceUserQueryUseCase.getTeamUsers(teamId);
-        return WorkspaceUsersResponse.fromWorkspaceUsers(workspaceUserQueryResponseDtos);
+    public WorkspaceUserResponses getTeamUsers(@PathVariable Long teamId) {
+        List<WorkspaceUserResponseDto> workspaceUserResponseDtos = workspaceUserQueryUseCase.getTeamUsers(teamId);
+        return WorkspaceUserResponses.fromWorkspaceUsers(workspaceUserResponseDtos);
     }
 
     @GetMapping("/teams/none/workspace-users")
     @ResponseStatus(HttpStatus.OK)
-    public WorkspaceUsersResponse getNoneTeamUsers(@Valid FindNoneTeamWorkspaceUsersParameters findNoneTeamWorkspaceUsersParameters) {
-        List<WorkspaceUserQueryResponseDto> noneTeamWorkspaceUsers = workspaceUserQueryUseCase
+    public WorkspaceUserResponses getNoneTeamUsers(@Valid FindNoneTeamWorkspaceUsersParameters findNoneTeamWorkspaceUsersParameters) {
+        List<WorkspaceUserResponseDto> noneTeamWorkspaceUsers = workspaceUserQueryUseCase
                 .getNoneTeamWorkspaceUsers(findNoneTeamWorkspaceUsersParameters.getWorkspaceId());
-        return WorkspaceUsersResponse.fromWorkspaceUsers(noneTeamWorkspaceUsers);
+        return WorkspaceUserResponses.fromWorkspaceUsers(noneTeamWorkspaceUsers);
     }
 
-
+    @Deprecated
     @PatchMapping("/teams/{teamId}/workspace-users")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void joinTeam(@PathVariable Long teamId,
-                         @RequestBody @Valid JoinTeamUsersRequest joinTeamUsersRequest) {
-        workspaceUserCommandUseCase.joinTeamUsers(joinTeamUsersRequest.toRequestDto(teamId));
+                         @RequestBody @Valid JoinTeamMembersRequest joinTeamMembersRequest) {
+        workspaceUserCommandUseCase.joinTeamUsers(joinTeamMembersRequest.toRequestDto(teamId));
     }
 
+    @Deprecated
     @PatchMapping("workspace-users/{workspaceUserId}/team")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void kickOutTeamUser(@PathVariable Long workspaceUserId,
-                                @RequestBody @Valid KickOutTeamUserRequest kickOutTeamUserRequest) {
-        workspaceUserCommandUseCase.kickOutTeamUser(kickOutTeamUserRequest.toRequestDto(workspaceUserId));
+                                @RequestBody @Valid EjectTeamMemberRequest ejectTeamMemberRequest) {
+        workspaceUserCommandUseCase.kickOutTeamUser(ejectTeamMemberRequest.toRequestDto(workspaceUserId));
     }
 
     @GetMapping("/workspace-users/nickname")
@@ -110,12 +107,12 @@ public class WorkspaceUserRestController {
             MediaType.MULTIPART_FORM_DATA_VALUE
     })
     @ResponseStatus(HttpStatus.OK)
-    public CreateAndModifyWorkspaceUserResponse createWorkspaceUserAdmin(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
+    public WorkspaceUserResponse createWorkspaceUserAdmin(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
                                                                          @RequestPart(value = "files", required = false) MultipartFile file,
                                                                          @AuthenticationPrincipal AuthUser authUser) {
-        WorkspaceUserCommandResponseDto workspaceUserCommandResponseDto =
+        WorkspaceUserResponseDto workspaceUserResponseDto =
                 workspaceUserCommandUseCase.createWorkspaceUser(createWorkspaceUserRequest.toAdminRequestDto(file, authUser.getUserId()));
-        return CreateAndModifyWorkspaceUserResponse.fromResponseDto(workspaceUserCommandResponseDto);
+        return WorkspaceUserResponse.from(workspaceUserResponseDto);
     }
 
     @PostMapping(value = "/workspace-users", consumes = {
@@ -123,11 +120,11 @@ public class WorkspaceUserRestController {
             MediaType.MULTIPART_FORM_DATA_VALUE
     })
     @ResponseStatus(HttpStatus.OK)
-    public CreateAndModifyWorkspaceUserResponse createWorkspaceUser(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
+    public WorkspaceUserResponse createWorkspaceUser(@RequestPart("request") @Valid CreateWorkspaceUserRequest createWorkspaceUserRequest,
                                                                     @RequestPart(value = "files", required = false) MultipartFile file,
                                                                     @AuthenticationPrincipal AuthUser authUser) {
-        WorkspaceUserCommandResponseDto workspaceUserCommandResponseDto =
+        WorkspaceUserResponseDto workspaceUserResponseDto =
                 workspaceUserCommandUseCase.createWorkspaceUser(createWorkspaceUserRequest.toRequestDto(file, authUser.getUserId()));
-        return CreateAndModifyWorkspaceUserResponse.fromResponseDto(workspaceUserCommandResponseDto);
+        return WorkspaceUserResponse.from(workspaceUserResponseDto);
     }
 }

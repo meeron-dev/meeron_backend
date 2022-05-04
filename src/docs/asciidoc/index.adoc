@@ -8,10 +8,10 @@
 
 include::overview.adoc[]
 
-=== Agenda
+=== Agenda [*]
 * link:agenda.html[Agenda API, window=_blank]
 
-=== Agenda-File
+=== Agenda-File [*]
 * link:agenda-file.html[Agenda-File API, window=_blank]
 
 === Attendee [*]
@@ -19,6 +19,9 @@ include::overview.adoc[]
 
 === Auth
 * link:auth.html[Auth API, window=_blank]
+
+=== Issue [*]
+* link:issue.html[Issue API, window=_blank]
 
 === Meeting
 * link:command-meeting.html[Meeting 생성 / 수정 / 삭제 API, window=_blank]

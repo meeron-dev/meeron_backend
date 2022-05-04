@@ -17,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -107,5 +108,21 @@ public class UserIntegrationTest extends IntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/users/quit")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @WithMockJwt
+    @DisplayName("워크스페이스 유저의 유저 조회 - 성공")
+    @Test
+    void get_user_from_workspace_user_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/workspace-users/{workspaceUserId}/user",
+                1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userId", is(1)))
+                .andExpect(jsonPath("$.loginEmail", is("test1@test.com")))
+                .andExpect(jsonPath("$.name", nullValue()))
+                .andExpect(jsonPath("$.profileImageUrl", nullValue()));
     }
 }

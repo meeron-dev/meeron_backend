@@ -1,13 +1,15 @@
 package com.cmc.meeron.topic.agenda.application.service;
 
 import com.cmc.meeron.common.exception.meeting.AgendaNotFoundException;
-import com.cmc.meeron.topic.agenda.application.port.out.AgendaToAgendaFileQueryPort;
-import com.cmc.meeron.topic.agenda.application.port.in.request.FindAgendaIssuesFilesRequestDtoBuilder;
-import com.cmc.meeron.topic.agenda.application.port.out.AgendaQueryPort;
 import com.cmc.meeron.topic.agenda.application.port.in.request.FindAgendaIssuesFilesRequestDto;
+import com.cmc.meeron.topic.agenda.application.port.in.request.FindAgendaIssuesFilesRequestDtoBuilder;
 import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaCountResponseDto;
 import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaIssuesFilesResponseDto;
+import com.cmc.meeron.topic.agenda.application.port.in.response.AgendaResponseDto;
+import com.cmc.meeron.topic.agenda.application.port.out.AgendaQueryPort;
+import com.cmc.meeron.topic.agenda.application.port.out.AgendaToAgendaFileQueryPort;
 import com.cmc.meeron.topic.agenda.application.port.out.AgendaToIssueQueryPort;
+import com.cmc.meeron.topic.agenda.domain.Agenda;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +22,10 @@ import java.util.Optional;
 
 import static com.cmc.meeron.file.AgendaFileFixture.AGENDA_FILE_1;
 import static com.cmc.meeron.topic.agenda.AgendaFixture.AGENDA1;
+import static com.cmc.meeron.topic.agenda.AgendaFixture.AGENDA2;
 import static com.cmc.meeron.topic.issue.IssueFixture.ISSUE_1;
 import static com.cmc.meeron.topic.issue.IssueFixture.ISSUE_2;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -82,6 +86,28 @@ class AgendaQueryServiceTest {
         );
     }
 
+    @DisplayName("회의의 아젠다들 조회 - 성공")
+    @Test
+    void get_meeting_agendas_success() throws Exception {
+
+        // given
+        List<Agenda> agendas = List.of(AGENDA1, AGENDA2);
+        when(agendaQueryPort.findByMeetingId(any()))
+                .thenReturn(agendas);
+
+        // when
+        List<AgendaResponseDto> responseDtos = agendaQueryService.getMeetingAgendas(1L);
+
+        // then
+        assertAll(
+                () -> verify(agendaQueryPort).findByMeetingId(1L),
+                () -> assertThat(responseDtos)
+                        .usingRecursiveComparison()
+                        .isEqualTo(AgendaResponseDto.from(agendas))
+        );
+    }
+
+    @Deprecated
     @DisplayName("아젠다 상세 조회 - 실패 / 존재하지 않는 순서일 경우")
     @Test
     void get_agenda_issue_files_fail_not_found_agenda() throws Exception {
@@ -96,6 +122,7 @@ class AgendaQueryServiceTest {
                 () -> agendaQueryService.getAgendaIssuesFiles(requestDto));
     }
 
+    @Deprecated
     @DisplayName("아젠다 상세 조회 - 성공")
     @Test
     void get_agenda_issue_files_success() throws Exception {
@@ -119,6 +146,40 @@ class AgendaQueryServiceTest {
                 () -> verify(agendaToAgendaFileQueryPort).findByAgendaId(AGENDA1.getId()),
                 () -> assertEquals(2, responseDto.getIssues().size()),
                 () -> assertEquals(1, responseDto.getFiles().size())
+        );
+    }
+
+    @DisplayName("아젠다 조회 - 실패 / 존재하지 않을 경우")
+    @Test
+    void get_agenda_fail_not_found() throws Exception {
+
+        // given
+        when(agendaQueryPort.findById(any()))
+                .thenReturn(Optional.empty());
+
+        // when, then
+        assertThrows(AgendaNotFoundException.class,
+                () -> agendaQueryService.getAgenda(1L));
+    }
+
+    @DisplayName("아젠다 조회 - 성공")
+    @Test
+    void get_agenda_success() throws Exception {
+
+        // given
+        Agenda agenda = AGENDA1;
+        when(agendaQueryPort.findById(any()))
+                .thenReturn(Optional.of(agenda));
+
+        // when
+        AgendaResponseDto responseDto = agendaQueryService.getAgenda(1L);
+
+        // then
+        assertAll(
+                () -> verify(agendaQueryPort).findById(1L),
+                () -> assertThat(responseDto)
+                        .usingRecursiveComparison()
+                        .isEqualTo(AgendaResponseDto.from(agenda))
         );
     }
 }

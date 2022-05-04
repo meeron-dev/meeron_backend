@@ -7,6 +7,7 @@ import com.cmc.meeron.attendee.adapter.in.response.*;
 import com.cmc.meeron.attendee.application.port.in.AttendeeCommandUseCase;
 import com.cmc.meeron.attendee.application.port.in.AttendeeQueryUseCase;
 import com.cmc.meeron.attendee.application.port.in.request.ChangeAttendStatusRequestDto;
+import com.cmc.meeron.attendee.application.port.in.request.MeetingAttendeeRequestDto;
 import com.cmc.meeron.attendee.application.port.in.request.MeetingTeamAttendeesRequestDto;
 import com.cmc.meeron.attendee.application.port.in.response.*;
 import com.cmc.meeron.common.meta.Improved;
@@ -90,5 +91,14 @@ public class AttendeeRestController {
     public AttendeeResponses getMeetingAdmins(@PathVariable Long meetingId) {
         List<AttendeeResponseDto> responseDtos = attendeeQueryUseCase.getMeetingAdmins(meetingId);
         return AttendeeResponses.from(responseDtos);
+    }
+
+    @GetMapping("/meetings/{meetingId}/attendees/me")
+    @ResponseStatus(HttpStatus.OK)
+    public AttendeeWorkspaceUserResponse getMyMeetingAttendee(@PathVariable Long meetingId,
+                                                              @RequestParam(value = "workspaceUserId") Long workspaceUserId) {
+        AttendeeResponseDto responseDto = attendeeQueryUseCase
+                .getMeetingAttendee(MeetingAttendeeRequestDto.from(meetingId, workspaceUserId));
+        return AttendeeWorkspaceUserResponse.from(responseDto);
     }
 }

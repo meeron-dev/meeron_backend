@@ -28,19 +28,6 @@ include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_su
 include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-request.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/get_my_workspace_user_fail_workspace_user_not_found/http-response.adoc[]
 
-[[workspace_users_user]]
-== '워크스페이스 유저' 의 유저(회원 정보) 조회
-=== [GET] /api/workspace-users/{id}/user
-include::{snippets}/workspace-user-rest-controller-test/get_user_success/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/get_user_success/request-headers.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/get_user_success/path-parameters.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/get_user_success/http-response.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/get_user_success/response-fields.adoc[]
-
-==== 1701
-include::{snippets}/workspace-user-rest-controller-test/get_user_fail_not_found/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/get_user_fail_not_found/http-response.adoc[]
-
 [[search_workspace_users]]
 == 워크스페이스 내 유저 닉네임 검색
 === [GET] /api/workspace-users
@@ -124,44 +111,6 @@ include::{snippets}/workspace-user-rest-controller-test/get_none_team_users_succ
 ==== 1001
 include::{snippets}/workspace-user-rest-controller-test/get_none_team_users_fail_invalid_parameters/http-request.adoc[]
 include::{snippets}/workspace-user-rest-controller-test/get_none_team_users_fail_invalid_parameters/http-response.adoc[]
-
-[[join_team_workspace_users]]
-== 팀원 추가
-=== [PATCH] /api/teams/{id}/workspace-users
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/request-headers.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/path-parameters.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/request-fields.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_success/http-response.adoc[]
-
-==== 1001
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_valid/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_valid/http-response.adoc[]
-
-==== 1402
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_found_team/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_not_found_team/http-response.adoc[]
-
-==== 1704
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_invalid_find_workspace_users_count/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/join_team_users_fail_invalid_find_workspace_users_count/http-response.adoc[]
-
-[[kick_out_team_workspace_users]]
-== 팀에서 추방
-=== [PATCH] /api/workspace-users/{id}/team
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/request-headers.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/path-parameters.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/request-fields.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_success/http-response.adoc[]
-
-==== 1001
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_invalid/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_invalid/http-response.adoc[]
-
-==== 1701
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_not_found_workspace_user/http-request.adoc[]
-include::{snippets}/workspace-user-rest-controller-test/kick_out_team_user_fail_not_found_workspace_user/http-response.adoc[]
 
 [[modify_workspace_user_info]]
 == 워크스페이스 유저 정보 수정

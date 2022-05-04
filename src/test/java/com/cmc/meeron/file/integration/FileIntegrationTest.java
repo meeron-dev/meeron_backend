@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.cmc.meeron.file.FileFixture.FILE;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WithMockJwt
@@ -27,5 +29,16 @@ public class FileIntegrationTest extends IntegrationTest {
                 .file(FILE)
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isCreated());
+    }
+
+    @DisplayName("아젠다 파일들 조회 - 성공")
+    @Test
+    void get_agenda_files_success() throws Exception {
+
+        // given, when, then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/agendas/{agendaId}/files", 1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.files", hasSize(1)));
     }
 }
