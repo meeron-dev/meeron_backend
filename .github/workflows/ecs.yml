@@ -1,0 +1,95 @@
+name: Deploy to Amazon ECS
+
+on:
+  push:
+    branches: [ dev, main ]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Set Application Deploy Environment variables
+        run: |
+          if [ ${GITHUB_REF##*/} == "main" ]; then
+            echo "APP_PROFILE_NAME=prod" >> $GITHUB_ENV
+            echo "ECS_CLUSTER_NAME=meeron-prod-cluster" >> $GITHUB_ENV
+            echo "ECS_SERVICE_NAME=meeron-prod-service" >> $GITHUB_ENV
+            echo "ECS_TASK_NAME=meeron-prod-task-definition.json" >> $GITHUB_ENV
+            echo "ECR_REPOSITORY_NAME=meeron-prod" >> $GITHUB_ENV
+          else
+            echo "APP_PROFILE_NAME=dev" >> $GITHUB_ENV
+            echo "ECS_CLUSTER_NAME=meeron-dev-cluster" >> $GITHUB_ENV
+            echo "ECS_SERVICE_NAME=meeron-dev-service" >> $GITHUB_ENV
+            echo "ECS_TASK_NAME=meeron-dev-task-definition.json" >> $GITHUB_ENV
+            echo "ECR_REPOSITORY_NAME=meeron-dev" >> $GITHUB_ENV
+          fi
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -Pjasypt.encryptor.password=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ env.ECR_REPOSITORY_NAME }}
+          IMAGE_TAG: latest
+        run: |
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=$PROFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_NAME }}
+          container-name: meeron-container
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE_NAME }}
+          cluster: ${{ env.ECS_CLUSTER_NAME }}
+          wait-for-service-stability: true
+
+      - name: build result to slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{job.status}}
+          fields: all
+          author_name: 'meeron CI / CD'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
