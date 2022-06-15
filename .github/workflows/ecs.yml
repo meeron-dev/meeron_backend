@@ -45,6 +45,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+      - name: Set up QEMU
+        id: qemu
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -55,10 +63,8 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ env.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: latest
-
-        # --platform arm64 동적 설정
         run: |
-          docker build --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=$PROFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker buildx build --platform linux/amd64,linux/arm64 --build-arg JASPYT_PASSWORD=${{ secrets.JASYPT_ENCRYPTOR_PASSWORD }} --build-arg PROFILE=$PROFILE -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
