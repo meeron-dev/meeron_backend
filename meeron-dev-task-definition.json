@@ -1,5 +1,5 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:596572818780:task-definition/meeron-dev-task-definition:1",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:596572818780:task-definition/meeron-dev-task-definition:latest",
   "containerDefinitions": [
     {
       "name": "meeron-container",
