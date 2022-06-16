@@ -1,0 +1,81 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:596572818780:task-definition/meeron-dev-task-definition:latest",
+  "containerDefinitions": [
+    {
+      "name": "meeron-container",
+      "image": "596572818780.dkr.ecr.ap-northeast-2.amazonaws.com/meeron-dev:latest",
+      "cpu": 0,
+      "links": [],
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "entryPoint": [],
+      "command": [],
+      "environment": [],
+      "environmentFiles": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "secrets": [],
+      "dnsServers": [],
+      "dnsSearchDomains": [],
+      "extraHosts": [],
+      "dockerSecurityOptions": [],
+      "dockerLabels": {},
+      "ulimits": [],
+      "systemControls": []
+    }
+  ],
+  "family": "meeron-dev-task-definition",
+  "taskRoleArn": "arn:aws:iam::596572818780:role/ecsFullAccessRole",
+  "networkMode": "awsvpc",
+  "revision": 1,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.17"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+    "EC2"
+  ],
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "cpu": "512",
+  "memory": "512",
+  "registeredAt": "2022-06-15T07:29:42.644Z",
+  "registeredBy": "arn:aws:iam::596572818780:root",
+  "tags": [
+    {
+      "key": "ecs:taskDefinition:createdFrom",
+      "value": "ecs-console-v2"
+    },
+    {
+      "key": "ecs:taskDefinition:stackId",
+      "value": "arn:aws:cloudformation:ap-northeast-2:596572818780:stack/ECS-Console-V2-TaskDefinition-7e703fdc-19c1-47dc-8a75-87088b80c690/e8d7f650-ec7c-11ec-8baf-0aab751935ea"
+    }
+  ]
+}
