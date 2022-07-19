@@ -22,6 +22,7 @@
 8. [개선 사항](#개선-사항)
    1. [Elastic Beanstalk](#elastic-beanstalk)
    2. [API의 가독성과 응답 구조 개선](#api의-가독성과-응답-구조-개선)
+   3. [ECS](#ecs)
 9. [소감 및 느낀점](#소감-및-느낀점)
 
 ### 개요
@@ -58,7 +59,8 @@
 
 ### 아키텍처
 
-<img width="1227" alt="image" src="https://user-images.githubusercontent.com/37062337/164976852-ce1a61f1-4523-455f-be6f-25e5636481da.png">
+![image](https://user-images.githubusercontent.com/37062337/179660161-0166b416-410c-4f1f-846b-a19afa7ea3ae.png)
+
 
 ### ERD
 
@@ -98,6 +100,18 @@
   <p align="center">
     개선 후 API 응답 구조
   </p>
+
+### ECS
+<p align="center">
+   <img width="1227" alt="image" src="https://user-images.githubusercontent.com/37062337/164976852-ce1a61f1-4523-455f-be6f-25e5636481da.png">
+</p>
+<p align="center">
+   이전 Elastic Beanstalk 아키텍처
+</p>
+
+- 기존에는 단일 컨테이너였지만 추후 여러 컨테이너를 효율적으로 관리하고 싶어 Elastic Beanstalk 환경에서 ECS EC2 환경으로 이전했습니다.
+- ECS Fargate보다 상대적으로 요금이 저렴한 [ECS EC2 환경](#아키텍처)을 선택했습니다.
+- 트래픽이 많지 않았고 프리 티어 및 요금을 아끼기 위해 개발 환경은 `t2.micro`, 운영 환경은 `t4g.small`(2022년 말 까지 무료) 스펙으로 설정했습니다.
 
 ### 소감 및 느낀점 
 
